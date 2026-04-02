@@ -1,14 +1,32 @@
 /// <reference types="vite/client" />
 import {
   HeadContent,
-  Link,
   Outlet,
   Scripts,
   createRootRoute,
 } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { APP_CONFIG } from "~/lib/constants/app";
+import { Navbar } from "~/components/shared/Navbar";
+import { Footer } from "~/components/shared/Footer";
+import { StructuredData } from "~/components/seo/StructuredData";
 import appCss from "~/styles/app.css?url";
+
+const ORG_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: APP_CONFIG.site.name,
+  url: APP_CONFIG.site.url,
+  description: `${APP_CONFIG.site.name} — ${APP_CONFIG.site.tagline}. Sandali artigianali fatti a mano a Napoli dal 1965.`,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "Via Chiaia, 104",
+    addressLocality: "Napoli",
+    addressRegion: "NA",
+    postalCode: "80132",
+    addressCountry: "IT",
+  },
+} as const;
 
 export const Route = createRootRoute({
   head: () => ({
@@ -20,11 +38,29 @@ export const Route = createRootRoute({
         content: `${APP_CONFIG.site.name} — ${APP_CONFIG.site.tagline}. Sandali artigianali fatti a mano a Napoli dal 1965.`,
       },
       { title: APP_CONFIG.site.name },
+      { property: "og:type", content: "website" },
+      { property: "og:locale", content: "it_IT" },
+      { property: "og:site_name", content: APP_CONFIG.site.name },
     ],
     links: [
       {
         rel: "preconnect",
         href: "https://fonts.bunny.net",
+      },
+      {
+        rel: "preconnect",
+        href: "https://fonts.bunny.net",
+        crossorigin: "",
+      },
+      {
+        rel: "preload",
+        href: "https://fonts.bunny.net/css?family=cormorant-garamond:wght@400;500;600;700&display=swap",
+        as: "style",
+      },
+      {
+        rel: "preload",
+        href: "https://fonts.bunny.net/css?family=dm-sans:wght@400;500;600&display=swap",
+        as: "style",
       },
       {
         rel: "stylesheet",
@@ -57,27 +93,36 @@ function RootDocument({ children }: { children: ReactNode }) {
 }
 
 function RootComponent() {
-  return <Outlet />;
+  return (
+    <>
+      <StructuredData data={ORG_SCHEMA} />
+      <Navbar />
+      <main id="main-content" className="min-h-screen pt-[var(--navbar-height)] md:pt-[var(--navbar-height-md)]">
+        <Outlet />
+      </main>
+      <Footer />
+    </>
+  );
 }
 
 function NotFoundComponent(): ReactNode {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center px-4">
-      <p className="text-8xl font-display font-bold text-[var(--color-primary)] mb-4">
+    <div className="flex min-h-[60vh] flex-col items-center justify-center px-[var(--page-padding-x)]">
+      <p className="mb-4 text-8xl font-display font-bold text-[var(--color-primary)]">
         404
       </p>
-      <h1 className="text-2xl md:text-3xl font-display font-semibold text-[var(--color-text)] mb-4">
+      <h1 className="mb-4 text-center text-2xl font-display font-semibold text-[var(--color-text)] md:text-3xl">
         Pagina non trovata
       </h1>
-      <p className="text-[var(--color-text-secondary)] mb-8 text-center max-w-md leading-relaxed">
+      <p className="mb-8 max-w-md text-center leading-relaxed text-[var(--color-text-secondary)]">
         La pagina che stai cercando non esiste o è stata spostata.
       </p>
-      <Link
-        to="/"
-        className="inline-flex items-center justify-center rounded-md bg-[var(--color-primary)] px-6 py-3 text-sm font-medium text-[var(--color-primary-foreground)] transition-colors hover:bg-[var(--color-primary-dark)]"
+      <a
+        href="/"
+        className="inline-flex h-12 items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-primary)] px-6 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-dark)]"
       >
         Torna alla homepage
-      </Link>
-    </main>
+      </a>
+    </div>
   );
 }

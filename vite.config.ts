@@ -9,6 +9,10 @@ export default defineConfig({
     port: 3000,
   },
   resolve: {
+    alias: {
+      "motion/react": "framer-motion",
+      motion: "framer-motion",
+    },
     conditions: ["browser", "development", "node"],
     tsconfigPaths: true,
   },

@@ -163,6 +163,16 @@ model DataRequest {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// Stripe — idempotency (required when modules.payments === true)
+// ═══════════════════════════════════════════════════════════════════════════
+
+model StripeEvent {
+  id          String   @id // Stripe event ID (evt_xxx)
+  type        String
+  processedAt DateTime
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // E-commerce business models — Calzoleria Prevenzano
 // ═══════════════════════════════════════════════════════════════════════════
 
