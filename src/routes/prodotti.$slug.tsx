@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
-import { m } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { ShoppingBag, Minus, Plus, Check, ChevronRight, Loader2 } from "lucide-react";
+import { cn } from "~/lib/utils/cn";
 
 interface ProductImage {
   id: string;
@@ -51,6 +52,49 @@ interface ProductListItem {
   category: { id: string; name: string; slug: string } | null;
 }
 
+interface OptionGroup {
+  type: string;
+  label: string;
+  options: Array<{
+    id: string;
+    label: string;
+    color: string | null;
+    priceModifier: number;
+    stock: number;
+  }>;
+}
+
+function parseOptionGroups(variants: ProductVariant[]): OptionGroup[] {
+  const groupMap = new Map<string, OptionGroup>();
+
+  for (const v of variants) {
+    const separator = v.name.includes(" - ") ? " - " : "/";
+    const parts = v.name.split(separator);
+    const groupType = parts.length > 1 ? parts[0].trim().toLowerCase() : "variante";
+    const optionLabel = parts.length > 1 ? parts.slice(1).join(separator).trim() : v.name.trim();
+
+    const displayLabel = capitalizeFirst(groupType);
+
+    if (!groupMap.has(groupType)) {
+      groupMap.set(groupType, { type: groupType, label: displayLabel, options: [] });
+    }
+
+    groupMap.get(groupType)!.options.push({
+      id: v.id,
+      label: optionLabel,
+      color: v.color,
+      priceModifier: v.price ? Number(v.price) : 0,
+      stock: v.stock,
+    });
+  }
+
+  return Array.from(groupMap.values());
+}
+
+function capitalizeFirst(s: string): string {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
 export const Route = createFileRoute("/prodotti/$slug")({
   component: ProdottoPage,
 });
@@ -61,7 +105,7 @@ function ProdottoPage(): ReactNode {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
+  const [selectedOptions, setSelectedOptions] = useState<Map<string, string>>(new Map());
   const [quantity, setQuantity] = useState(1);
   const [cartStatus, setCartStatus] = useState<"idle" | "loading" | "success">("idle");
 
@@ -73,8 +117,13 @@ function ProdottoPage(): ReactNode {
       const json = await res.json();
       if (json.ok) {
         setProduct(json.data);
-        if (json.data.variants.length === 1) {
-          setSelectedVariantId(json.data.variants[0].id);
+        if (json.data.variants.length > 0) {
+          const groups = parseOptionGroups(json.data.variants);
+          const initial = new Map<string, string>();
+          for (const g of groups) {
+            if (g.options.length > 0) initial.set(g.type, g.options[0].id);
+          }
+          setSelectedOptions(initial);
         }
       } else {
         setNotFound(true);
@@ -102,17 +151,61 @@ function ProdottoPage(): ReactNode {
     fetchRelated();
   }, []);
 
+  const optionGroups = useMemo(
+    () => (product ? parseOptionGroups(product.variants) : []),
+    [product],
+  );
+
+  const selectedVariantId = useMemo(() => {
+    if (optionGroups.length === 0) return null;
+    if (optionGroups.length === 1) {
+      return selectedOptions.get(optionGroups[0].type) ?? optionGroups[0].options[0]?.id ?? null;
+    }
+    const match = product?.variants.find((v) =>
+      optionGroups.every((g) => selectedOptions.get(g.type) === v.id)
+    );
+    return match?.id ?? null;
+  }, [selectedOptions, optionGroups, product]);
+
   const selectedVariant = product?.variants.find((v) => v.id === selectedVariantId) ?? null;
-  const effectivePrice = selectedVariant?.price ?? product?.price ?? 0;
+
+  const priceBreakdown = useMemo(() => {
+    const base = product?.price ?? 0;
+    let optionsTotal = 0;
+    for (const g of optionGroups) {
+      const selectedId = selectedOptions.get(g.type);
+      if (selectedId) {
+        const opt = g.options.find((o) => o.id === selectedId);
+        if (opt) optionsTotal += opt.priceModifier;
+      }
+    }
+    return { base, optionsTotal, total: base + optionsTotal };
+  }, [product, optionGroups, selectedOptions]);
+
   const effectiveStock = selectedVariant ? selectedVariant.stock : (product?.stock ?? 0);
 
   const stockStatus = effectiveStock === 0
-    ? { label: "Esaurito", color: "text-[var(--color-destructive)]" }
+    ? { label: "Esaurito", color: "text-[var(--color-destructive)]", bg: "bg-red-50" }
     : effectiveStock <= 3
-      ? { label: `Ultimi ${effectiveStock} pezzi`, color: "text-amber-600" }
-      : { label: "Disponibile", color: "text-green-600" };
+      ? { label: `Ultimi ${effectiveStock} pezzi`, color: "text-amber-700", bg: "bg-amber-50" }
+      : { label: "Disponibile", color: "text-green-700", bg: "bg-green-50" };
 
-  const canAddToCart = product && !product.variants.length || selectedVariantId !== null;
+  const allGroupsSelected = optionGroups.length === 0 || optionGroups.every((g) => selectedOptions.has(g.type));
+  const canAddToCart = product && !product.variants.length || allGroupsSelected;
+
+  const handleSelectOption = (groupType: string, optionId: string) => {
+    setSelectedOptions((prev) => new Map(prev).set(groupType, optionId));
+
+    if (product) {
+      const variant = product.variants.find((v) => v.id === optionId);
+      if (variant?.color && product.images.length > 0) {
+        const colorMatch = product.images.findIndex(
+          (img) => img.alt?.toLowerCase().includes(variant.color!.toLowerCase()),
+        );
+        if (colorMatch >= 0) setSelectedImageIndex(colorMatch);
+      }
+    }
+  };
 
   const handleAddToCart = async () => {
     if (!product || !canAddToCart || effectiveStock === 0 || cartStatus === "loading") return;
@@ -173,14 +266,8 @@ function ProdottoPage(): ReactNode {
     );
   }
 
-  const sizes = [...new Set(product.variants.filter((v) => v.size).map((v) => v.size!))];
-  const colorsForSize = sizes.length > 0 && selectedVariant
-    ? product.variants.filter((v) => v.size === selectedVariant.size)
-    : product.variants;
-
   return (
     <>
-      {/* Breadcrumb */}
       <div className="bg-[var(--color-surface)] py-4">
         <div className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
           <nav className="text-sm text-[var(--color-text-muted)]" aria-label="Breadcrumb">
@@ -204,46 +291,49 @@ function ProdottoPage(): ReactNode {
         </div>
       </div>
 
-      {/* Product detail */}
       <section className="bg-[var(--color-background)] py-[var(--section-padding-y)]">
         <div className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
-            {/* Images */}
             <m.div
               initial={{ opacity: 0, x: -24 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
             >
-              {/* Main image */}
               <div className="relative aspect-square overflow-hidden rounded-[var(--radius-lg)] bg-[var(--color-muted)]">
-                {product.images.length > 0 ? (
-                  <img
-                    src={product.images[selectedImageIndex].url}
-                    alt={product.images[selectedImageIndex].alt ?? product.name}
-                    className="h-full w-full object-cover"
-                    width={product.images[selectedImageIndex].width ?? 800}
-                    height={product.images[selectedImageIndex].height ?? 800}
+                <AnimatePresence mode="wait">
+                  <m.img
+                    key={selectedImageIndex}
+                    src={product.images[selectedImageIndex]?.url}
+                    alt={product.images[selectedImageIndex]?.alt ?? product.name}
+                    className="absolute inset-0 h-full w-full object-cover"
+                    width={product.images[selectedImageIndex]?.width ?? 800}
+                    height={product.images[selectedImageIndex]?.height ?? 800}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
                   />
-                ) : (
+                </AnimatePresence>
+                {!product.images.length && (
                   <div className="flex h-full w-full items-center justify-center text-[var(--color-text-muted)]">
                     <ShoppingBag className="h-16 w-16" />
                   </div>
                 )}
               </div>
 
-              {/* Thumbnails */}
               {product.images.length > 1 && (
-                <div className="mt-4 flex gap-3 overflow-x-auto">
+                <div className="mt-4 flex gap-3 overflow-x-auto pb-1">
                   {product.images.map((img, i) => (
                     <button
                       key={img.id}
                       type="button"
                       onClick={() => setSelectedImageIndex(i)}
-                      className={`h-20 w-20 shrink-0 overflow-hidden rounded-[var(--radius-md)] border-2 transition-colors ${
+                      className={cn(
+                        "h-20 w-20 shrink-0 overflow-hidden rounded-[var(--radius-md)] border-2 transition-all duration-200",
                         i === selectedImageIndex
-                          ? "border-[var(--color-primary)]"
-                          : "border-transparent opacity-70 hover:opacity-100"
-                      }`}
+                          ? "border-[var(--color-primary)] ring-2 ring-[var(--color-primary)]/20"
+                          : "border-transparent opacity-60 hover:opacity-100",
+                      )}
                     >
                       <img
                         src={img.url}
@@ -257,7 +347,6 @@ function ProdottoPage(): ReactNode {
               )}
             </m.div>
 
-            {/* Product info */}
             <m.div
               className="flex flex-col"
               initial={{ opacity: 0, x: 24 }}
@@ -274,22 +363,55 @@ function ProdottoPage(): ReactNode {
                 {product.name}
               </h1>
 
-              {/* Price */}
-              <div className="mt-4 flex items-center gap-3">
-                <p className="text-[var(--text-2xl)] font-semibold text-[var(--color-primary)]">
-                  €{effectivePrice.toFixed(2)}
-                </p>
-                {product.compareAtPrice && (
-                  <p className="text-lg text-[var(--color-text-muted)] line-through">
-                    €{product.compareAtPrice.toFixed(2)}
-                  </p>
+              <div className="mt-4 space-y-1">
+                <div className="flex items-center gap-3">
+                  <AnimatePresence mode="wait">
+                    <m.p
+                      key={priceBreakdown.total}
+                      className="text-[var(--text-2xl)] font-semibold text-[var(--color-primary)]"
+                      initial={{ opacity: 0, y: -4 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 4 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      EUR {priceBreakdown.total.toFixed(2)}
+                    </m.p>
+                  </AnimatePresence>
+                  {product.compareAtPrice && (
+                    <p className="text-lg text-[var(--color-text-muted)] line-through">
+                      EUR {product.compareAtPrice.toFixed(2)}
+                    </p>
+                  )}
+                </div>
+                {priceBreakdown.optionsTotal > 0 && (
+                  <m.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    className="space-y-0.5 overflow-hidden"
+                  >
+                    <div className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
+                      <span>Prezzo base: EUR {priceBreakdown.base.toFixed(2)}</span>
+                    </div>
+                    {optionGroups.map((g) => {
+                      const selectedId = selectedOptions.get(g.type);
+                      const opt = selectedId ? g.options.find((o) => o.id === selectedId) : null;
+                      if (!opt || opt.priceModifier === 0) return null;
+                      return (
+                        <p key={g.type} className="text-sm text-[var(--color-text-secondary)]">
+                          + {opt.label}: EUR {opt.priceModifier.toFixed(2)}
+                        </p>
+                      );
+                    })}
+                  </m.div>
                 )}
               </div>
 
-              {/* Stock */}
-              <p className={`mt-3 text-sm font-medium ${stockStatus.color}`}>
-                {stockStatus.label}
-              </p>
+              <div className="mt-3">
+                <span className={cn("inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium", stockStatus.bg, stockStatus.color)}>
+                  <span className={cn("h-1.5 w-1.5 rounded-full", effectiveStock === 0 ? "bg-red-500" : effectiveStock <= 3 ? "bg-amber-500" : "bg-green-500")} />
+                  {stockStatus.label}
+                </span>
+              </div>
 
               {product.shortDescription && (
                 <p className="mt-4 leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
@@ -299,83 +421,73 @@ function ProdottoPage(): ReactNode {
 
               <hr className="stitch-divider stitch-divider--left my-6" />
 
-              {/* Variant selector */}
-              {product.variants.length > 0 && (
-                <div className="space-y-4">
-                  {sizes.length > 0 && (
-                    <div>
-                      <span className="mb-2 block text-sm font-medium text-[var(--color-text)]">Taglia</span>
-                      <div className="flex flex-wrap gap-2">
-                        {sizes.map((size) => (
-                          <button
-                            key={size}
-                            type="button"
-                            onClick={() => {
-                              const firstForSize = product.variants.find((v) => v.size === size);
-                              if (firstForSize) setSelectedVariantId(firstForSize.id);
-                            }}
-                            className={`flex h-10 items-center justify-center rounded-[var(--radius-md)] border px-4 text-sm font-medium transition-colors ${
-                              selectedVariant?.size === size
-                                ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-white"
-                                : "border-[var(--color-border)] text-[var(--color-text)] hover:border-[var(--color-primary)]"
-                            }`}
-                          >
-                            {size}
-                          </button>
-                        ))}
+              {optionGroups.length > 0 && (
+                <div className="space-y-5">
+                  {optionGroups.map((group) => {
+                    const selectedId = selectedOptions.get(group.type);
+                    return (
+                      <div key={group.type}>
+                        <span className="mb-2.5 block text-sm font-medium text-[var(--color-text)]">
+                          {group.label}
+                        </span>
+                        <div className="flex flex-wrap gap-2">
+                          {group.options.map((opt) => (
+                            <button
+                              key={opt.id}
+                              type="button"
+                              onClick={() => handleSelectOption(group.type, opt.id)}
+                              disabled={opt.stock === 0}
+                              className={cn(
+                                "flex items-center gap-2 rounded-[var(--radius-md)] border px-3 py-2.5 text-sm font-medium transition-all duration-200",
+                                selectedId === opt.id
+                                  ? "border-[var(--color-primary)] bg-[var(--color-primary)]/5 shadow-sm"
+                                  : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-primary)] hover:text-[var(--color-text)]",
+                                opt.stock === 0 && "cursor-not-allowed opacity-40",
+                              )}
+                            >
+                              {opt.color && (
+                                <span
+                                  className="inline-block h-4 w-4 rounded-full border border-[var(--color-border)]"
+                                  style={{ backgroundColor: opt.color }}
+                                />
+                              )}
+                              <span>{opt.label}</span>
+                              {opt.priceModifier > 0 && (
+                                <span className={cn(
+                                  "text-xs font-semibold",
+                                  selectedId === opt.id ? "text-[var(--color-primary)]" : "text-[var(--color-text-muted)]",
+                                )}>
+                                  +EUR {opt.priceModifier.toFixed(2)}
+                                </span>
+                              )}
+                            </button>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  )}
-
-                  <div>
-                    <span className="mb-2 block text-sm font-medium text-[var(--color-text)]">
-                      {sizes.length > 0 ? "Colore" : "Variante"}
-                    </span>
-                    <div className="flex flex-wrap gap-2">
-                      {colorsForSize.map((variant) => (
-                        <button
-                          key={variant.id}
-                          type="button"
-                          onClick={() => setSelectedVariantId(variant.id)}
-                          className={`flex items-center gap-2 rounded-[var(--radius-md)] border px-3 py-2 text-sm transition-colors ${
-                            selectedVariantId === variant.id
-                              ? "border-[var(--color-primary)] bg-[var(--color-primary)]/5 text-[var(--color-text)]"
-                              : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-primary)]"
-                          }`}
-                        >
-                          <span
-                            className="inline-block h-4 w-4 rounded-full border border-[var(--color-border)]"
-                            style={{ backgroundColor: variant.color ?? "#999" }}
-                          />
-                          {variant.color && <span>{variant.color}</span>}
-                          {variant.size && !sizes.length && <span>{variant.size}</span>}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
+                    );
+                  })}
                 </div>
               )}
 
-              {/* Quantity + Add to cart */}
               <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
                 <div className="flex items-center rounded-[var(--radius-md)] border border-[var(--color-border)]">
                   <button
                     type="button"
                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
                     disabled={quantity <= 1}
-                    className="flex h-10 w-10 items-center justify-center text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text)] disabled:opacity-40"
+                    className="flex h-12 w-12 items-center justify-center text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text)] disabled:opacity-40"
                     aria-label="Diminuisci quantità"
                   >
                     <Minus className="h-4 w-4" />
                   </button>
-                  <span className="flex h-10 w-12 items-center justify-center text-sm font-medium text-[var(--color-text)]">
+                  <span className="flex h-12 w-12 items-center justify-center text-sm font-semibold text-[var(--color-text)]">
                     {quantity}
                   </span>
                   <button
                     type="button"
                     onClick={() => setQuantity((q) => Math.min(10, q + 1))}
                     disabled={quantity >= 10}
-                    className="flex h-10 w-10 items-center justify-center text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text)] disabled:opacity-40"
+                    className="flex h-12 w-12 items-center justify-center text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text)] disabled:opacity-40"
                     aria-label="Aumenta quantità"
                   >
                     <Plus className="h-4 w-4" />
@@ -386,11 +498,12 @@ function ProdottoPage(): ReactNode {
                   type="button"
                   disabled={!canAddToCart || effectiveStock === 0 || cartStatus === "loading"}
                   onClick={handleAddToCart}
-                  className={`inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-[var(--radius-md)] px-8 text-sm font-medium transition-colors duration-[var(--transition-base)] disabled:cursor-not-allowed disabled:opacity-60 ${
+                  className={cn(
+                    "inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-[var(--radius-md)] px-8 text-sm font-medium transition-all duration-[var(--transition-base)] disabled:cursor-not-allowed disabled:opacity-60",
                     cartStatus === "success"
                       ? "bg-green-600 text-white"
-                      : "bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)]"
-                  }`}
+                      : "bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)] hover:shadow-lg",
+                  )}
                 >
                   {cartStatus === "loading" && <Loader2 className="h-4 w-4 animate-spin" />}
                   {cartStatus === "success" ? (
@@ -404,12 +517,16 @@ function ProdottoPage(): ReactNode {
                     <>
                       <ShoppingBag className="h-4 w-4" />
                       Aggiungi al carrello
+                      {priceBreakdown.optionsTotal > 0 && (
+                        <span className="ml-1 text-[var(--color-primary-light)]">
+                          EUR {priceBreakdown.total.toFixed(2)}
+                        </span>
+                      )}
                     </>
                   )}
                 </button>
               </div>
 
-              {/* Materials */}
               {product.materials && (
                 <>
                   <hr className="stitch-divider stitch-divider--left my-6" />
@@ -422,7 +539,6 @@ function ProdottoPage(): ReactNode {
                 </>
               )}
 
-              {/* Description */}
               {product.description && (
                 <>
                   <hr className="stitch-divider stitch-divider--left my-6" />
@@ -439,7 +555,6 @@ function ProdottoPage(): ReactNode {
         </div>
       </section>
 
-      {/* Related products */}
       {relatedProducts.length > 0 && (
         <ScrollAnimatedSection className="bg-[var(--color-surface)] py-[var(--section-padding-y)]">
           <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
@@ -504,11 +619,11 @@ function RelatedProductCard({ product }: { product: ProductListItem }) {
         </h3>
         <div className="mt-2 flex items-center gap-2">
           <p className="text-sm font-medium text-[var(--color-primary)]">
-            €{product.price.toFixed(2)}
+            EUR {product.price.toFixed(2)}
           </p>
           {product.compareAtPrice && (
             <p className="text-sm text-[var(--color-text-muted)] line-through">
-              €{product.compareAtPrice.toFixed(2)}
+              EUR {product.compareAtPrice.toFixed(2)}
             </p>
           )}
         </div>
