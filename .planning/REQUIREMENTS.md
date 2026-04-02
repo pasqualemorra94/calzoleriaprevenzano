@@ -159,22 +159,88 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DATA-01 through DATA-05 | Phase 1 | Pending |
-| AUTH-01 through AUTH-09 | Phase 2 | Pending |
-| CATL-01 through CATL-09 | Phase 3 | Pending |
-| CONF-01 through CONF-09 | Phase 4 | Pending |
-| CART-01 through CART-08 | Phase 5 | Pending |
-| PAYM-01 through PAYM-11 | Phase 6 | Pending |
-| CONT-01 through CONT-05 | Phase 7 | Pending |
-| COMP-01 through COMP-07 | Phase 7 | Pending |
-| SEOP-01 through SEOP-06 | Phase 7 | Pending |
-| ADMN-01 through ADMN-07 | Phase 9 | Pending |
+| DATA-01 | Phase 1 | Pending |
+| DATA-02 | Phase 1 | Pending |
+| DATA-03 | Phase 1 | Pending |
+| DATA-04 | Phase 1 | Pending |
+| DATA-05 | Phase 1 | Pending |
+| AUTH-01 | Phase 2 | Pending |
+| AUTH-02 | Phase 2 | Pending |
+| AUTH-03 | Phase 2 | Pending |
+| AUTH-04 | Phase 2 | Pending |
+| AUTH-09 | Phase 2 | Pending |
+| CATL-01 | Phase 3 | Pending |
+| CATL-02 | Phase 3 | Pending |
+| CATL-03 | Phase 3 | Pending |
+| CATL-04 | Phase 3 | Pending |
+| CATL-05 | Phase 3 | Pending |
+| CATL-06 | Phase 3 | Pending |
+| CATL-07 | Phase 3 | Pending |
+| CATL-08 | Phase 3 | Pending |
+| CATL-09 | Phase 3 | Pending |
+| CONF-01 | Phase 4 | Pending |
+| CONF-02 | Phase 4 | Pending |
+| CONF-03 | Phase 4 | Pending |
+| CONF-04 | Phase 4 | Pending |
+| CONF-05 | Phase 4 | Pending |
+| CONF-06 | Phase 4 | Pending |
+| CONF-07 | Phase 4 | Pending |
+| CONF-08 | Phase 4 | Pending |
+| CONF-09 | Phase 4 | Pending |
+| CART-01 | Phase 5 | Pending |
+| CART-02 | Phase 5 | Pending |
+| CART-03 | Phase 5 | Pending |
+| CART-04 | Phase 5 | Pending |
+| CART-05 | Phase 5 | Pending |
+| CART-06 | Phase 5 | Pending |
+| CART-07 | Phase 5 | Pending |
+| CART-08 | Phase 5 | Pending |
+| PAYM-01 | Phase 6 | Pending |
+| PAYM-02 | Phase 6 | Pending |
+| PAYM-03 | Phase 6 | Pending |
+| PAYM-04 | Phase 6 | Pending |
+| PAYM-05 | Phase 6 | Pending |
+| PAYM-06 | Phase 6 | Pending |
+| PAYM-07 | Phase 6 | Pending |
+| PAYM-08 | Phase 6 | Pending |
+| PAYM-09 | Phase 6 | Pending |
+| PAYM-10 | Phase 6 | Pending |
+| PAYM-11 | Phase 6 | Pending |
+| CONT-01 | Phase 7 | Pending |
+| CONT-02 | Phase 7 | Pending |
+| CONT-03 | Phase 7 | Pending |
+| CONT-04 | Phase 7 | Pending |
+| CONT-05 | Phase 7 | Pending |
+| AUTH-05 | Phase 8 | Pending |
+| AUTH-06 | Phase 8 | Pending |
+| AUTH-07 | Phase 8 | Pending |
+| AUTH-08 | Phase 8 | Pending |
+| ADMN-01 | Phase 9 | Pending |
+| ADMN-02 | Phase 9 | Pending |
+| ADMN-03 | Phase 9 | Pending |
+| ADMN-04 | Phase 9 | Pending |
+| ADMN-05 | Phase 9 | Pending |
+| ADMN-06 | Phase 9 | Pending |
+| ADMN-07 | Phase 9 | Pending |
+| COMP-01 | Phase 10 | Pending |
+| COMP-02 | Phase 10 | Pending |
+| COMP-03 | Phase 10 | Pending |
+| COMP-04 | Phase 10 | Pending |
+| COMP-05 | Phase 10 | Pending |
+| COMP-06 | Phase 10 | Pending |
+| COMP-07 | Phase 10 | Pending |
+| SEOP-01 | Phase 10 | Pending |
+| SEOP-02 | Phase 10 | Pending |
+| SEOP-03 | Phase 10 | Pending |
+| SEOP-04 | Phase 10 | Pending |
+| SEOP-05 | Phase 10 | Pending |
+| SEOP-06 | Phase 10 | Pending |
 
 **Coverage:**
-- v1 requirements: 58 total
-- Mapped to phases: 58
+- v1 requirements: 76 total
+- Mapped to phases: 76
 - Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-02*
-*Last updated: 2026-04-02 after initial definition*
+*Last updated: 2026-04-02 after roadmap creation*
