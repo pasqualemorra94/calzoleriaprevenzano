@@ -1,0 +1,225 @@
+/* ═══════════════════════════════════════════════════════════════
+   Calzoleria Prevenzano — Design Tokens
+   Fonte di verita: site-output/design-direction.md
+   ═══════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Typography ─────────────────────────────────────────── */
+  --font-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-body: "DM Sans", system-ui, -apple-system, sans-serif;
+
+  /* ── Colors ────────────────────────────────────────────── */
+  /* Primary — Cuoio caldo napoletano */
+  --color-primary: #8B5E3C;
+  --color-primary-light: #A67B56;
+  --color-primary-dark: #6B4226;
+  --color-primary-foreground: #FFFFFF;
+
+  /* Accent — Oro/ottone */
+  --color-accent: #C9A961;
+  --color-accent-light: #D4BA7F;
+  --color-accent-foreground: #2D2D2D;
+
+  /* Background — Bianco caldo / crema parchment */
+  --color-background: #FAF6F1;
+  --color-foreground: #2D2D2D;
+
+  /* Text */
+  --color-text: #2D2D2D;
+  --color-text-secondary: #5A5A5A;
+  --color-text-muted: #8A8A8A;
+
+  /* Muted — Sabbia calda */
+  --color-muted: #E8E0D6;
+  --color-muted-foreground: #5A5A5A;
+
+  /* Surface — Bianco puro */
+  --color-surface: #FFFFFF;
+  --color-surface-foreground: #2D2D2D;
+
+  /* Border */
+  --color-border: #DDD5CA;
+  --color-border-light: #EBE6DF;
+
+  /* Destructive */
+  --color-destructive: #DC2626;
+  --color-destructive-foreground: #FFFFFF;
+
+  /* ── 🧬 DNA: Stitch Lines (Golden Thread) ─────────────── */
+  --stitch-color: #C9A961;
+  --stitch-width: 1px;
+  --stitch-length: 120px;
+
+  /* ── Spacing Scale ─────────────────────────────────────── */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+  --space-4xl: 6rem;
+  --space-5xl: 8rem;
+
+  /* ── Border Radius ─────────────────────────────────────── */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-full: 9999px;
+
+  /* ── Shadows ───────────────────────────────────────────── */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.04);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.03);
+  --shadow-card-hover: 0 10px 25px -3px rgb(139 94 60 / 0.12), 0 4px 6px -4px rgb(139 94 60 / 0.06);
+
+  /* ── Typography Scale (Fluid) ──────────────────────────── */
+  --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+  --text-sm: clamp(0.875rem, 0.8rem + 0.375vw, 1rem);
+  --text-base: clamp(1rem, 0.925rem + 0.375vw, 1.125rem);
+  --text-lg: clamp(1.125rem, 1rem + 0.625vw, 1.25rem);
+  --text-xl: clamp(1.25rem, 1rem + 1.25vw, 1.5rem);
+  --text-2xl: clamp(1.5rem, 1.1rem + 2vw, 2rem);
+  --text-3xl: clamp(1.875rem, 1.2rem + 3.375vw, 2.5rem);
+  --text-4xl: clamp(2.25rem, 1.25rem + 5vw, 3.5rem);
+  --text-5xl: clamp(3rem, 1.5rem + 7.5vw, 4.5rem);
+  --text-6xl: clamp(3.5rem, 1.5rem + 10vw, 6rem);
+  --text-7xl: clamp(4rem, 1rem + 15vw, 7rem);
+
+  /* Font weights */
+  --font-light: 300;
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+  /* Letter spacing */
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.025em;
+  --tracking-wider: 0.05em;
+  --tracking-widest: 0.1em;
+
+  /* Line height */
+  --leading-none: 1;
+  --leading-tight: 1.15;
+  --leading-snug: 1.3;
+  --leading-normal: 1.6;
+  --leading-relaxed: 1.75;
+
+  /* ── Layout ────────────────────────────────────────────── */
+  --page-max-width: 80rem;
+  --page-padding-x: clamp(1rem, 0.5rem + 2.5vw, 4rem);
+  --section-padding-y: clamp(3rem, 2rem + 5vw, 6rem);
+  --section-padding-y-lg: clamp(4rem, 2rem + 7.5vw, 8rem);
+  --navbar-height: 4rem;
+  --navbar-height-md: 5rem;
+
+  /* ── Transitions ───────────────────────────────────────── */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 350ms cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-reveal: 550ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ── Z-Index Scale ─────────────────────────────────────── */
+  --z-base: 0;
+  --z-above: 10;
+  --z-sticky: 40;
+  --z-navbar: 50;
+  --z-overlay: 60;
+  --z-modal: 70;
+  --z-toast: 80;
+}
+
+/* ── Base Resets ─────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--color-text);
+  background-color: var(--color-background);
+  min-height: 100dvh;
+}
+
+/* ── Typography Utilities ────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: var(--font-semibold);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-text);
+}
+
+h1 { font-size: var(--text-5xl); }
+h2 { font-size: var(--text-4xl); }
+h3 { font-size: var(--text-3xl); }
+h4 { font-size: var(--text-2xl); }
+h5 { font-size: var(--text-xl); }
+h6 { font-size: var(--text-lg); }
+
+/* ── 🧬 DNA Component: Stitch Divider ───────────────────── */
+.stitch-divider {
+  display: block;
+  width: var(--stitch-length);
+  height: var(--stitch-width);
+  background-color: var(--stitch-color);
+  margin: var(--space-xl) auto;
+  border: none;
+}
+
+.stitch-divider--left {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.stitch-divider--right {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+/* ── Skip Navigation (Accessibility) ─────────────────────── */
+.skip-to-content {
+  position: absolute;
+  top: -100%;
+  left: var(--space-md);
+  z-index: var(--z-toast);
+  padding: var(--space-sm) var(--space-lg);
+  background-color: var(--color-primary);
+  color: var(--color-primary-foreground);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  transition: top var(--transition-fast);
+}
+
+.skip-to-content:focus {
+  top: var(--space-md);
+}
+
+/* ── Focus Visible ───────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ── Selection ───────────────────────────────────────────── */
+::selection {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-foreground);
+}

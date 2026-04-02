@@ -1,0 +1,58 @@
+{
+  "nav": {
+    "sandali": "Sandali",
+    "accessori": "Accessori",
+    "pelletteria": "Pelletteria",
+    "laBottega": "La Bottega",
+    "contatti": "Contatti",
+    "ricerca": "Cerca prodotti",
+    "wishlist": "Lista desideri",
+    "carrello": "Carrello"
+  },
+  "footer": {
+    "shop": "Shop",
+    "informazioni": "Informazioni",
+    "termini": "Termini e Condizioni",
+    "personalizzazione": "Personalizzazione",
+    "spedizioni": "Spedizioni",
+    "resi": "Resi e Rimborsi",
+    "privacy": "Privacy Policy",
+    "cookie": "Cookie Policy",
+    "terminiServizio": "Termini di Servizio",
+    "dirittoRecesso": "Diritto di Recesso"
+  },
+  "cookie": {
+    "title": "Consenso Cookie",
+    "description": "Utilizziamo cookie tecnici necessari al funzionamento del sito e, previo tuo consenso, cookie di profilazione per migliorare la tua esperienza. Per saperne di più consulta la nostra",
+    "accept": "Accetta tutti",
+    "reject": "Rifiuta"
+  },
+  "common": {
+    "tornaHome": "Torna alla homepage",
+    "ricarica": "Ricarica la pagina",
+    "errore": "Qualcosa è andato storto",
+    "erroreDesc": "Si è verificato un errore imprevisto. Riprova o contattaci se il problema persiste.",
+    "nonTrovata": "Pagina non trovata",
+    "nonTrovataDesc": "La pagina che stai cercando non esiste o è stata spostata.",
+    "acquista": "Acquista ora",
+    "esplora": "Esplora",
+    "scopri": "Scopri",
+    "scopriDiPiu": "Scopri di più",
+    "vediTutti": "Vedi tutti",
+    "caricaAltro": "Carica altro"
+  },
+  "error": {
+    "404": {
+      "title": "Pagina non trovata",
+      "description": "La pagina che stai cercando non esiste o è stata spostata."
+    },
+    "500": {
+      "title": "Errore del server",
+      "description": "Qualcosa è andato storto. Stiamo lavorando per risolvere il problema."
+    },
+    "generic": {
+      "title": "Errore imprevisto",
+      "description": "Si è verificato un errore. Riprova o contattaci se il problema persiste."
+    }
+  }
+}

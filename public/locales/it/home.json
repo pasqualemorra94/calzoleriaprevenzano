@@ -1,0 +1,49 @@
+{
+  "meta": {
+    "title": "Calzoleria Prevenzano — Sandali Artigianali Fatti a Mano",
+    "description": "Sandali artigianali personalizzati fatti a mano a Napoli dal 1965. Pelle italiana, tradizione e qualità artigianale. Spedizione gratuita sopra i 99€."
+  },
+  "hero": {
+    "headline": "",
+    "subtitle": "",
+    "primaryCta": "",
+    "secondaryCta": ""
+  },
+  "categories": {
+    "title": "",
+    "sandali": { "name": "Sandali Artigianali", "description": "", "cta": "" },
+    "accessori": { "name": "Accessori Calzoleria", "description": "", "cta": "" },
+    "pelletteria": { "name": "Pelletteria", "description": "", "cta": "" }
+  },
+  "customization": {
+    "title": "",
+    "subtitle": "",
+    "steps": {
+      "1": { "title": "", "description": "" },
+      "2": { "title": "", "description": "" },
+      "3": { "title": "", "description": "" }
+    }
+  },
+  "products": {
+    "title": "",
+    "tabs": { "new": "", "bestseller": "" }
+  },
+  "bottega": {
+    "title": "",
+    "subtitle": "",
+    "description": "",
+    "cta": ""
+  },
+  "trust": {
+    "items": []
+  },
+  "testimonials": {
+    "title": ""
+  },
+  "newsletter": {
+    "title": "",
+    "subtitle": "",
+    "placeholder": "",
+    "cta": ""
+  }
+}
