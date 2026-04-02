@@ -1,8 +1,6 @@
 // ─── Calzoleria Prevenzano — Database Seed ─────────────────────────────────
-// ⛔ DO NOT use bcrypt directly — admin user creation will be replaced by
-//   auth.register() once the secure-auth-sdk is integrated (compliance phase).
-//   For now, the password is stored as a placeholder argon2id hash.
-//   After compliance integration, re-run: pnpm db:reset && pnpm db:seed
+// ⛔ Admin passwords are hashed with scrypt (same as auth.server.ts).
+//   To generate a new hash: run the one-liner in the script below.
 // ───────────────────────────────────────────────────────────────────────────
 
 import { PrismaClient } from "@prisma/client";
@@ -11,10 +9,9 @@ const prisma = new PrismaClient();
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@calzoleriaprevenzano.it";
 
-// Argon2id hash of "Admin123!@#" — generated via secure-auth-sdk
-// This will be replaced by auth.register() during compliance phase
+// Scrypt hash of "Admin123!@#" — generated via: node -e "const {randomBytes,scrypt}=require('crypto');const{promisify}=require('util');(async()=>{const s=randomBytes(16).toString('hex');const k=(await promisify(scrypt)('Admin123!@#',Buffer.from(s,'hex'),64)).toString('hex');console.log(s+':'+k)})()"
 const ADMIN_PASSWORD_HASH =
-  "$argon2id$v=19$m=65536,t=3,p=4$c2VlZF9zYWx0X2hlcmU$REPLACE_WITH_REAL_HASH_AFTER_SDK_SETUP";
+  "f1fbf1c89327d02170861d7b9f666bc7:4bc45af5dfdae11935d31b7a5cd9ddce8294b2537a50c2baa319eb19f9959066f17185e0745c15fdd6f4d660d187dee8324856dd934a759c9b3538db74b1124a";
 
 // ─── Seed Data Types ─────────────────────────────────────────────────────
 
@@ -586,7 +583,7 @@ async function seedProducts(categoryMap: Map<string, string>): Promise<number> {
 
   for (const prod of products) {
     const categoryId = categoryMap.get(prod.categorySlug) ?? null;
-    const created = await prisma.product.upsert({
+    await prisma.product.upsert({
       where: { slug: prod.slug },
       update: {
         name: prod.name,
@@ -698,7 +695,7 @@ async function seedDiscountCodes(): Promise<number> {
 }
 
 async function seedAdminUser(): Promise<void> {
-  console.log("👤 Seeding admin user...");
+  console.log("👤 Seeding admin users...");
 
   const existingAdmin = await prisma.authUser.findUnique({
     where: { email: ADMIN_EMAIL },
@@ -715,9 +712,33 @@ async function seedAdminUser(): Promise<void> {
       },
     });
     console.log(`   ✅ Admin user created (${ADMIN_EMAIL})`);
-    console.log("   ⚠️  Password hash is a placeholder — run db:reset after compliance setup");
   } else {
-    console.log("   ✅ Admin user already exists");
+    await prisma.authUser.update({
+      where: { email: ADMIN_EMAIL },
+      data: { passwordHash: ADMIN_PASSWORD_HASH },
+    });
+    console.log(`   ✅ Admin user updated (${ADMIN_EMAIL})`);
+  }
+
+  // Second admin: pasquale@calzoleriaprevenzano.it
+  const SECOND_ADMIN_EMAIL = "pasquale@calzoleriaprevenzano.it";
+  const existingSecond = await prisma.authUser.findUnique({
+    where: { email: SECOND_ADMIN_EMAIL },
+  });
+
+  if (!existingSecond) {
+    await prisma.authUser.create({
+      data: {
+        email: SECOND_ADMIN_EMAIL,
+        name: "Pasquale",
+        passwordHash: ADMIN_PASSWORD_HASH,
+        role: "admin",
+        emailVerified: true,
+      },
+    });
+    console.log(`   ✅ Second admin created (${SECOND_ADMIN_EMAIL})`);
+  } else {
+    console.log(`   ✅ Second admin already exists (${SECOND_ADMIN_EMAIL})`);
   }
 }
 

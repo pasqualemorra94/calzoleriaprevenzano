@@ -1,5 +1,5 @@
 import type { Variants } from "framer-motion";
-import { useReducedMotion } from "framer-motion";
+import { useState, useEffect } from "react";
 
 /** Fade in from bottom — standard entrance for sections */
 export const fadeInUp: Variants = {
@@ -89,12 +89,28 @@ export const pageTransition: Variants = {
   exit: { opacity: 0, y: -12, transition: { duration: 0.2, ease: "easeIn" } },
 };
 
-/** Safe wrapper: returns reduced variants when OS requests it */
+const REDUCED_VARIANTS: Variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0 } },
+};
+
+/**
+ * Safe wrapper: returns reduced variants when OS requests it.
+ *
+ * SSR-safe: on the server, `window.matchMedia` doesn't exist,
+ * so we always return full variants during SSR. The reduced-motion
+ * check is deferred to a `useEffect` to avoid hydration mismatch.
+ */
 export function useSafeVariants(variants: Variants): Variants {
-  const reduced = useReducedMotion();
-  if (!reduced) return variants;
-  return {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { duration: 0 } },
-  };
+  const [reduced, setReduced] = useState(false);
+
+  useEffect(() => {
+    const mql = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduced(mql.matches);
+    const handler = (e: MediaQueryListEvent) => setReduced(e.matches);
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, []);
+
+  return reduced ? REDUCED_VARIANTS : variants;
 }

@@ -1,4 +1,4 @@
-import { motion, useInView } from "motion/react";
+import { m, useInView } from "motion/react";
 import { useRef } from "react";
 import type { ReactNode } from "react";
 import type { Variants } from "framer-motion";
@@ -30,7 +30,7 @@ export function ScrollAnimatedSection({
   const safeVariants = useSafeVariants(variants);
 
   return (
-    <motion.div
+    <m.div
       ref={ref}
       variants={safeVariants}
       initial="hidden"
@@ -39,6 +39,6 @@ export function ScrollAnimatedSection({
       style={delay ? { transitionDelay: `${delay}s` } : undefined}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }

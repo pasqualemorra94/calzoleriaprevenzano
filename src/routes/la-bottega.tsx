@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
 import { fadeInUp } from "~/lib/animation-variants";
-import { motion, useInView } from "motion/react";
+import { m, useInView } from "motion/react";
 import { useRef } from "react";
 
 export const Route = createFileRoute("/la-bottega")({
@@ -27,7 +27,7 @@ function LaBottegaPage(): ReactNode {
       {/* Page hero */}
       <section className="bg-[var(--color-surface)] py-[var(--section-padding-y-lg)]">
         <div className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
-          <motion.div
+          <m.div
             className="mx-auto max-w-3xl text-center"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -39,7 +39,7 @@ function LaBottegaPage(): ReactNode {
             <h1 className="font-display text-[var(--text-4xl)] font-semibold tracking-tight md:text-[var(--text-5xl)]">
               {ABOUT_COPY.headline}
             </h1>
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -85,7 +85,7 @@ function BottegaInfoBlock(): ReactNode {
   return (
     <section ref={ref} className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
       <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
-        <motion.img
+        <m.img
           src="/images/bottega-interna.webp"
           alt="L'interno della bottega Calzoleria Prevenzano"
           className="aspect-[4/3] w-full rounded-[var(--radius-lg)] object-cover"
@@ -96,7 +96,7 @@ function BottegaInfoBlock(): ReactNode {
           animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -32 }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         />
-        <motion.div
+        <m.div
           initial={{ opacity: 0, x: 32 }}
           animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 32 }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
@@ -118,7 +118,7 @@ function BottegaInfoBlock(): ReactNode {
               <dd className="text-sm text-[var(--color-text-secondary)]">04590921211</dd>
             </div>
           </dl>
-        </motion.div>
+        </m.div>
       </div>
     </section>
   );

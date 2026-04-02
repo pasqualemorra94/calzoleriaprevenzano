@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
 import { fadeInUp } from "~/lib/animation-variants";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 
 export function NewsletterSection() {
   const [email, setEmail] = useState("");
@@ -32,7 +32,7 @@ export function NewsletterSection() {
   return (
     <ScrollAnimatedSection className="bg-[var(--color-muted)] py-[var(--section-padding-y)]" variants={fadeInUp}>
       <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
-        <motion.div
+        <m.div
           className="mx-auto max-w-xl text-center"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -81,7 +81,7 @@ export function NewsletterSection() {
           <p className="mt-3 text-xs text-[var(--color-text-muted)]">
             Inviamo al massimo 1 email al mese. Puoi cancellarti in qualsiasi momento.
           </p>
-        </motion.div>
+        </m.div>
 
         {/* DNA: Stitch divider */}
         <hr className="stitch-divider mt-12" />

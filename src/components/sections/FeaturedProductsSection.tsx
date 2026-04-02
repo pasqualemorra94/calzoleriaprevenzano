@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
 import { StaggeredGrid, StaggeredItem } from "~/components/ui/StaggeredGrid";
-import { motion, AnimatePresence } from "motion/react";
+import { m, AnimatePresence } from "motion/react";
 import { ArrowRight, ShoppingBag, Heart } from "lucide-react";
 
 type ProductTab = "nuove" | "bestseller";
@@ -46,7 +46,7 @@ const PRODUCTS: Record<ProductTab, Product[]> = {
 
 function ProductCard({ product }: { product: Product }) {
   return (
-    <motion.div
+    <m.div
       className="group"
       whileHover={{ y: -4 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
@@ -96,7 +96,7 @@ function ProductCard({ product }: { product: Product }) {
           €{product.price.toFixed(2)}
         </p>
       </div>
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -138,7 +138,7 @@ export function FeaturedProductsSection() {
 
         {/* Tab description */}
         <AnimatePresence mode="wait">
-          <motion.p
+          <m.p
             key={activeTab}
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -147,12 +147,12 @@ export function FeaturedProductsSection() {
             className="mx-auto mb-12 max-w-2xl text-center text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]"
           >
             {currentTabMeta?.description}
-          </motion.p>
+          </m.p>
         </AnimatePresence>
 
         {/* Product grid — 2 col mobile, 3 col tablet, 4 col desktop */}
         <AnimatePresence mode="wait">
-          <motion.div
+          <m.div
             key={activeTab}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -166,7 +166,7 @@ export function FeaturedProductsSection() {
                 </StaggeredItem>
               ))}
             </StaggeredGrid>
-          </motion.div>
+          </m.div>
         </AnimatePresence>
 
         {/* View all CTA */}

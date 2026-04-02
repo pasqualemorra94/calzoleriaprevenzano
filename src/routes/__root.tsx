@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { APP_CONFIG } from "~/lib/constants/app";
+import { MotionProvider } from "~/providers/MotionProvider";
 import { Navbar } from "~/components/shared/Navbar";
 import { Footer } from "~/components/shared/Footer";
 import { StructuredData } from "~/components/seo/StructuredData";
@@ -50,7 +51,7 @@ export const Route = createRootRoute({
       {
         rel: "preconnect",
         href: "https://fonts.bunny.net",
-        crossorigin: "",
+        crossOrigin: "",
       },
       {
         rel: "preload",
@@ -66,7 +67,6 @@ export const Route = createRootRoute({
         rel: "stylesheet",
         href: "https://fonts.bunny.net/css?family=cormorant-garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=dm-sans:ital,wght@0,400;0,500;0,600;1,400&display=swap",
       },
-      { rel: "stylesheet", href: "/design-tokens.css" },
       { rel: "stylesheet", href: appCss },
     ],
   }),
@@ -82,9 +82,6 @@ function RootDocument({ children }: { children: ReactNode }) {
         <HeadContent />
       </head>
       <body className="min-h-screen bg-[var(--color-background)] text-[var(--color-text)] antialiased">
-        <a href="#main-content" className="skip-to-content">
-          Vai al contenuto principale
-        </a>
         {children}
         <Scripts />
       </body>
@@ -94,14 +91,17 @@ function RootDocument({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   return (
-    <>
+    <MotionProvider>
+      <a href="#main-content" className="skip-to-content">
+        Vai al contenuto principale
+      </a>
       <StructuredData data={ORG_SCHEMA} />
       <Navbar />
       <main id="main-content" className="min-h-screen pt-[var(--navbar-height)] md:pt-[var(--navbar-height-md)]">
         <Outlet />
       </main>
       <Footer />
-    </>
+    </MotionProvider>
   );
 }
 

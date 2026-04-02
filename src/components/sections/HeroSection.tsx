@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import { heroStagger, heroStaggerItem } from "~/lib/animation-variants";
 import { APP_CONFIG } from "~/lib/constants/app";
 
@@ -28,38 +28,38 @@ export function HeroSection() {
       </div>
 
       {/* Content — bottom-left on desktop, centered on mobile */}
-      <motion.div
+      <m.div
         className="relative z-10 mx-auto w-full max-w-[var(--page-max-width)] px-[var(--page-padding-x)] pb-16 pt-32 text-center md:pb-24 md:pt-0 md:text-left"
         variants={heroStagger}
         initial="hidden"
         animate="visible"
       >
         {/* Eyebrow */}
-        <motion.span
+        <m.span
           variants={heroStaggerItem}
           className="mb-4 inline-block text-xs font-medium uppercase tracking-[var(--tracking-widest)] text-[var(--color-accent)]"
         >
           {APP_CONFIG.site.tagline}
-        </motion.span>
+        </m.span>
 
         {/* Headline — Cormorant Garamond, bottom-left */}
-        <motion.h1
+        <m.h1
           variants={heroStaggerItem}
           className="font-display text-[var(--text-5xl)] font-semibold leading-[var(--leading-tight)] tracking-tight text-white md:text-[var(--text-7xl)]"
         >
           {HERO_COPY.headline}
-        </motion.h1>
+        </m.h1>
 
         {/* Subtitle */}
-        <motion.p
+        <m.p
           variants={heroStaggerItem}
           className="mx-auto mt-6 max-w-xl text-[var(--text-base)] leading-[var(--leading-relaxed)] text-white/80 md:mx-0 md:text-[var(--text-lg)]"
         >
           {HERO_COPY.subtitle}
-        </motion.p>
+        </m.p>
 
         {/* CTAs */}
-        <motion.div
+        <m.div
           variants={heroStaggerItem}
           className="mt-8 flex flex-col items-center gap-4 sm:flex-row md:justify-start"
         >
@@ -75,8 +75,8 @@ export function HeroSection() {
           >
             {HERO_COPY.secondaryCta}
           </a>
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
 
       {/* 🧬 DNA: Golden stitch line at bottom of hero */}
       <div className="absolute bottom-0 left-1/2 z-10 h-[var(--stitch-width)] w-[var(--stitch-length)] -translate-x-1/2 bg-[var(--color-accent)] md:left-0 md:translate-x-0 md:ml-[var(--page-padding-x)]" />

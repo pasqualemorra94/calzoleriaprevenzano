@@ -92,7 +92,6 @@ export function TestimonialsSection() {
           ))}
         </StaggeredGrid>
 
-}
       </section>
     </ScrollAnimatedSection>
   );

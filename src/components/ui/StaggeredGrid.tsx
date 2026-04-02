@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import type { ReactNode } from "react";
 import { staggerContainer, staggerItem } from "~/lib/animation-variants";
 import { useSafeVariants } from "~/lib/animation-variants";
@@ -12,7 +12,7 @@ export function StaggeredGrid({ children, className }: StaggeredGridProps): Reac
   const safeContainer = useSafeVariants(staggerContainer);
 
   return (
-    <motion.div
+    <m.div
       className={className}
       variants={safeContainer}
       initial="hidden"
@@ -20,7 +20,7 @@ export function StaggeredGrid({ children, className }: StaggeredGridProps): Reac
       viewport={{ once: true, amount: 0.1 }}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -28,8 +28,8 @@ export function StaggeredItem({ children, className }: StaggeredGridProps): Reac
   const safeItem = useSafeVariants(staggerItem);
 
   return (
-    <motion.div variants={safeItem} className={className}>
+    <m.div variants={safeItem} className={className}>
       {children}
-    </motion.div>
+    </m.div>
   );
 }

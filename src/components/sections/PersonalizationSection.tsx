@@ -1,6 +1,6 @@
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
 import { slideInLeft, slideInRight, fadeInUp } from "~/lib/animation-variants";
-import { motion, useInView } from "motion/react";
+import { m, useInView } from "motion/react";
 import { useRef } from "react";
 
 interface PersonalizationStep {
@@ -36,7 +36,7 @@ function StepCard({ step, index }: { step: PersonalizationStep; index: number })
   const variants = index % 2 === 0 ? slideInLeft : slideInRight;
 
   return (
-    <motion.div
+    <m.div
       ref={ref}
       variants={variants}
       initial="hidden"
@@ -60,7 +60,7 @@ function StepCard({ step, index }: { step: PersonalizationStep; index: number })
       <p className="mt-3 max-w-xs text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
         {step.description}
       </p>
-    </motion.div>
+    </m.div>
   );
 }
 

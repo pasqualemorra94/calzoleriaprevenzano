@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
 import { fadeInUp } from "~/lib/animation-variants";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 
 export const Route = createFileRoute("/guida-taglia")({
   component: GuidaTagliaPage,
@@ -33,7 +33,7 @@ function GuidaTagliaPage(): ReactNode {
       {/* Page hero */}
       <section className="bg-[var(--color-surface)] py-[var(--section-padding-y-lg)]">
         <div className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
-          <motion.div
+          <m.div
             className="mx-auto max-w-3xl text-center"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -45,7 +45,7 @@ function GuidaTagliaPage(): ReactNode {
             <h1 className="font-display text-[var(--text-4xl)] font-semibold tracking-tight md:text-[var(--text-5xl)]">
               Guida alla Taglia — Trova la misura perfetta
             </h1>
-          </motion.div>
+          </m.div>
         </div>
       </section>
 

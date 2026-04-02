@@ -1,5 +1,5 @@
 import { ScrollCounter } from "~/components/ui/ScrollCounter";
-import { motion, useInView } from "motion/react";
+import { m, useInView } from "motion/react";
 import { useRef } from "react";
 import { ShieldCheck, Truck, RotateCcw, CreditCard } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
@@ -42,7 +42,7 @@ function TrustCard({ item, index }: { item: TrustItem; index: number }) {
   const Icon = item.icon;
 
   return (
-    <motion.div
+    <m.div
       ref={ref}
       initial={{ opacity: 0, y: 16 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
@@ -74,7 +74,7 @@ function TrustCard({ item, index }: { item: TrustItem; index: number }) {
       <p className="mt-1 text-xs leading-relaxed text-white/60 md:text-sm">
         {item.description}
       </p>
-    </motion.div>
+    </m.div>
   );
 }
 
@@ -91,7 +91,6 @@ export function TrustStripSection() {
           ))}
         </div>
 
-}
         <hr className="mx-auto mt-8 h-[var(--stitch-width)] w-[var(--stitch-length)] border-0 bg-[var(--color-accent)]/40" />
       </div>
     </section>

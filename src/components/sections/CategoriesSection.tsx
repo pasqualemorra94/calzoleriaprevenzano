@@ -1,7 +1,7 @@
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
 import { StaggeredGrid, StaggeredItem } from "~/components/ui/StaggeredGrid";
 import { ArrowRight } from "lucide-react";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 
 interface Category {
   title: string;
@@ -42,7 +42,7 @@ const CATEGORIES: Category[] = [
 
 function CategoryCard({ category }: { category: Category }) {
   return (
-    <motion.a
+    <m.a
       href={category.href}
       className="group relative block overflow-hidden rounded-[var(--radius-lg)]"
       whileHover={{ y: -4 }}
@@ -78,7 +78,7 @@ function CategoryCard({ category }: { category: Category }) {
 
       {/* 🧬 DNA: Stitch border frame */}
       <div className="pointer-events-none absolute inset-0 rounded-[var(--radius-lg)] border border-[var(--color-accent)]/0 transition-colors duration-[var(--transition-base)] group-hover:border-[var(--color-accent)]/30" />
-    </motion.a>
+    </m.a>
   );
 }
 

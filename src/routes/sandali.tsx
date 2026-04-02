@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
 import { StaggeredGrid, StaggeredItem } from "~/components/ui/StaggeredGrid";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import { Search, SlidersHorizontal, ShoppingBag, Heart, X } from "lucide-react";
 
 interface Product {
@@ -45,7 +45,7 @@ function SandaliPage(): ReactNode {
       {/* Page header */}
       <section className="bg-[var(--color-surface)] py-[var(--section-padding-y)]">
         <div className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
@@ -59,7 +59,7 @@ function SandaliPage(): ReactNode {
             <p className="mt-4 max-w-2xl text-[var(--text-lg)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
               La collezione completa — dal classico infradito al modello gioiello. Ogni sandalo è personalizzabile nei materiali e nei dettagli.
             </p>
-          </motion.div>
+          </m.div>
         </div>
       </section>
 
@@ -152,7 +152,7 @@ function SandaliPage(): ReactNode {
 
 function ProductCard({ product }: { product: Product }) {
   return (
-    <motion.article
+    <m.article
       className="group"
       whileHover={{ y: -4 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
@@ -209,6 +209,6 @@ function ProductCard({ product }: { product: Product }) {
           €{product.price.toFixed(2)}
         </p>
       </div>
-    </motion.article>
+    </m.article>
   );
 }

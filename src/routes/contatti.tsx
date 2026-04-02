@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
-import { motion } from "motion/react";
+import { m } from "motion/react";
 import { MapPin, Phone, MessageCircle, Mail, Loader2, Check } from "lucide-react";
 
 export const Route = createFileRoute("/contatti")({
@@ -64,7 +64,7 @@ function ContattiPage(): ReactNode {
       {/* Page hero */}
       <section className="bg-[var(--color-surface)] py-[var(--section-padding-y-lg)]">
         <div className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
-          <motion.div
+          <m.div
             className="mx-auto max-w-3xl text-center"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -76,7 +76,7 @@ function ContattiPage(): ReactNode {
             <p className="mt-4 text-[var(--text-lg)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
               {CONTACT_INFO.body}
             </p>
-          </motion.div>
+          </m.div>
         </div>
       </section>
 

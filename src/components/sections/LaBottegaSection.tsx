@@ -1,6 +1,6 @@
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
 import { slideInLeft, slideInRight } from "~/lib/animation-variants";
-import { motion, useInView } from "motion/react";
+import { m, useInView } from "motion/react";
 import { useRef } from "react";
 import { ArrowRight } from "lucide-react";
 
@@ -27,7 +27,7 @@ export function LaBottegaSection() {
       >
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[2fr_3fr] lg:gap-16">
           {/* Left — Text (40%) */}
-          <motion.div
+          <m.div
             variants={slideInLeft}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
@@ -62,10 +62,10 @@ export function LaBottegaSection() {
               {BORTEGA_COPY.cta}
               <ArrowRight className="h-4 w-4" />
             </a>
-          </motion.div>
+          </m.div>
 
           {/* Right — Image (60%) with 🧬 DNA: gentle scale-reveal */}
-          <motion.div
+          <m.div
             variants={slideInRight}
             initial="hidden"
             animate={isInView ? "visible" : "hidden"}
@@ -90,7 +90,7 @@ export function LaBottegaSection() {
               <p className="font-display text-2xl font-bold text-[var(--color-primary)]">70+</p>
               <p className="text-xs font-medium text-[var(--color-text-muted)]">Anni di tradizione</p>
             </div>
-          </motion.div>
+          </m.div>
         </div>
       </section>
     </ScrollAnimatedSection>
