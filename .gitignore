@@ -1,0 +1,19 @@
+# AI Site Generator Agents
+site-generator-agents/
+
+# Agent outputs
+site-output/
+research-output/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+
+# Build
+dist/
+build/
+.cache/
