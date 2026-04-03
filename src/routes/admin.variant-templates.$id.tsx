@@ -105,92 +105,108 @@ export default function VariantTemplateEditPage(): ReactNode {
 
   if (loading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
+      <div className="flex h-64 items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-[var(--color-primary)]" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="border-b border-gray-200 bg-white px-6 py-4">
-        <div className="mx-auto flex max-w-4xl items-center gap-4">
-          <Link
-            to="/admin/variant-templates"
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100"
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Link>
-          <h1 className="text-sm font-medium text-gray-900">
-            {isNew ? "Nuovo template" : "Modifica template"}
-          </h1>
+    <div className="space-y-5">
+      {/* Breadcrumb-like back + title */}
+      <div className="flex items-center gap-3">
+        <Link
+          to="/admin/variant-templates"
+          className="flex h-8 w-8 items-center justify-center rounded-md text-gray-500 transition-colors hover:bg-gray-100"
+          aria-label="Torna alla lista template"
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </Link>
+        <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
+          {isNew ? "Nuovo template" : "Modifica template"}
+        </span>
+      </div>
+
+      {/* Basic info */}
+      <div className="rounded-lg bg-white p-5 shadow-sm ring-1 ring-gray-950/5">
+        <div className="space-y-4">
+          <div>
+            <label htmlFor="tpl-name" className="mb-1.5 block text-xs font-medium text-gray-700">
+              Nome *
+            </label>
+            <input
+              id="tpl-name"
+              type="text"
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value);
+                if (!slug) setSlug(generateSlug(e.target.value));
+              }}
+              placeholder="es. Gioiello Samantha Colori"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]/20"
+            />
+          </div>
+          <div>
+            <label htmlFor="tpl-slug" className="mb-1.5 block text-xs font-medium text-gray-700">
+              Slug *
+            </label>
+            <input
+              id="tpl-slug"
+              type="text"
+              value={slug}
+              onChange={(e) => setSlug(e.target.value)}
+              placeholder="gioiello-samantha-colori"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm font-mono focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]/20"
+            />
+          </div>
+          <div>
+            <label htmlFor="tpl-desc" className="mb-1.5 block text-xs font-medium text-gray-700">
+              Descrizione
+            </label>
+            <textarea
+              id="tpl-desc"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Note opzionali su questo template..."
+              rows={2}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]/20"
+            />
+          </div>
         </div>
       </div>
 
-      <div className="mx-auto max-w-4xl space-y-6 px-6 py-8">
-        {/* Basic info */}
-        <div className="rounded-lg bg-white p-6 shadow-sm">
-          <div className="space-y-4">
+      {/* Variant Builder */}
+      <div className="rounded-lg bg-white p-5 shadow-sm ring-1 ring-gray-950/5">
+        <VariantBuilder
+          value={config}
+          onChange={setConfig}
+        />
+      </div>
 
-            <div>
-              <label htmlFor="tpl-name" className="mb-1.5 block text-sm font-medium text-gray-700">
-                Nome *
-              </label>
-              <input
-                id="tpl-name"
-                type="text"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                  if (!slug) setSlug(generateSlug(e.target.value));
-                }}
-                placeholder="es. Gioiello Samantha Colori"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]/20"
-              />
-            </div>
-            <div>
-              <label htmlFor="tpl-slug" className="mb-1.5 block text-sm font-medium text-gray-700">
-                Slug *
-              </label>
-              <input
-                id="tpl-slug"
-                type="text"
-                value={slug}
-                onChange={(e) => setSlug(e.target.value)}
-                placeholder="gioiello-samantha-colori"
-                className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm font-mono focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]/20"
-              />
-            </div>
-            <div>
-              <label htmlFor="tpl-desc" className="mb-1.5 block text-sm font-medium text-gray-700">
-                Descrizione
-              </label>
-              <textarea
-                id="tpl-desc"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Note opzionali su questo template..."
-                rows={2}
-                className="w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]/20"
-              />
-            </div>
-          </div>
+      {/* Error */}
+      {error && (
+        <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          <AlertCircle className="h-4 w-4 shrink-0" />
+          {error}
+        </div>
+      )}
+
+      {/* Actions */}
+      <div className="flex items-center justify-between">
+        <div className="rounded-lg bg-gray-50 p-3 text-[11px] leading-relaxed text-gray-500">
+          <p className="font-medium tracking-wider text-gray-400">Come usare questo template</p>
+          <ol className="mt-1 ml-4 list-decimal space-y-0.5">
+            <li>Definisci i gruppi di opzioni (colore, tacco, taglia…)</li>
+            <li>Per ogni opzione colore, puoi aggiungere un URL immagine</li>
+            <li>Salva il template</li>
+            <li>Vai su un prodotto → sezione varianti → &quot;Applica Template&quot;</li>
+          </ol>
         </div>
 
-        {/* Variant Builder */}
-        <div className="rounded-lg bg-white p-6 shadow-sm">
-          <VariantBuilder
-            value={config}
-            onChange={setConfig}
-          />
-        </div>
-
-        {/* Actions */}
-        <div className="flex items-center justify-end gap-3">
+        <div className="flex items-center gap-2">
           <Link
             to="/admin/variant-templates"
-            className="rounded-lg border border-gray-200 px-6 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
+            className="rounded-md border border-gray-200 px-4 py-2 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-50"
           >
             Annulla
           </Link>
@@ -198,45 +214,25 @@ export default function VariantTemplateEditPage(): ReactNode {
             type="button"
             disabled={saving}
             onClick={handleSave}
-            className="inline-flex items-center gap-2 rounded-lg bg-[var(--color-primary)] px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-dark)] disabled:opacity-60"
+            className="inline-flex items-center gap-2 rounded-md bg-[var(--color-primary)] px-4 py-2 text-xs font-medium text-white transition-colors hover:bg-[var(--color-primary-dark)] disabled:opacity-60"
           >
             {saving ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" />
-                Salvataggio...
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                Salvataggio…
               </>
             ) : success ? (
               <>
-                <CheckCircle className="h-4 w-4" />
+                <CheckCircle className="h-3.5 w-3.5" />
                 Salvato!
               </>
             ) : (
               <>
-                <Save className="h-4 w-4" />
-                Salva Template
+                <Save className="h-3.5 w-3.5" />
+                Salva
               </>
             )}
           </button>
-        </div>
-
-        {/* Error */}
-        {error && (
-          <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-            <AlertCircle className="h-4 w-4 shrink-0" />
-            {error}
-          </div>
-        )}
-
-        {/* Usage hint */}
-        <div className="rounded-lg bg-gray-50 p-4 text-xs text-gray-500">
-          <p className="text-xs font-medium tracking-wider text-gray-400">Come usare questo template</p>
-          <ol className="mt-1 ml-4 list-decimal space-y-0.5">
-            <li>Definisci i gruppi di opzioni (colore, tacco, taglia...)</li>
-            <li>Per ogni opzione colore, puoi aggiungere un URL immagine</li>
-            <li>Salva il template</li>
-            <li>Vai su un prodotto → sezione varianti → &quot;Applica Template&quot;</li>
-            <li>Il template viene copiato sul prodotto — puoi personalizzarlo senza modificare il template</li>
-          </ol>
         </div>
       </div>
     </div>
