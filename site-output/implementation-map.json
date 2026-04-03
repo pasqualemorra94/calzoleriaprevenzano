@@ -1,5 +1,5 @@
 {
-  "version": 16,
+  "version": 17,
   "generatedAt": "2026-04-02T00:00:00.000Z",
   "projectSlug": "calzoleria-prevenzano",
   "framework": "tanstack",
@@ -7,56 +7,360 @@
   "authProvider": "better-auth",
   "routes": {
     "pages": [
-      { "path": "/", "file": "src/routes/index.tsx", "auth": "none", "type": "public" },
-      { "path": "/catalogo", "file": "src/routes/catalogo.tsx", "auth": "none", "type": "public" },
-      { "path": "/prodotti/$slug", "file": "src/routes/prodotti.$slug.tsx", "auth": "none", "type": "public" },
-      { "path": "/sandali", "file": "src/routes/sandali.tsx", "auth": "none", "type": "public" },
-      { "path": "/la-bottega", "file": "src/routes/la-bottega.tsx", "auth": "none", "type": "public" },
-      { "path": "/contatti", "file": "src/routes/contatti.tsx", "auth": "none", "type": "public" },
-      { "path": "/guida-taglia", "file": "src/routes/guida-taglia.tsx", "auth": "none", "type": "public" },
-      { "path": "/carrello", "file": "src/routes/carrello.tsx", "auth": "none", "type": "public" },
-      { "path": "/checkout", "file": "src/routes/checkout.tsx", "auth": "none", "type": "public" },
-      { "path": "/privacy", "file": "src/routes/privacy.tsx", "auth": "none", "type": "legal" },
-      { "path": "/cookie", "file": "src/routes/cookie.tsx", "auth": "none", "type": "legal" },
-      { "path": "/termini", "file": "src/routes/termini.tsx", "auth": "none", "type": "legal" },
-      { "path": "/auth/login", "file": "src/routes/auth/login.tsx", "auth": "none", "type": "auth" },
-      { "path": "/auth/register", "file": "src/routes/auth/register.tsx", "auth": "none", "type": "auth" },
-      { "path": "/auth/forgot-password", "file": "src/routes/auth/forgot-password.tsx", "auth": "none", "type": "auth" },
-      { "path": "/auth/reset-password", "file": "src/routes/auth/reset-password.tsx", "auth": "none", "type": "auth" },
-      { "path": "/admin", "file": "src/routes/admin.index.tsx", "auth": "admin", "type": "admin" },
-      { "path": "/admin/prodotti", "file": "src/routes/admin.prodotti.tsx", "auth": "admin", "type": "admin" },
-      { "path": "/admin/prodotti/$id", "file": "src/routes/admin.prodotti.$id.tsx", "auth": "admin", "type": "admin" },
-      { "path": "/admin/media", "file": "src/routes/admin.media.tsx", "auth": "admin", "type": "admin" },
-      { "path": "/admin/media/$id", "file": "src/routes/admin.media.$id.tsx", "auth": "admin", "type": "admin" },
-      { "path": "/admin/ordini", "file": "src/routes/admin.ordini.tsx", "auth": "admin", "type": "admin" },
-      { "path": "/admin/ordini/$id", "file": "src/routes/admin.ordini.$id.tsx", "auth": "admin", "type": "admin" }
+      {
+        "path": "/",
+        "file": "src/routes/index.tsx",
+        "auth": "none",
+        "type": "public"
+      },
+      {
+        "path": "/catalogo",
+        "file": "src/routes/catalogo.tsx",
+        "auth": "none",
+        "type": "public"
+      },
+      {
+        "path": "/prodotti/$slug",
+        "file": "src/routes/prodotti.$slug.tsx",
+        "auth": "none",
+        "type": "public"
+      },
+      {
+        "path": "/sandali",
+        "file": "src/routes/sandali.tsx",
+        "auth": "none",
+        "type": "public"
+      },
+      {
+        "path": "/la-bottega",
+        "file": "src/routes/la-bottega.tsx",
+        "auth": "none",
+        "type": "public"
+      },
+      {
+        "path": "/contatti",
+        "file": "src/routes/contatti.tsx",
+        "auth": "none",
+        "type": "public"
+      },
+      {
+        "path": "/guida-taglia",
+        "file": "src/routes/guida-taglia.tsx",
+        "auth": "none",
+        "type": "public"
+      },
+      {
+        "path": "/carrello",
+        "file": "src/routes/carrello.tsx",
+        "auth": "none",
+        "type": "public"
+      },
+      {
+        "path": "/checkout",
+        "file": "src/routes/checkout.tsx",
+        "auth": "none",
+        "type": "public"
+      },
+      {
+        "path": "/privacy",
+        "file": "src/routes/privacy.tsx",
+        "auth": "none",
+        "type": "legal"
+      },
+      {
+        "path": "/cookie",
+        "file": "src/routes/cookie.tsx",
+        "auth": "none",
+        "type": "legal"
+      },
+      {
+        "path": "/termini",
+        "file": "src/routes/termini.tsx",
+        "auth": "none",
+        "type": "legal"
+      },
+      {
+        "path": "/auth/login",
+        "file": "src/routes/auth/login.tsx",
+        "auth": "none",
+        "type": "auth"
+      },
+      {
+        "path": "/auth/register",
+        "file": "src/routes/auth/register.tsx",
+        "auth": "none",
+        "type": "auth"
+      },
+      {
+        "path": "/auth/forgot-password",
+        "file": "src/routes/auth/forgot-password.tsx",
+        "auth": "none",
+        "type": "auth"
+      },
+      {
+        "path": "/auth/reset-password",
+        "file": "src/routes/auth/reset-password.tsx",
+        "auth": "none",
+        "type": "auth"
+      },
+      {
+        "path": "/admin",
+        "file": "src/routes/admin.index.tsx",
+        "auth": "admin",
+        "type": "admin"
+      },
+      {
+        "path": "/admin/prodotti",
+        "file": "src/routes/admin.prodotti.tsx",
+        "auth": "admin",
+        "type": "admin"
+      },
+      {
+        "path": "/admin/prodotti/$id",
+        "file": "src/routes/admin.prodotti.$id.tsx",
+        "auth": "admin",
+        "type": "admin"
+      },
+      {
+        "path": "/admin/media",
+        "file": "src/routes/admin.media.tsx",
+        "auth": "admin",
+        "type": "admin"
+      },
+      {
+        "path": "/admin/media/$id",
+        "file": "src/routes/admin.media.$id.tsx",
+        "auth": "admin",
+        "type": "admin"
+      },
+      {
+        "path": "/admin/ordini",
+        "file": "src/routes/admin.ordini.tsx",
+        "auth": "admin",
+        "type": "admin"
+      },
+      {
+        "path": "/admin/ordini/$id",
+        "file": "src/routes/admin.ordini.$id.tsx",
+        "auth": "admin",
+        "type": "admin"
+      }
     ],
     "api": [
-      { "path": "/api/auth/*", "file": "src/routes/api/auth/$.ts", "methods": ["GET", "POST"], "auth": "better-auth" },
-      { "path": "/api/products", "file": "src/routes/api/products.ts", "methods": ["GET", "POST"], "auth": "POST=admin" },
-      { "path": "/api/products/$slug", "file": "src/routes/api/products.$slug.ts", "methods": ["GET"], "auth": "none" },
-      { "path": "/api/products/$slug/reviews", "file": "src/routes/api/products.$slug.reviews.ts", "methods": ["GET", "POST"], "auth": "POST=required" },
-      { "path": "/api/categories", "file": "src/routes/api/categories.ts", "methods": ["GET"], "auth": "none" },
-      { "path": "/api/cart", "file": "src/routes/api/cart.ts", "methods": ["GET", "POST"], "auth": "none" },
-      { "path": "/api/cart/items/$itemId", "file": "src/routes/api/cart.items.$itemId.ts", "methods": ["PATCH", "DELETE"], "auth": "none" },
-      { "path": "/api/orders", "file": "src/routes/api/orders.ts", "methods": ["GET"], "auth": "required" },
-      { "path": "/api/orders/$id", "file": "src/routes/api/orders.$id.ts", "methods": ["GET"], "auth": "required" },
-      { "path": "/api/checkout", "file": "src/routes/api/checkout.ts", "methods": ["POST"], "auth": "none" },
-      { "path": "/api/contact", "file": "src/routes/api/contact.ts", "methods": ["POST"], "auth": "none" },
-      { "path": "/api/newsletter", "file": "src/routes/api/newsletter.ts", "methods": ["POST"], "auth": "none" },
-      { "path": "/api/wishlist", "file": "src/routes/api/wishlist.ts", "methods": ["GET", "POST", "DELETE"], "auth": "required" },
-      { "path": "/api/webhooks/stripe", "file": "src/routes/api/webhooks/stripe.ts", "methods": ["POST"], "auth": "webhook" },
-      { "path": "/api/upload", "file": "src/routes/api/upload.ts", "methods": ["POST"], "auth": "admin" },
-      { "path": "/api/admin/stats", "file": "src/routes/api/admin/stats.ts", "methods": ["GET"], "auth": "admin" },
-      { "path": "/api/admin/products", "file": "src/routes/api/admin/products.ts", "methods": ["GET"], "auth": "admin" },
-      { "path": "/api/admin/products/$id", "file": "src/routes/api/admin/products.$id.ts", "methods": ["GET", "PUT", "DELETE"], "auth": "admin" },
-      { "path": "/api/admin/orders", "file": "src/routes/api/admin/orders.ts", "methods": ["GET"], "auth": "admin" },
-      { "path": "/api/admin/orders/$id", "file": "src/routes/api/admin/orders.$id.ts", "methods": ["GET", "PATCH"], "auth": "admin" },
-      { "path": "/api/admin/categories", "file": "src/routes/api/admin/categories.ts", "methods": ["GET", "POST"], "auth": "admin" },
-      { "path": "/api/admin/categories/$id", "file": "src/routes/api/admin/categories.$id.ts", "methods": ["PUT", "DELETE"], "auth": "admin" },
-      { "path": "/api/admin/media", "file": "src/routes/api/admin/media.ts", "methods": ["GET"], "auth": "admin" },
-      { "path": "/api/admin/media/$id", "file": "src/routes/api/admin/media.$id.ts", "methods": ["GET", "PUT", "DELETE"], "auth": "admin" },
-      { "path": "/api/site/media", "file": "src/routes/api/site/media.ts", "methods": ["GET"], "auth": "none" }
+      {
+        "path": "/api/auth/*",
+        "file": "src/routes/api/auth/$.ts",
+        "methods": [
+          "GET",
+          "POST"
+        ],
+        "auth": "better-auth"
+      },
+      {
+        "path": "/api/products",
+        "file": "src/routes/api/products.ts",
+        "methods": [
+          "GET",
+          "POST"
+        ],
+        "auth": "POST=admin"
+      },
+      {
+        "path": "/api/products/$slug",
+        "file": "src/routes/api/products.$slug.ts",
+        "methods": [
+          "GET"
+        ],
+        "auth": "none"
+      },
+      {
+        "path": "/api/products/$slug/reviews",
+        "file": "src/routes/api/products.$slug.reviews.ts",
+        "methods": [
+          "GET",
+          "POST"
+        ],
+        "auth": "POST=required"
+      },
+      {
+        "path": "/api/categories",
+        "file": "src/routes/api/categories.ts",
+        "methods": [
+          "GET"
+        ],
+        "auth": "none"
+      },
+      {
+        "path": "/api/cart",
+        "file": "src/routes/api/cart.ts",
+        "methods": [
+          "GET",
+          "POST"
+        ],
+        "auth": "none"
+      },
+      {
+        "path": "/api/cart/items/$itemId",
+        "file": "src/routes/api/cart.items.$itemId.ts",
+        "methods": [
+          "PATCH",
+          "DELETE"
+        ],
+        "auth": "none"
+      },
+      {
+        "path": "/api/orders",
+        "file": "src/routes/api/orders.ts",
+        "methods": [
+          "GET"
+        ],
+        "auth": "required"
+      },
+      {
+        "path": "/api/orders/$id",
+        "file": "src/routes/api/orders.$id.ts",
+        "methods": [
+          "GET"
+        ],
+        "auth": "required"
+      },
+      {
+        "path": "/api/checkout",
+        "file": "src/routes/api/checkout.ts",
+        "methods": [
+          "POST"
+        ],
+        "auth": "none"
+      },
+      {
+        "path": "/api/contact",
+        "file": "src/routes/api/contact.ts",
+        "methods": [
+          "POST"
+        ],
+        "auth": "none"
+      },
+      {
+        "path": "/api/newsletter",
+        "file": "src/routes/api/newsletter.ts",
+        "methods": [
+          "POST"
+        ],
+        "auth": "none"
+      },
+      {
+        "path": "/api/wishlist",
+        "file": "src/routes/api/wishlist.ts",
+        "methods": [
+          "GET",
+          "POST",
+          "DELETE"
+        ],
+        "auth": "required"
+      },
+      {
+        "path": "/api/webhooks/stripe",
+        "file": "src/routes/api/webhooks/stripe.ts",
+        "methods": [
+          "POST"
+        ],
+        "auth": "webhook"
+      },
+      {
+        "path": "/api/upload",
+        "file": "src/routes/api/upload.ts",
+        "methods": [
+          "POST"
+        ],
+        "auth": "admin"
+      },
+      {
+        "path": "/api/admin/stats",
+        "file": "src/routes/api/admin/stats.ts",
+        "methods": [
+          "GET"
+        ],
+        "auth": "admin"
+      },
+      {
+        "path": "/api/admin/products",
+        "file": "src/routes/api/admin/products.ts",
+        "methods": [
+          "GET"
+        ],
+        "auth": "admin"
+      },
+      {
+        "path": "/api/admin/products/$id",
+        "file": "src/routes/api/admin/products.$id.ts",
+        "methods": [
+          "GET",
+          "PUT",
+          "DELETE"
+        ],
+        "auth": "admin"
+      },
+      {
+        "path": "/api/admin/orders",
+        "file": "src/routes/api/admin/orders.ts",
+        "methods": [
+          "GET"
+        ],
+        "auth": "admin"
+      },
+      {
+        "path": "/api/admin/orders/$id",
+        "file": "src/routes/api/admin/orders.$id.ts",
+        "methods": [
+          "GET",
+          "PATCH"
+        ],
+        "auth": "admin"
+      },
+      {
+        "path": "/api/admin/categories",
+        "file": "src/routes/api/admin/categories.ts",
+        "methods": [
+          "GET",
+          "POST"
+        ],
+        "auth": "admin"
+      },
+      {
+        "path": "/api/admin/categories/$id",
+        "file": "src/routes/api/admin/categories.$id.ts",
+        "methods": [
+          "PUT",
+          "DELETE"
+        ],
+        "auth": "admin"
+      },
+      {
+        "path": "/api/admin/media",
+        "file": "src/routes/api/admin/media.ts",
+        "methods": [
+          "GET"
+        ],
+        "auth": "admin"
+      },
+      {
+        "path": "/api/admin/media/$id",
+        "file": "src/routes/api/admin/media.$id.ts",
+        "methods": [
+          "GET",
+          "PUT",
+          "DELETE"
+        ],
+        "auth": "admin"
+      },
+      {
+        "path": "/api/site/media",
+        "file": "src/routes/api/site/media.ts",
+        "methods": [
+          "GET"
+        ],
+        "auth": "none"
+      }
     ]
   },
   "components": {
@@ -104,13 +408,29 @@
   },
   "database": {
     "models": [
-      "user", "session", "account", "verification",
+      "user",
+      "session",
+      "account",
+      "verification",
       "AuditLog",
-      "ConsentLog", "DataRequest", "StripeEvent",
-      "Category", "Product", "ProductVariant", "ProductImage",
-      "Review", "Address", "Cart", "CartItem",
-      "Order", "OrderItem", "Payment", "Wishlist", "DiscountCode",
-      "VariantTemplate", "Media"
+      "ConsentLog",
+      "DataRequest",
+      "StripeEvent",
+      "Category",
+      "Product",
+      "ProductVariant",
+      "ProductImage",
+      "Review",
+      "Address",
+      "Cart",
+      "CartItem",
+      "Order",
+      "OrderItem",
+      "Payment",
+      "Wishlist",
+      "DiscountCode",
+      "VariantTemplate",
+      "Media"
     ]
   },
   "lib": {
@@ -197,11 +517,16 @@
   },
   "authConfig": {
     "provider": "better-auth",
-    "plugins": ["admin", "tanstackStartCookies"],
+    "plugins": [
+      "admin",
+      "tanstackStartCookies"
+    ],
     "emailAndPassword": true,
     "sessionExpiryDays": 30,
     "passwordHashing": "scrypt",
-    "adminRoles": ["admin"],
+    "adminRoles": [
+      "admin"
+    ],
     "auditLogging": "databaseHooks",
     "envSecret": "BETTER_AUTH_SECRET",
     "envUrl": "BETTER_AUTH_URL"
@@ -239,7 +564,8 @@
       "2026-04-03: Pagina /guida-taglia — aggiunta immagine tutorial, istruzioni dettagliate, layout 2 colonne, link WhatsApp",
       "2026-04-03: selectedOptions — CartItem/OrderItem con JSON selectedOptions per prodotti variantConfig, validazione prezzo con modifier, risoluzione display (label+value+color)",
       "2026-04-03: variantConfig seed integration — 81 config estratte in site-output/variant-configs.json, applyVariantConfigs() in seed.ts (niente più script manuale dopo reset DB)",
-      "2026-04-03: Product images — 79/81 sandali con immagini full-size (600x800+), 2 senza alternativa full-size (chiara, raffaella-maria)"
+      "2026-04-03: Product images — 79/81 sandali con immagini full-size (600x800+), 2 senza alternativa full-size (chiara, raffaella-maria)",
+      "2026-04-03: Fix mediaId association — ProductImage.mediaId ora correttamente salvato quando si seleziona dalla Media Library; VariantBuilder aggiunto pulsante MediaPicker per swatch imageUrl"
     ]
   }
 }

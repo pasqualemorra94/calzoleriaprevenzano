@@ -37,6 +37,7 @@ const productImageSchema = z.object({
   url: z.string().min(1),
   alt: z.string().nullable().optional(),
   sortOrder: z.number().int().min(0).default(0),
+  mediaId: z.string().nullable().optional(),
 });
 
 /** Create product (admin) */

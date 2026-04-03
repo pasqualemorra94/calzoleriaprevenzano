@@ -68,6 +68,7 @@ interface AdminProductDetail {
     url: string;
     alt: string | null;
     sortOrder: number;
+    mediaId: string | null;
   }>;
   variants: Array<{
     id: string;
@@ -310,11 +311,12 @@ export async function getAdminProduct(id: string): Promise<AdminProductDetail | 
     variantConfig: product.variantConfig as Record<string, unknown> | null,
     categoryId: product.categoryId,
     category: product.category,
-    images: product.images.map((img: { id: string; url: string; alt: string | null; sortOrder: number }) => ({
+    images: product.images.map((img: { id: string; url: string; alt: string | null; sortOrder: number; mediaId: string | null }) => ({
       id: img.id,
       url: img.url,
       alt: img.alt,
       sortOrder: img.sortOrder,
+      mediaId: img.mediaId,
     })),
     variants: product.variants.map((v: {
       id: string; name: string; color: string | null; size: string | null;
@@ -348,6 +350,7 @@ interface ImagePayload {
   url: string;
   alt?: string | null;
   sortOrder: number;
+  mediaId?: string | null;
 }
 
 interface ProductWithRelationsInput {
@@ -399,6 +402,7 @@ export async function adminCreateProduct(data: ProductWithRelationsInput) {
                 url: img.url,
                 alt: img.alt ?? null,
                 sortOrder: img.sortOrder,
+                mediaId: img.mediaId ?? null,
               })),
             },
           }
@@ -450,6 +454,7 @@ export async function adminUpdateProduct(id: string, data: Record<string, unknow
             url: img.url,
             alt: img.alt ?? null,
             sortOrder: img.sortOrder,
+            mediaId: img.mediaId ?? null,
           })),
         });
       }

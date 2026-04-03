@@ -936,3 +936,31 @@ Media Library (1.357 records total)
 2. **Checkout**: opzioni selezionate visibili con color swatches
 3. **Admin ordini**: dettaglio opzioni cliente per riga
 4. **Seed automatico**: `npx prisma db seed` applica 81 variantConfig senza script manuale
+
+---
+
+## 🐛 Bug fix: mediaId association Media Library ↔ Prodotti/Template | 2026-04-03
+
+### Bug risolti
+
+| # | Bug | Fix |
+|---|-----|-----|
+| 1 | `mediaId` mai salvato quando si seleziona immagine dalla MediaPicker nel form prodotto | Aggiunto `mediaId` a ProductImageForm, addImagesFromMedia, imagesPayload |
+| 2 | `mediaId` non presente nel validator Zod (`productImageSchema`) | Aggiunto campo `mediaId` nullable optional allo schema |
+| 3 | `mediaId` non gestito nel server (ImagePayload, createMany, getAdminProduct) | Aggiunto `mediaId` a ImagePayload, createMany in create/update, getAdminProduct response |
+| 4 | VariantBuilder: nessun MediaPicker per imageUrl degli swatch colore | Aggiunto pulsante FolderOpen per aprire MediaPicker (single select) su ogni opzione color-swatch |
+
+### File modificati
+
+| File | Modifica | Giustificazione |
+|------|----------|-----------------|
+| `src/lib/validators/products.ts` | Aggiunto `mediaId: z.string().nullable().optional()` a `productImageSchema` | Permettere al validator di accettare il campo mediaId |
+| `src/lib/admin.server.ts` | Aggiunto `mediaId` a `AdminProductDetail.images`, `ImagePayload`, `createMany` (create+update), `getAdminProduct` mapping | Server-side: persistere e restituire il FK alla Media Library |
+| `src/routes/admin.prodotti.$id.tsx` | Aggiunto `mediaId` a `ProductImageForm`, `emptyImage`, `addImagesFromMedia`, `fetchProduct` mapping, `imagesPayload` | Frontend: catturare e inviare il mediaId quando si seleziona dalla libreria |
+| `src/components/admin/VariantBuilder.tsx` | Aggiunto import MediaPicker/SelectedMedia/FolderOpen, stato `mediaPickerTarget`, handler `handleMediaSelect`, pulsante FolderOpen su ogni opzione color-swatch, render MediaPicker modale | Permettere di selezionare immagini dalla libreria per gli swatch colore nei template |
+
+### Impatto
+
+- Le immagini selezionate dalla Media Library nei prodotti sono ora correttamente collegate via `mediaId` FK
+- `deleteMedia` rileva correttamente l'uso in prodotti tramite `productImage.mediaId`
+- Il VariantBuilder permette ora di scegliere immagini dalla libreria (non solo URL manuale)

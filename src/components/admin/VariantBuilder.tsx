@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Plus, Trash2, GripVertical, Copy, ImageIcon, X, ChevronDown, ChevronUp, ChevronRight } from "lucide-react";
+import { Plus, Trash2, GripVertical, Copy, ImageIcon, X, ChevronDown, ChevronUp, ChevronRight, FolderOpen } from "lucide-react";
 import type { VariantConfig, VariantGroup, VariantOption, VariantControlType } from "~/lib/types/variant-config";
 import { VariantConfigSchema } from "~/lib/types/variant-config";
+import { MediaPicker } from "~/components/admin/MediaPicker";
+import type { SelectedMedia } from "~/components/admin/MediaPicker";
 
 const CONTROL_TYPE_LABELS: Record<VariantControlType, string> = {
   button: "Pulsanti",
@@ -399,6 +401,17 @@ function GroupEditor({
   onMoveOption: (optIndex: number, direction: -1 | 1) => void;
 }) {
   const [collapsed, setCollapsed] = useState(false);
+  const [mediaPickerTarget, setMediaPickerTarget] = useState<number | null>(null);
+
+  const handleMediaSelect = useCallback((items: SelectedMedia[]) => {
+    if (mediaPickerTarget === null || items.length === 0) {
+      setMediaPickerTarget(null);
+      return;
+    }
+    const selected = items[0];
+    onUpdateOption(mediaPickerTarget, { imageUrl: selected.url });
+    setMediaPickerTarget(null);
+  }, [mediaPickerTarget, onUpdateOption]);
 
   return (
     <div className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)]">
@@ -516,6 +529,15 @@ function GroupEditor({
                     <div className="mt-1.5 flex items-center gap-2 pl-1">
                       <ImageIcon className="h-3 w-3 shrink-0 text-[var(--color-text-muted)]" />
                       <input type="text" value={opt.imageUrl ?? ""} onChange={(e) => onUpdateOption(optIndex, { imageUrl: e.target.value || undefined })} placeholder="/images/products/colore-nero.jpg" className="h-6 flex-1 rounded border border-[var(--color-border)] bg-transparent px-2 text-[11px] font-mono text-[var(--color-text-muted)] focus:border-[var(--color-primary)] focus:outline-none" />
+                      <button
+                        type="button"
+                        onClick={() => setMediaPickerTarget(optIndex)}
+                        className="inline-flex h-6 items-center gap-1 rounded border border-[var(--color-border)] px-1.5 text-[10px] font-medium text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
+                        title="Scegli dalla libreria"
+                        aria-label="Scegli immagine dalla libreria"
+                      >
+                        <FolderOpen className="h-3 w-3" />
+                      </button>
                       {opt.imageUrl && (
                         <button type="button" onClick={() => onUpdateOption(optIndex, { imageUrl: undefined })} className="p-0.5 text-[var(--color-text-muted)] hover:text-[var(--color-destructive)]" aria-label="Rimuovi immagine">
                           <X className="h-3 w-3" />
@@ -529,6 +551,15 @@ function GroupEditor({
           </div>
         </>
       )}
+
+      {/* Media Picker for swatch image selection */}
+      <MediaPicker
+        open={mediaPickerTarget !== null}
+        onClose={() => setMediaPickerTarget(null)}
+        onSelect={handleMediaSelect}
+        multiple={false}
+        maxSelections={1}
+      />
     </div>
   );
 }

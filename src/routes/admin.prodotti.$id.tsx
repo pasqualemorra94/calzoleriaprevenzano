@@ -37,6 +37,7 @@ interface ProductImageForm {
   url: string;
   alt: string;
   sortOrder: number;
+  mediaId: string | null;
 }
 
 interface ProductForm {
@@ -98,6 +99,7 @@ const emptyImage: ProductImageForm = {
   url: "",
   alt: "",
   sortOrder: 0,
+  mediaId: null,
 };
 
 const OPTION_GROUP_LABELS: Record<string, string> = {
@@ -186,12 +188,13 @@ function AdminProductEditPage(): ReactNode {
       });
 
       const mappedImages: ProductImageForm[] = (p.images ?? []).map((img: {
-        id: string; url: string; alt: string | null; sortOrder: number;
+        id: string; url: string; alt: string | null; sortOrder: number; mediaId: string | null;
       }) => ({
         id: img.id,
         url: img.url,
         alt: img.alt ?? "",
         sortOrder: img.sortOrder,
+        mediaId: img.mediaId,
       }));
 
       setForm({
@@ -303,6 +306,7 @@ function AdminProductEditPage(): ReactNode {
         url: m.url,
         alt: m.alt ?? m.originalName,
         sortOrder: startOrder + i,
+        mediaId: m.id,
       }));
       return { ...prev, images: [...prev.images, ...newImages] };
     });
@@ -412,6 +416,7 @@ function AdminProductEditPage(): ReactNode {
           url: img.url,
           alt: img.alt || null,
           sortOrder: img.sortOrder,
+          mediaId: img.mediaId || null,
         }));
 
       const body = {
