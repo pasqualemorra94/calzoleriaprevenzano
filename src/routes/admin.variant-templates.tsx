@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { Plus, Edit, Trash2, Layers, ChevronRight, Search } from "lucide-react";
@@ -14,10 +14,25 @@ interface TemplateListItem {
 }
 
 export const Route = createFileRoute("/admin/variant-templates")({
-  component: VariantTemplatesListPage,
+  component: VariantTemplatesPage,
 });
 
-export default function VariantTemplatesListPage(): ReactNode {
+/**
+ * Layout wrapper: renders child route (edit page) or template list.
+ * Without <Outlet />, navigating to /admin/variant-templates/$id
+ * would show the list instead of the edit form.
+ */
+export default function VariantTemplatesPage(): ReactNode {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  if (pathname !== "/admin/variant-templates") {
+    return <Outlet />;
+  }
+
+  return <VariantTemplatesList />;
+}
+
+function VariantTemplatesList(): ReactNode {
   const [templates, setTemplates] = useState<TemplateListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
