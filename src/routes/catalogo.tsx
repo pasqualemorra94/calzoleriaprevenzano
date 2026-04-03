@@ -4,7 +4,12 @@ import { useState, useEffect, useCallback } from "react";
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
 import { StaggeredGrid, StaggeredItem } from "~/components/ui/StaggeredGrid";
 import { m } from "motion/react";
-import { Search, X, ChevronLeft, ChevronRight, ShoppingBag, Heart, SlidersHorizontal } from "lucide-react";
+import {
+  Search, X, ChevronLeft, ChevronRight, ChevronDown,
+  ShoppingBag, Heart, SlidersHorizontal, Filter,
+} from "lucide-react";
+
+// ── Types ──────────────────────────────────────────────────
 
 interface ProductListItem {
   id: string;
@@ -34,6 +39,8 @@ interface CategoryWithChildren {
 
 type SortOption = "newest" | "price_asc" | "price_desc" | "name";
 
+// ── Constants ──────────────────────────────────────────────
+
 const SORT_OPTIONS: { value: SortOption; label: string }[] = [
   { value: "newest", label: "Novità" },
   { value: "price_asc", label: "Prezzo crescente" },
@@ -42,6 +49,8 @@ const SORT_OPTIONS: { value: SortOption; label: string }[] = [
 ];
 
 const PER_PAGE = 12;
+
+// ── Helpers ────────────────────────────────────────────────
 
 function buildUrl(params: {
   page: number;
@@ -58,6 +67,18 @@ function buildUrl(params: {
   return `/api/products?${sp.toString()}`;
 }
 
+/** Check if a slug matches a parent or any of its children */
+function isCategoryActive(
+  slug: string,
+  activeCategory: string | undefined,
+  children: CategoryItem[],
+): boolean {
+  if (slug === activeCategory) return true;
+  return children.some((child) => child.slug === activeCategory);
+}
+
+// ── Route ──────────────────────────────────────────────────
+
 export const Route = createFileRoute("/catalogo")({
   component: CatalogoPage,
   validateSearch: (search: Record<string, string>): { category?: string; query?: string; page?: string; sort?: string } => {
@@ -69,6 +90,8 @@ export const Route = createFileRoute("/catalogo")({
     };
   },
 });
+
+// ── Page Component ─────────────────────────────────────────
 
 function CatalogoPage(): ReactNode {
   const routeSearch = useSearch({ from: "/catalogo" });
@@ -82,6 +105,7 @@ function CatalogoPage(): ReactNode {
   const [activeCategory, setActiveCategory] = useState<string | undefined>(routeSearch.category);
   const [sort, setSort] = useState<SortOption>("newest");
   const [loading, setLoading] = useState(true);
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const fetchCategories = useCallback(async () => {
     try {
@@ -122,6 +146,11 @@ function CatalogoPage(): ReactNode {
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
+
+  // Close mobile filters when a filter is applied
+  useEffect(() => {
+    setMobileFiltersOpen(false);
+  }, [activeCategory, query]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -170,189 +199,407 @@ function CatalogoPage(): ReactNode {
         </div>
       </section>
 
-      {/* Filters + Products */}
+      {/* Filters Sidebar + Products Grid */}
       <ScrollAnimatedSection className="bg-[var(--color-background)] py-[var(--section-padding-y)]">
         <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
-          {/* Search + Filters bar */}
-          <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            {/* Search input */}
-            <form onSubmit={handleSearch} className="relative max-w-xs">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-text-muted)]" />
-              <input
-                type="text"
-                placeholder="Cerca prodotti..."
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                aria-label="Cerca prodotti"
-                className="h-10 w-full rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] py-2 pl-9 pr-9 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] transition-colors focus:border-[var(--color-primary)] focus:outline-none"
-              />
-              {searchInput && (
-                <button
-                  type="button"
-                  onClick={handleClearSearch}
-                  aria-label="Cancella ricerca"
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
-              )}
-            </form>
-
-            {/* Category filters — hierarchical */}
-            <div className="flex flex-wrap items-center gap-2">
-              <SlidersHorizontal className="h-4 w-4 text-[var(--color-text-muted)]" />
-              <button
-                type="button"
-                onClick={() => handleCategoryChange(undefined)}
-                className={`rounded-[var(--radius-md)] px-4 py-2 text-xs font-medium transition-colors duration-[var(--transition-base)] ${
-                  !activeCategory
-                    ? "bg-[var(--color-primary)] text-white"
-                    : "bg-[var(--color-muted)] text-[var(--color-text-secondary)] hover:bg-[var(--color-muted)]/80"
-                }`}
-              >
-                Tutte
-              </button>
-              {categories.map((cat) => (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onClick={() => handleCategoryChange(cat.slug)}
-                  className={`rounded-[var(--radius-md)] px-4 py-2 text-xs font-medium transition-colors duration-[var(--transition-base)] ${
-                    activeCategory === cat.slug
-                      ? "bg-[var(--color-primary)] text-white"
-                      : "bg-[var(--color-muted)] text-[var(--color-text-secondary)] hover:bg-[var(--color-muted)]/80"
-                  }`}
-                >
-                  {cat.name} ({cat.productCount})
-                </button>
-              ))}
-              {/* Show subcategories when a parent is active */}
-              {activeCategory && (() => {
-                const parent = categories.find((c) => c.slug === activeCategory);
-                if (parent && parent.children.length > 0) {
-                  return parent.children.map((child) => (
-                    <button
-                      key={child.id}
-                      type="button"
-                      onClick={() => handleCategoryChange(child.slug)}
-                      className={`rounded-[var(--radius-md)] border border-[var(--color-border)] px-3 py-1.5 text-xs font-medium transition-colors duration-[var(--transition-base)] ${
-                        activeCategory === child.slug
-                          ? "bg-[var(--color-primary)] text-white border-transparent"
-                          : "bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-muted)]/80"
-                      }`}
-                    >
-                      {child.name} ({child.productCount})
-                    </button>
-                  ));
-                }
-                return null;
-              })()}
-            </div>
-          </div>
-
-          {/* Sort + Results count */}
-          <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm text-[var(--color-text-muted)]">
-              {total} {total === 1 ? "prodotto" : "prodotti"}
-              {query && ` per "${query}"`}
-            </p>
-            <select
-              value={sort}
-              onChange={(e) => handleSortChange(e.target.value as SortOption)}
-              aria-label="Ordina per"
-              className="h-10 rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text)] transition-colors focus:border-[var(--color-primary)] focus:outline-none"
+          <div className="flex gap-8">
+            {/* ── Desktop Sidebar ──────────────────────────── */}
+            <aside
+              className="hidden w-64 shrink-0 lg:block"
+              aria-label="Filtri catalogo"
             >
-              {SORT_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
-          </div>
+              <CatalogSidebar
+                categories={categories}
+                activeCategory={activeCategory}
+                searchInput={searchInput}
+                onCategoryChange={handleCategoryChange}
+                onSearch={handleSearch}
+                onClearSearch={handleClearSearch}
+                onSearchInputChange={setSearchInput}
+              />
+            </aside>
 
-          {/* Content */}
-          {loading ? (
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4 lg:gap-8">
-              {Array.from({ length: 8 }).map((_, i) => (
-                <div key={i} className="animate-pulse">
-                  <div className="aspect-[3/4] rounded-[var(--radius-lg)] bg-[var(--color-muted)]" />
-                  <div className="mt-4 space-y-2">
-                    <div className="h-3 w-16 rounded bg-[var(--color-muted)]" />
-                    <div className="h-4 w-full rounded bg-[var(--color-muted)]" />
-                    <div className="h-4 w-20 rounded bg-[var(--color-muted)]" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : products.length > 0 ? (
-            <StaggeredGrid className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4 lg:gap-8">
-              {products.map((product) => (
-                <StaggeredItem key={product.id}>
-                  <CatalogProductCard product={product} />
-                </StaggeredItem>
-              ))}
-            </StaggeredGrid>
-          ) : (
-            <div className="py-20 text-center">
-              <p className="text-[var(--color-text-muted)]">
-                Nessun prodotto trovato con questi criteri.
-              </p>
-              <button
-                type="button"
-                onClick={() => {
-                  handleClearSearch();
-                  handleCategoryChange(undefined);
-                }}
-                className="mt-4 text-sm font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]"
-              >
-                Resetta filtri
-              </button>
-            </div>
-          )}
+            {/* ── Mobile Filters Toggle Button ─────────────── */}
+            <button
+              type="button"
+              onClick={() => setMobileFiltersOpen((prev) => !prev)}
+              className="fixed bottom-24 left-1/2 z-30 -translate-x-1/2 lg:hidden"
+              aria-expanded={mobileFiltersOpen}
+              aria-controls="mobile-filters-panel"
+              aria-label={mobileFiltersOpen ? "Chiudi filtri" : "Apri filtri"}
+            >
+              <span className="flex items-center gap-2 rounded-full bg-[var(--color-primary)] px-5 py-3 text-sm font-medium text-white shadow-lg transition-shadow hover:shadow-xl">
+                <Filter className="h-4 w-4" />
+                Filtri
+              </span>
+            </button>
 
-          {/* Pagination */}
-          {!loading && totalPages > 1 && (
-            <nav className="mt-12 flex items-center justify-center gap-1" aria-label="Paginazione">
-              <button
-                type="button"
-                disabled={page <= 1}
-                onClick={() => setPage((p) => p - 1)}
-                className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-md)] border border-[var(--color-border)] text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface)] disabled:cursor-not-allowed disabled:opacity-40"
-                aria-label="Pagina precedente"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+            {/* ── Mobile Filters Overlay ───────────────────── */}
+            {mobileFiltersOpen && (
+              <div
+                className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+                onClick={() => setMobileFiltersOpen(false)}
+                aria-hidden="true"
+              />
+            )}
+
+            <div
+              id="mobile-filters-panel"
+              className={`fixed inset-y-0 left-0 z-50 w-80 overflow-y-auto bg-[var(--color-surface)] p-6 shadow-xl transition-transform duration-300 lg:hidden ${
+                mobileFiltersOpen ? "translate-x-0" : "-translate-x-full"
+              }`}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Filtri catalogo"
+            >
+              <div className="mb-6 flex items-center justify-between">
+                <h2 className="font-display text-lg font-semibold">Filtri</h2>
                 <button
-                  key={p}
                   type="button"
-                  onClick={() => setPage(p)}
-                  className={`flex h-10 w-10 items-center justify-center rounded-[var(--radius-md)] text-sm font-medium transition-colors ${
-                    p === page
-                      ? "bg-[var(--color-primary)] text-white"
-                      : "border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface)]"
-                  }`}
-                  aria-current={p === page ? "page" : undefined}
+                  onClick={() => setMobileFiltersOpen(false)}
+                  aria-label="Chiudi filtri"
+                  className="rounded-[var(--radius-md)] p-2 text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-text)]"
                 >
-                  {p}
+                  <X className="h-5 w-5" />
                 </button>
-              ))}
-              <button
-                type="button"
-                disabled={page >= totalPages}
-                onClick={() => setPage((p) => p + 1)}
-                className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-md)] border border-[var(--color-border)] text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface)] disabled:cursor-not-allowed disabled:opacity-40"
-                aria-label="Pagina successiva"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </nav>
-          )}
+              </div>
+              <CatalogSidebar
+                categories={categories}
+                activeCategory={activeCategory}
+                searchInput={searchInput}
+                onCategoryChange={handleCategoryChange}
+                onSearch={handleSearch}
+                onClearSearch={handleClearSearch}
+                onSearchInputChange={setSearchInput}
+              />
+            </div>
+
+            {/* ── Main Content ─────────────────────────────── */}
+            <div className="min-w-0 flex-1">
+              {/* Sort + Results count */}
+              <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-sm text-[var(--color-text-muted)]">
+                  {total} {total === 1 ? "prodotto" : "prodotti"}
+                  {query && ` per "${query}"`}
+                  {activeCategory && (() => {
+                    const allCats = categories.flatMap((c) => [
+                      { slug: c.slug, name: c.name },
+                      ...c.children.map((ch) => ({ slug: ch.slug, name: ch.name })),
+                    ]);
+                    const found = allCats.find((c) => c.slug === activeCategory);
+                    return found ? ` in "${found.name}"` : "";
+                  })()}
+                </p>
+                <div className="flex items-center gap-3">
+                  <SlidersHorizontal className="h-4 w-4 text-[var(--color-text-muted)] lg:hidden" />
+                  <select
+                    value={sort}
+                    onChange={(e) => handleSortChange(e.target.value as SortOption)}
+                    aria-label="Ordina per"
+                    className="h-10 rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text)] transition-colors focus:border-[var(--color-primary)] focus:outline-none"
+                  >
+                    {SORT_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Active filter pills */}
+              {(activeCategory || query) && (
+                <div className="mb-6 flex flex-wrap items-center gap-2">
+                  <span className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
+                    Filtri attivi:
+                  </span>
+                  {query && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-[var(--color-primary)]/10 px-3 py-1 text-xs font-medium text-[var(--color-primary)]">
+                      &ldquo;{query}&rdquo;
+                      <button
+                        type="button"
+                        onClick={handleClearSearch}
+                        aria-label={`Rimuovi filtro ricerca "${query}"`}
+                        className="ml-0.5 rounded-full p-0.5 transition-colors hover:bg-[var(--color-primary)]/20"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </span>
+                  )}
+                  {activeCategory && (() => {
+                    const allCats = categories.flatMap((c) => [
+                      { slug: c.slug, name: c.name },
+                      ...c.children.map((ch) => ({ slug: ch.slug, name: ch.name })),
+                    ]);
+                    const found = allCats.find((c) => c.slug === activeCategory);
+                    if (!found) return null;
+                    return (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[var(--color-primary)]/10 px-3 py-1 text-xs font-medium text-[var(--color-primary)]">
+                        {found.name}
+                        <button
+                          type="button"
+                          onClick={() => handleCategoryChange(undefined)}
+                          aria-label={`Rimuovi filtro categoria ${found.name}`}
+                          className="ml-0.5 rounded-full p-0.5 transition-colors hover:bg-[var(--color-primary)]/20"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </span>
+                    );
+                  })()}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleClearSearch();
+                      handleCategoryChange(undefined);
+                    }}
+                    className="text-xs font-medium text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-primary)]"
+                  >
+                    Resetta tutto
+                  </button>
+                </div>
+              )}
+
+              {/* Product Grid — 3 columns on desktop */}
+              {loading ? (
+                <div className="grid grid-cols-2 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
+                  {Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="animate-pulse">
+                      <div className="aspect-[3/4] rounded-[var(--radius-lg)] bg-[var(--color-muted)]" />
+                      <div className="mt-4 space-y-2">
+                        <div className="h-3 w-16 rounded bg-[var(--color-muted)]" />
+                        <div className="h-4 w-full rounded bg-[var(--color-muted)]" />
+                        <div className="h-4 w-20 rounded bg-[var(--color-muted)]" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : products.length > 0 ? (
+                <StaggeredGrid className="grid grid-cols-2 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
+                  {products.map((product) => (
+                    <StaggeredItem key={product.id}>
+                      <CatalogProductCard product={product} />
+                    </StaggeredItem>
+                  ))}
+                </StaggeredGrid>
+              ) : (
+                <div className="py-20 text-center">
+                  <p className="text-[var(--color-text-muted)]">
+                    Nessun prodotto trovato con questi criteri.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleClearSearch();
+                      handleCategoryChange(undefined);
+                    }}
+                    className="mt-4 text-sm font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]"
+                  >
+                    Resetta filtri
+                  </button>
+                </div>
+              )}
+
+              {/* Pagination */}
+              {!loading && totalPages > 1 && (
+                <nav className="mt-12 flex items-center justify-center gap-1" aria-label="Paginazione">
+                  <button
+                    type="button"
+                    disabled={page <= 1}
+                    onClick={() => setPage((p) => p - 1)}
+                    className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-md)] border border-[var(--color-border)] text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface)] disabled:cursor-not-allowed disabled:opacity-40"
+                    aria-label="Pagina precedente"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                    <button
+                      key={p}
+                      type="button"
+                      onClick={() => setPage(p)}
+                      className={`flex h-10 w-10 items-center justify-center rounded-[var(--radius-md)] text-sm font-medium transition-colors ${
+                        p === page
+                          ? "bg-[var(--color-primary)] text-white"
+                          : "border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface)]"
+                      }`}
+                      aria-current={p === page ? "page" : undefined}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    disabled={page >= totalPages}
+                    onClick={() => setPage((p) => p + 1)}
+                    className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-md)] border border-[var(--color-border)] text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface)] disabled:cursor-not-allowed disabled:opacity-40"
+                    aria-label="Pagina successiva"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </nav>
+              )}
+            </div>
+          </div>
         </section>
       </ScrollAnimatedSection>
     </>
   );
 }
+
+// ── Sidebar Component (shared desktop + mobile) ────────────
+
+function CatalogSidebar({
+  categories,
+  activeCategory,
+  searchInput,
+  onCategoryChange,
+  onSearch,
+  onClearSearch,
+  onSearchInputChange,
+}: {
+  categories: CategoryWithChildren[];
+  activeCategory: string | undefined;
+  searchInput: string;
+  onCategoryChange: (slug: string | undefined) => void;
+  onSearch: (e: React.FormEvent) => void;
+  onClearSearch: () => void;
+  onSearchInputChange: (value: string) => void;
+}): ReactNode {
+  return (
+    <div className="space-y-8">
+      {/* Search */}
+      <div>
+        <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
+          Cerca
+        </h3>
+        <form onSubmit={onSearch} className="relative">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-text-muted)]" />
+          <input
+            type="text"
+            placeholder="Cerca prodotti..."
+            value={searchInput}
+            onChange={(e) => onSearchInputChange(e.target.value)}
+            aria-label="Cerca prodotti"
+            className="h-10 w-full rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] py-2 pl-9 pr-9 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] transition-colors focus:border-[var(--color-primary)] focus:outline-none"
+          />
+          {searchInput && (
+            <button
+              type="button"
+              onClick={onClearSearch}
+              aria-label="Cancella ricerca"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
+        </form>
+      </div>
+
+      {/* Category tree */}
+      <nav aria-label="Categorie prodotti">
+        <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
+          Categorie
+        </h3>
+        <ul className="space-y-1" role="tree">
+          {/* "All" option */}
+          <li role="treeitem" aria-selected={!activeCategory}>
+            <button
+              type="button"
+              onClick={() => onCategoryChange(undefined)}
+              className={`flex w-full items-center rounded-[var(--radius-md)] px-3 py-2 text-sm transition-colors duration-[var(--transition-base)] ${
+                !activeCategory
+                  ? "bg-[var(--color-primary)]/10 font-medium text-[var(--color-primary)]"
+                  : "text-[var(--color-text-secondary)] hover:bg-[var(--color-muted)]/60 hover:text-[var(--color-text)]"
+              }`}
+            >
+              Tutte le categorie
+            </button>
+          </li>
+
+          {/* Category groups with expandable children */}
+          {categories.map((cat) => {
+            const hasChildren = cat.children.length > 0;
+            const parentActive = isCategoryActive(cat.slug, activeCategory, cat.children);
+            const expanded = parentActive && hasChildren;
+
+            return (
+              <li key={cat.id} role="treeitem" aria-expanded={hasChildren ? expanded : undefined}>
+                <div className="flex items-center">
+                  <button
+                    type="button"
+                    onClick={() => onCategoryChange(cat.slug)}
+                    className={`flex min-w-0 flex-1 items-center rounded-[var(--radius-md)] px-3 py-2 text-sm transition-colors duration-[var(--transition-base)] ${
+                      activeCategory === cat.slug
+                        ? "bg-[var(--color-primary)]/10 font-medium text-[var(--color-primary)]"
+                        : parentActive
+                          ? "bg-[var(--color-primary)]/5 font-medium text-[var(--color-primary)]"
+                          : "text-[var(--color-text-secondary)] hover:bg-[var(--color-muted)]/60 hover:text-[var(--color-text)]"
+                    }`}
+                  >
+                    <span className="min-w-0 truncate">{cat.name}</span>
+                    <span className="ml-2 shrink-0 text-xs text-[var(--color-text-muted)]">
+                      {cat.productCount}
+                    </span>
+                  </button>
+                  {hasChildren && (
+                    <span className="ml-1 shrink-0 px-1">
+                      <ChevronDown
+                        className={`h-3.5 w-3.5 text-[var(--color-text-muted)] transition-transform duration-200 ${
+                          expanded ? "rotate-180" : ""
+                        }`}
+                        aria-hidden="true"
+                      />
+                    </span>
+                  )}
+                </div>
+
+                {/* Subcategories (expanded when parent is active) */}
+                {hasChildren && expanded && (
+                  <ul className="ml-4 mt-1 space-y-0.5 border-l border-[var(--color-border-light)] pl-3" role="group">
+                    {/* "All [parent name]" sub-option */}
+                    <li>
+                      <button
+                        type="button"
+                        onClick={() => onCategoryChange(cat.slug)}
+                        className={`flex w-full items-center rounded-[var(--radius-sm)] px-3 py-1.5 text-xs transition-colors duration-[var(--transition-base)] ${
+                          activeCategory === cat.slug
+                            ? "font-medium text-[var(--color-primary)]"
+                            : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]"
+                        }`}
+                      >
+                        Tutti {cat.name}
+                      </button>
+                    </li>
+                    {cat.children.map((child) => (
+                      <li key={child.id}>
+                        <button
+                          type="button"
+                          onClick={() => onCategoryChange(child.slug)}
+                          className={`flex w-full items-center rounded-[var(--radius-sm)] px-3 py-1.5 text-xs transition-colors duration-[var(--transition-base)] ${
+                            activeCategory === child.slug
+                              ? "font-medium text-[var(--color-primary)]"
+                              : "text-[var(--color-text-muted)] hover:text-[var(--color-text-secondary)]"
+                          }`}
+                        >
+                          <span className="min-w-0 truncate">{child.name}</span>
+                          <span className="ml-auto shrink-0 text-[var(--color-text-muted)]">
+                            {child.productCount}
+                          </span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+    </div>
+  );
+}
+
+// ── Product Card ────────────────────────────────────────────
 
 function CatalogProductCard({ product }: { product: ProductListItem }) {
   return (
