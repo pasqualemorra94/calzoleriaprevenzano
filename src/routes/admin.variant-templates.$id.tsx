@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { ArrowLeft, Save, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { VariantBuilder } from "~/components/admin/VariantBuilder";
 import type { VariantConfig } from "~/lib/types/variant-config";
-import { SANDALI_VARIANT_CONFIG, PELLETTERIA_VARIANT_CONFIG } from "~/lib/types/variant-config";
 
 export const Route = createFileRoute("/admin/variant-templates/$id")({
   component: VariantTemplateEditPage,
@@ -178,32 +177,6 @@ export default function VariantTemplateEditPage(): ReactNode {
             </div>
           </div>
         </div>
-
-        {/* Quick start from preset */}
-        {!config && (
-          <div className="rounded-lg border-2 border-dashed border-gray-300 bg-white p-6">
-            <h2 className="mb-2 text-sm font-semibold text-gray-700">Inizia da un preset</h2>
-            <p className="mb-4 text-xs text-gray-500">
-              Carica un preset e personalizzalo per il tuo prodotto
-            </p>
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={() => setConfig(JSON.parse(JSON.stringify(SANDALI_VARIANT_CONFIG)))}
-                className="rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
-              >
-                🥿 Sandali (pelle + colore + tacco + taglia)
-              </button>
-              <button
-                type="button"
-                onClick={() => setConfig(JSON.parse(JSON.stringify(PELLETTERIA_VARIANT_CONFIG)))}
-                className="rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 transition-colors hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
-              >
-                👜 Pelletteria (solo colore)
-              </button>
-            </div>
-          </div>
-        )}
 
         {/* Variant Builder */}
         <div className="rounded-lg bg-white p-6 shadow-sm">

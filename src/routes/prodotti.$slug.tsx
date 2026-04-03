@@ -65,6 +65,8 @@ interface OptionGroup {
     stock: number;
     imageUrl: string | null;
   }>;
+  /** Conditional visibility — show only when parent group matches */
+  dependsOn?: { groupId: string; optionValue: string };
 }
 
 function parseOptionGroups(variants: ProductVariant[]): OptionGroup[] {
@@ -112,6 +114,7 @@ function ProdottoPage(): ReactNode {
   const [selectedOptions, setSelectedOptions] = useState<Map<string, string>>(new Map());
   const [quantity, setQuantity] = useState(1);
   const [cartStatus, setCartStatus] = useState<"idle" | "loading" | "success">("idle");
+  const [customerNote, setCustomerNote] = useState("");
 
   const fetchProduct = useCallback(async () => {
     setLoading(true);
@@ -180,10 +183,11 @@ function ProdottoPage(): ReactNode {
         return parsedConfig.groups.map((g) => ({
           type: g.id,
           label: g.label,
+          dependsOn: g.dependsOn ?? undefined,
           options: g.options.map((o) => ({
             id: o.value,
             label: o.label,
-            color: o.color,
+            color: o.color ?? null,
             priceModifier: o.priceModifier ?? 0,
             stock: 999, // Config-based options don't track stock per-variant
             imageUrl: o.imageUrl ?? null,
@@ -194,6 +198,22 @@ function ProdottoPage(): ReactNode {
     },
     [product, parsedConfig],
   );
+
+  // Compute which groups are currently visible based on selectedOptions
+  // A group is visible if:
+  // - It has NO dependsOn (always visible), OR
+  // - Its dependsOn.groupId has a selected value matching dependsOn.optionValue
+  const visibleGroups = useMemo(() => {
+    if (!parsedConfig) return optionGroups; // Legacy variants don't have conditional groups
+    return optionGroups.filter((group) => {
+      if (!group.dependsOn) return true;
+      const parentValue = selectedOptions.get(group.dependsOn.groupId);
+      return parentValue === group.dependsOn.optionValue;
+    });
+  }, [optionGroups, selectedOptions, parsedConfig]);
+
+  // Check if all visible (and required) groups have a selection
+  const allVisibleGroupsSelected = visibleGroups.every((g) => selectedOptions.has(g.type));
 
   const selectedVariantId = useMemo(() => {
     if (optionGroups.length === 0) return null;
@@ -211,7 +231,7 @@ function ProdottoPage(): ReactNode {
   const priceBreakdown = useMemo(() => {
     const base = product?.price ?? 0;
     let optionsTotal = 0;
-    for (const g of optionGroups) {
+    for (const g of visibleGroups) {
       const selectedId = selectedOptions.get(g.type);
       if (selectedId) {
         const opt = g.options.find((o) => o.id === selectedId);
@@ -219,7 +239,7 @@ function ProdottoPage(): ReactNode {
       }
     }
     return { base, optionsTotal, total: base + optionsTotal };
-  }, [product, optionGroups, selectedOptions]);
+  }, [product, visibleGroups, selectedOptions]);
 
   const effectiveStock = selectedVariant ? selectedVariant.stock : (product?.stock ?? 0);
 
@@ -229,11 +249,35 @@ function ProdottoPage(): ReactNode {
       ? { label: `Ultimi ${effectiveStock} pezzi`, color: "text-amber-700", bg: "bg-amber-50" }
       : { label: "Disponibile", color: "text-green-700", bg: "bg-green-50" };
 
-  const allGroupsSelected = optionGroups.length === 0 || optionGroups.every((g) => selectedOptions.has(g.type));
+  const allGroupsSelected = optionGroups.length === 0 || allVisibleGroupsSelected;
   const canAddToCart = product && !product.variants.length || allGroupsSelected;
 
   const handleSelectOption = (groupType: string, optionId: string) => {
-    setSelectedOptions((prev) => new Map(prev).set(groupType, optionId));
+    setSelectedOptions((prev) => {
+      const next = new Map(prev);
+      next.set(groupType, optionId);
+
+      // When a parent group changes, reset all dependent child groups
+      // and auto-select the first option of each newly visible child
+      if (parsedConfig) {
+        for (const group of optionGroups) {
+          if (group.dependsOn && group.dependsOn.groupId === groupType) {
+            // This child depends on the group that just changed
+            // Only auto-select if the new value matches
+            if (group.dependsOn.optionValue === optionId) {
+              if (group.options.length > 0) {
+                next.set(group.type, group.options[0].id);
+              }
+            } else {
+              // Parent value doesn't match — clear child selection
+              next.delete(group.type);
+            }
+          }
+        }
+      }
+
+      return next;
+    });
 
     if (product) {
       const variant = product.variants.find((v) => v.id === optionId);
@@ -435,6 +479,8 @@ function ProdottoPage(): ReactNode {
                       const selectedId = selectedOptions.get(g.type);
                       const opt = selectedId ? g.options.find((o) => o.id === selectedId) : null;
                       if (!opt || opt.priceModifier === 0) return null;
+                      // Only show modifiers from visible groups
+                      if (!visibleGroups.includes(g)) return null;
                       return (
                         <p key={g.type} className="text-sm text-[var(--color-text-secondary)]">
                           + {opt.label}: EUR {opt.priceModifier.toFixed(2)}
@@ -460,24 +506,31 @@ function ProdottoPage(): ReactNode {
 
               <hr className="stitch-divider stitch-divider--left my-6" />
 
-              {optionGroups.length > 0 && (
+              {visibleGroups.length > 0 && (
                 <div className="space-y-5">
-                  {optionGroups.map((group) => {
+                  {visibleGroups.map((group) => {
                     const selectedId = selectedOptions.get(group.type);
                     // Determine the control type from variantConfig if available
                     const configGroup = parsedConfig?.groups.find((g) => g.id === group.type);
                     const controlType = configGroup?.type ?? (group.options.length > 8 ? "select" : "button");
 
                     return (
-                      <div key={group.type}>
-                        <span className="mb-2.5 block text-sm font-medium text-[var(--color-text)]">
-                          {group.label}
-                          {selectedId && (
-                            <span className="ml-2 text-xs font-normal text-[var(--color-text-muted)]">
-                              — {group.options.find((o) => o.id === selectedId)?.label}
-                            </span>
-                          )}
-                        </span>
+                      <AnimatePresence key={group.type} mode="wait">
+                        <m.div
+                          key={group.type}
+                          initial={{ opacity: 0, y: 8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -8 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          <span className="mb-2.5 block text-sm font-medium text-[var(--color-text)]">
+                            {group.label}
+                            {selectedId && (
+                              <span className="ml-2 text-xs font-normal text-[var(--color-text-muted)]">
+                                — {group.options.find((o) => o.id === selectedId)?.label}
+                              </span>
+                            )}
+                          </span>
 
                         {/* SELECT type — dropdown */}
                         {controlType === "select" ? (
@@ -581,9 +634,37 @@ function ProdottoPage(): ReactNode {
                             ))}
                           </div>
                         )}
-                      </div>
+                        </m.div>
+                      </AnimatePresence>
                     );
                   })}
+                </div>
+              )}
+
+              {/* Customer Note — for personalization requests */}
+              {parsedConfig && (
+                <div>
+                  <label
+                    htmlFor="customer-note"
+                    className="mb-2 block text-sm font-medium text-[var(--color-text)]"
+                  >
+                    Note personalizzazione
+                    <span className="ml-1 text-xs font-normal text-[var(--color-text-muted)]">(opzionale)</span>
+                  </label>
+                  <textarea
+                    id="customer-note"
+                    value={customerNote}
+                    onChange={(e) => setCustomerNote(e.target.value)}
+                    placeholder="Es: misura cm, colore specifico, incisione..."
+                    rows={2}
+                    maxLength={500}
+                    className="w-full rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2.5 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-muted)]/50 transition-colors focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]/20"
+                  />
+                  {customerNote.length > 0 && (
+                    <span className="mt-1 block text-right text-[11px] text-[var(--color-text-muted)]">
+                      {customerNote.length}/500
+                    </span>
+                  )}
                 </div>
               )}
 
