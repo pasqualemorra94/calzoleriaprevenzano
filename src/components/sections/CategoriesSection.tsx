@@ -87,7 +87,26 @@ function CategoryCard({ category }: { category: Category }) {
   );
 }
 
-export function CategoriesSection() {
+interface Category {
+  title: string;
+  description: string;
+  cta: string;
+  href: string;
+  image: string;
+  featured?: boolean;
+}
+
+interface CategoriesSectionProps {
+  categoryImages?: Record<string, string>;
+}
+
+export function CategoriesSection({ categoryImages }: CategoriesSectionProps) {
+  // Merge DB-sourced images with hardcoded fallbacks
+  const categoriesWithImages: Category[] = CATEGORIES.map((cat) => ({
+    ...cat,
+    image: categoryImages?.[cat.title] ?? cat.image,
+  }));
+
   return (
     <ScrollAnimatedSection className="bg-[var(--color-background)] py-[var(--section-padding-y-lg)]">
       <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
@@ -126,9 +145,9 @@ export function CategoriesSection() {
         {/* Bento Grid: featured card full-width + 2 cards side by side */}
         <StaggeredGrid className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
           <StaggeredItem className="md:col-span-2">
-            <CategoryCard category={CATEGORIES[0]} />
+            <CategoryCard category={categoriesWithImages[0]} />
           </StaggeredItem>
-          {CATEGORIES.slice(1).map((category) => (
+          {categoriesWithImages.slice(1).map((category) => (
             <StaggeredItem key={category.title}>
               <CategoryCard category={category} />
             </StaggeredItem>

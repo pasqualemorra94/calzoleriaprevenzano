@@ -19,40 +19,41 @@ interface CategorySeed {
   description: string | null;
   sortOrder: number;
   parentId: string | null;
+  image: string | null;
 }
 
 const categories: CategorySeed[] = [
   // ── Sandali (root) ─────────────────────────────────
-  { name: "Sandali", slug: "sandali", description: "Sandali artigianali fatti a mano a Napoli, personalizzabili in pelle, colore e tacco.", sortOrder: 1, parentId: null },
+  { name: "Sandali", slug: "sandali", description: "Sandali artigianali fatti a mano a Napoli, personalizzabili in pelle, colore e tacco.", sortOrder: 1, parentId: null, image: "/images/products/schiava-4.png" },
 
   // ── Classici ─────────────────────────────────────────
-  { name: "Classici", slug: "classici", description: "Sandali della collezione classica: infradito, schiava, treccia.", sortOrder: 1, parentId: "sandali" },
-  { name: "Con infradito", slug: "con-infradito", description: "Sandali classici con infradito, personalizzabili in pelle e colore.", sortOrder: 1, parentId: "classici" },
-  { name: "Schiava", slug: "schiava", description: "Sandali schiava artigianali in pelle pregiata.", sortOrder: 2, parentId: "classici" },
+  { name: "Classici", slug: "classici", description: "Sandali della collezione classica: infradito, schiava, treccia.", sortOrder: 1, parentId: "sandali", image: null },
+  { name: "Con infradito", slug: "con-infradito", description: "Sandali classici con infradito, personalizzabili in pelle e colore.", sortOrder: 1, parentId: "classici", image: null },
+  { name: "Schiava", slug: "schiava", description: "Sandali schiava artigianali in pelle pregiata.", sortOrder: 2, parentId: "classici", image: null },
 
   // ── Gioiello ────────────────────────────────────────
-  { name: "Gioiello", slug: "gioiello", description: "Sandali della collezione gioiello con dettagli preziosi applicati a mano.", sortOrder: 2, parentId: "sandali" },
-  { name: "Cavigliera", slug: "cavigliera", description: "Sandali gioiello con cavigliera, personalizzabili con gioiello.", sortOrder: 1, parentId: "gioiello" },
-  { name: "Con infradito Gioiello", slug: "con-infradito-gioiello", description: "Sandali gioiello con infradito.", sortOrder: 2, parentId: "gioiello" },
-  { name: "Aggiunta ciondolo", slug: "aggiunta-ciondolo", description: "Sandali con aggiunta ciondolo, collezione gioiello.", sortOrder: 3, parentId: "gioiello" },
-  { name: "Fasce", slug: "fasce", description: "Sandali gioiello con fasce in pelle.", sortOrder: 4, parentId: "gioiello" },
-  { name: "Strass", slug: "strass", description: "Sandali gioiello con strass applicati a mano.", sortOrder: 5, parentId: "gioiello" },
+  { name: "Gioiello", slug: "gioiello", description: "Sandali della collezione gioiello con dettagli preziosi applicati a mano.", sortOrder: 2, parentId: "sandali", image: null },
+  { name: "Cavigliera", slug: "cavigliera", description: "Sandali gioiello con cavigliera, personalizzabili con gioiello.", sortOrder: 1, parentId: "gioiello", image: null },
+  { name: "Con infradito Gioiello", slug: "con-infradito-gioiello", description: "Sandali gioiello con infradito.", sortOrder: 2, parentId: "gioiello", image: null },
+  { name: "Aggiunta ciondolo", slug: "aggiunta-ciondolo", description: "Sandali con aggiunta ciondolo, collezione gioiello.", sortOrder: 3, parentId: "gioiello", image: null },
+  { name: "Fasce", slug: "fasce", description: "Sandali gioiello con fasce in pelle.", sortOrder: 4, parentId: "gioiello", image: null },
+  { name: "Strass", slug: "strass", description: "Sandali gioiello con strass applicati a mano.", sortOrder: 5, parentId: "gioiello", image: null },
 
   // ── Bambini ────────────────────────────────────────
-  { name: "Bambini", slug: "bambini", description: "Sandali artigianali per bambini, morbidi e confortevoli.", sortOrder: 3, parentId: "sandali" },
-  { name: "Infradito Bambini", slug: "infradito-bambini", description: "Sandali per bambini con infradito.", sortOrder: 1, parentId: "bambini" },
-  { name: "No infradito Bambini", slug: "no-infradito-bambini", description: "Sandali per bambini senza infradito.", sortOrder: 2, parentId: "bambini" },
+  { name: "Bambini", slug: "bambini", description: "Sandali artigianali per bambini, morbidi e confortevoli.", sortOrder: 3, parentId: "sandali", image: null },
+  { name: "Infradito Bambini", slug: "infradito-bambini", description: "Sandali per bambini con infradito.", sortOrder: 1, parentId: "bambini", image: null },
+  { name: "No infradito Bambini", slug: "no-infradito-bambini", description: "Sandali per bambini senza infradito.", sortOrder: 2, parentId: "bambini", image: null },
 
   // ── Pelletteria (root) ─────────────────────────────
-  { name: "Pelletteria", slug: "pelletteria", description: "Borselli, cinture e accessori in pelle artigianale.", sortOrder: 2, parentId: null },
-  { name: "Borselli", slug: "borselli", description: "Borselli in pelle artigianale.", sortOrder: 1, parentId: "pelletteria" },
-  { name: "Cinture", slug: "cinture", description: "Cinture in pelle di vitello, lavorate a mano.", sortOrder: 2, parentId: "pelletteria" },
-  { name: "Agende", slug: "agende", description: "Agende e quaderni in pelle artigianale.", sortOrder: 3, parentId: "pelletteria" },
-  { name: "Accessori", slug: "accessori-calzoleria", description: "Accessori per la cura delle calzature.", sortOrder: 4, parentId: "pelletteria" },
+  { name: "Pelletteria", slug: "pelletteria", description: "Borselli, cinture e accessori in pelle artigianale.", sortOrder: 2, parentId: null, image: "/images/products/borsello-cuoio.png" },
+  { name: "Borselli", slug: "borselli", description: "Borselli in pelle artigianale.", sortOrder: 1, parentId: "pelletteria", image: null },
+  { name: "Cinture", slug: "cinture", description: "Cinture in pelle di vitello, lavorate a mano.", sortOrder: 2, parentId: "pelletteria", image: null },
+  { name: "Agende", slug: "agende", description: "Agende e quaderni in pelle artigianale.", sortOrder: 3, parentId: "pelletteria", image: null },
+  { name: "Accessori", slug: "accessori-calzoleria", description: "Accessori per la cura delle calzature.", sortOrder: 4, parentId: "pelletteria", image: null },
 
   // ── Articoli per calzature (root) ─────────────────
-  { name: "Articoli per calzature", slug: "articoli-calzature", description: "Prodotti per la cura e la manutenzione delle calzature.", sortOrder: 3, parentId: null },
-  { name: "Solette", slug: "solette", description: "Solette in cuoio e materiali naturali.", sortOrder: 1, parentId: "articoli-calzature" },
+  { name: "Articoli per calzature", slug: "articoli-calzature", description: "Prodotti per la cura e la manutenzione delle calzature.", sortOrder: 3, parentId: null, image: "/images/products/cintura-cuoio-035-nero.png" },
+  { name: "Solette", slug: "solette", description: "Solette in cuoio e materiali naturali.", sortOrder: 1, parentId: "articoli-calzature", image: null },
 ];
 
 // ─── Products ────────────────────────────────────────────────────────────
@@ -97,6 +98,11 @@ function isSandalo(categories: string[]): boolean {
 
 // Import scraped data
 import scrapedData from "../site-output/scraped-products.json" with { type: "json" };
+
+// Import variant configs (81 sandalo products with taglia/colore/tacco options)
+import variantConfigsData from "../site-output/variant-configs.json" with { type: "json" };
+
+const variantConfigs = variantConfigsData as Array<{ slug: string; config: unknown }>;
 
 const scraped = scrapedData as {
   products: Array<{
@@ -212,10 +218,11 @@ async function seedCategories(): Promise<Map<string, string>> {
   const categoryMap = new Map<string, string>();
 
   for (const cat of categories) {
+    const parentId = cat.parentId ? categoryMap.get(cat.parentId) ?? null : null;
     const created = await prisma.category.upsert({
       where: { slug: cat.slug },
-      update: { name: cat.name, description: cat.description, sortOrder: cat.sortOrder, parentId: cat.parentId ? categoryMap.get(cat.parentId) ?? null : null },
-      create: { name: cat.name, slug: cat.slug, description: cat.description, sortOrder: cat.sortOrder, parentId: cat.parentId ? categoryMap.get(cat.parentId) ?? null : null },
+      update: { name: cat.name, description: cat.description, sortOrder: cat.sortOrder, parentId, image: cat.image },
+      create: { name: cat.name, slug: cat.slug, description: cat.description, sortOrder: cat.sortOrder, parentId, image: cat.image },
     });
     categoryMap.set(cat.slug, created.id);
   }
@@ -359,6 +366,28 @@ async function seedAdminUser(): Promise<void> {
   }
 }
 
+async function applyVariantConfigs(): Promise<number> {
+  console.log("📦 Applying variant configs to sandalo products...");
+  let updated = 0;
+
+  for (const vc of variantConfigs) {
+    try {
+      await prisma.product.update({
+        where: { slug: vc.slug },
+        data: { variantConfig: JSON.parse(JSON.stringify(vc.config)) },
+      });
+      updated++;
+      if (updated % 20 === 0) process.stdout.write(`\r  ... ${updated}/${variantConfigs.length}`);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.warn(`  ⚠️  Failed to set variantConfig for ${vc.slug}: ${msg}`);
+    }
+  }
+
+  console.log(`\r   ✅ ${updated}/${variantConfigs.length} products updated with variantConfig`);
+  return updated;
+}
+
 async function main() {
   console.log("🌱 Starting database seed — Calzoleria Prevenzano");
   console.log("=".repeat(55));
@@ -366,6 +395,7 @@ async function main() {
   await cleanExistingData();
   const categoryMap = await seedCategories();
   const productCount = await seedProducts(categoryMap);
+  const variantConfigCount = await applyVariantConfigs();
   await seedReviews();
   await seedDiscountCodes();
   await seedAdminUser();
@@ -374,6 +404,7 @@ async function main() {
   console.log("✅ Seed complete");
   console.log(`   Categories: ${categoryMap.size}`);
   console.log(`   Products: ${productCount}`);
+  console.log(`   Variant configs: ${variantConfigCount}`);
   console.log(`   Images: ${products.reduce((sum, p) => sum + p.images.length, 0)}`);
 }
 
