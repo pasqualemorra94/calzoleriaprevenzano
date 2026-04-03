@@ -123,7 +123,7 @@ export async function getProducts(input: ListProductsInput): Promise<PaginatedDa
         shortDescription: true,
         price: true,
         compareAtPrice: true,
-        images: { where: { sortOrder: 0 }, select: { id: true, url: true, alt: true }, take: 1 },
+        images: { orderBy: { sortOrder: "asc" }, select: { id: true, url: true, alt: true }, take: 1 },
         category: { select: { id: true, name: true, slug: true } },
       },
     }),
@@ -295,7 +295,7 @@ export async function getFeaturedProducts(limit = 8): Promise<ProductListItem[]>
       shortDescription: true,
       price: true,
       compareAtPrice: true,
-      images: { where: { sortOrder: 0 }, select: { id: true, url: true, alt: true }, take: 1 },
+      images: { orderBy: { sortOrder: "asc" }, select: { id: true, url: true, alt: true }, take: 1 },
       category: { select: { id: true, name: true, slug: true } },
     },
   });
