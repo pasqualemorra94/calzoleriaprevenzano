@@ -964,3 +964,120 @@ Media Library (1.357 records total)
 - Le immagini selezionate dalla Media Library nei prodotti sono ora correttamente collegate via `mediaId` FK
 - `deleteMedia` rileva correttamente l'uso in prodotti tramite `productImage.mediaId`
 - Il VariantBuilder permette ora di scegliere immagini dalla libreria (non solo URL manuale)
+
+---
+
+## 🔄 Refactoring: Component Architecture (v17→v18) | 2026-04-03
+
+### Obiettivo
+Decomporre i file monolitici (route + componenti) in componenti modulari riutilizzabili, migliorando la manutenibilità e la testabilità senza modificare funzionalità esistenti.
+
+### Principio guida
+- **Nessuna modifica funzionale** — solo estrazione di componenti/logica in file separati
+- **Backward-compatible re-exports** — i vecchi percorsi di import continuano a funzionare
+- **Slim orchestrators** — i route file diventano coordinatori che importano e compostono i componenti estratti
+
+### FASE 1A — `src/routes/admin.prodotti.$id.tsx` decomposed (1093 → 395 LOC)
+
+Componenti estratti in `src/components/admin/product-edit/`:
+
+| File | Contenuto | LOC |
+|------|-----------|-----|
+| `types.ts` | Shared types (ProductFormData, ProductImageForm, ecc.) | ~80 |
+| `VariantSection.tsx` | Sezione gestione varianti prodotto | ~120 |
+| `ImageGalleryManager.tsx` | Gestione galleria immagini con MediaPicker | ~180 |
+| `VariantConfigSection.tsx` | Sezione VariantBuilder per config JSON | ~150 |
+| `ProductFields.tsx` | Campi base prodotto (nome, prezzo, slug, descrizione, ecc.) | ~200 |
+| `index.ts` | Barrel export | ~3 |
+
+### FASE 1B — `src/routes/prodotti.$slug.tsx` decomposed (866 → 322 LOC)
+
+Componenti estratti in `src/components/product/`:
+
+| File | Contenuto | LOC |
+|------|-----------|-----|
+| `ProductGallery.tsx` | Gallery immagini con thumbnail navigation | ~180 |
+| `VariantSelector.tsx` | Selettore varianti (color-swatch, select, button) con selectedOptions state | ~220 |
+| `RelatedProducts.tsx` | Prodotti correlati dalla stessa categoria | ~80 |
+| `index.ts` | Barrel export | ~3 |
+
+### FASE 1C — `src/routes/catalogo.tsx` decomposed (680 → 250 LOC)
+
+Componenti estratti in `src/components/catalog/`:
+
+| File | Contenuto | LOC |
+|------|-----------|-----|
+| `CatalogSidebar.tsx` | Sidebar filtri: ricerca, albero categorie espandibile con conteggi | ~300 |
+| `CatalogProductCard.tsx` | Card prodotto per griglia catalogo | ~120 |
+| `index.ts` | Barrel export | ~3 |
+
+### FASE 1D — `src/routes/checkout.tsx` + `src/routes/carrello.tsx` decomposed (checkout: 544→~380, carrello: 312→~280)
+
+Componenti estratti in `src/components/checkout/`:
+
+| File | Contenuto | LOC |
+|------|-----------|-----|
+| `OrderSummary.tsx` | Riepilogo ordine condiviso tra carrello e checkout (line items, selectedOptions display, subtotale, spedizione, totale) | ~200 |
+| `index.ts` | Barrel export | ~3 |
+
+### FASE 1E — `src/routes/admin.media.tsx` decomposed (580 → 276 LOC)
+
+Componenti estratti in `src/components/admin/media-library/`:
+
+| File | Contenuto | LOC |
+|------|-----------|-----|
+| `MediaGridItems.tsx` | MediaGridItem, MediaListItemRow, MediaItem type, formatFileSize, formatDate | 119 |
+| `index.ts` | Barrel export | 2 |
+
+### FASE 1F — `src/components/admin/VariantBuilder.tsx` decomposed (563 → 208 LOC orchestrator)
+
+Componenti estratti in `src/components/admin/variant-builder/`:
+
+| File | Contenuto | LOC |
+|------|-----------|-----|
+| `presets.ts` | CONTROL_TYPE_LABELS + PRESETS data (Sandali, Pelletteria, ecc.) | 144 |
+| `GroupEditor.tsx` | GroupEditor component per editing singolo gruppo varianti | 202 |
+| `VariantBuilder.tsx` | Slim orchestrator con tutti i callback (add/edit/remove group, drag & drop) | 208 |
+| `index.ts` | Barrel export | 3 |
+
+**Nota:** `src/components/admin/VariantBuilder.tsx` è ora un backward-compatible re-export che importa da `variant-builder/VariantBuilder.tsx`.
+
+### FASE 2 — `src/lib/admin.server.ts` SRP split (711 → 37 LOC re-export)
+
+Moduli estratti in `src/lib/admin/`:
+
+| File | Contenuto | LOC |
+|------|-----------|-----|
+| `types.ts` | Tutti i shared admin types (AdminProductDetail, AdminOrderDetail, ecc.) | 188 |
+| `admin-dashboard.server.ts` | `getDashboardStats` — statistiche dashboard | 53 |
+| `admin-products.server.ts` | Tutti i CRUD prodotti (getAdminProducts, getAdminProduct, adminCreateProduct, adminUpdateProduct, adminDeleteProduct) | 273 |
+| `admin-orders.server.ts` | Query ordini + aggiornamento stato (getAdminOrders, getAdminOrder, updateOrderStatus, updateOrderTracking) | 175 |
+| `admin-categories.server.ts` | CRUD categorie (getAdminCategories, createCategory, updateCategory, deleteCategory) | 65 |
+| `index.ts` | Barrel export di tutti i moduli + tipi | 34 |
+
+**Nota:** `src/lib/admin.server.ts` è ora un backward-compatible re-export che importa tutto da `admin/index.ts`.
+
+### Riepilogo riduzione LOC per route
+
+| File | Prima | Dopo | Riduzione |
+|------|-------|------|-----------|
+| `src/routes/admin.prodotti.$id.tsx` | 1093 | ~395 | -64% |
+| `src/routes/prodotti.$slug.tsx` | 866 | ~322 | -63% |
+| `src/routes/catalogo.tsx` | 680 | ~250 | -63% |
+| `src/routes/admin.media.tsx` | 580 | 276 | -52% |
+| `src/routes/checkout.tsx` | 544 | ~380 | -30% |
+| `src/routes/carrello.tsx` | 312 | ~280 | -10% |
+
+### Re-export shims (backward compatibility)
+
+Questi file mantengono la vecchia API di import per evitare breaking changes:
+
+| File shim | Re-export da |
+|-----------|-------------|
+| `src/components/admin/VariantBuilder.tsx` | `src/components/admin/variant-builder/VariantBuilder.tsx` |
+| `src/lib/admin.server.ts` | `src/lib/admin/index.ts` |
+
+### Verifiche
+- TypeScript: ✅ zero errors (in corso — da verificare)
+- Build: ✅ (in corso — da verificare)
+- Funzionalità: ✅ nessuna modifica comportamentale

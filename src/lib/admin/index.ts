@@ -1,11 +1,4 @@
-/**
- * Admin Service — backward-compatible barrel re-export
- *
- * The actual implementation lives in `src/lib/admin/`.
- * This file re-exports everything for backward compatibility.
- */
-
-export { getDashboardStats } from "./admin/admin-dashboard.server";
+export { getDashboardStats } from "./admin-dashboard.server";
 export {
   getAdminProducts,
   getAdminProduct,
@@ -13,19 +6,19 @@ export {
   adminUpdateProduct,
   adminDeleteProduct,
   adminRestoreProduct,
-} from "./admin/admin-products.server";
+} from "./admin-products.server";
 export {
   getAdminOrders,
   getAdminOrder,
   adminUpdateOrderStatus,
-} from "./admin/admin-orders.server";
+} from "./admin-orders.server";
 export {
   getAdminCategories,
   adminGetCategory,
   adminCreateCategory,
   adminUpdateCategory,
   adminDeleteCategory,
-} from "./admin/admin-categories.server";
+} from "./admin-categories.server";
 
 export type {
   DashboardStats,
@@ -34,4 +27,8 @@ export type {
   AdminOrderListItem,
   AdminOrderDetail,
   AdminCategoryItem,
-} from "./admin/types";
+  PaginatedData,
+  VariantPayload,
+  ImagePayload,
+  ProductWithRelationsInput,
+} from "./types";

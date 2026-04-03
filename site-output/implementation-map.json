@@ -1,5 +1,5 @@
 {
-  "version": 17,
+  "version": 18,
   "generatedAt": "2026-04-02T00:00:00.000Z",
   "projectSlug": "calzoleria-prevenzano",
   "framework": "tanstack",
@@ -386,7 +386,19 @@
     ],
     "admin": [
       "src/components/admin/VariantBuilder.tsx",
-      "src/components/admin/MediaPicker.tsx"
+      "src/components/admin/MediaPicker.tsx",
+      "src/components/admin/media-library/MediaGridItems.tsx",
+      "src/components/admin/media-library/index.ts",
+      "src/components/admin/variant-builder/VariantBuilder.tsx",
+      "src/components/admin/variant-builder/GroupEditor.tsx",
+      "src/components/admin/variant-builder/presets.ts",
+      "src/components/admin/variant-builder/index.ts",
+      "src/components/admin/product-edit/types.ts",
+      "src/components/admin/product-edit/VariantSection.tsx",
+      "src/components/admin/product-edit/ImageGalleryManager.tsx",
+      "src/components/admin/product-edit/VariantConfigSection.tsx",
+      "src/components/admin/product-edit/ProductFields.tsx",
+      "src/components/admin/product-edit/index.ts"
     ],
     "auth": [
       "src/components/auth/LoginForm.tsx",
@@ -404,6 +416,21 @@
       "src/components/ui/ScrollAnimatedSection.tsx",
       "src/components/ui/ScrollCounter.tsx",
       "src/components/ui/StaggeredGrid.tsx"
+    ],
+    "product": [
+      "src/components/product/ProductGallery.tsx",
+      "src/components/product/VariantSelector.tsx",
+      "src/components/product/RelatedProducts.tsx",
+      "src/components/product/index.ts"
+    ],
+    "catalog": [
+      "src/components/catalog/CatalogSidebar.tsx",
+      "src/components/catalog/CatalogProductCard.tsx",
+      "src/components/catalog/index.ts"
+    ],
+    "checkout": [
+      "src/components/checkout/OrderSummary.tsx",
+      "src/components/checkout/index.ts"
     ]
   },
   "database": {
@@ -443,6 +470,12 @@
       "src/lib/cart.server.ts",
       "src/lib/orders.server.ts",
       "src/lib/admin.server.ts",
+      "src/lib/admin/types.ts",
+      "src/lib/admin/admin-dashboard.server.ts",
+      "src/lib/admin/admin-products.server.ts",
+      "src/lib/admin/admin-orders.server.ts",
+      "src/lib/admin/admin-categories.server.ts",
+      "src/lib/admin/index.ts",
       "src/lib/media.server.ts",
       "src/lib/wishlist.server.ts",
       "src/lib/reviews.server.ts",
@@ -565,7 +598,37 @@
       "2026-04-03: selectedOptions — CartItem/OrderItem con JSON selectedOptions per prodotti variantConfig, validazione prezzo con modifier, risoluzione display (label+value+color)",
       "2026-04-03: variantConfig seed integration — 81 config estratte in site-output/variant-configs.json, applyVariantConfigs() in seed.ts (niente più script manuale dopo reset DB)",
       "2026-04-03: Product images — 79/81 sandali con immagini full-size (600x800+), 2 senza alternativa full-size (chiara, raffaella-maria)",
-      "2026-04-03: Fix mediaId association — ProductImage.mediaId ora correttamente salvato quando si seleziona dalla Media Library; VariantBuilder aggiunto pulsante MediaPicker per swatch imageUrl"
+      "2026-04-03: Fix mediaId association — ProductImage.mediaId ora correttamente salvato quando si seleziona dalla Media Library; VariantBuilder aggiunto pulsante MediaPicker per swatch imageUrl",
+      "2026-04-03: Refactoring — admin.media.tsx decomposed (580→276 LOC), MediaGridItems estratto in src/components/admin/media-library/",
+      "2026-04-03: Refactoring — VariantBuilder.tsx decomposed (563→208 LOC orchestrator), GroupEditor+presets estratti in src/components/admin/variant-builder/",
+      "2026-04-03: Refactoring — admin.prodotti.$id.tsx decomposed (1093→395 LOC), 5 componenti estratti in src/components/admin/product-edit/",
+      "2026-04-03: Refactoring — prodotti.$slug.tsx decomposed (866→322 LOC), ProductGallery+VariantSelector+RelatedProducts estratti in src/components/product/",
+      "2026-04-03: Refactoring — catalogo.tsx decomposed (680→250 LOC), CatalogSidebar+CatalogProductCard estratti in src/components/catalog/",
+      "2026-04-03: Refactoring — checkout.tsx+carrello.tsx decomposed, OrderSummary estratto in src/components/checkout/",
+      "2026-04-03: Refactoring — admin.server.ts SRP split (711→37 LOC re-export), 5 moduli estratti in src/lib/admin/ (types, dashboard, products, orders, categories)",
+      "2026-04-03: Refactoring — backward-compatible re-export shims: src/components/admin/VariantBuilder.tsx → variant-builder/, src/lib/admin.server.ts → admin/index.ts"
     ]
+  },
+  "regressionNotes": {
+    "reexportShims": [
+      {
+        "shim": "src/components/admin/VariantBuilder.tsx",
+        "target": "src/components/admin/variant-builder/VariantBuilder.tsx",
+        "reason": "Preserve existing imports from consumers"
+      },
+      {
+        "shim": "src/lib/admin.server.ts",
+        "target": "src/lib/admin/index.ts",
+        "reason": "Preserve existing imports from API routes and server code"
+      }
+    ],
+    "routeOrchestrators": {
+      "src/routes/admin.media.tsx": { "before": 580, "after": 276, "extractsFrom": "src/components/admin/media-library/" },
+      "src/routes/admin.prodotti.$id.tsx": { "before": 1093, "after": 395, "extractsFrom": "src/components/admin/product-edit/" },
+      "src/routes/prodotti.$slug.tsx": { "before": 866, "after": 322, "extractsFrom": "src/components/product/" },
+      "src/routes/catalogo.tsx": { "before": 680, "after": 250, "extractsFrom": "src/components/catalog/" },
+      "src/routes/checkout.tsx": { "before": 544, "after": 380, "extractsFrom": "src/components/checkout/" },
+      "src/routes/carrello.tsx": { "before": 312, "after": 280, "extractsFrom": "src/components/checkout/" }
+    }
   }
 }
