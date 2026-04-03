@@ -40,7 +40,7 @@ export function HeroSection() {
             suffix=""
             className="font-display text-xl font-bold text-white"
           />
-          <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-white/50">Anno di fondazione</p>
+          <p className="mt-1 text-[10px] tracking-[0.2em] text-white/50">Anno di fondazione</p>
         </div>
         <div className="rounded-[var(--radius-lg)] border border-white/10 bg-white/5 px-5 py-4 text-center backdrop-blur-sm">
           <ScrollCounter
@@ -48,7 +48,7 @@ export function HeroSection() {
             suffix=""
             className="font-display text-xl font-bold text-[var(--color-accent)]"
           />
-          <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-white/50">Modelli unici</p>
+          <p className="mt-1 text-[10px] tracking-[0.2em] text-white/50">Modelli unici</p>
         </div>
       </div>
 
@@ -64,7 +64,7 @@ export function HeroSection() {
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className="text-[var(--color-accent)]" aria-hidden="true">
             <path d="M8 1L9.5 6.5L15 8L9.5 9.5L8 15L6.5 9.5L1 8L6.5 6.5L8 1Z" fill="currentColor" />
           </svg>
-          <span className="text-xs font-medium uppercase tracking-[0.2em] text-[var(--color-accent)]">
+          <span className="text-xs font-medium tracking-[0.2em] text-[var(--color-accent)]">
             {APP_CONFIG.site.tagline}
           </span>
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className="text-[var(--color-accent)]" aria-hidden="true">
@@ -118,7 +118,7 @@ export function HeroSection() {
               <span key={i} className="h-[3px] w-1 bg-[var(--color-accent)]/40 rounded-full" style={{ marginTop: i % 2 === 0 ? "0" : "3px" }} />
             ))}
           </div>
-          <span className="text-[10px] uppercase tracking-[0.25em] text-[var(--color-accent)]/50">Artigianato dal 1965</span>
+          <span className="text-[10px] tracking-[0.25em] text-[var(--color-accent)]/50">Artigianato dal 1965</span>
         </div>
         <div className="h-[var(--stitch-width)] hidden flex-1 max-w-[120px] bg-[var(--color-accent)]/30 md:block" />
       </div>

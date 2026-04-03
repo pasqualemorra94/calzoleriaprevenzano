@@ -32,7 +32,7 @@ export function LaBottegaSection() {
               <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="currentColor" opacity="0.3" />
               <circle cx="12" cy="12" r="3" fill="currentColor" />
             </svg>
-            <span className="text-xs font-medium uppercase tracking-[var(--tracking-widest)] text-[var(--color-text-muted)]">
+            <span className="text-xs font-medium tracking-[var(--tracking-widest)] text-[var(--color-text-muted)]">
               La nostra storia
             </span>
           </div>

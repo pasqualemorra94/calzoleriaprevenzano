@@ -9,24 +9,24 @@ const FOOTER_LINKS = {
       { label: "Sandali Artigianali", href: "/sandali" },
       { label: "Pelletteria", href: "/catalogo?category=pelletteria" },
       { label: "Articoli per Calzature", href: "/catalogo?category=articoli-calzature" },
-      { label: "Catalogo Completo", href: "/catalogo" },
+      { label: "Catalogo completo", href: "/catalogo" },
     ],
   },
   info: {
     title: "Informazioni",
     items: [
-      { label: "Chi Siamo", href: "/la-bottega" },
+      { label: "Chi siamo", href: "/la-bottega" },
       { label: "Contatti", href: "/contatti" },
-      { label: "Guida Taglie", href: "/guida-taglia" },
-      { label: "Spedizioni e Resi", href: "/termini" },
+      { label: "Guida taglie", href: "/guida-taglia" },
+      { label: "Spedizioni e resi", href: "/termini" },
     ],
   },
   legal: {
-    title: "Termini e Condizioni",
+    title: "Termini e condizioni",
     items: [
-      { label: "Privacy Policy", href: "/privacy" },
-      { label: "Cookie Policy", href: "/cookie" },
-      { label: "Termini di Servizio", href: "/termini" },
+      { label: "Privacy policy", href: "/privacy" },
+      { label: "Cookie policy", href: "/cookie" },
+      { label: "Termini di servizio", href: "/termini" },
     ],
   },
 } as const;
@@ -83,7 +83,7 @@ export function Footer(): ReactNode {
 
           {/* Shop */}
           <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider mb-4 text-[var(--color-accent)]">
+            <h4 className="text-sm font-semibold tracking-wider mb-4 text-[var(--color-accent)]">
               {FOOTER_LINKS.shop.title}
             </h4>
             <ul className="space-y-3">
@@ -102,7 +102,7 @@ export function Footer(): ReactNode {
 
           {/* Info */}
           <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider mb-4 text-[var(--color-accent)]">
+            <h4 className="text-sm font-semibold tracking-wider mb-4 text-[var(--color-accent)]">
               {FOOTER_LINKS.info.title}
             </h4>
             <ul className="space-y-3">
@@ -121,7 +121,7 @@ export function Footer(): ReactNode {
 
           {/* Legal */}
           <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider mb-4 text-[var(--color-accent)]">
+            <h4 className="text-sm font-semibold tracking-wider mb-4 text-[var(--color-accent)]">
               {FOOTER_LINKS.legal.title}
             </h4>
             <ul className="space-y-3">

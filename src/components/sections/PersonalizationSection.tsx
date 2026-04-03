@@ -109,7 +109,7 @@ export function PersonalizationSection() {
         <div className="mb-16 text-center md:mb-20">
           <div className="inline-flex items-center gap-4 mb-6">
             <span className="h-px w-8 bg-[var(--color-accent)]/40" />
-            <span className="text-xs font-medium uppercase tracking-[var(--tracking-widest)] text-[var(--color-accent)]">
+            <span className="text-xs font-medium tracking-[var(--tracking-widest)] text-[var(--color-accent)]">
               Su misura
             </span>
             <span className="h-px w-8 bg-[var(--color-accent)]/40" />

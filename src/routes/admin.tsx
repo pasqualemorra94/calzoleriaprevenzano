@@ -10,7 +10,7 @@ export const Route = createFileRoute("/admin")({
 const NAV_ITEMS = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard, matchPath: "/admin" as const, exact: true },
   { label: "Prodotti", href: "/admin/prodotti", icon: Package, matchPath: "/admin/prodotti" as const },
-  { label: "Variant Templates", href: "/admin/variant-templates", icon: Layers, matchPath: "/admin/variant-templates" as const },
+  { label: "Variant templates", href: "/admin/variant-templates", icon: Layers, matchPath: "/admin/variant-templates" as const },
   { label: "Ordini", href: "/admin/ordini", icon: ShoppingCart, matchPath: "/admin/ordini" as const },
 ] as const;
 
@@ -75,7 +75,7 @@ function AdminLayout(): ReactNode {
         </div>
 
         <nav className="flex-1 overflow-y-auto px-3 py-4">
-          <span className="px-3 text-[11px] font-medium uppercase tracking-wider text-gray-400">Navigazione</span>
+          <span className="px-3 text-[11px] font-medium tracking-wider text-gray-400">Navigazione</span>
           <div className="space-y-1">
             {NAV_ITEMS.map((item) => {
               const Icon = item.icon;
@@ -126,7 +126,7 @@ function AdminLayout(): ReactNode {
           </button>
 
           <div className="hidden lg:block">
-            <span className="text-xs font-medium uppercase tracking-wider text-gray-500">Pannello di amministrazione</span>
+            <span className="text-xs font-medium tracking-wider text-gray-500">Pannello di amministrazione</span>
           </div>
 
           <div className="flex-1" />

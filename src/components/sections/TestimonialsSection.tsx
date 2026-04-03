@@ -83,7 +83,7 @@ export function TestimonialsSection() {
         <div className="mb-12 text-center md:mb-16">
           <div className="inline-flex items-center gap-3 mb-4">
             <Quote className="h-4 w-4 text-[var(--color-accent)]" />
-            <span className="text-xs font-medium uppercase tracking-[var(--tracking-widest)] text-[var(--color-text-muted)]">
+            <span className="text-xs font-medium tracking-[var(--tracking-widest)] text-[var(--color-text-muted)]">
               Clienti
             </span>
           </div>

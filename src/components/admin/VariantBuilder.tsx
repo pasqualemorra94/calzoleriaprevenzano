@@ -474,7 +474,7 @@ function GroupEditor({
           {/* Options */}
           <div className="space-y-2 p-4">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-medium uppercase tracking-wider text-[var(--color-text-muted)]">Opzioni ({group.options.length})</span>
+              <span className="text-[11px] font-medium tracking-wider text-[var(--color-text-muted)]">Opzioni ({group.options.length})</span>
               <button type="button" onClick={onAddOption} className="inline-flex items-center gap-1 text-xs font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]">
                 <Plus className="h-3 w-3" /> Aggiungi
               </button>

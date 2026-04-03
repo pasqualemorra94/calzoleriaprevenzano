@@ -86,7 +86,7 @@ function ContattiPage(): ReactNode {
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_2fr] lg:gap-16">
             {/* Left — Contact details */}
             <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
+              <p className="text-xs font-medium tracking-wider text-[var(--color-text-muted)]">
                 Informazioni di contatto
               </p>
               <hr className="stitch-divider stitch-divider--left my-4" />
@@ -136,7 +136,7 @@ function ContattiPage(): ReactNode {
 
             {/* Right — Contact form */}
             <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
+              <p className="text-xs font-medium tracking-wider text-[var(--color-text-muted)]">
                 Inviaci un messaggio
               </p>
               <hr className="stitch-divider stitch-divider--left my-4" />

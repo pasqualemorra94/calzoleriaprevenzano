@@ -235,7 +235,7 @@ function CheckoutPage(): ReactNode {
               >
                 <div className="flex items-center gap-2 mb-6">
                   <Truck className="h-5 w-5 text-[var(--color-primary)]" />
-                  <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)] mb-4">Indirizzo di spedizione</p>
+                  <p className="text-xs font-medium tracking-wider text-[var(--color-text-muted)] mb-4">Indirizzo di spedizione</p>
                 </div>
                 <hr className="stitch-divider stitch-divider--left mb-6" />
 
@@ -420,7 +420,7 @@ function CheckoutPage(): ReactNode {
               {/* Right — Order summary */}
               <div className="lg:sticky lg:top-24">
                 <div className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
-                  <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">Riepilogo ordine</p>
+                  <p className="text-xs font-medium tracking-wider text-[var(--color-text-muted)]">Riepilogo ordine</p>
                   <hr className="stitch-divider stitch-divider--left my-4" />
 
                   {/* Items */}

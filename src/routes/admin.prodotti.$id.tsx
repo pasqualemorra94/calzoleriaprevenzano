@@ -451,7 +451,7 @@ function AdminProductEditPage(): ReactNode {
         : "border-gray-200 focus:border-[var(--color-primary)] focus:ring-[var(--color-primary)]",
     );
 
-  const labelClass = "block text-xs font-medium uppercase tracking-wider text-gray-500";
+  const labelClass = "block text-xs font-medium tracking-wider text-gray-500";
 
   const variantGroups = groupVariantsByOptionType(form.variants);
 
@@ -473,7 +473,7 @@ function AdminProductEditPage(): ReactNode {
           <ArrowLeft className="h-4 w-4" />
           Indietro
         </Link>
-        <h1 className="text-base font-medium text-gray-900">{isNew ? "Nuovo Prodotto" : "Modifica Prodotto"}</h1>
+        <h1 className="text-base font-medium text-gray-900">{isNew ? "Nuovo prodotto" : "Modifica prodotto"}</h1>
       </div>
 
       {error && (
@@ -736,7 +736,7 @@ function AdminProductEditPage(): ReactNode {
               )}
 
               <div className="mt-4 border-t border-gray-100 pt-4">
-                <p className="mb-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Nuovo gruppo di opzioni</p>
+                <p className="mb-2 text-xs font-medium text-gray-500 tracking-wider">Nuovo gruppo di opzioni</p>
                 <div className="flex flex-wrap gap-2">
                   {Object.entries(OPTION_GROUP_LABELS)
                     .filter(([key]) => !(key.toLowerCase() in variantGroups))

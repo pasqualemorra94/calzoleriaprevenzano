@@ -196,7 +196,7 @@ function AdminOrderDetailPage(): ReactNode {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-gray-200 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                  <tr className="border-b border-gray-200 text-left text-xs font-medium tracking-wider text-gray-500">
                     <th className="pb-2 pr-4">Nome</th>
                     <th className="pb-2 pr-4">Variante</th>
                     <th className="pb-2 pr-4">SKU</th>

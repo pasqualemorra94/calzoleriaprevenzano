@@ -361,7 +361,7 @@ function CatalogProductCard({ product }: { product: ProductListItem }) {
         )}
 
         {product.compareAtPrice && (
-          <span className="absolute left-3 top-3 rounded-[var(--radius-sm)] bg-[var(--color-accent)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--color-accent-foreground)]">
+          <span className="absolute left-3 top-3 rounded-[var(--radius-sm)] bg-[var(--color-accent)] px-2 py-0.5 text-[10px] font-semibold tracking-wider text-[var(--color-accent-foreground)]">
             Sconto
           </span>
         )}
@@ -388,7 +388,7 @@ function CatalogProductCard({ product }: { product: ProductListItem }) {
 
       <div className="mt-4">
         {product.category && (
-          <span className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
+          <span className="text-xs font-medium tracking-wider text-[var(--color-text-muted)]">
             {product.category.name}
           </span>
         )}

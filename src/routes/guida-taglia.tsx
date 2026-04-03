@@ -39,7 +39,7 @@ function GuidaTagliaPage(): ReactNode {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="mb-3 inline-block text-xs font-medium uppercase tracking-[var(--tracking-widest)] text-[var(--color-text-muted)]">
+            <span className="mb-3 inline-block text-xs font-medium tracking-[var(--tracking-widest)] text-[var(--color-text-muted)]">
               Guida
             </span>
             <h1 className="font-display text-[var(--text-lg)] font-semibold tracking-tight md:text-[var(--text-xl)]">
@@ -53,7 +53,7 @@ function GuidaTagliaPage(): ReactNode {
       <ScrollAnimatedSection className="bg-[var(--color-background)] py-[var(--section-padding-y)]">
         <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
           <div className="mx-auto max-w-2xl">
-            <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
+            <p className="text-xs font-medium tracking-wider text-[var(--color-text-muted)]">
               Come misurare il piede
             </p>
             <hr className="stitch-divider stitch-divider--left my-4" />
@@ -78,7 +78,7 @@ function GuidaTagliaPage(): ReactNode {
       <ScrollAnimatedSection className="bg-[var(--color-surface)] py-[var(--section-padding-y)]" variants={fadeInUp}>
         <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
           <div className="mx-auto max-w-xl">
-            <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
+            <p className="text-xs font-medium tracking-wider text-[var(--color-text-muted)]">
               Tabella taglie
             </p>
             <hr className="stitch-divider stitch-divider--left my-4" />
@@ -88,13 +88,13 @@ function GuidaTagliaPage(): ReactNode {
               <table className="w-full">
                 <thead>
                   <tr className="bg-[var(--color-primary)] text-white">
-                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider">
+                    <th className="px-4 py-3 text-left text-xs font-semibold tracking-wider">
                       Misura piede (cm)
                     </th>
-                    <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider">
+                    <th className="px-4 py-3 text-center text-xs font-semibold tracking-wider">
                       IT
                     </th>
-                    <th className="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider">
+                    <th className="px-4 py-3 text-center text-xs font-semibold tracking-wider">
                       EU
                     </th>
                   </tr>

@@ -64,7 +64,7 @@ function CategoryCard({ category }: { category: Category }) {
       {/* Overlay with better gradient */}
       <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/60 via-black/20 to-transparent p-6 md:p-8">
         {/* Label */}
-        <span className="mb-2 inline-block w-fit rounded-[var(--radius-sm)] bg-[var(--color-accent)]/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--color-accent-foreground)]">
+        <span className="mb-2 inline-block w-fit rounded-[var(--radius-sm)] bg-[var(--color-accent)]/90 px-3 py-1 text-[10px] font-semibold tracking-[0.15em] text-[var(--color-accent-foreground)]">
           Collezione
         </span>
         <h3 className={`font-display font-semibold text-white ${isFeatured ? "text-[var(--text-xl)] md:text-[var(--text-2xl)]" : "text-lg md:text-[var(--text-xl)]"}`}>
@@ -95,7 +95,7 @@ export function CategoriesSection() {
         <div className="mb-14 text-center md:mb-20">
           <div className="inline-flex items-center gap-4 mb-6">
             <span className="h-px w-12 bg-[var(--color-accent)]/50" />
-            <span className="text-xs font-medium uppercase tracking-[0.25em] text-[var(--color-accent)]">
+            <span className="text-xs font-medium tracking-[0.25em] text-[var(--color-accent)]">
               Le nostre collezioni
             </span>
             <span className="h-px w-12 bg-[var(--color-accent)]/50" />

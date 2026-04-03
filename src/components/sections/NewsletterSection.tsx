@@ -45,7 +45,7 @@ export function NewsletterSection() {
               <rect x="2" y="4" width="20" height="16" rx="2" />
               <path d="M22 4L12 13L2 4" />
             </svg>
-            <span className="text-xs font-medium uppercase tracking-[var(--tracking-widest)] text-[var(--color-accent)]">
+            <span className="text-xs font-medium tracking-[var(--tracking-widest)] text-[var(--color-accent)]">
               Newsletter
             </span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-[var(--color-accent)]" aria-hidden="true">

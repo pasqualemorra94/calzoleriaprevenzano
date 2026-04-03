@@ -124,7 +124,7 @@ function AdminDashboardPage(): ReactNode {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <tr className="border-b border-gray-100 bg-gray-50 text-left text-xs font-medium tracking-wider text-gray-500">
                 <th className="px-6 py-3">Numero</th>
                 <th className="px-6 py-3">Cliente</th>
                 <th className="px-6 py-3">Stato</th>

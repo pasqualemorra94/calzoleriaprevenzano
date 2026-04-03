@@ -111,7 +111,7 @@ function AdminOrdersList(): ReactNode {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-base font-medium text-gray-900">Gestione Ordini</h1>
+      <h1 className="text-base font-medium text-gray-900">Gestione ordini</h1>
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1">
@@ -140,8 +140,8 @@ function AdminOrdersList(): ReactNode {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-200 bg-gray-50 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                <th className="px-4 py-3">Numero Ordine</th>
+              <tr className="border-b border-gray-200 bg-gray-50 text-left text-xs font-medium tracking-wider text-gray-500">
+                <th className="px-4 py-3">Numero ordine</th>
                 <th className="px-4 py-3">Cliente</th>
                 <th className="px-4 py-3 text-right">Articoli</th>
                 <th className="px-4 py-3 text-right">Totale</th>

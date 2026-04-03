@@ -56,7 +56,7 @@ function ProductCard({ product }: { product: Product }) {
         )}
 
         {product.compareAtPrice && (
-          <span className="absolute left-3 top-3 rounded-[var(--radius-sm)] bg-[var(--color-accent)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--color-accent-foreground)]">
+          <span className="absolute left-3 top-3 rounded-[var(--radius-sm)] bg-[var(--color-accent)] px-2 py-0.5 text-[10px] font-semibold tracking-wider text-[var(--color-accent-foreground)]">
             Sconto
           </span>
         )}
@@ -80,7 +80,7 @@ function ProductCard({ product }: { product: Product }) {
       {/* Product info */}
       <div className="mt-5">
         {product.category && (
-          <span className="text-[11px] font-medium uppercase tracking-[0.15em] text-[var(--color-text-muted)]">
+          <span className="text-[11px] font-medium tracking-[0.15em] text-[var(--color-text-muted)]">
             {product.category.name}
           </span>
         )}
@@ -141,7 +141,7 @@ export function FeaturedProductsSection() {
       <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
         {/* Section header */}
         <div className="mb-14 text-center md:mb-16">
-          <span className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.2em] text-[var(--color-text-muted)]">
+          <span className="mb-4 inline-block text-xs font-medium tracking-[0.2em] text-[var(--color-text-muted)]">
             Catalogo
           </span>
           <h2 className="font-display text-[var(--text-lg)] font-semibold tracking-tight md:text-[var(--text-xl)]">

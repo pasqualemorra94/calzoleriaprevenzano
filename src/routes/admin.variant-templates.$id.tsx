@@ -123,7 +123,7 @@ export default function VariantTemplateEditPage(): ReactNode {
             <ArrowLeft className="h-4 w-4" />
           </Link>
           <h1 className="text-base font-medium text-gray-900">
-            {isNew ? "Nuovo Template" : "Modifica Template"}
+            {isNew ? "Nuovo template" : "Modifica template"}
           </h1>
         </div>
       </div>
@@ -229,7 +229,7 @@ export default function VariantTemplateEditPage(): ReactNode {
 
         {/* Usage hint */}
         <div className="rounded-lg bg-gray-50 p-4 text-xs text-gray-500">
-          <p className="text-xs font-medium uppercase tracking-wider text-gray-400">Come usare questo template</p>
+          <p className="text-xs font-medium tracking-wider text-gray-400">Come usare questo template</p>
           <ol className="mt-1 ml-4 list-decimal space-y-0.5">
             <li>Definisci i gruppi di opzioni (colore, tacco, taglia...)</li>
             <li>Per ogni opzione colore, puoi aggiungere un URL immagine</li>

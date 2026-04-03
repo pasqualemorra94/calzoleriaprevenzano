@@ -438,7 +438,7 @@ function ProdottoPage(): ReactNode {
               transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
             >
               {product.category && (
-                <span className="mb-2 text-xs font-medium uppercase tracking-[var(--tracking-widest)] text-[var(--color-text-muted)]">
+                <span className="mb-2 text-xs font-medium tracking-[var(--tracking-widest)] text-[var(--color-text-muted)]">
                   {product.category.name}
                 </span>
               )}
@@ -758,7 +758,7 @@ function ProdottoPage(): ReactNode {
                 <>
                   <hr className="stitch-divider stitch-divider--left my-6" />
                   <div>
-                    <h2 className="mb-2 text-xs font-medium uppercase tracking-[var(--tracking-wider)] text-[var(--color-text-muted)]">Materiali</h2>
+                    <h2 className="mb-2 text-xs font-medium tracking-[var(--tracking-wider)] text-[var(--color-text-muted)]">Materiali</h2>
                     <p className="text-sm leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
                       {product.materials}
                     </p>
@@ -770,7 +770,7 @@ function ProdottoPage(): ReactNode {
                 <>
                   <hr className="stitch-divider stitch-divider--left my-6" />
                   <div>
-                    <h2 className="mb-2 text-xs font-medium uppercase tracking-[var(--tracking-wider)] text-[var(--color-text-muted)]">Descrizione</h2>
+                    <h2 className="mb-2 text-xs font-medium tracking-[var(--tracking-wider)] text-[var(--color-text-muted)]">Descrizione</h2>
                     <p className="text-sm leading-[var(--leading-relaxed)] whitespace-pre-line text-[var(--color-text-secondary)]">
                       {product.description}
                     </p>
@@ -786,7 +786,7 @@ function ProdottoPage(): ReactNode {
         <ScrollAnimatedSection className="bg-[var(--color-surface)] py-[var(--section-padding-y)]">
           <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
             <div className="mb-10 text-center">
-              <h2 className="text-xs font-medium uppercase tracking-[var(--tracking-widest)] text-[var(--color-text-muted)]">
+              <h2 className="text-xs font-medium tracking-[var(--tracking-widest)] text-[var(--color-text-muted)]">
                 Potrebbe piacerti anche
               </h2>
             </div>
@@ -832,7 +832,7 @@ function RelatedProductCard({ product }: { product: ProductListItem }) {
       </div>
       <div className="mt-4">
         {product.category && (
-          <span className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
+          <span className="text-xs font-medium tracking-wider text-[var(--color-text-muted)]">
             {product.category.name}
           </span>
         )}

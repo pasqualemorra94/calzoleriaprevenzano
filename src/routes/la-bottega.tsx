@@ -33,8 +33,8 @@ function LaBottegaPage(): ReactNode {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span className="mb-4 inline-block text-xs font-medium uppercase tracking-[var(--tracking-widest)] text-[var(--color-text-muted)]">
-              Chi Siamo
+            <span className="mb-4 inline-block text-xs font-medium tracking-[var(--tracking-widest)] text-[var(--color-text-muted)]">
+              Chi siamo
             </span>
             <h1 className="font-display text-[var(--text-lg)] font-semibold tracking-tight md:text-[var(--text-xl)]">
               {ABOUT_COPY.headline}

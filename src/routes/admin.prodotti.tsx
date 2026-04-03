@@ -115,14 +115,14 @@ function AdminProductsList(): ReactNode {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-base font-medium text-gray-900">Gestione Prodotti</h1>
+        <h1 className="text-base font-medium text-gray-900">Gestione prodotti</h1>
         <Link
           to="/admin/prodotti/$id"
           params={{ id: "nuovo" }}
           className="inline-flex h-9 items-center gap-2 rounded-md bg-[var(--color-primary)] px-4 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-dark)]"
         >
           <Plus className="h-4 w-4" />
-          Nuovo Prodotto
+          Nuovo prodotto
         </Link>
       </div>
 
@@ -153,7 +153,7 @@ function AdminProductsList(): ReactNode {
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-gray-200 bg-gray-50 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <tr className="border-b border-gray-200 bg-gray-50 text-left text-xs font-medium tracking-wider text-gray-500">
                 <th className="px-4 py-3">Immagine</th>
                 <th className="px-4 py-3">Nome</th>
                 <th className="px-4 py-3">Categoria</th>
