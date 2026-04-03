@@ -1,6 +1,6 @@
 # Calzoleria Prevenzano — Implementation Map
 
-> Generated: 2026-04-02 | Version: 3 | Framework: TanStack Router + React + Vite
+> Generated: 2026-04-02 | Version: 16 | Framework: TanStack Router + React + Vite
 
 ## Architecture Overview
 
@@ -892,3 +892,47 @@ Media Library (1.357 records total)
 2. Sezione Personalizzazione: immagine showcase affiancata ai 3 step con icone reali
 3. Pagina La Bottega: storia reale della famiglia Prevenzano dal 1984, team section con foto Nunzio e Francesca
 4. Pagina Guida Taglia: immagine tutorial affiancata alle istruzioni, tabella taglie migliorata
+
+---
+
+## 🆕 Feature aggiunta: selectedOptions + variantConfig seed | 2026-04-03
+
+### Nuovi file creati
+
+| File | Tipo | Layer | Scopo |
+|------|------|-------|-------|
+| `site-output/variant-configs.json` | Data | DATA | 81 variantConfig estratte per seed automatico |
+| `scripts/migrate-to-media.ts` | Script | INFRA | Utility migrazione riferimenti immagini → Media table |
+| `src/routes/api/site/media.ts` | API | BIZ | Endpoint pubblico per template media nelle pagine |
+| `prisma/migrations/20260403171415_selected_options_cart_order/` | Migration | DATA | Aggiunge selectedOptions JSON a CartItem e OrderItem |
+
+### File modificati
+
+| File | Modifica | Giustificazione |
+|------|----------|-----------------|
+| `prisma/schema.prisma` | Aggiunto selectedOptions Json? a CartItem e OrderItem | Supporto opzioni selezionate per prodotti variantConfig |
+| `prisma/seed.ts` | Aggiunto applyVariantConfigs() + import variant-configs.json + category image field | variantConfig persistente attraverso DB reset, categorie con immagine |
+| `src/lib/cart.server.ts` | Branch A/B: variantConfig validation con priceModifier, resolved options | Prodotti con variantConfig gestiti correttamente nel carrello |
+| `src/lib/orders.server.ts` | Copia selectedOptions da CartItem a OrderItem | Opzioni visibili negli ordini |
+| `src/lib/admin.server.ts` | Include selectedOptions in getAdminOrder | Admin può vedere opzioni selezionate |
+| `src/lib/validators/products.ts` | Aggiunto selectedOptions a addToCartSchema | Validazione input |
+| `src/routes/carrello.tsx` | Display selectedOptions con color swatches | Utente vede scelte nel carrello |
+| `src/routes/checkout.tsx` | Display selectedOptions con color swatches | Utente conferma scelte al checkout |
+| `src/routes/prodotti.$slug.tsx` | Invia selectedOptions nel POST /api/cart | Product detail invia opzioni al carrello |
+| `src/routes/admin.ordini.$id.tsx` | Display selectedOptions con color swatches | Admin vede opzioni cliente nell'ordine |
+| `src/components/sections/CategoriesSection.tsx` | Accetta categoryImages prop | Immagini categorie dinamiche |
+
+### Product images update
+
+| Metrica | Valore |
+|---------|--------|
+| Sandali totali | 81 |
+| Full-size (600x800+) | 79 |
+| Thumbnail only | 2 (chiara, raffaella-maria — nessuna fonte full-size disponibile) |
+
+### Flusso utente aggiornato
+
+1. **Carrello con variantConfig**: utente seleziona taglia/colore/tacco → validazione server → prezzo con modifier → resolved options salvate
+2. **Checkout**: opzioni selezionate visibili con color swatches
+3. **Admin ordini**: dettaglio opzioni cliente per riga
+4. **Seed automatico**: `npx prisma db seed` applica 81 variantConfig senza script manuale

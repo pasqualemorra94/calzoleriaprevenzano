@@ -1,5 +1,5 @@
 {
-  "version": 15,
+  "version": 16,
   "generatedAt": "2026-04-02T00:00:00.000Z",
   "projectSlug": "calzoleria-prevenzano",
   "framework": "tanstack",
@@ -236,7 +236,10 @@
       "2026-04-03: LaBottegaSection — immagine placeholder sostituita con foto reale personalizzazione",
       "2026-04-03: PersonalizationSection — aggiunta immagine showcase e icone reali dal reference, layout migliorato",
       "2026-04-03: Pagina /la-bottega — aggiunto team section con foto Nunzio/Francesca, testi migliorati con storia reale dal 1984",
-      "2026-04-03: Pagina /guida-taglia — aggiunta immagine tutorial, istruzioni dettagliate, layout 2 colonne, link WhatsApp"
+      "2026-04-03: Pagina /guida-taglia — aggiunta immagine tutorial, istruzioni dettagliate, layout 2 colonne, link WhatsApp",
+      "2026-04-03: selectedOptions — CartItem/OrderItem con JSON selectedOptions per prodotti variantConfig, validazione prezzo con modifier, risoluzione display (label+value+color)",
+      "2026-04-03: variantConfig seed integration — 81 config estratte in site-output/variant-configs.json, applyVariantConfigs() in seed.ts (niente più script manuale dopo reset DB)",
+      "2026-04-03: Product images — 79/81 sandali con immagini full-size (600x800+), 2 senza alternativa full-size (chiara, raffaella-maria)"
     ]
   }
 }
