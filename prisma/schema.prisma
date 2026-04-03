@@ -1,11 +1,11 @@
 // ─── Calzoleria Prevenzano — Prisma Schema ─────────────────────────────────
 // Site type: ecommerce
-// Modules: auth, gdpr, payments, seo, security, email
+// Modules: auth (Better Auth), gdpr, payments, seo, security, email
 //
 // ─── Cascade delete rules ─────────────────────────────────────────────────
 // Order       → OrderItem      : onDelete: Cascade
 // Cart        → CartItem       : onDelete: Cascade
-// AuthUser    → Cart, Order, Wishlist, Review, Address : onDelete: Cascade
+// user        → Cart, Order, Wishlist, Review, Address : onDelete: Cascade
 // Product     → ProductVariant, ProductImage, Review   : onDelete: Cascade
 // Category    → Product                              : onDelete: SetNull
 // ───────────────────────────────────────────────────────────────────────────
@@ -20,94 +20,95 @@ datasource db {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// secure-auth-sdk required models — DO NOT rename or modify field names.
-// The SDK uses createPrismaAdapter(prisma) which maps to these exact names.
+// Better Auth — core models (user, session, account, verification)
+// DO NOT rename fields. Better Auth adapter maps to these exact names.
 // ═══════════════════════════════════════════════════════════════════════════
 
-model AuthUser {
-  id                String             @id @default(cuid())
-  email             String             @unique
-  passwordHash      String
-  name              String?
-  role              String             @default("user") // "user" | "admin" — SDK uses string, not enum
-  emailVerified     Boolean            @default(false)
-  totpEnabled       Boolean            @default(false)
-  lockedUntil       DateTime?
-  lockedPermanently Boolean            @default(false)
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
+model user {
+  id            String    @id
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
-  sessions          AuthSession[]
-  totpSecret        AuthTOTPSecret?
-  backupCodes       AuthBackupCode[]
-  emailTokens       AuthEmailToken[]
-  lockouts          AuthLockout[]
-  auditLogs         AuthAuditLog[]
-  oauthAccounts     AuthOAuthAccount[]
+  // Admin plugin fields
+  role          String    @default("user")
+  banned        Boolean?  @default(false)
+  banReason     String?
+  banExpires    DateTime?
+
+  // Better Auth relations
+  sessions      session[]
+  accounts      account[]
 
   // Business relations
-  addresses         Address[]
-  orders            Order[]
-  carts             Cart[]
-  reviews           Review[]
-  wishlistItems     Wishlist[]
+  addresses     Address[]
+  orders        Order[]
+  carts         Cart[]
+  reviews       Review[]
+  wishlistItems Wishlist[]
 
   @@index([email])
+  @@map("users") // avoid PostgreSQL reserved word "user"
 }
 
-model AuthSession {
-  id        String   @id
-  userId    String
-  expiresAt DateTime
-  createdAt DateTime @default(now())
-  user      AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+model session {
+  id             String   @id
+  userId         String
+  token          String   @unique
+  expiresAt      DateTime
+  ipAddress      String?
+  userAgent      String?
+  impersonatedBy String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  user           user     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([expiresAt])
+  @@map("sessions")
 }
 
-model AuthTOTPSecret {
-  id        String   @id @default(cuid())
-  userId    String   @unique
-  secret    String
-  createdAt DateTime @default(now())
-  user      AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
+model account {
+  id                   String    @id
+  userId               String
+  accountId            String
+  providerId           String
+  accessToken          String?   @db.Text
+  refreshToken         String?   @db.Text
+  accessTokenExpiresAt DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                String?   @db.Text
+  idToken              String?   @db.Text
+  password             String?
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  user                 user      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-model AuthBackupCode {
-  id        String    @id @default(cuid())
-  userId    String
-  codeHash  String
-  usedAt    DateTime?
-  user      AuthUser  @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  @@unique([providerId, accountId])
   @@index([userId])
+  @@map("accounts")
 }
 
-model AuthEmailToken {
-  id        String    @id @default(cuid())
-  userId    String
-  token     String    @unique
-  type      String    // "verify_email" | "reset_password" | "magic_link"
-  expiresAt DateTime
-  usedAt    DateTime?
-  user      AuthUser  @relation(fields: [userId], references: [id], onDelete: Cascade)
+model verification {
+  id         String   @id
+  identifier String
+  value      String   @unique
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-  @@index([token])
-  @@index([userId])
+  @@index([identifier])
+  @@map("verifications")
 }
 
-model AuthLockout {
-  id             String    @id @default(cuid())
-  userId         String
-  failedAttempts Int       @default(0)
-  lastAttemptAt  DateTime?
-  user           AuthUser  @relation(fields: [userId], references: [id], onDelete: Cascade)
+// ═══════════════════════════════════════════════════════════════════════════
+// AuditLog — lightweight auth audit trail (via Better Auth database hooks)
+// ═══════════════════════════════════════════════════════════════════════════
 
-  @@index([userId])
-}
-
-model AuthAuditLog {
+model AuditLog {
   id        String    @id @default(cuid())
   userId    String?
   event     String
@@ -115,22 +116,11 @@ model AuthAuditLog {
   userAgent String?
   metadata  Json?
   createdAt DateTime  @default(now())
-  user      AuthUser? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([createdAt])
-}
-
-model AuthOAuthAccount {
-  id             String    @id @default(cuid())
-  userId         String
-  provider       String    // "google" | "github" | "apple" | "discord" | "microsoft"
-  providerUserId String
-  createdAt      DateTime  @default(now())
-  user           AuthUser  @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerUserId])
-  @@index([userId])
+  @@index([event])
+  @@map("audit_logs")
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -293,7 +283,7 @@ model Review {
   createdAt  DateTime @default(now())
 
   product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  user       AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       user     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([productId])
   @@index([userId])
@@ -320,7 +310,7 @@ model Address {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  user       AuthUser    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       user     @relation(fields: [userId], references: [id], onDelete: Cascade)
   orderItems OrderItem[]
 
   @@index([userId])
@@ -336,7 +326,7 @@ model Cart {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 
-  user      AuthUser?  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      user?      @relation(fields: [userId], references: [id], onDelete: Cascade)
   items     CartItem[]
 
   @@index([userId])
@@ -384,7 +374,7 @@ model Order {
   deletedAt      DateTime?
   deletedBy      String?
 
-  user           AuthUser       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user           user           @relation(fields: [userId], references: [id], onDelete: Cascade)
   items          OrderItem[]
   payments       Payment[]
 
@@ -447,7 +437,7 @@ model Wishlist {
   productId String
   createdAt DateTime @default(now())
 
-  user      AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
   product   Product  @relation(fields: [productId], references: [id])
 
   @@unique([userId, productId])

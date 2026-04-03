@@ -76,8 +76,8 @@ export const OWASP_COVERAGE = {
   A01: {
     category: "Broken Access Control",
     status: "PASS",
-    coverage: "requireUser/requireAdmin guards, session SDK, CSRF SDK",
-    evidence: "src/lib/sdk-auth.server.ts",
+    coverage: "requireUser/requireAdmin guards, Better Auth sessions, CSRF cookies",
+    evidence: "src/lib/sdk-auth.server.ts, src/lib/auth.ts",
   },
   A02: {
     category: "Security Misconfiguration",
@@ -88,14 +88,14 @@ export const OWASP_COVERAGE = {
   A03: {
     category: "Software Supply Chain Failures",
     status: "PASS",
-    coverage: "pnpm lockfile, no custom auth packages, secure-auth-sdk",
-    evidence: "package.json, pnpm-lock.yaml",
+    coverage: "pnpm lockfile, Better Auth (scrypt), Stripe webhook signatures",
+    evidence: "package.json, src/lib/auth.ts",
   },
   A04: {
     category: "Cryptographic Failures",
     status: "PASS",
-    coverage: "Argon2id via SDK, Stripe webhook signatures, HSTS",
-    evidence: "src/lib/auth.server.ts, src/lib/webhook-stripe.server.ts",
+    coverage: "Better Auth scrypt password hashing, Stripe webhook signatures, HSTS",
+    evidence: "src/lib/auth.ts, src/lib/webhook-stripe.server.ts",
   },
   A05: {
     category: "Injection",
@@ -112,8 +112,8 @@ export const OWASP_COVERAGE = {
   A07: {
     category: "Authentication Failures",
     status: "PASS",
-    coverage: "secure-auth-sdk (no JWT/bcrypt manual), lockout, TOTP, breach check",
-    evidence: "src/lib/auth.server.ts",
+    coverage: "Better Auth (scrypt, lockout, session management, built-in rate limiting)",
+    evidence: "src/lib/auth.ts",
   },
   A08: {
     category: "Software or Data Integrity Failures",

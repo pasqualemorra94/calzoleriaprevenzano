@@ -5,10 +5,12 @@ import { Link } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import { zodValidator } from "@tanstack/zod-form-adapter";
 import { Loader2, ArrowLeft, Mail } from "lucide-react";
+import { authClient } from "~/lib/auth-client";
 import type { ForgotPasswordInput } from "~/lib/validators/auth";
 
 /**
  * ForgotPasswordForm — Password reset request form.
+ * Uses Better Auth's forgetPassword endpoint.
  * Always returns success to prevent email enumeration.
  */
 export function ForgotPasswordForm() {
@@ -27,10 +29,9 @@ export function ForgotPasswordForm() {
       setIsLoading(true);
 
       try {
-        await fetch("/auth/forgot-password", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(value),
+        await authClient.requestPasswordReset({
+          email: value.email,
+          redirectTo: `${window.location.origin}/auth/reset-password`,
         });
         // Always show success to prevent email enumeration
         setEmailSent(true);

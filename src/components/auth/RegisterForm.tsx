@@ -5,6 +5,7 @@ import { Link } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import { zodValidator } from "@tanstack/zod-form-adapter";
 import { Eye, EyeOff, Loader2, ArrowLeft } from "lucide-react";
+import { authClient } from "~/lib/auth-client";
 import type { RegisterInput } from "~/lib/validators/auth";
 import { GdprConsentFields } from "./GdprConsentFields";
 import { RegisterSuccessView } from "./RegisterSuccessView";
@@ -13,7 +14,8 @@ import { FormField } from "./FormField";
 /**
  * RegisterForm — Registration page component.
  * Uses @tanstack/react-form with Zod validation.
- * Includes GDPR consent checkboxes (privacy policy, age confirmation).
+ * Submits to Better Auth via authClient.signUp.email().
+ * GDPR consent checkboxes are handled client-side (Italian requirement).
  */
 export function RegisterForm() {
   const [serverError, setServerError] = useState<string | null>(null);
@@ -37,16 +39,18 @@ export function RegisterForm() {
       setServerError(null);
       setIsLoading(true);
       try {
-        const response = await fetch("/auth/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(value),
+        const { error } = await authClient.signUp.email({
+          name: value.name,
+          email: value.email,
+          password: value.password,
         });
-        const data = await response.json() as { error?: string };
-        if (!response.ok) {
-          setServerError(data.error ?? "Errore durante la registrazione. Riprova.");
+
+        if (error) {
+          const message = error.message ?? "Errore durante la registrazione. Riprova.";
+          setServerError(message);
           return;
         }
+
         setSuccess(true);
       } catch {
         setServerError("Errore di connessione. Riprova.");

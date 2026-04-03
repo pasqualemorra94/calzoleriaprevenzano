@@ -1,74 +1,71 @@
+-- CreateSchema
+CREATE SCHEMA IF NOT EXISTS "public";
+
 -- CreateTable
-CREATE TABLE "AuthUser" (
+CREATE TABLE "users" (
     "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "passwordHash" TEXT NOT NULL,
-    "name" TEXT,
-    "role" TEXT NOT NULL DEFAULT 'user',
     "emailVerified" BOOLEAN NOT NULL DEFAULT false,
-    "totpEnabled" BOOLEAN NOT NULL DEFAULT false,
-    "lockedUntil" TIMESTAMP(3),
-    "lockedPermanently" BOOLEAN NOT NULL DEFAULT false,
+    "image" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "role" TEXT NOT NULL DEFAULT 'user',
+    "banned" BOOLEAN DEFAULT false,
+    "banReason" TEXT,
+    "banExpires" TIMESTAMP(3),
 
-    CONSTRAINT "AuthUser_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "AuthSession" (
-    "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "expiresAt" TIMESTAMP(3) NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "AuthSession_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "AuthTOTPSecret" (
-    "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "secret" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "AuthTOTPSecret_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "AuthBackupCode" (
-    "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "codeHash" TEXT NOT NULL,
-    "usedAt" TIMESTAMP(3),
-
-    CONSTRAINT "AuthBackupCode_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "AuthEmailToken" (
+CREATE TABLE "sessions" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "token" TEXT NOT NULL,
-    "type" TEXT NOT NULL,
     "expiresAt" TIMESTAMP(3) NOT NULL,
-    "usedAt" TIMESTAMP(3),
+    "ipAddress" TEXT,
+    "userAgent" TEXT,
+    "impersonatedBy" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "AuthEmailToken_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "sessions_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "AuthLockout" (
+CREATE TABLE "accounts" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "failedAttempts" INTEGER NOT NULL DEFAULT 0,
-    "lastAttemptAt" TIMESTAMP(3),
+    "accountId" TEXT NOT NULL,
+    "providerId" TEXT NOT NULL,
+    "accessToken" TEXT,
+    "refreshToken" TEXT,
+    "accessTokenExpiresAt" TIMESTAMP(3),
+    "refreshTokenExpiresAt" TIMESTAMP(3),
+    "scope" TEXT,
+    "idToken" TEXT,
+    "password" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "AuthLockout_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "accounts_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "AuthAuditLog" (
+CREATE TABLE "verifications" (
+    "id" TEXT NOT NULL,
+    "identifier" TEXT NOT NULL,
+    "value" TEXT NOT NULL,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "verifications_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "audit_logs" (
     "id" TEXT NOT NULL,
     "userId" TEXT,
     "event" TEXT NOT NULL,
@@ -77,18 +74,7 @@ CREATE TABLE "AuthAuditLog" (
     "metadata" JSONB,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "AuthAuditLog_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "AuthOAuthAccount" (
-    "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "provider" TEXT NOT NULL,
-    "providerUserId" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "AuthOAuthAccount_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "audit_logs_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -114,6 +100,15 @@ CREATE TABLE "DataRequest" (
     "completedAt" TIMESTAMP(3),
 
     CONSTRAINT "DataRequest_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "StripeEvent" (
+    "id" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "processedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "StripeEvent_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -326,46 +321,40 @@ CREATE TABLE "DiscountCode" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "AuthUser_email_key" ON "AuthUser"("email");
+CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
 -- CreateIndex
-CREATE INDEX "AuthUser_email_idx" ON "AuthUser"("email");
+CREATE INDEX "users_email_idx" ON "users"("email");
 
 -- CreateIndex
-CREATE INDEX "AuthSession_userId_idx" ON "AuthSession"("userId");
+CREATE UNIQUE INDEX "sessions_token_key" ON "sessions"("token");
 
 -- CreateIndex
-CREATE INDEX "AuthSession_expiresAt_idx" ON "AuthSession"("expiresAt");
+CREATE INDEX "sessions_userId_idx" ON "sessions"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "AuthTOTPSecret_userId_key" ON "AuthTOTPSecret"("userId");
+CREATE INDEX "sessions_expiresAt_idx" ON "sessions"("expiresAt");
 
 -- CreateIndex
-CREATE INDEX "AuthBackupCode_userId_idx" ON "AuthBackupCode"("userId");
+CREATE INDEX "accounts_userId_idx" ON "accounts"("userId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "AuthEmailToken_token_key" ON "AuthEmailToken"("token");
+CREATE UNIQUE INDEX "accounts_providerId_accountId_key" ON "accounts"("providerId", "accountId");
 
 -- CreateIndex
-CREATE INDEX "AuthEmailToken_token_idx" ON "AuthEmailToken"("token");
+CREATE UNIQUE INDEX "verifications_value_key" ON "verifications"("value");
 
 -- CreateIndex
-CREATE INDEX "AuthEmailToken_userId_idx" ON "AuthEmailToken"("userId");
+CREATE INDEX "verifications_identifier_idx" ON "verifications"("identifier");
 
 -- CreateIndex
-CREATE INDEX "AuthLockout_userId_idx" ON "AuthLockout"("userId");
+CREATE INDEX "audit_logs_userId_idx" ON "audit_logs"("userId");
 
 -- CreateIndex
-CREATE INDEX "AuthAuditLog_userId_idx" ON "AuthAuditLog"("userId");
+CREATE INDEX "audit_logs_createdAt_idx" ON "audit_logs"("createdAt");
 
 -- CreateIndex
-CREATE INDEX "AuthAuditLog_createdAt_idx" ON "AuthAuditLog"("createdAt");
-
--- CreateIndex
-CREATE INDEX "AuthOAuthAccount_userId_idx" ON "AuthOAuthAccount"("userId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "AuthOAuthAccount_provider_providerUserId_key" ON "AuthOAuthAccount"("provider", "providerUserId");
+CREATE INDEX "audit_logs_event_idx" ON "audit_logs"("event");
 
 -- CreateIndex
 CREATE INDEX "ConsentLog_userId_idx" ON "ConsentLog"("userId");
@@ -539,25 +528,10 @@ CREATE INDEX "DiscountCode_startsAt_idx" ON "DiscountCode"("startsAt");
 CREATE INDEX "DiscountCode_expiresAt_idx" ON "DiscountCode"("expiresAt");
 
 -- AddForeignKey
-ALTER TABLE "AuthSession" ADD CONSTRAINT "AuthSession_userId_fkey" FOREIGN KEY ("userId") REFERENCES "AuthUser"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "sessions" ADD CONSTRAINT "sessions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "AuthTOTPSecret" ADD CONSTRAINT "AuthTOTPSecret_userId_fkey" FOREIGN KEY ("userId") REFERENCES "AuthUser"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "AuthBackupCode" ADD CONSTRAINT "AuthBackupCode_userId_fkey" FOREIGN KEY ("userId") REFERENCES "AuthUser"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "AuthEmailToken" ADD CONSTRAINT "AuthEmailToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES "AuthUser"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "AuthLockout" ADD CONSTRAINT "AuthLockout_userId_fkey" FOREIGN KEY ("userId") REFERENCES "AuthUser"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "AuthAuditLog" ADD CONSTRAINT "AuthAuditLog_userId_fkey" FOREIGN KEY ("userId") REFERENCES "AuthUser"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "AuthOAuthAccount" ADD CONSTRAINT "AuthOAuthAccount_userId_fkey" FOREIGN KEY ("userId") REFERENCES "AuthUser"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "accounts" ADD CONSTRAINT "accounts_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Category" ADD CONSTRAINT "Category_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "Category"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -575,13 +549,13 @@ ALTER TABLE "ProductImage" ADD CONSTRAINT "ProductImage_productId_fkey" FOREIGN 
 ALTER TABLE "Review" ADD CONSTRAINT "Review_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Review" ADD CONSTRAINT "Review_userId_fkey" FOREIGN KEY ("userId") REFERENCES "AuthUser"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Review" ADD CONSTRAINT "Review_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Address" ADD CONSTRAINT "Address_userId_fkey" FOREIGN KEY ("userId") REFERENCES "AuthUser"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Address" ADD CONSTRAINT "Address_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Cart" ADD CONSTRAINT "Cart_userId_fkey" FOREIGN KEY ("userId") REFERENCES "AuthUser"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Cart" ADD CONSTRAINT "Cart_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "CartItem" ADD CONSTRAINT "CartItem_cartId_fkey" FOREIGN KEY ("cartId") REFERENCES "Cart"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -593,7 +567,7 @@ ALTER TABLE "CartItem" ADD CONSTRAINT "CartItem_productId_fkey" FOREIGN KEY ("pr
 ALTER TABLE "CartItem" ADD CONSTRAINT "CartItem_variantId_fkey" FOREIGN KEY ("variantId") REFERENCES "ProductVariant"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Order" ADD CONSTRAINT "Order_userId_fkey" FOREIGN KEY ("userId") REFERENCES "AuthUser"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Order" ADD CONSTRAINT "Order_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -611,7 +585,8 @@ ALTER TABLE "OrderItem" ADD CONSTRAINT "OrderItem_addressId_fkey" FOREIGN KEY ("
 ALTER TABLE "Payment" ADD CONSTRAINT "Payment_orderId_fkey" FOREIGN KEY ("orderId") REFERENCES "Order"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Wishlist" ADD CONSTRAINT "Wishlist_userId_fkey" FOREIGN KEY ("userId") REFERENCES "AuthUser"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Wishlist" ADD CONSTRAINT "Wishlist_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Wishlist" ADD CONSTRAINT "Wishlist_productId_fkey" FOREIGN KEY ("productId") REFERENCES "Product"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+

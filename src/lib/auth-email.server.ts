@@ -1,13 +1,13 @@
 /**
  * Auth Email Wiring — server-only
  *
- * Connects secure-auth-sdk email hooks to the sendEmail service.
- * Handles: verify email, password reset, magic link.
+ * Connects Better Auth email hooks to the sendEmail service.
+ * Used by auth.ts (Better Auth config) for password reset emails.
  */
 
 import { sendEmail } from "./email.server";
 
-type AuthEmailType = "verify" | "reset" | "magic-link";
+type AuthEmailType = "verify" | "reset";
 
 interface AuthEmailData {
   url: string;
@@ -17,19 +17,18 @@ interface AuthEmailData {
 
 /**
  * Send auth-related transactional email.
- * Called by the auth SDK's onEmailRequired hook.
+ * Called by Better Auth's sendResetPassword hook.
  */
 export async function sendAuthEmail(type: AuthEmailType, data: AuthEmailData): Promise<boolean> {
   const subjects: Record<AuthEmailType, string> = {
     verify: "Verifica il tuo indirizzo email — Calzoleria Prevenzano",
     reset: "Reimposta la tua password — Calzoleria Prevenzano",
-    "magic-link": "Il tuo link di accesso — Calzoleria Prevenzano",
   };
 
   const getHtml = (t: AuthEmailType, d: AuthEmailData): string => {
     const brandName = "Calzoleria Prevenzano";
     const greeting = d.name ? `Ciao ${d.name}` : "Ciao";
-    const ctaText = t === "verify" ? "Verifica email" : t === "reset" ? "Reimposta password" : "Accedi";
+    const ctaText = t === "verify" ? "Verifica email" : "Reimposta password";
 
     return `
       <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; max-width:600px; margin:0 auto; padding:32px;">
@@ -38,9 +37,7 @@ export async function sendAuthEmail(type: AuthEmailType, data: AuthEmailData): P
           ${
             t === "verify"
               ? "Per completare la registrazione, verifica il tuo indirizzo email cliccando sul pulsante qui sotto."
-              : t === "reset"
-                ? "Abbiamo ricevuto una richiesta di reimpostazione della password. Clicca sul pulsante per scegliere una nuova password."
-                : "Clicca sul pulsante qui sotto per accedere al tuo account."
+              : "Abbiamo ricevuto una richiesta di reimpostazione della password. Clicca sul pulsante per scegliere una nuova password."
           }
         </p>
         <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin:0 auto;">

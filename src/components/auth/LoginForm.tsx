@@ -5,12 +5,13 @@ import { Link } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import { zodValidator } from "@tanstack/zod-form-adapter";
 import { Eye, EyeOff, Loader2, ArrowLeft } from "lucide-react";
+import { authClient } from "~/lib/auth-client";
 import type { LoginInput } from "~/lib/validators/auth";
 
 /**
  * LoginForm — Login page component.
  * Uses @tanstack/react-form with Zod validation.
- * Submits to the loginServerFn server function.
+ * Submits to Better Auth via authClient.signIn.email().
  */
 export function LoginForm() {
   const [serverError, setServerError] = useState<string | null>(null);
@@ -29,20 +30,18 @@ export function LoginForm() {
       setIsLoading(true);
 
       try {
-        const response = await fetch("/auth/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(value),
+        const { error } = await authClient.signIn.email({
+          email: value.email,
+          password: value.password,
         });
 
-        const data = await response.json() as { error?: string };
-
-        if (!response.ok) {
-          setServerError(data.error ?? "Errore durante il login. Riprova.");
+        if (error) {
+          const message = error.message ?? "Errore durante il login. Riprova.";
+          setServerError(message);
           return;
         }
 
-        // Redirect handled by server response
+        // Redirect after successful login
         window.location.href = "/";
       } catch {
         setServerError("Errore di connessione. Riprova.");

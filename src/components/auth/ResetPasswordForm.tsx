@@ -5,10 +5,12 @@ import { Link } from "@tanstack/react-router";
 import { useForm } from "@tanstack/react-form";
 import { zodValidator } from "@tanstack/zod-form-adapter";
 import { Eye, EyeOff, Loader2, Check } from "lucide-react";
+import { authClient } from "~/lib/auth-client";
 import type { ResetPasswordInput } from "~/lib/validators/auth";
 
 /**
  * ResetPasswordForm — New password form after password reset.
+ * Uses Better Auth's resetPassword endpoint.
  * Reads the token from URL search params.
  */
 export function ResetPasswordForm() {
@@ -30,16 +32,13 @@ export function ResetPasswordForm() {
       setIsLoading(true);
 
       try {
-        const response = await fetch("/auth/reset-password", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(value),
+        const { error } = await authClient.resetPassword({
+          newPassword: value.password,
+          token: value.token,
         });
 
-        const data = await response.json() as { error?: string };
-
-        if (!response.ok) {
-          setServerError(data.error ?? "Errore durante il reset. Il link potrebbe essere scaduto.");
+        if (error) {
+          setServerError(error.message ?? "Errore durante il reset. Il link potrebbe essere scaduto.");
           return;
         }
 

@@ -147,7 +147,7 @@ export async function getDashboardStats(): Promise<DashboardStats> {
       prisma.order.count({ where: { status: "pending", deletedAt: null } }),
       prisma.product.count(),
       prisma.product.count({ where: { isActive: true, deletedAt: null } }),
-      prisma.authUser.count(),
+      prisma.user.count(),
       prisma.order.findMany({
         where: { deletedAt: null },
         orderBy: { createdAt: "desc" },
@@ -506,7 +506,7 @@ export async function adminUpdateOrderStatus(
   });
 
   // Audit log
-  await prisma.authAuditLog.create({
+  await prisma.auditLog.create({
     data: {
       userId: adminUserId,
       event: `order_status_changed`,

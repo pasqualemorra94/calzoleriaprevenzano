@@ -1,15 +1,7 @@
 import { PrismaClient } from "@prisma/client";
-import { randomBytes, scrypt } from "node:crypto";
-import { promisify } from "node:util";
+import { auth } from "../src/lib/auth";
 
 const prisma = new PrismaClient();
-const scryptAsync = promisify(scrypt);
-
-async function hashPassword(password: string): Promise<string> {
-  const salt = randomBytes(16);
-  const derivedKey = (await scryptAsync(password, salt, 64)) as Buffer;
-  return `${salt.toString("hex")}:${derivedKey.toString("hex")}`;
-}
 
 // ─── Categories ──────────────────────────────────────────────────────────────
 
@@ -727,20 +719,24 @@ async function seedReviews(): Promise<number> {
     });
     if (!product) continue;
 
-    let user = await prisma.authUser.findUnique({
+    // Use Better Auth API to create users for reviews
+    let user = await prisma.user.findUnique({
       where: { email: rev.authorEmail },
     });
     if (!user) {
-      const pwHash = await hashPassword("ReviewUser123!");
-      user = await prisma.authUser.create({
-        data: {
+      await auth.api.signUpEmail({
+        body: {
           email: rev.authorEmail,
+          password: "ReviewUser123!",
           name: rev.authorName,
-          passwordHash: pwHash,
-          emailVerified: true,
         },
       });
+      user = await prisma.user.findUnique({
+        where: { email: rev.authorEmail },
+      });
     }
+
+    if (!user) continue;
 
     await prisma.review.create({
       data: {
@@ -791,27 +787,31 @@ async function seedAdminUser(): Promise<void> {
   const ADMIN_PASSWORD = "Admin123!";
   const ADMIN_NAME = "Nunzio Prevenzano";
 
-  const passwordHash = await hashPassword(ADMIN_PASSWORD);
-
-  const existing = await prisma.authUser.findUnique({
+  const existing = await prisma.user.findUnique({
     where: { email: ADMIN_EMAIL },
   });
 
   if (!existing) {
-    await prisma.authUser.create({
-      data: {
+    // Use Better Auth API to create admin user
+    await auth.api.signUpEmail({
+      body: {
         email: ADMIN_EMAIL,
+        password: ADMIN_PASSWORD,
         name: ADMIN_NAME,
-        passwordHash,
-        role: "admin",
-        emailVerified: true,
       },
     });
+
+    // Set admin role directly via Prisma
+    await prisma.user.update({
+      where: { email: ADMIN_EMAIL },
+      data: { role: "admin", emailVerified: true },
+    });
+
     console.log(`   ✅ Admin user created (${ADMIN_EMAIL})`);
   } else {
-    await prisma.authUser.update({
+    await prisma.user.update({
       where: { email: ADMIN_EMAIL },
-      data: { passwordHash, name: ADMIN_NAME, role: "admin", emailVerified: true },
+      data: { role: "admin", emailVerified: true, name: ADMIN_NAME },
     });
     console.log(`   ✅ Admin user updated (${ADMIN_EMAIL})`);
   }
