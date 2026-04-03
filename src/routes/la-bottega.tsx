@@ -101,10 +101,10 @@ function BottegaInfoBlock(): ReactNode {
           animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 32 }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
         >
-          <h2 className="font-display text-[var(--text-3xl)] font-semibold tracking-tight">
+          <h2 className="font-display text-[var(--text-xl)] font-semibold tracking-tight">
             Via Chiaia 104, Napoli
           </h2>
-          <hr className="stitch-divider stitch-divider--left my-6" />
+          <hr className="stitch-divider stitch-divider--left my-4" />
           <p className="text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
             Due punti vendita nel cuore di Napoli dove puoi toccare con mano la qualità dei materiali, provare i modelli e vedere gli artigiani al lavoro. Ti aspettiamo in bottega.
           </p>

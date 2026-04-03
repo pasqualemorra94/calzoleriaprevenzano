@@ -86,10 +86,10 @@ function ContattiPage(): ReactNode {
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_2fr] lg:gap-16">
             {/* Left — Contact details */}
             <div>
-              <h2 className="font-display text-[var(--text-2xl)] font-semibold tracking-tight">
+              <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
                 Informazioni di contatto
-              </h2>
-              <hr className="stitch-divider stitch-divider--left my-6" />
+              </p>
+              <hr className="stitch-divider stitch-divider--left my-4" />
 
               <ul className="space-y-6">
                 <li className="flex items-start gap-4">
@@ -136,10 +136,10 @@ function ContattiPage(): ReactNode {
 
             {/* Right — Contact form */}
             <div>
-              <h2 className="font-display text-[var(--text-2xl)] font-semibold tracking-tight">
+              <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
                 Inviaci un messaggio
-              </h2>
-              <hr className="stitch-divider stitch-divider--left my-6" />
+              </p>
+              <hr className="stitch-divider stitch-divider--left my-4" />
 
               {formState === "success" ? (
                 <div className="rounded-lg border border-green-200 bg-green-50 p-6 text-center">

@@ -53,10 +53,10 @@ function GuidaTagliaPage(): ReactNode {
       <ScrollAnimatedSection className="bg-[var(--color-background)] py-[var(--section-padding-y)]">
         <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
           <div className="mx-auto max-w-2xl">
-            <h2 className="font-display text-[var(--text-2xl)] font-semibold tracking-tight">
+            <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
               Come misurare il piede
-            </h2>
-            <hr className="stitch-divider stitch-divider--left my-6" />
+            </p>
+            <hr className="stitch-divider stitch-divider--left my-4" />
 
             <ol className="space-y-4">
               {STEPS.map((step, index) => (
@@ -78,10 +78,10 @@ function GuidaTagliaPage(): ReactNode {
       <ScrollAnimatedSection className="bg-[var(--color-surface)] py-[var(--section-padding-y)]" variants={fadeInUp}>
         <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
           <div className="mx-auto max-w-xl">
-            <h2 className="font-display text-[var(--text-2xl)] font-semibold tracking-tight">
+            <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
               Tabella taglie
-            </h2>
-            <hr className="stitch-divider stitch-divider--left my-6" />
+            </p>
+            <hr className="stitch-divider stitch-divider--left my-4" />
 
             {/* Table */}
             <div className="overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border)]">

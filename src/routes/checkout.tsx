@@ -162,7 +162,7 @@ function CheckoutPage(): ReactNode {
           <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
             <Check className="h-8 w-8 text-green-600" />
           </div>
-          <h1 className="mb-2 font-display text-[var(--text-3xl)] font-semibold">
+          <h1 className="mb-2 font-display text-[var(--text-xl)] font-semibold">
             Ordine confermato!
           </h1>
           <p className="text-[var(--color-text-secondary)]">
