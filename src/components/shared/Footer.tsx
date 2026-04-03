@@ -7,18 +7,18 @@ const FOOTER_LINKS = {
     title: "Shop",
     items: [
       { label: "Sandali Artigianali", href: "/sandali" },
-      { label: "Accessori Calzoleria", href: "/accessori" },
-      { label: "Pelletteria", href: "/pelletteria" },
-      { label: "Personalizzazione", href: "/personalizzazione" },
+      { label: "Catalogo Completo", href: "/catalogo" },
+      { label: "Novità", href: "/catalogo" },
+      { label: "La Bottega", href: "/la-bottega" },
     ],
   },
   info: {
     title: "Informazioni",
     items: [
-      { label: "La Bottega", href: "/la-bottega" },
+      { label: "Chi Siamo", href: "/la-bottega" },
       { label: "Contatti", href: "/contatti" },
-      { label: "Spedizioni", href: "/spedizioni" },
-      { label: "Resi e Rimborsi", href: "/resi" },
+      { label: "Guida Taglie", href: "/guida-taglia" },
+      { label: "Spedizioni e Resi", href: "/termini" },
     ],
   },
   legal: {
@@ -27,7 +27,6 @@ const FOOTER_LINKS = {
       { label: "Privacy Policy", href: "/privacy" },
       { label: "Cookie Policy", href: "/cookie" },
       { label: "Termini di Servizio", href: "/termini" },
-      { label: "Diritto di Recesso", href: "/recesso" },
     ],
   },
 } as const;

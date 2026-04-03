@@ -88,10 +88,10 @@ export function PersonalizationSection() {
         {/* CTA */}
         <div className="mt-16 text-center">
           <a
-            href="/personalizzazione"
+            href="/catalogo"
             className="inline-flex h-12 items-center justify-center rounded-[var(--radius-md)] border border-[var(--color-accent)] px-8 text-sm font-medium text-[var(--color-primary)] transition-colors duration-[var(--transition-base)] hover:bg-[var(--color-accent)]/10"
           >
-            Inizia a personalizzare
+            Scopri il catalogo
           </a>
         </div>
       </section>

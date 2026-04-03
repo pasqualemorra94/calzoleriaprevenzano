@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
 import { StaggeredGrid, StaggeredItem } from "~/components/ui/StaggeredGrid";
 import { m, AnimatePresence } from "motion/react";
-import { ArrowRight, ShoppingBag, Heart } from "lucide-react";
+import { ArrowRight, ShoppingBag } from "lucide-react";
 
 type ProductTab = "nuove" | "bestseller";
 
@@ -46,57 +46,49 @@ const PRODUCTS: Record<ProductTab, Product[]> = {
 
 function ProductCard({ product }: { product: Product }) {
   return (
-    <m.div
+    <m.article
       className="group"
-      whileHover={{ y: -4 }}
-      transition={{ duration: 0.25, ease: "easeOut" }}
+      whileHover={{ y: -6 }}
+      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
     >
       <div className="relative aspect-[3/4] overflow-hidden rounded-[var(--radius-lg)] bg-[var(--color-muted)]">
-        {/* Product image with 🧬 DNA: gentle scale-reveal */}
         <img
           src={product.image}
           alt={product.name}
-          className="h-full w-full object-cover transition-transform duration-[var(--transition-slow)] group-hover:scale-[1.05]"
+          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
           loading="lazy"
           width={400}
           height={533}
         />
 
-        {/* Quick action overlay on hover */}
-        <div className="absolute inset-0 flex items-end justify-between p-4 opacity-0 transition-opacity duration-[var(--transition-base)] group-hover:opacity-100">
-          <button
-            type="button"
-            aria-label="Aggiungi ai preferiti"
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-surface)] text-[var(--color-text)] shadow-md transition-colors hover:bg-[var(--color-primary)] hover:text-white"
-          >
-            <Heart className="h-4 w-4" />
-          </button>
-          <button
-            type="button"
-            aria-label="Aggiungi al carrello"
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-primary)] text-white shadow-md transition-colors hover:bg-[var(--color-primary-dark)]"
+        {/* Quick add overlay */}
+        <div className="absolute inset-x-0 bottom-0 flex justify-center p-4 translate-y-full opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+          <a
+            href={`/catalogo`}
+            className="inline-flex h-11 items-center gap-2 rounded-[var(--radius-md)] bg-[var(--color-primary)] px-5 text-xs font-semibold tracking-wide text-white shadow-[0_4px_20px_rgba(139,94,60,0.3)] transition-all hover:bg-[var(--color-primary-dark)]"
           >
             <ShoppingBag className="h-4 w-4" />
-          </button>
+            Aggiungi al carrello
+          </a>
         </div>
 
-        {/* 🧬 DNA: Stitch border on hover */}
-        <div className="pointer-events-none absolute inset-0 rounded-[var(--radius-lg)] border border-[var(--color-accent)]/0 transition-colors duration-[var(--transition-base)] group-hover:border-[var(--color-accent)]/30" />
+        {/* Hover border */}
+        <div className="pointer-events-none absolute inset-0 rounded-[var(--radius-lg)] border border-[var(--color-accent)]/0 transition-all duration-300 group-hover:border-[var(--color-accent)]/25" />
       </div>
 
       {/* Product info */}
-      <div className="mt-4">
-        <span className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
+      <div className="mt-5">
+        <span className="text-[11px] font-medium uppercase tracking-[0.15em] text-[var(--color-text-muted)]">
           {product.category}
         </span>
-        <h3 className="mt-1 font-display text-[var(--text-base)] font-semibold leading-snug text-[var(--color-text)]">
-          {product.name}
+        <h3 className="mt-1.5 font-display text-[var(--text-base)] font-semibold leading-snug text-[var(--color-text)] transition-colors duration-200 group-hover:text-[var(--color-primary)]">
+          <a href={`/catalogo`} className="block">{product.name}</a>
         </h3>
-        <p className="mt-2 text-sm font-medium text-[var(--color-primary)]">
+        <p className="mt-2 text-sm font-semibold text-[var(--color-primary)]">
           €{product.price.toFixed(2)}
         </p>
       </div>
-    </m.div>
+    </m.article>
   );
 }
 
@@ -106,11 +98,11 @@ export function FeaturedProductsSection() {
   const currentTabMeta = TABS.find((t) => t.key === activeTab);
 
   return (
-    <ScrollAnimatedSection className="bg-[var(--color-background)] py-[var(--section-padding-y)]">
+    <ScrollAnimatedSection className="bg-[var(--color-surface)] py-[var(--section-padding-y-lg)]">
       <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
         {/* Section header */}
-        <div className="mb-12 text-center md:mb-16">
-          <span className="mb-3 inline-block text-xs font-medium uppercase tracking-[var(--tracking-widest)] text-[var(--color-text-muted)]">
+        <div className="mb-14 text-center md:mb-16">
+          <span className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.2em] text-[var(--color-text-muted)]">
             Catalogo
           </span>
           <h2 className="font-display text-[var(--text-4xl)] font-semibold tracking-tight">
@@ -125,10 +117,10 @@ export function FeaturedProductsSection() {
               key={tab.key}
               type="button"
               onClick={() => setActiveTab(tab.key)}
-              className={`rounded-[var(--radius-md)] px-6 py-2.5 text-sm font-medium transition-colors duration-[var(--transition-base)] ${
+              className={`rounded-[var(--radius-md)] px-7 py-2.5 text-sm font-medium transition-all duration-200 ${
                 activeTab === tab.key
-                  ? "bg-[var(--color-primary)] text-white"
-                  : "bg-[var(--color-muted)] text-[var(--color-text-secondary)] hover:bg-[var(--color-muted)]/80"
+                  ? "bg-[var(--color-primary)] text-white shadow-sm"
+                  : "bg-[var(--color-muted)] text-[var(--color-text-secondary)] hover:bg-[var(--color-border)]"
               }`}
             >
               {tab.label}
@@ -150,7 +142,7 @@ export function FeaturedProductsSection() {
           </m.p>
         </AnimatePresence>
 
-        {/* Product grid — 2 col mobile, 3 col tablet, 4 col desktop */}
+        {/* Product grid */}
         <AnimatePresence mode="wait">
           <m.div
             key={activeTab}
@@ -159,7 +151,7 @@ export function FeaturedProductsSection() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <StaggeredGrid className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6 lg:grid-cols-4 lg:gap-8">
+            <StaggeredGrid className="grid grid-cols-2 gap-5 md:grid-cols-3 md:gap-7 lg:grid-cols-4 lg:gap-8">
               {currentProducts.map((product) => (
                 <StaggeredItem key={product.id}>
                   <ProductCard product={product} />
@@ -170,13 +162,13 @@ export function FeaturedProductsSection() {
         </AnimatePresence>
 
         {/* View all CTA */}
-        <div className="mt-12 text-center">
+        <div className="mt-14 text-center">
           <a
             href="/catalogo"
-            className="inline-flex items-center gap-2 text-sm font-medium text-[var(--color-primary)] transition-colors duration-[var(--transition-base)] hover:text-[var(--color-primary-dark)]"
+            className="group inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-primary)] transition-colors duration-200 hover:text-[var(--color-primary-dark)]"
           >
             Vedi tutti i prodotti
-            <ArrowRight className="h-4 w-4" />
+            <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
           </a>
         </div>
       </section>

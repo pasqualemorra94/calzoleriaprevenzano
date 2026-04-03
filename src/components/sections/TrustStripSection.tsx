@@ -80,7 +80,7 @@ function TrustCard({ item, index }: { item: TrustItem; index: number }) {
 
 export function TrustStripSection() {
   return (
-    <section className="bg-[var(--color-primary-dark)] py-12">
+    <section className="bg-[var(--color-primary-dark)] py-16 md:py-20">
       <div className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
         {/* 🧬 DNA: Stitch lines top and bottom */}
         <hr className="mx-auto mb-8 h-[var(--stitch-width)] w-[var(--stitch-length)] border-0 bg-[var(--color-accent)]/40" />
