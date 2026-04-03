@@ -5,6 +5,7 @@ import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
 import { m, AnimatePresence } from "motion/react";
 import { ShoppingBag, Minus, Plus, Check, ChevronRight, Loader2 } from "lucide-react";
 import { cn } from "~/lib/utils/cn";
+import { VariantConfigSchema } from "~/lib/types/variant-config";
 
 interface ProductImage {
   id: string;
@@ -36,6 +37,7 @@ interface ProductDetail {
   stock: number;
   weight: number | null;
   materials: string | null;
+  variantConfig: Record<string, unknown> | null;
   category: { id: string; name: string; slug: string } | null;
   images: ProductImage[];
   variants: ProductVariant[];
@@ -117,14 +119,23 @@ function ProdottoPage(): ReactNode {
       const json = await res.json();
       if (json.ok) {
         setProduct(json.data);
-        if (json.data.variants.length > 0) {
+        const initial = new Map<string, string>();
+
+        // Prefer variantConfig (JSON builder) over legacy variants
+        const config = VariantConfigSchema.safeParse(json.data.variantConfig);
+        if (config.success && config.data.groups.length > 0) {
+          for (const g of config.data.groups) {
+            if (g.required && g.options.length > 0) {
+              initial.set(g.id, g.options[0].value);
+            }
+          }
+        } else if (json.data.variants.length > 0) {
           const groups = parseOptionGroups(json.data.variants);
-          const initial = new Map<string, string>();
           for (const g of groups) {
             if (g.options.length > 0) initial.set(g.type, g.options[0].id);
           }
-          setSelectedOptions(initial);
         }
+        setSelectedOptions(initial);
       } else {
         setNotFound(true);
       }
@@ -151,9 +162,34 @@ function ProdottoPage(): ReactNode {
     fetchRelated();
   }, []);
 
+  // Determine which variant system to use
+  const parsedConfig = useMemo(() => {
+    if (!product?.variantConfig) return null;
+    const result = VariantConfigSchema.safeParse(product.variantConfig);
+    return result.success ? result.data : null;
+  }, [product?.variantConfig]);
+
+  // Use variantConfig when available, fall back to legacy variants
   const optionGroups = useMemo(
-    () => (product ? parseOptionGroups(product.variants) : []),
-    [product],
+    () => {
+      if (!product) return [];
+      if (parsedConfig) {
+        // Map variantConfig groups to the same OptionGroup format
+        return parsedConfig.groups.map((g) => ({
+          type: g.id,
+          label: g.label,
+          options: g.options.map((o) => ({
+            id: o.value,
+            label: o.label,
+            color: o.color,
+            priceModifier: o.priceModifier ?? 0,
+            stock: 999, // Config-based options don't track stock per-variant
+          })),
+        }));
+      }
+      return parseOptionGroups(product.variants);
+    },
+    [product, parsedConfig],
   );
 
   const selectedVariantId = useMemo(() => {
@@ -425,44 +461,101 @@ function ProdottoPage(): ReactNode {
                 <div className="space-y-5">
                   {optionGroups.map((group) => {
                     const selectedId = selectedOptions.get(group.type);
+                    // Determine the control type from variantConfig if available
+                    const configGroup = parsedConfig?.groups.find((g) => g.id === group.type);
+                    const controlType = configGroup?.type ?? (group.options.length > 8 ? "select" : "button");
+
                     return (
                       <div key={group.type}>
                         <span className="mb-2.5 block text-sm font-medium text-[var(--color-text)]">
                           {group.label}
+                          {selectedId && (
+                            <span className="ml-2 text-xs font-normal text-[var(--color-text-muted)]">
+                              — {group.options.find((o) => o.id === selectedId)?.label}
+                            </span>
+                          )}
                         </span>
-                        <div className="flex flex-wrap gap-2">
-                          {group.options.map((opt) => (
-                            <button
-                              key={opt.id}
-                              type="button"
-                              onClick={() => handleSelectOption(group.type, opt.id)}
-                              disabled={opt.stock === 0}
-                              className={cn(
-                                "flex items-center gap-2 rounded-[var(--radius-md)] border px-3 py-2.5 text-sm font-medium transition-all duration-200",
-                                selectedId === opt.id
-                                  ? "border-[var(--color-primary)] bg-[var(--color-primary)]/5 shadow-sm"
-                                  : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-primary)] hover:text-[var(--color-text)]",
-                                opt.stock === 0 && "cursor-not-allowed opacity-40",
-                              )}
-                            >
-                              {opt.color && (
+
+                        {/* SELECT type — dropdown */}
+                        {controlType === "select" ? (
+                          <select
+                            value={selectedId ?? ""}
+                            onChange={(e) => handleSelectOption(group.type, e.target.value)}
+                            className="h-10 w-full max-w-xs rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text)] transition-colors focus:border-[var(--color-primary)] focus:outline-none"
+                          >
+                            {!selectedId && <option value="">Seleziona...</option>}
+                            {group.options.map((opt) => (
+                              <option key={opt.id} value={opt.id} disabled={opt.stock === 0}>
+                                {opt.label}
+                                {opt.priceModifier > 0 ? ` (+EUR ${opt.priceModifier.toFixed(2)})` : ""}
+                              </option>
+                            ))}
+                          </select>
+
+                        /* COLOR-SWATCH type — visual color circles */
+                        ) : controlType === "color-swatch" ? (
+                          <div className="flex flex-wrap gap-2">
+                            {group.options.map((opt) => (
+                              <button
+                                key={opt.id}
+                                type="button"
+                                onClick={() => handleSelectOption(group.type, opt.id)}
+                                disabled={opt.stock === 0}
+                                className={cn(
+                                  "group/color relative h-9 w-9 rounded-full border-2 transition-all duration-200",
+                                  selectedId === opt.id
+                                    ? "border-[var(--color-primary)] ring-2 ring-[var(--color-primary)]/20 scale-110"
+                                    : "border-[var(--color-border)] hover:border-[var(--color-text-muted)] hover:scale-105",
+                                  opt.stock === 0 && "cursor-not-allowed opacity-40",
+                                )}
+                                title={opt.label + (opt.priceModifier > 0 ? ` (+EUR ${opt.priceModifier.toFixed(2)})` : "")}
+                                aria-label={opt.label}
+                                aria-pressed={selectedId === opt.id}
+                              >
                                 <span
-                                  className="inline-block h-4 w-4 rounded-full border border-[var(--color-border)]"
-                                  style={{ backgroundColor: opt.color }}
+                                  className="absolute inset-0.5 rounded-full"
+                                  style={{ backgroundColor: opt.color ?? "#ccc" }}
                                 />
-                              )}
-                              <span>{opt.label}</span>
-                              {opt.priceModifier > 0 && (
-                                <span className={cn(
-                                  "text-xs font-semibold",
-                                  selectedId === opt.id ? "text-[var(--color-primary)]" : "text-[var(--color-text-muted)]",
-                                )}>
-                                  +EUR {opt.priceModifier.toFixed(2)}
-                                </span>
-                              )}
-                            </button>
-                          ))}
-                        </div>
+                              </button>
+                            ))}
+                          </div>
+
+                        /* BUTTON type — default pill buttons */
+                        ) : (
+                          <div className="flex flex-wrap gap-2">
+                            {group.options.map((opt) => (
+                              <button
+                                key={opt.id}
+                                type="button"
+                                onClick={() => handleSelectOption(group.type, opt.id)}
+                                disabled={opt.stock === 0}
+                                className={cn(
+                                  "flex items-center gap-2 rounded-[var(--radius-md)] border px-3 py-2.5 text-sm font-medium transition-all duration-200",
+                                  selectedId === opt.id
+                                    ? "border-[var(--color-primary)] bg-[var(--color-primary)]/5 shadow-sm"
+                                    : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-primary)] hover:text-[var(--color-text)]",
+                                  opt.stock === 0 && "cursor-not-allowed opacity-40",
+                                )}
+                              >
+                                {opt.color && (
+                                  <span
+                                    className="inline-block h-4 w-4 rounded-full border border-[var(--color-border)]"
+                                    style={{ backgroundColor: opt.color }}
+                                  />
+                                )}
+                                <span>{opt.label}</span>
+                                {opt.priceModifier > 0 && (
+                                  <span className={cn(
+                                    "text-xs font-semibold",
+                                    selectedId === opt.id ? "text-[var(--color-primary)]" : "text-[var(--color-text-muted)]",
+                                  )}>
+                                    +€{opt.priceModifier.toFixed(2)}
+                                  </span>
+                                )}
+                              </button>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     );
                   })}

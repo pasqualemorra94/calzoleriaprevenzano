@@ -35,7 +35,7 @@ const CATEGORIES: Category[] = [
     description:
       "Solette, calzature per la cura delle scarpe e accessori tecnici per chi bada al dettaglio.",
     cta: "Scopri gli accessori",
-    href: "/catalogo?category=accessori-per-calzature",
+    href: "/catalogo?category=articoli-calzature",
     image: "/images/products/cintura-cuoio-035-nero.png",
   },
 ];

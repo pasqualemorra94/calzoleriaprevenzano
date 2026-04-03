@@ -7,9 +7,9 @@ const FOOTER_LINKS = {
     title: "Shop",
     items: [
       { label: "Sandali Artigianali", href: "/sandali" },
+      { label: "Pelletteria", href: "/catalogo?category=pelletteria" },
+      { label: "Articoli per Calzature", href: "/catalogo?category=articoli-calzature" },
       { label: "Catalogo Completo", href: "/catalogo" },
-      { label: "Novità", href: "/catalogo" },
-      { label: "La Bottega", href: "/la-bottega" },
     ],
   },
   info: {

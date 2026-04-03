@@ -53,6 +53,7 @@ export const createProductSchema = z.object({
   stock: z.number().int().min(0).default(0),
   weight: z.number().min(0).optional(),
   materials: z.string().optional(),
+  variantConfig: z.record(z.unknown()).optional(),
   categoryId: z.string().optional(),
   variants: z.array(productVariantSchema).optional(),
   images: z.array(productImageSchema).optional(),

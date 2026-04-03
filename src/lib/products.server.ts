@@ -34,6 +34,7 @@ interface ProductDetail {
   stock: number;
   weight: number | null;
   materials: string | null;
+  variantConfig: Record<string, unknown> | null;
   category: { id: string; name: string; slug: string } | null;
   images: Array<{ id: string; url: string; alt: string | null; width: number | null; height: number | null }>;
   variants: Array<{
@@ -47,13 +48,31 @@ interface ProductDetail {
   }>;
 }
 
+interface CategoryChildItem {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  image: string | null;
+  productCount: number;
+  children: Array<{
+    id: string;
+    name: string;
+    slug: string;
+    description: string | null;
+    image: string | null;
+    productCount: number;
+  }>;
+}
+
 interface CategoryItem {
   id: string;
   name: string;
   slug: string;
   description: string | null;
   image: string | null;
-  children: Array<{ id: string; name: string; slug: string; description: string | null; image: string | null }>;
+  productCount: number;
+  children: CategoryChildItem[];
 }
 
 interface RawProductListRow {
@@ -144,6 +163,7 @@ export async function getProductBySlug(slug: string): Promise<ProductDetail | nu
     stock: product.stock,
     weight: product.weight ? Number(product.weight) : null,
     materials: product.materials,
+    variantConfig: product.variantConfig as Record<string, unknown> | null,
     category: product.category,
     images: product.images,
     variants: product.variants.map((v: {
@@ -166,7 +186,7 @@ export async function getProductBySlug(slug: string): Promise<ProductDetail | nu
   };
 }
 
-/** Get all active categories */
+/** Get all active categories with full hierarchy and product counts */
 export async function getCategories(): Promise<CategoryItem[]> {
   const categories = await prisma.category.findMany({
     where: { isActive: true, parentId: null },
@@ -180,11 +200,86 @@ export async function getCategories(): Promise<CategoryItem[]> {
       children: {
         where: { isActive: true },
         orderBy: { sortOrder: "asc" },
-        select: { id: true, name: true, slug: true, description: true, image: true },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          description: true,
+          image: true,
+          children: {
+            where: { isActive: true },
+            orderBy: { sortOrder: "asc" },
+            select: { id: true, name: true, slug: true, description: true, image: true },
+          },
+        },
       },
     },
   });
-  return categories;
+
+  // Collect all IDs for product count query
+  const allIds: string[] = [];
+  for (const cat of categories) {
+    allIds.push(cat.id);
+    for (const child of cat.children) {
+      allIds.push(child.id);
+      for (const gc of child.children) {
+        allIds.push(gc.id);
+      }
+    }
+  }
+
+  const productCounts = await prisma.product.groupBy({
+    by: ["categoryId"],
+    where: { categoryId: { in: allIds, not: null }, isActive: true, deletedAt: null },
+    _count: { id: true },
+  });
+
+  const countMap = new Map<string, number>();
+  for (const pc of productCounts) {
+    if (pc.categoryId) countMap.set(pc.categoryId, pc._count.id);
+  }
+
+  const getCount = (id: string): number => countMap.get(id) ?? 0;
+
+  const result: CategoryItem[] = categories.map((cat) => {
+    const directCount = getCount(cat.id);
+    const childrenSum = cat.children.reduce((s, ch) => {
+      const chDirect = getCount(ch.id);
+      const gcSum = ch.children.reduce((s2, gc) => s2 + getCount(gc.id), 0);
+      return s + chDirect + gcSum;
+    }, 0);
+
+    return {
+      id: cat.id,
+      name: cat.name,
+      slug: cat.slug,
+      description: cat.description,
+      image: cat.image,
+      productCount: directCount + childrenSum,
+      children: cat.children.map((ch) => {
+        const chDirect = getCount(ch.id);
+        const gcSum = ch.children.reduce((s2, gc) => s2 + getCount(gc.id), 0);
+        return {
+          id: ch.id,
+          name: ch.name,
+          slug: ch.slug,
+          description: ch.description,
+          image: ch.image,
+          productCount: chDirect + gcSum,
+          children: ch.children.map((gc) => ({
+            id: gc.id,
+            name: gc.name,
+            slug: gc.slug,
+            description: gc.description,
+            image: gc.image,
+            productCount: getCount(gc.id),
+          })),
+        };
+      }),
+    };
+  });
+
+  return result;
 }
 
 /** Get featured products */
@@ -218,7 +313,14 @@ function buildProductWhere(opts: {
   const conditions: Array<Record<string, unknown>> = [{ isActive: true }, { deletedAt: null }];
 
   if (opts.category) {
-    conditions.push({ category: { slug: opts.category } });
+    // Match the category itself OR any of its descendants (children, grandchildren, etc.)
+    conditions.push({
+      OR: [
+        { category: { slug: opts.category } },
+        { category: { parent: { slug: opts.category } } },
+        { category: { parent: { parent: { slug: opts.category } } } },
+      ],
+    });
   }
   if (opts.query) {
     conditions.push({

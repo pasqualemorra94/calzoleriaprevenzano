@@ -8,9 +8,9 @@ import type { ReactNode } from "react";
 const NAV_ITEMS = [
   { label: "Home", to: "/", icon: Home, matchPath: "/" as const, exact: true },
   { label: "Catalogo", to: "/catalogo", icon: Store, matchPath: "/catalogo" as const },
-  { label: "Cerca", to: "/catalogo", icon: Search, matchPath: "/catalogo" as const },
+  { label: "Cerca", to: "/catalogo", icon: Search, matchPath: "/sandali" as const, exact: true },
   { label: "Carrello", to: "/carrello", icon: ShoppingBag, matchPath: "/carrello" as const },
-  { label: "Account", to: "/contatti", icon: User, matchPath: "/contatti" as const },
+  { label: "Account", to: "/auth/login", icon: User, matchPath: "/auth" as const },
 ];
 
 /**

@@ -9,7 +9,7 @@ import {
 import type { ReactNode } from "react";
 import { APP_CONFIG } from "~/lib/constants/app";
 import { MotionProvider } from "~/providers/MotionProvider";
-import { Navbar } from "~/components/shared/Navbar";
+import { MegaMenu } from "~/components/shared/MegaMenu";
 import { Footer } from "~/components/shared/Footer";
 import { MobileBottomNav } from "~/components/shared/MobileBottomNav";
 import { StructuredData } from "~/components/seo/StructuredData";
@@ -102,7 +102,7 @@ function RootComponent() {
         Vai al contenuto principale
       </a>
       <StructuredData data={ORG_SCHEMA} />
-      {!isAdmin && <Navbar />}
+      {!isAdmin && <MegaMenu />}
       <main
         id="main-content"
         className={cn(

@@ -21,6 +21,15 @@ interface CategoryItem {
   id: string;
   name: string;
   slug: string;
+  productCount: number;
+}
+
+interface CategoryWithChildren {
+  id: string;
+  name: string;
+  slug: string;
+  productCount: number;
+  children: CategoryItem[];
 }
 
 type SortOption = "newest" | "price_asc" | "price_desc" | "name";
@@ -55,7 +64,7 @@ export const Route = createFileRoute("/catalogo")({
 
 function CatalogoPage(): ReactNode {
   const [products, setProducts] = useState<ProductListItem[]>([]);
-  const [categories, setCategories] = useState<CategoryItem[]>([]);
+  const [categories, setCategories] = useState<CategoryWithChildren[]>([]);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
@@ -172,7 +181,7 @@ function CatalogoPage(): ReactNode {
               )}
             </form>
 
-            {/* Category filters */}
+            {/* Category filters — hierarchical */}
             <div className="flex flex-wrap items-center gap-2">
               <SlidersHorizontal className="h-4 w-4 text-[var(--color-text-muted)]" />
               <button
@@ -197,9 +206,30 @@ function CatalogoPage(): ReactNode {
                       : "bg-[var(--color-muted)] text-[var(--color-text-secondary)] hover:bg-[var(--color-muted)]/80"
                   }`}
                 >
-                  {cat.name}
+                  {cat.name} ({cat.productCount})
                 </button>
               ))}
+              {/* Show subcategories when a parent is active */}
+              {activeCategory && (() => {
+                const parent = categories.find((c) => c.slug === activeCategory);
+                if (parent && parent.children.length > 0) {
+                  return parent.children.map((child) => (
+                    <button
+                      key={child.id}
+                      type="button"
+                      onClick={() => handleCategoryChange(child.slug)}
+                      className={`rounded-[var(--radius-md)] border border-[var(--color-border)] px-3 py-1.5 text-xs font-medium transition-colors duration-[var(--transition-base)] ${
+                        activeCategory === child.slug
+                          ? "bg-[var(--color-primary)] text-white border-transparent"
+                          : "bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-muted)]/80"
+                      }`}
+                    >
+                      {child.name} ({child.productCount})
+                    </button>
+                  ));
+                }
+                return null;
+              })()}
             </div>
           </div>
 

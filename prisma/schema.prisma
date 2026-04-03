@@ -177,6 +177,7 @@ model Category {
   parentId    String?
   sortOrder   Int        @default(0)
   isActive    Boolean    @default(true)
+  variantConfig Json?       // default variant config for products in this category
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
 
@@ -206,6 +207,7 @@ model Product {
   stock            Int               @default(0)
   weight           Decimal?          @db.Decimal(8, 2) // kg
   materials        String?           // materiali: "Pelle di vitello", "Cuoio", ecc.
+  variantConfig    Json?             // JSON-based variant builder config (groups of options)
   categoryId       String?
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt

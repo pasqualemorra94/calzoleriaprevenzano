@@ -60,6 +60,7 @@ interface AdminProductDetail {
   stock: number;
   weight: number | null;
   materials: string | null;
+  variantConfig: Record<string, unknown> | null;
   categoryId: string | null;
   category: { id: string; name: string; slug: string } | null;
   images: Array<{
@@ -306,6 +307,7 @@ export async function getAdminProduct(id: string): Promise<AdminProductDetail | 
     stock: product.stock,
     weight: product.weight ? Number(product.weight) : null,
     materials: product.materials,
+    variantConfig: product.variantConfig as Record<string, unknown> | null,
     categoryId: product.categoryId,
     category: product.category,
     images: product.images.map((img: { id: string; url: string; alt: string | null; sortOrder: number }) => ({
@@ -361,17 +363,19 @@ interface ProductWithRelationsInput {
   stock?: number;
   weight?: number;
   materials?: string;
+  variantConfig?: Record<string, unknown>;
   categoryId?: string;
   variants?: VariantPayload[];
   images?: ImagePayload[];
 }
 
 export async function adminCreateProduct(data: ProductWithRelationsInput) {
-  const { variants, images, ...productData } = data;
+  const { variants, images, variantConfig, ...productData } = data;
 
   return prisma.product.create({
     data: {
       ...productData,
+      ...(variantConfig !== undefined ? { variantConfig } : {}),
       ...(variants && variants.length > 0
         ? {
             variants: {
@@ -399,18 +403,21 @@ export async function adminCreateProduct(data: ProductWithRelationsInput) {
             },
           }
         : {}),
-    },
+    } as Parameters<typeof prisma.product.create>[0]["data"],
   });
 }
 
 export async function adminUpdateProduct(id: string, data: Record<string, unknown>) {
-  const { variants, images, ...productData } = data as ProductWithRelationsInput & Record<string, unknown>;
+  const { variants, images, variantConfig, ...productData } = data as ProductWithRelationsInput & Record<string, unknown>;
 
   return prisma.$transaction(async (tx: Parameters<Parameters<typeof prisma.$transaction>[0]>[0]) => {
-    // Update base product fields
+    // Update base product fields (variantConfig is Json, use JsonValue type)
     const product = await tx.product.update({
       where: { id },
-      data: productData,
+      data: {
+        ...productData,
+        ...(variantConfig !== undefined ? { variantConfig } : {}),
+      } as Parameters<typeof tx.product.update>[0]["data"],
     });
 
     // Handle variants — delete existing and recreate
