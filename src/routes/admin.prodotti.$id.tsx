@@ -135,6 +135,7 @@ function AdminProductEditPage(): ReactNode {
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
   const [touched, setTouched] = useState<Set<string>>(new Set());
   const [templates, setTemplates] = useState<Array<{ id: string; name: string; description: string | null }>>([]);
+  const [categoryTemplateApplied, setCategoryTemplateApplied] = useState(false);
 
   const fetchCategories = useCallback(async () => {
     try {
@@ -226,6 +227,32 @@ function AdminProductEditPage(): ReactNode {
     fetchTemplates();
   }, [fetchCategories, fetchProduct, fetchTemplates]);
 
+  const parsedVariantConfig = form.variantConfig ? (() => {
+    try { return JSON.parse(form.variantConfig) as VariantConfig; }
+    catch { return null; }
+  })() : null;
+
+  // Auto-apply category template when category changes on new product
+  useEffect(() => {
+    if (!isNew || !form.categoryId || categoryTemplateApplied || form.variantConfig) return;
+
+    (async () => {
+      try {
+        const res = await fetch(`/api/admin/categories/${form.categoryId}`);
+        const json = await res.json();
+        if (json.ok && json.data?.variantConfig) {
+          const catConfig = typeof json.data.variantConfig === "string"
+            ? JSON.parse(json.data.variantConfig)
+            : json.data.variantConfig;
+          if (catConfig?.groups?.length > 0) {
+            updateField("variantConfig", JSON.stringify(catConfig, null, 2));
+            setCategoryTemplateApplied(true);
+          }
+        }
+      } catch { /* ignore */ }
+    })();
+  }, [isNew, form.categoryId, categoryTemplateApplied, form.variantConfig]);
+
   const updateField = (key: keyof ProductForm, value: ProductForm[keyof ProductForm]) => {
     setForm((prev) => {
       const next = { ...prev, [key]: value };
@@ -297,23 +324,37 @@ function AdminProductEditPage(): ReactNode {
   };
 
   const handleApplyTemplate = async (templateId: string) => {
-    if (!confirm("Applicare questo template? Il config attuale sarà sostituito.")) return;
     try {
       const res = await fetch(`/api/admin/variant-templates/${templateId}`);
       const json = await res.json();
       if (json.ok && json.data?.config) {
-        const parsed: VariantConfig = typeof json.data.config === "string"
+        const incoming: VariantConfig = typeof json.data.config === "string"
           ? JSON.parse(json.data.config)
           : json.data.config;
-        updateField("variantConfig", JSON.stringify(parsed, null, 2));
+
+        // Merge: combine existing groups with template groups
+        const existing: VariantConfig = parsedVariantConfig ?? { groups: [] };
+        const existingGroupIds = new Map<string, number>();
+        for (let i = 0; i < existing.groups.length; i++) {
+          existingGroupIds.set(existing.groups[i].id, i);
+        }
+
+        const merged = [...existing.groups];
+        for (const group of incoming.groups) {
+          const idx = existingGroupIds.get(group.id);
+          if (idx !== undefined) {
+            // Replace existing group with same ID
+            merged[idx] = group;
+          } else {
+            // Append new group
+            merged.push(group);
+          }
+        }
+
+        updateField("variantConfig", JSON.stringify({ groups: merged }, null, 2));
       }
     } catch { /* ignore */ }
   };
-
-  const parsedVariantConfig = form.variantConfig ? (() => {
-    try { return JSON.parse(form.variantConfig) as VariantConfig; }
-    catch { return null; }
-  })() : null;
 
   const validateForm = (): boolean => {
     const errors: FieldErrors = {};
@@ -747,11 +788,23 @@ function AdminProductEditPage(): ReactNode {
                       }}
                       className="rounded-md border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors focus:border-[var(--color-primary)] focus:outline-none"
                     >
-                      <option value="" disabled>Applica Template...</option>
+                      <option value="" disabled>Aggiungi Template...</option>
                       {templates.map((t) => (
                         <option key={t.id} value={t.id}>{t.name}</option>
                       ))}
                     </select>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (confirm("Rimuovere tutte le opzioni varianti?")) {
+                          updateField("variantConfig", null);
+                        }
+                      }}
+                      className="rounded-md border border-red-200 px-2.5 py-1.5 text-xs font-medium text-red-600 transition-colors hover:bg-red-50"
+                    >
+                      <Trash2 className="mr-1 inline h-3 w-3" />
+                      Pulisci
+                    </button>
                   </div>
                 )}
               </div>
@@ -759,7 +812,8 @@ function AdminProductEditPage(): ReactNode {
               <p className="mb-4 text-xs text-[var(--color-text-muted)]">
                 Usa il builder visivo per definire gruppi di opzioni (colore, tacco, taglia...).
                 Le opzioni di tipo "Swatches colore" mostreranno la foto del prodotto dentro ogni swatch.
-                Puoi anche applicare un template predefinito dal menu a tendina.
+                Selezionando un template dal menu, i suoi gruppi vengono <strong>aggiunti</strong> a quelli esistenti
+                (gruppi con lo stesso ID vengono aggiornati). Il pulsante "Pulisci" rimuove tutto.
               </p>
 
               <VariantBuilder

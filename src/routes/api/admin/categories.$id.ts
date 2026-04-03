@@ -6,12 +6,26 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { apiSuccess, apiError, apiNoContent } from "~/lib/api-response";
 import { requireAdmin } from "~/lib/sdk-auth.server";
-import { adminUpdateCategory, adminDeleteCategory } from "~/lib/admin.server";
+import { adminUpdateCategory, adminDeleteCategory, adminGetCategory } from "~/lib/admin.server";
 import { updateCategorySchema } from "~/lib/validators/admin";
 
 export const Route = createFileRoute("/api/admin/categories/$id")({
   server: {
     handlers: {
+      GET: async ({ request, params }) => {
+        try {
+          await requireAdmin(request);
+        } catch {
+          return apiError("FORBIDDEN", "Accesso negato", 403);
+        }
+
+        const category = await adminGetCategory(params.id);
+        if (!category) {
+          return apiError("NOT_FOUND", "Categoria non trovata", 404);
+        }
+        return apiSuccess(category);
+      },
+
       PUT: async ({ request, params }) => {
         try {
           await requireAdmin(request);

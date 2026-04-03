@@ -660,6 +660,10 @@ export async function getAdminCategories(): Promise<AdminCategoryItem[]> {
   }));
 }
 
+export async function adminGetCategory(id: string) {
+  return prisma.category.findUnique({ where: { id } });
+}
+
 export async function adminCreateCategory(data: CreateCategoryInput) {
   return prisma.category.create({ data });
 }
