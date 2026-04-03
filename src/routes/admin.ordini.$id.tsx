@@ -192,7 +192,7 @@ function AdminOrderDetailPage(): ReactNode {
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="space-y-6 lg:col-span-2">
           <div className="rounded-lg bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-lg font-semibold text-gray-900">Articoli</h2>
+
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
@@ -250,7 +250,7 @@ function AdminOrderDetailPage(): ReactNode {
 
           {order.payments.length > 0 && (
             <div className="rounded-lg bg-white p-6 shadow-sm">
-              <h2 className="mb-4 text-lg font-semibold text-gray-900">Pagamenti</h2>
+
               <div className="divide-y divide-gray-100">
                 {order.payments.map((p) => (
                   <div key={p.id} className="flex items-center justify-between py-3">
@@ -273,7 +273,7 @@ function AdminOrderDetailPage(): ReactNode {
 
         <div className="space-y-6">
           <div className="rounded-lg bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-lg font-semibold text-gray-900">Cliente</h2>
+
             <dl className="space-y-3 text-sm">
               <div>
                 <dt className="text-gray-500">Nome</dt>
@@ -287,7 +287,7 @@ function AdminOrderDetailPage(): ReactNode {
           </div>
 
           <div className="rounded-lg bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-lg font-semibold text-gray-900">Dettagli Ordine</h2>
+
             <dl className="space-y-3 text-sm">
               <div>
                 <dt className="text-gray-500">Stato corrente</dt>
@@ -325,7 +325,7 @@ function AdminOrderDetailPage(): ReactNode {
           </div>
 
           <div className="rounded-lg bg-white p-6 shadow-sm">
-            <h2 className="mb-4 text-lg font-semibold text-gray-900">Azioni</h2>
+
             <div className="space-y-4">
               <div>
                 <label htmlFor="status-select" className={labelClass}>Aggiorna stato</label>

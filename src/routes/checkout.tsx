@@ -235,7 +235,7 @@ function CheckoutPage(): ReactNode {
               >
                 <div className="flex items-center gap-2 mb-6">
                   <Truck className="h-5 w-5 text-[var(--color-primary)]" />
-                  <h2 className="font-display text-[var(--text-2xl)] font-semibold">Indirizzo di spedizione</h2>
+                  <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)] mb-4">Indirizzo di spedizione</p>
                 </div>
                 <hr className="stitch-divider stitch-divider--left mb-6" />
 
@@ -420,7 +420,7 @@ function CheckoutPage(): ReactNode {
               {/* Right — Order summary */}
               <div className="lg:sticky lg:top-24">
                 <div className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
-                  <h2 className="font-display text-[var(--text-lg)] font-semibold">Riepilogo ordine</h2>
+                  <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">Riepilogo ordine</p>
                   <hr className="stitch-divider stitch-divider--left my-4" />
 
                   {/* Items */}
@@ -470,8 +470,8 @@ function CheckoutPage(): ReactNode {
                     </div>
                     <hr className="border-[var(--color-border)]" />
                     <div className="flex justify-between">
-                      <span className="font-display text-[var(--text-lg)] font-semibold">Totale</span>
-                      <span className="font-display text-[var(--text-lg)] font-semibold text-[var(--color-primary)]">
+                      <span className="text-base font-semibold">Totale</span>
+                      <span className="text-base font-bold text-[var(--color-primary)]">
                         €{total.toFixed(2)}
                       </span>
                     </div>

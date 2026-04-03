@@ -75,7 +75,7 @@ function AdminLayout(): ReactNode {
         </div>
 
         <nav className="flex-1 overflow-y-auto px-3 py-4">
-          <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-widest text-gray-500">Navigazione</p>
+          <span className="px-3 text-[11px] font-medium uppercase tracking-wider text-gray-400">Navigazione</span>
           <div className="space-y-1">
             {NAV_ITEMS.map((item) => {
               const Icon = item.icon;
@@ -126,7 +126,7 @@ function AdminLayout(): ReactNode {
           </button>
 
           <div className="hidden lg:block">
-            <h2 className="text-sm font-medium text-gray-900">Pannello di amministrazione</h2>
+            <span className="text-xs font-medium uppercase tracking-wider text-gray-500">Pannello di amministrazione</span>
           </div>
 
           <div className="flex-1" />

@@ -112,7 +112,7 @@ function CarrelloPage(): ReactNode {
           <div className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
             <div className="flex flex-col items-center py-16 text-center">
               <ShoppingBag className="mb-6 h-16 w-16 text-[var(--color-text-muted)]" />
-              <h2 className="mb-2 font-display text-[var(--text-2xl)] font-semibold">Il tuo carrello è vuoto</h2>
+              <p className="mb-2 text-sm text-gray-500">Il tuo carrello è vuoto</p>
               <p className="mb-8 max-w-md text-[var(--color-text-secondary)]">
                 Aggiungi i tuoi sandali preferiti al carrello e procedi all'acquisto quando sei pronto.
               </p>
@@ -246,7 +246,7 @@ function CarrelloPage(): ReactNode {
             {/* Order summary */}
             <div className="lg:sticky lg:top-24">
               <div className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
-                <h2 className="font-display text-[var(--text-lg)] font-semibold">Riepilogo ordine</h2>
+                <p className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">Riepilogo ordine</p>
                 <hr className="stitch-divider stitch-divider--left my-4" />
 
                 <div className="space-y-3">
@@ -272,8 +272,8 @@ function CarrelloPage(): ReactNode {
                   )}
                   <hr className="border-[var(--color-border)]" />
                   <div className="flex justify-between">
-                    <span className="font-display text-[var(--text-lg)] font-semibold">Totale</span>
-                    <span className="font-display text-[var(--text-lg)] font-semibold text-[var(--color-primary)]">
+                    <span className="text-base font-semibold">Totale</span>
+                    <span className="text-base font-bold text-[var(--color-primary)]">
                       €{total.toFixed(2)}
                     </span>
                   </div>

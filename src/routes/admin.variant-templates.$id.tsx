@@ -229,7 +229,7 @@ export default function VariantTemplateEditPage(): ReactNode {
 
         {/* Usage hint */}
         <div className="rounded-lg bg-gray-50 p-4 text-xs text-gray-500">
-          <p className="font-semibold text-gray-700">Come usare questo template</p>
+          <p className="text-xs font-medium uppercase tracking-wider text-gray-400">Come usare questo template</p>
           <ol className="mt-1 ml-4 list-decimal space-y-0.5">
             <li>Definisci i gruppi di opzioni (colore, tacco, taglia...)</li>
             <li>Per ogni opzione colore, puoi aggiungere un URL immagine</li>
