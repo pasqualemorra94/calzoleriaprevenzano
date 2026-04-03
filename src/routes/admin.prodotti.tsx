@@ -1,10 +1,25 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, useCallback, type ReactNode } from "react";
 import { Plus, Search, Loader2, Pencil, Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/admin/prodotti")({
   component: AdminProductsPage,
 });
+
+/**
+ * Layout wrapper: renders child route (edit page) or product list.
+ * Without <Outlet />, navigating to /admin/prodotti/$id would show
+ * the list instead of the edit form.
+ */
+function AdminProductsPage(): ReactNode {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  if (pathname !== "/admin/prodotti") {
+    return <Outlet />;
+  }
+
+  return <AdminProductsList />;
+}
 
 interface ProductListItem {
   id: string;
@@ -33,7 +48,7 @@ const SORT_OPTIONS = [
   { label: "Prezzo decrescente", value: "price_desc" },
 ] as const;
 
-function AdminProductsPage(): ReactNode {
+function AdminProductsList(): ReactNode {
   const [products, setProducts] = useState<ProductListItem[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);

@@ -1,10 +1,23 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, useCallback, type ReactNode } from "react";
 import { Search, Loader2, Eye } from "lucide-react";
 
 export const Route = createFileRoute("/admin/ordini")({
   component: AdminOrdersPage,
 });
+
+/**
+ * Layout wrapper: renders child route (order detail) or order list.
+ */
+function AdminOrdersPage(): ReactNode {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  if (pathname !== "/admin/ordini") {
+    return <Outlet />;
+  }
+
+  return <AdminOrdersList />;
+}
 
 interface OrderListItem {
   id: string;
@@ -54,7 +67,7 @@ const SORT_OPTIONS = [
   { label: "Numero ordine", value: "order_number" },
 ] as const;
 
-function AdminOrdersPage(): ReactNode {
+function AdminOrdersList(): ReactNode {
   const [orders, setOrders] = useState<OrderListItem[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);

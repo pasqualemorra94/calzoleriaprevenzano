@@ -39,9 +39,20 @@ export function NewsletterSection() {
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
-          <span className="mb-3 inline-block text-xs font-medium uppercase tracking-[var(--tracking-widest)] text-[var(--color-text-muted)]">
-            Newsletter
-          </span>
+          {/* 🧬 Section header — Correspondence themed */}
+          <div className="inline-flex items-center gap-3 mb-6">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-[var(--color-accent)]" aria-hidden="true">
+              <rect x="2" y="4" width="20" height="16" rx="2" />
+              <path d="M22 4L12 13L2 4" />
+            </svg>
+            <span className="text-xs font-medium uppercase tracking-[var(--tracking-widest)] text-[var(--color-accent)]">
+              Newsletter
+            </span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-[var(--color-accent)]" aria-hidden="true">
+              <rect x="2" y="4" width="20" height="16" rx="2" />
+              <path d="M22 4L12 13L2 4" />
+            </svg>
+          </div>
           <h2 className="font-display text-[var(--text-3xl)] font-semibold tracking-tight md:text-[var(--text-4xl)]">
             Resta aggiornato sulle nuove collezioni
           </h2>
@@ -50,9 +61,14 @@ export function NewsletterSection() {
           </p>
 
           {status === "success" ? (
-            <p className="mt-8 text-sm font-medium text-green-700">
-              Iscrizione avvenuta con successo! Controlla la tua casella email per la conferma.
-            </p>
+            <div className="mt-8 flex items-center justify-center gap-2">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-green-600" aria-hidden="true">
+                <path d="M20 6L9 17l-5-5" />
+              </svg>
+              <p className="text-sm font-medium text-green-700">
+                Iscrizione avvenuta con successo! Controlla la tua casella email per la conferma.
+              </p>
+            </div>
           ) : (
             <form
               className="mt-8 flex flex-col gap-3 sm:flex-row sm:gap-0"
@@ -83,8 +99,19 @@ export function NewsletterSection() {
           </p>
         </m.div>
 
-        {/* DNA: Stitch divider */}
-        <hr className="stitch-divider mt-12" />
+        {/* DNA: Decorative stitch line */}
+        <div className="mt-12 flex items-center justify-center gap-2">
+          {[...Array(7)].map((_, i) => (
+            <span
+              key={i}
+              className="h-[2px] rounded-full bg-[var(--color-accent)]"
+              style={{
+                width: i % 2 === 0 ? "20px" : "6px",
+                opacity: i % 2 === 0 ? 0.3 : 0.15,
+              }}
+            />
+          ))}
+        </div>
       </section>
     </ScrollAnimatedSection>
   );

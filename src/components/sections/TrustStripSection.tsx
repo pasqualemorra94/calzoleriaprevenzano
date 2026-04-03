@@ -51,9 +51,9 @@ function TrustCard({ item, index }: { item: TrustItem; index: number }) {
         ease: [0.22, 1, 0.36, 1],
         delay: index * 0.1,
       }}
-      className="flex flex-col items-center text-center"
+      className="group flex flex-col items-center text-center"
     >
-      <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/10">
+      <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-white/5 backdrop-blur-sm transition-all duration-300 group-hover:border-[var(--color-accent)]/30 group-hover:bg-white/10">
         <Icon className="h-5 w-5 text-[var(--color-accent)]" />
       </div>
 
@@ -71,7 +71,7 @@ function TrustCard({ item, index }: { item: TrustItem; index: number }) {
         </div>
       ) : null}
 
-      <p className="mt-1 text-xs leading-relaxed text-white/60 md:text-sm">
+      <p className="mt-1 text-xs leading-relaxed text-white/50 md:text-sm">
         {item.description}
       </p>
     </m.div>
@@ -80,10 +80,25 @@ function TrustCard({ item, index }: { item: TrustItem; index: number }) {
 
 export function TrustStripSection() {
   return (
-    <section className="bg-[var(--color-primary-dark)] py-16 md:py-20">
-      <div className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
-        {/* 🧬 DNA: Stitch lines top and bottom */}
-        <hr className="mx-auto mb-8 h-[var(--stitch-width)] w-[var(--stitch-length)] border-0 bg-[var(--color-accent)]/40" />
+    <section className="relative bg-[var(--color-primary-dark)] py-16 md:py-20 overflow-hidden">
+      {/* 🧬 DNA: Subtle texture overlay */}
+      <div className="absolute inset-0 opacity-[0.02]" style={{ backgroundImage: "radial-gradient(circle at 50% 50%, #C9A961 1px, transparent 1px)", backgroundSize: "6px 6px" }} />
+
+      <div className="relative mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
+        {/* 🧬 DNA: Decorative stitch lines */}
+        <div className="mb-10 flex items-center justify-center gap-2">
+          {[...Array(5)].map((_, i) => (
+            <span
+              key={i}
+              className="h-[1px] rounded-full"
+              style={{
+                width: i % 2 === 0 ? "28px" : "10px",
+                backgroundColor: `var(--color-accent)`,
+                opacity: 0.4,
+              }}
+            />
+          ))}
+        </div>
 
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4 md:gap-12">
           {TRUST_ITEMS.map((item, index) => (
@@ -91,7 +106,19 @@ export function TrustStripSection() {
           ))}
         </div>
 
-        <hr className="mx-auto mt-8 h-[var(--stitch-width)] w-[var(--stitch-length)] border-0 bg-[var(--color-accent)]/40" />
+        <div className="mt-10 flex items-center justify-center gap-2">
+          {[...Array(5)].map((_, i) => (
+            <span
+              key={i}
+              className="h-[1px] rounded-full"
+              style={{
+                width: i % 2 === 0 ? "28px" : "10px",
+                backgroundColor: `var(--color-accent)`,
+                opacity: 0.4,
+              }}
+            />
+          ))}
+        </div>
       </div>
     </section>
   );

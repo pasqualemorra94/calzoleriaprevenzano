@@ -18,25 +18,25 @@ const CATEGORIES: Category[] = [
     description:
       "La collezione completa — dal classico infradito al modello gioiello. Ogni sandalo è personalizzabile nei materiali e nei dettagli.",
     cta: "Esplora i sandali",
-    href: "/sandali",
-    image: "/images/cat-sandali.svg",
+    href: "/catalogo?category=sandali",
+    image: "/images/products/schiava-4.png",
     featured: true,
-  },
-  {
-    title: "Accessori per Calzature",
-    description:
-      "Solette, calzature per la cura delle scarpe e accessori tecnici per chi bada al dettaglio.",
-    cta: "Scopri gli accessori",
-    href: "/catalogo",
-    image: "/images/cat-accessori.svg",
   },
   {
     title: "Pelletteria",
     description:
       "Portafogli, cinture e borselli in pelle italiana — piccoli oggetti che raccontano la stessa artigianalità dei nostri sandali.",
     cta: "Vedi la pelletteria",
-    href: "/catalogo",
-    image: "/images/cat-pelletteria.svg",
+    href: "/catalogo?category=pelletteria",
+    image: "/images/products/borsello-cuoio.png",
+  },
+  {
+    title: "Accessori per Calzature",
+    description:
+      "Solette, calzature per la cura delle scarpe e accessori tecnici per chi bada al dettaglio.",
+    cta: "Scopri gli accessori",
+    href: "/catalogo?category=accessori-per-calzature",
+    image: "/images/products/cintura-cuoio-035-nero.png",
   },
 ];
 
@@ -91,14 +91,36 @@ export function CategoriesSection() {
   return (
     <ScrollAnimatedSection className="bg-[var(--color-background)] py-[var(--section-padding-y-lg)]">
       <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
-        {/* Section header */}
+        {/* 🧬 Section header — Napoli-themed with stitch + Vesuvio silhouette motif */}
         <div className="mb-14 text-center md:mb-20">
-          <span className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.2em] text-[var(--color-text-muted)]">
-            Le nostre collezioni
-          </span>
+          <div className="inline-flex items-center gap-4 mb-6">
+            <span className="h-px w-12 bg-[var(--color-accent)]/50" />
+            <span className="text-xs font-medium uppercase tracking-[0.25em] text-[var(--color-accent)]">
+              Le nostre collezioni
+            </span>
+            <span className="h-px w-12 bg-[var(--color-accent)]/50" />
+          </div>
           <h2 className="font-display text-[var(--text-4xl)] font-semibold tracking-tight">
             Artigianato che racconta
           </h2>
+          <p className="mx-auto mt-4 max-w-xl text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
+            Tre anime del nostro lavoro — dal sandalo al complemento, ogni pezzo nasce
+            dalle mani esperte dei nostri artigiani napoletani.
+          </p>
+          {/* 🧬 DNA: Decorative stitch pattern */}
+          <div className="mt-8 flex items-center justify-center gap-1">
+            {[...Array(5)].map((_, i) => (
+              <span
+                key={i}
+                className="h-[2px] rounded-full"
+                style={{
+                  width: i % 2 === 0 ? "24px" : "8px",
+                  backgroundColor: `var(--color-accent)`,
+                  opacity: i % 2 === 0 ? 0.6 : 0.3,
+                }}
+              />
+            ))}
+          </div>
         </div>
 
         {/* Bento Grid: featured card full-width + 2 cards side by side */}

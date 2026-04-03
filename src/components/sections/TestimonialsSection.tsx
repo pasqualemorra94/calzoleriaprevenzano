@@ -1,6 +1,7 @@
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
 import { StaggeredGrid, StaggeredItem } from "~/components/ui/StaggeredGrid";
 import { Quote } from "lucide-react";
+import { m } from "motion/react";
 
 interface Testimonial {
   text: string;
@@ -38,7 +39,11 @@ const TESTIMONIALS: Testimonial[] = [
 
 function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   return (
-    <div className="relative rounded-[var(--radius-lg)] border border-[var(--color-border-light)] bg-[var(--color-surface)] p-6 md:p-8">
+    <m.article
+      className="group relative rounded-[var(--radius-lg)] border border-[var(--color-border-light)] bg-[var(--color-surface)] p-6 md:p-8 transition-shadow duration-300 hover:shadow-[var(--shadow-card-hover)]"
+      whileHover={{ y: -2 }}
+      transition={{ duration: 0.25 }}
+    >
       {/* Quote icon */}
       <Quote className="mb-4 h-6 w-6 text-[var(--color-accent)]" />
 
@@ -49,9 +54,9 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
 
       {/* Author */}
       <div className="mt-6 flex items-center gap-3">
-        {/* Avatar placeholder */}
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-muted)] font-display text-sm font-semibold text-[var(--color-primary)]">
-          {testimonial.author.charAt(0)}
+        {/* Avatar with initials */}
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-dark)] font-display text-sm font-semibold text-white">
+          {testimonial.author.split(" ").map((n) => n[0]).join("").slice(0, 2)}
         </div>
         <div>
           <p className="text-sm font-semibold text-[var(--color-text)]">
@@ -63,9 +68,10 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
         </div>
       </div>
 
-      {/* 🧬 DNA: Stitch accent top-left */}
-      <div className="absolute left-4 top-0 h-4 w-4 border-l-2 border-t-2 border-[var(--color-accent)]/30 rounded-tl-sm md:left-6 md:top-0" />
-    </div>
+      {/* 🧬 DNA: Stitch corner accents */}
+      <div className="absolute left-4 top-0 h-4 w-4 border-l-2 border-t-2 border-[var(--color-accent)]/20 rounded-tl-sm md:left-6" />
+      <div className="absolute right-4 bottom-0 h-4 w-4 border-b-2 border-r-2 border-[var(--color-accent)]/20 rounded-br-sm md:right-6" />
+    </m.article>
   );
 }
 
@@ -73,14 +79,21 @@ export function TestimonialsSection() {
   return (
     <ScrollAnimatedSection className="bg-[var(--color-background)] py-[var(--section-padding-y)]">
       <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
-        {/* Section header */}
+        {/* 🧬 Section header — Customer voices themed */}
         <div className="mb-12 text-center md:mb-16">
-          <span className="mb-3 inline-block text-xs font-medium uppercase tracking-[var(--tracking-widest)] text-[var(--color-text-muted)]">
-            Clienti
-          </span>
+          <div className="inline-flex items-center gap-3 mb-4">
+            <Quote className="h-4 w-4 text-[var(--color-accent)]" />
+            <span className="text-xs font-medium uppercase tracking-[var(--tracking-widest)] text-[var(--color-text-muted)]">
+              Clienti
+            </span>
+          </div>
           <h2 className="font-display text-[var(--text-4xl)] font-semibold tracking-tight">
             Cosa dicono di noi
           </h2>
+          <p className="mx-auto mt-4 max-w-lg text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
+            Le parole di chi ci ha scelto — da Napoli a Torino, le storie
+            di chi cammina con i nostri sandali.
+          </p>
         </div>
 
         {/* Staggered grid: 1 col mobile, 2 col md, 3 col lg */}
@@ -91,7 +104,6 @@ export function TestimonialsSection() {
             </StaggeredItem>
           ))}
         </StaggeredGrid>
-
       </section>
     </ScrollAnimatedSection>
   );

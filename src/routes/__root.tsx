@@ -11,6 +11,7 @@ import { APP_CONFIG } from "~/lib/constants/app";
 import { MotionProvider } from "~/providers/MotionProvider";
 import { Navbar } from "~/components/shared/Navbar";
 import { Footer } from "~/components/shared/Footer";
+import { MobileBottomNav } from "~/components/shared/MobileBottomNav";
 import { StructuredData } from "~/components/seo/StructuredData";
 import { cn } from "~/lib/utils/cn";
 import appCss from "~/styles/app.css?url";
@@ -106,12 +107,13 @@ function RootComponent() {
         id="main-content"
         className={cn(
           "min-h-screen",
-          !isAdmin && "pt-[var(--navbar-height)] md:pt-[var(--navbar-height-md)]",
+          !isAdmin && "pt-[var(--navbar-height)] md:pt-[var(--navbar-height-md)] pb-20 md:pb-0",
         )}
       >
         <Outlet />
       </main>
       {!isAdmin && <Footer />}
+      {!isAdmin && <MobileBottomNav />}
     </MotionProvider>
   );
 }
