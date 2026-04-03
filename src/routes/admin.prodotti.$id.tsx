@@ -2,9 +2,11 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, useCallback, type ReactNode } from "react";
 import {
   ArrowLeft, Loader2, Save, Plus, Trash2, GripVertical,
-  ImageIcon, ChevronDown, ChevronUp, AlertCircle, CheckCircle,
+  ImageIcon, ChevronDown, ChevronUp, AlertCircle, CheckCircle, Layers, Download,
 } from "lucide-react";
 import { cn } from "~/lib/utils/cn";
+import { VariantBuilder } from "~/components/admin/VariantBuilder";
+import type { VariantConfig } from "~/lib/types/variant-config";
 
 export const Route = createFileRoute("/admin/prodotti/$id")({
   component: AdminProductEditPage,
@@ -50,6 +52,7 @@ interface ProductForm {
   isFeatured: boolean;
   variants: ProductVariantForm[];
   images: ProductImageForm[];
+  variantConfig: string | null;
 }
 
 interface FieldErrors {
@@ -74,6 +77,7 @@ const emptyForm: ProductForm = {
   isFeatured: false,
   variants: [],
   images: [],
+  variantConfig: null,
 };
 
 const emptyVariant: ProductVariantForm = {
@@ -130,12 +134,21 @@ function AdminProductEditPage(): ReactNode {
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
   const [touched, setTouched] = useState<Set<string>>(new Set());
+  const [templates, setTemplates] = useState<Array<{ id: string; name: string; description: string | null }>>([]);
 
   const fetchCategories = useCallback(async () => {
     try {
       const res = await fetch("/api/admin/categories");
       const json = await res.json();
       if (json.ok) setCategories(json.data);
+    } catch { /* ignore */ }
+  }, []);
+
+  const fetchTemplates = useCallback(async () => {
+    try {
+      const res = await fetch("/api/admin/variant-templates");
+      const json = await res.json();
+      if (json.ok) setTemplates(json.data);
     } catch { /* ignore */ }
   }, []);
 
@@ -192,6 +205,7 @@ function AdminProductEditPage(): ReactNode {
         isFeatured: p.isFeatured,
         variants: mappedVariants,
         images: mappedImages,
+        variantConfig: p.variantConfig ? JSON.stringify(p.variantConfig, null, 2) : null,
       });
 
       const initialGroups = new Set<string>();
@@ -209,7 +223,8 @@ function AdminProductEditPage(): ReactNode {
   useEffect(() => {
     fetchCategories();
     fetchProduct();
-  }, [fetchCategories, fetchProduct]);
+    fetchTemplates();
+  }, [fetchCategories, fetchProduct, fetchTemplates]);
 
   const updateField = (key: keyof ProductForm, value: ProductForm[keyof ProductForm]) => {
     setForm((prev) => {
@@ -281,6 +296,25 @@ function AdminProductEditPage(): ReactNode {
     });
   };
 
+  const handleApplyTemplate = async (templateId: string) => {
+    if (!confirm("Applicare questo template? Il config attuale sarà sostituito.")) return;
+    try {
+      const res = await fetch(`/api/admin/variant-templates/${templateId}`);
+      const json = await res.json();
+      if (json.ok && json.data?.config) {
+        const parsed: VariantConfig = typeof json.data.config === "string"
+          ? JSON.parse(json.data.config)
+          : json.data.config;
+        updateField("variantConfig", JSON.stringify(parsed, null, 2));
+      }
+    } catch { /* ignore */ }
+  };
+
+  const parsedVariantConfig = form.variantConfig ? (() => {
+    try { return JSON.parse(form.variantConfig) as VariantConfig; }
+    catch { return null; }
+  })() : null;
+
   const validateForm = (): boolean => {
     const errors: FieldErrors = {};
     if (!form.name.trim()) errors.name = true;
@@ -338,6 +372,7 @@ function AdminProductEditPage(): ReactNode {
         isFeatured: form.isFeatured,
         variants: variantsPayload,
         images: imagesPayload,
+        variantConfig: form.variantConfig ? JSON.parse(form.variantConfig) : null,
       };
 
       let res: Response;
@@ -687,6 +722,50 @@ function AdminProductEditPage(): ReactNode {
                   </button>
                 </div>
               </div>
+            </div>
+
+            {/* ─── Configurazione Varianti (JSON Builder) ─── */}
+            <div className="rounded-lg bg-white p-6 shadow-sm">
+              <div className="mb-4 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Layers className="h-5 w-5 text-[var(--color-primary)]" />
+                  <h2 className="text-lg font-semibold text-gray-900">Configurazione Varianti</h2>
+                  {parsedVariantConfig && (
+                    <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+                      {parsedVariantConfig.groups.length} gruppi
+                    </span>
+                  )}
+                </div>
+                {templates.length > 0 && (
+                  <div className="flex items-center gap-2">
+                    <Download className="h-4 w-4 text-[var(--color-text-muted)]" />
+                    <select
+                      value=""
+                      onChange={(e) => {
+                        if (e.target.value) handleApplyTemplate(e.target.value);
+                        e.target.value = "";
+                      }}
+                      className="rounded-md border border-gray-200 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 transition-colors focus:border-[var(--color-primary)] focus:outline-none"
+                    >
+                      <option value="" disabled>Applica Template...</option>
+                      {templates.map((t) => (
+                        <option key={t.id} value={t.id}>{t.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+              </div>
+
+              <p className="mb-4 text-xs text-[var(--color-text-muted)]">
+                Usa il builder visivo per definire gruppi di opzioni (colore, tacco, taglia...).
+                Le opzioni di tipo "Swatches colore" mostreranno la foto del prodotto dentro ogni swatch.
+                Puoi anche applicare un template predefinito dal menu a tendina.
+              </p>
+
+              <VariantBuilder
+                value={parsedVariantConfig}
+                onChange={(config) => updateField("variantConfig", config ? JSON.stringify(config, null, 2) : null)}
+              />
             </div>
 
             <div className="rounded-lg bg-white p-6 shadow-sm">

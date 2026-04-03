@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, useMatchRoute } from "@tanstack/react-router";
 import { useState, useEffect, type ReactNode } from "react";
-import { Menu, X, LayoutDashboard, Package, ShoppingCart, ExternalLink } from "lucide-react";
+import { Menu, X, LayoutDashboard, Package, ShoppingCart, Layers, ExternalLink } from "lucide-react";
 import { cn } from "~/lib/utils/cn";
 
 export const Route = createFileRoute("/admin")({
@@ -10,6 +10,7 @@ export const Route = createFileRoute("/admin")({
 const NAV_ITEMS = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard, matchPath: "/admin" as const, exact: true },
   { label: "Prodotti", href: "/admin/prodotti", icon: Package, matchPath: "/admin/prodotti" as const },
+  { label: "Variant Templates", href: "/admin/variant-templates", icon: Layers, matchPath: "/admin/variant-templates" as const },
   { label: "Ordini", href: "/admin/ordini", icon: ShoppingCart, matchPath: "/admin/ordini" as const },
 ] as const;
 
