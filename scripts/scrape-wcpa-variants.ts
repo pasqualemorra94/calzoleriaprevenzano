@@ -98,18 +98,45 @@ function guessColorHex(label: string): string | undefined {
 // elements by their known WCPA class patterns.
 
 function parseWcpaForm(html: string): WcpaField[] {
-  // Step 0: Find the <form class="cart"> and extract its full content
-  const cartFormStart = html.indexOf('<form class="cart"');
-  if (cartFormStart < 0) return [];
+  // Step 0: Find the WCPA form container — try wcpa_form_outer first (more reliable),
+  // fall back to <form class="cart"> for older setups
+  let formHtml = "";
 
-  // Find matching </form> by counting open/close
-  let depth = 0;
-  let formEnd = cartFormStart;
-  for (let i = cartFormStart; i < html.length; i++) {
-    if (html.slice(i, i + 5) === "<form") depth++;
-    if (html.slice(i, i + 7) === "</form>") { depth--; if (depth === 0) { formEnd = i + 7; break; } }
+  const outerStart = html.indexOf('wcpa_form_outer');
+  if (outerStart >= 0) {
+    // Find the containing <div class="... wcpa_form_outer ..."> and extract to its </div>
+    // Go back to find the opening <div or <section
+    const searchStart = Math.max(0, outerStart - 200);
+    const beforeOuter = html.slice(searchStart, outerStart + 50);
+    const divMatch = beforeOuter.match(/<(div|section)[^>]*\sclass="[^"]*wcpa_form_outer[^"]*"/);
+    if (divMatch) {
+      const tagStart = searchStart + (divMatch.index ?? 0);
+      // Find matching close tag
+      let depth = 0;
+      const openTag = divMatch[1];
+      const closeTag = `</${openTag}>`;
+      for (let i = tagStart; i < html.length; i++) {
+        if (html.slice(i, i + openTag.length + 1) === `<${openTag}`) depth++;
+        if (html.slice(i, i + closeTag.length) === closeTag) { depth--; if (depth === 0) { formHtml = html.slice(tagStart, i + closeTag.length); break; } }
+      }
+    }
   }
-  const formHtml = html.slice(cartFormStart, formEnd);
+
+  // Fallback: try <form class="cart">
+  if (!formHtml) {
+    const cartFormStart = html.indexOf('<form class="cart"');
+    if (cartFormStart >= 0) {
+      let depth = 0;
+      let formEnd = cartFormStart;
+      for (let i = cartFormStart; i < html.length; i++) {
+        if (html.slice(i, i + 5) === "<form") depth++;
+        if (html.slice(i, i + 7) === "</form>") { depth--; if (depth === 0) { formEnd = i + 7; break; } }
+      }
+      formHtml = html.slice(cartFormStart, formEnd);
+    }
+  }
+
+  if (!formHtml) return [];
 
   // Step 1: Extract all wcpa_form_item blocks with their IDs, types, labels, and data attributes
   const items: Array<{
