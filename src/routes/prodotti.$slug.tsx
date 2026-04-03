@@ -706,7 +706,7 @@ function ProdottoPage(): ReactNode {
                   <button
                     type="button"
                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                    disabled={quantity <= 1}
+                    disabled={quantity <= 1 || effectiveStock === 0}
                     className="flex h-12 w-12 items-center justify-center text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text)] disabled:opacity-40"
                     aria-label="Diminuisci quantità"
                   >
@@ -718,7 +718,7 @@ function ProdottoPage(): ReactNode {
                   <button
                     type="button"
                     onClick={() => setQuantity((q) => Math.min(10, q + 1))}
-                    disabled={quantity >= 10}
+                    disabled={quantity >= 10 || effectiveStock === 0}
                     className="flex h-12 w-12 items-center justify-center text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text)] disabled:opacity-40"
                     aria-label="Aumenta quantità"
                   >
@@ -726,9 +726,14 @@ function ProdottoPage(): ReactNode {
                   </button>
                 </div>
 
+                {effectiveStock === 0 ? (
+                  <div className="flex h-12 flex-1 items-center justify-center gap-2 rounded-[var(--radius-md)] border border-[var(--color-destructive)]/30 bg-[var(--color-destructive)]/5 px-8 text-sm font-medium text-[var(--color-destructive)]">
+                    Non disponibile al momento
+                  </div>
+                ) : (
                 <button
                   type="button"
-                  disabled={!canAddToCart || effectiveStock === 0 || cartStatus === "loading"}
+                  disabled={!canAddToCart || cartStatus === "loading"}
                   onClick={handleAddToCart}
                   className={cn(
                     "inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-[var(--radius-md)] px-8 text-sm font-medium transition-all duration-[var(--transition-base)] disabled:cursor-not-allowed disabled:opacity-60",
@@ -737,33 +742,23 @@ function ProdottoPage(): ReactNode {
                       : "bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)] hover:shadow-lg",
                   )}
                 >
-                  {cartStatus === "loading" && <Loader2 className="h-4 w-4 animate-spin" />}
-                  {cartStatus === "success" ? (
-                    <>
-                      <Check className="h-4 w-4" />
-                      Aggiunto al carrello
-                    </>
-                  ) : effectiveStock === 0 ? (
-                    "Esaurito"
+                  {cartStatus === "loading" ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : cartStatus === "success" ? (
+                    <Check className="h-4 w-4" />
                   ) : (
-                    <>
-                      <ShoppingBag className="h-4 w-4" />
-                      Aggiungi al carrello
-                      {priceBreakdown.optionsTotal > 0 && (
-                        <span className="ml-1 text-[var(--color-primary-light)]">
-                          EUR {priceBreakdown.total.toFixed(2)}
-                        </span>
-                      )}
-                    </>
+                    <ShoppingBag className="h-4 w-4" />
                   )}
+                  {cartStatus === "success" ? "Aggiunto!" : "Aggiungi al carrello"}
                 </button>
+                )}
               </div>
 
               {product.materials && (
                 <>
                   <hr className="stitch-divider stitch-divider--left my-6" />
                   <div>
-                    <h2 className="mb-2 font-display text-[var(--text-lg)] font-semibold">Materiali</h2>
+                    <h2 className="mb-2 text-xs font-medium uppercase tracking-[var(--tracking-wider)] text-[var(--color-text-muted)]">Materiali</h2>
                     <p className="text-sm leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
                       {product.materials}
                     </p>
@@ -775,7 +770,7 @@ function ProdottoPage(): ReactNode {
                 <>
                   <hr className="stitch-divider stitch-divider--left my-6" />
                   <div>
-                    <h2 className="mb-2 font-display text-[var(--text-lg)] font-semibold">Descrizione</h2>
+                    <h2 className="mb-2 text-xs font-medium uppercase tracking-[var(--tracking-wider)] text-[var(--color-text-muted)]">Descrizione</h2>
                     <p className="text-sm leading-[var(--leading-relaxed)] whitespace-pre-line text-[var(--color-text-secondary)]">
                       {product.description}
                     </p>
@@ -791,11 +786,8 @@ function ProdottoPage(): ReactNode {
         <ScrollAnimatedSection className="bg-[var(--color-surface)] py-[var(--section-padding-y)]">
           <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
             <div className="mb-10 text-center">
-              <span className="mb-3 inline-block text-xs font-medium uppercase tracking-[var(--tracking-widest)] text-[var(--color-text-muted)]">
+              <h2 className="text-xs font-medium uppercase tracking-[var(--tracking-widest)] text-[var(--color-text-muted)]">
                 Potrebbe piacerti anche
-              </span>
-              <h2 className="font-display text-[var(--text-3xl)] font-semibold tracking-tight">
-                Prodotti correlati
               </h2>
             </div>
 

@@ -1,6 +1,7 @@
 # Calzoleria Prevenzano — Project Context
 
 > Updated: 2026-04-03 | Agent: features-coding
+> Session: variant system + admin UX + stock management
 
 ## Tech Stack
 - **Framework**: TanStack Start (React SSR)

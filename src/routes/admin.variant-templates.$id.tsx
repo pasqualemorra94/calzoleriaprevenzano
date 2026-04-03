@@ -131,7 +131,7 @@ export default function VariantTemplateEditPage(): ReactNode {
       <div className="mx-auto max-w-4xl space-y-6 px-6 py-8">
         {/* Basic info */}
         <div className="rounded-lg bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-base font-semibold text-gray-900">Informazioni Template</h2>
+          <h2 className="text-sm font-semibold text-gray-900">Informazioni</h2>
           <div className="space-y-4">
             <div>
               <label htmlFor="tpl-name" className="mb-1.5 block text-sm font-medium text-gray-700">
@@ -228,8 +228,8 @@ export default function VariantTemplateEditPage(): ReactNode {
         )}
 
         {/* Usage hint */}
-        <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 text-xs text-blue-700">
-          <p className="font-semibold">Come usare questo template:</p>
+        <div className="rounded-lg bg-gray-50 p-4 text-xs text-gray-500">
+          <p className="font-semibold text-gray-700">Come usare questo template</p>
           <ol className="mt-1 ml-4 list-decimal space-y-0.5">
             <li>Definisci i gruppi di opzioni (colore, tacco, taglia...)</li>
             <li>Per ogni opzione colore, puoi aggiungere un URL immagine</li>
