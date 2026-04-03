@@ -131,8 +131,8 @@ export default function VariantTemplateEditPage(): ReactNode {
       <div className="mx-auto max-w-4xl space-y-6 px-6 py-8">
         {/* Basic info */}
         <div className="rounded-lg bg-white p-6 shadow-sm">
-          <h2 className="text-sm font-semibold text-gray-900">Informazioni</h2>
           <div className="space-y-4">
+
             <div>
               <label htmlFor="tpl-name" className="mb-1.5 block text-sm font-medium text-gray-700">
                 Nome *

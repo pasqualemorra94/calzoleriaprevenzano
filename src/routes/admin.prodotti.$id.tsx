@@ -453,8 +453,6 @@ function AdminProductEditPage(): ReactNode {
 
   const labelClass = "block text-xs font-medium uppercase tracking-wider text-gray-500";
 
-  const sectionTitle = "text-sm font-semibold text-gray-900";
-
   const variantGroups = groupVariantsByOptionType(form.variants);
 
   if (loading) {
@@ -495,7 +493,6 @@ function AdminProductEditPage(): ReactNode {
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="space-y-6 lg:col-span-2">
             <div className="rounded-lg bg-white p-6 shadow-sm">
-              <h2 className={sectionTitle}>Informazioni Prodotto</h2>
               <div className="space-y-4">
                 <div>
                   <label htmlFor="name" className={cn(labelClass, touched.has("name") && fieldErrors.name && "text-red-600")}>
@@ -562,13 +559,12 @@ function AdminProductEditPage(): ReactNode {
               </div>
             </div>
 
-            <div className="rounded-lg bg-white p-6 shadow-sm">
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className={sectionTitle}>Varianti e Opzioni</h2>
-                <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600">
-                  {form.variants.length} opzioni
-                </span>
-              </div>
+             <div className="rounded-lg bg-white p-6 shadow-sm">
+               <div className="mb-4 flex items-center justify-end">
+                 <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600">
+                   {form.variants.length} opzioni
+                 </span>
+               </div>
 
               {Object.keys(variantGroups).length > 0 && (
                 <div className="space-y-3">
@@ -769,11 +765,10 @@ function AdminProductEditPage(): ReactNode {
 
             {/* ─── Configurazione Varianti (JSON Builder) ─── */}
             <div className="rounded-lg bg-white p-6 shadow-sm">
-              <div className="mb-4 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Layers className="h-5 w-5 text-[var(--color-primary)]" />
-                  <h2 className={sectionTitle}>Configurazione Varianti</h2>
-                  {parsedVariantConfig && (
+               <div className="mb-4 flex items-center justify-between">
+                 <div className="flex items-center gap-2">
+                   <Layers className="h-5 w-5 text-[var(--color-primary)]" />
+                   {parsedVariantConfig && (
                     <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
                       {parsedVariantConfig.groups.length} gruppi
                     </span>
@@ -824,11 +819,10 @@ function AdminProductEditPage(): ReactNode {
               />
             </div>
 
-            <div className="rounded-lg bg-white p-6 shadow-sm">
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className={sectionTitle}>Immagini</h2>
-                <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600">
-                  {form.images.length} immagini
+             <div className="rounded-lg bg-white p-6 shadow-sm">
+               <div className="mb-4 flex items-center justify-end">
+                 <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600">
+                   {form.images.length} immagini
                 </span>
               </div>
 
@@ -910,7 +904,6 @@ function AdminProductEditPage(): ReactNode {
 
           <div className="space-y-6">
             <div className="rounded-lg bg-white p-6 shadow-sm">
-              <h2 className={sectionTitle}>Prezzo e Stock</h2>
               <div className="space-y-4">
                 <div>
                   <label htmlFor="price" className={cn(labelClass, touched.has("price") && fieldErrors.price && "text-red-600")}>
@@ -958,7 +951,6 @@ function AdminProductEditPage(): ReactNode {
             </div>
 
             <div className="rounded-lg bg-white p-6 shadow-sm">
-              <h2 className={sectionTitle}>Dettagli</h2>
               <div className="space-y-4">
                 <div>
                   <label htmlFor="sku" className={labelClass}>SKU</label>
@@ -1007,7 +999,6 @@ function AdminProductEditPage(): ReactNode {
 
             {form.variants.length > 0 && (
               <div className="rounded-lg bg-white p-6 shadow-sm">
-                <h2 className={sectionTitle}>Riepilogo Prezzi</h2>
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center justify-between text-gray-600">
                     <span>Prezzo base</span>
