@@ -60,6 +60,18 @@ Agende (4), Astucci (2), Borselli (6), Cinture (14) — all non-variant products
 - `scripts/apply-variant-configs.ts` — applies to DB (ESM)
 - 209 swatch images in `public/images/swatches/`
 
+### Image Specificity per Product
+- **81 scraped products**: each has its OWN specific images (Sole has its 3, Ghiaccio its 2, Rosellina 29 its 4, etc.)
+- **Shared images**: Pelle Classica/Camoscio/Pitonato/Laminato swatches are shared across ALL 4-pelle products (Vittoria/Irene/Paola/Mia/Giulia) — this is CORRECT, same leather
+- **Strass images**: shared across Strass 1010/1012/1014/1016 — CORRECT, same strass types
+- **11 AJAX-only products** (Atena, Rodi, Lucia, Stella Marina, Francesca, BSMI3, Bama Kids, Cuscinetto Prestige, Prestige pelle Kids, Soletta Memory A Ritaglio, Stella): have CATEGORY template images (not their own). The WCPA form is AJAX-loaded and couldn't be scraped. Admin needs to update images manually.
+
+### AJAX-only products (need manual image update)
+- Atena, Rodi → currently has Sole's images (wrong)
+- Lucia, Stella Marina → currently has Sole's images (wrong)
+- Francesca → has Ginevra's images (may be correct — same "Aggiunta ciondolo" pattern)
+- BSMI3, Bama Kids, Cuscinetto, Kids, Soletta Memory → taglia-only, no images needed
+
 ## Known Issues
 - Zod/Better Auth warning: `z$1.email` — ignore (library issue)
 - Scripts in `scripts/` use intentional `any` — not app code
