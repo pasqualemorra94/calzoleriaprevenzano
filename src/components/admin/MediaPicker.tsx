@@ -77,6 +77,8 @@ export function MediaPicker({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dragCounterRef = useRef(0);
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const initialSelectedRef = useRef(initialSelected);
+  initialSelectedRef.current = initialSelected;
 
   // ── Fetch media ──
 
@@ -101,10 +103,10 @@ export function MediaPicker({
   useEffect(() => {
     if (!open) return;
     setPage(1);
-    setSelected(new Set(initialSelected));
+    setSelected(new Set(initialSelectedRef.current));
     setSearchQuery("");
     fetchMedia(1, "");
-  }, [open, initialSelected, fetchMedia]);
+  }, [open, fetchMedia]);
 
   // ── Search with debounce ──
 
