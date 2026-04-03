@@ -549,7 +549,7 @@ function ProdottoPage(): ReactNode {
                           </select>
 
                         ) : controlType === "color-swatch" ? (
-                          <div className="flex flex-wrap gap-2">
+                          <div className="grid grid-cols-5 gap-2.5 sm:grid-cols-6 md:grid-cols-7 lg:grid-cols-8">
                             {group.options.map((opt) => (
                               <button
                                 key={opt.id}
@@ -557,43 +557,56 @@ function ProdottoPage(): ReactNode {
                                 onClick={() => handleSelectOption(group.type, opt.id)}
                                 disabled={opt.stock === 0}
                                 className={cn(
-                                  "group/color relative overflow-hidden rounded-[var(--radius-lg)] border-2 transition-all duration-200 aspect-square",
-                                  selectedId === opt.id
-                                    ? "border-[var(--color-primary)] ring-2 ring-[var(--color-primary)]/20 scale-105"
-                                    : "border-transparent hover:border-[var(--color-border)] hover:scale-105",
+                                  "group/color flex flex-col items-center gap-1.5 transition-all duration-200",
+                                  selectedId === opt.id && "scale-[1.02]",
                                   opt.stock === 0 && "cursor-not-allowed opacity-40",
                                 )}
                                 title={opt.label + (opt.priceModifier > 0 ? ` (+EUR ${opt.priceModifier.toFixed(2)})` : "")}
                                 aria-label={opt.label}
                                 aria-pressed={selectedId === opt.id}
                               >
-                                {opt.imageUrl ? (
-                                  <>
-                                    {/* Product image preview */}
+                                {/* Swatch image or color circle */}
+                                <span
+                                  className={cn(
+                                    "relative aspect-square w-full overflow-hidden rounded-[var(--radius-lg)] transition-all duration-200",
+                                    selectedId === opt.id
+                                      ? "ring-2 ring-[var(--color-primary)] ring-offset-2 ring-offset-[var(--color-background)] shadow-md"
+                                      : "ring-1 ring-[var(--color-border)] hover:ring-[var(--color-primary)]/50 hover:shadow-sm",
+                                  )}
+                                >
+                                  {opt.imageUrl ? (
                                     <img
                                       src={opt.imageUrl}
                                       alt={opt.label}
-                                      className="absolute inset-0 h-full w-full object-cover"
+                                      className="h-full w-full object-cover"
                                       loading="lazy"
                                     />
-                                    {/* Color accent strip at bottom */}
+                                  ) : (
                                     <span
-                                      className="absolute bottom-0 left-0 right-0 h-1.5"
+                                      className="absolute inset-1 rounded-full"
                                       style={{ backgroundColor: opt.color ?? "#ccc" }}
                                     />
-                                    {/* Selected checkmark overlay */}
-                                    {selectedId === opt.id && (
-                                      <span className="absolute inset-0 flex items-center justify-center bg-[var(--color-primary)]/20">
-                                        <Check className="h-4 w-4 text-white drop-shadow-md" />
-                                      </span>
-                                    )}
-                                  </>
-                                ) : (
-                                  /* Fallback: plain color circle */
-                                  <span
-                                    className="absolute inset-0.5 rounded-full"
-                                    style={{ backgroundColor: opt.color ?? "#ccc" }}
-                                  />
+                                  )}
+                                  {/* Selected checkmark */}
+                                  {selectedId === opt.id && (
+                                    <span className="absolute inset-0 flex items-center justify-center bg-[var(--color-primary)]/25">
+                                      <Check className="h-5 w-5 text-white drop-shadow-lg" />
+                                    </span>
+                                  )}
+                                </span>
+                                {/* Label under swatch */}
+                                <span className={cn(
+                                  "w-full truncate text-center text-[11px] leading-tight transition-colors",
+                                  selectedId === opt.id
+                                    ? "font-semibold text-[var(--color-primary)]"
+                                    : "text-[var(--color-text-secondary)]",
+                                )}>
+                                  {opt.label}
+                                </span>
+                                {opt.priceModifier > 0 && (
+                                  <span className="text-[10px] font-medium text-[var(--color-text-muted)]">
+                                    +€{opt.priceModifier.toFixed(0)}
+                                  </span>
                                 )}
                               </button>
                             ))}
