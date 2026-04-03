@@ -63,6 +63,7 @@ interface OptionGroup {
     color: string | null;
     priceModifier: number;
     stock: number;
+    imageUrl: string | null;
   }>;
 }
 
@@ -87,6 +88,7 @@ function parseOptionGroups(variants: ProductVariant[]): OptionGroup[] {
       color: v.color,
       priceModifier: v.price ? Number(v.price) : 0,
       stock: v.stock,
+      imageUrl: null,
     });
   }
 
@@ -184,6 +186,7 @@ function ProdottoPage(): ReactNode {
             color: o.color,
             priceModifier: o.priceModifier ?? 0,
             stock: 999, // Config-based options don't track stock per-variant
+            imageUrl: o.imageUrl ?? null,
           })),
         }));
       }
@@ -492,7 +495,6 @@ function ProdottoPage(): ReactNode {
                             ))}
                           </select>
 
-                        /* COLOR-SWATCH type — visual color circles */
                         ) : controlType === "color-swatch" ? (
                           <div className="flex flex-wrap gap-2">
                             {group.options.map((opt) => (
@@ -502,25 +504,48 @@ function ProdottoPage(): ReactNode {
                                 onClick={() => handleSelectOption(group.type, opt.id)}
                                 disabled={opt.stock === 0}
                                 className={cn(
-                                  "group/color relative h-9 w-9 rounded-full border-2 transition-all duration-200",
+                                  "group/color relative overflow-hidden rounded-[var(--radius-lg)] border-2 transition-all duration-200 aspect-square",
                                   selectedId === opt.id
-                                    ? "border-[var(--color-primary)] ring-2 ring-[var(--color-primary)]/20 scale-110"
-                                    : "border-[var(--color-border)] hover:border-[var(--color-text-muted)] hover:scale-105",
+                                    ? "border-[var(--color-primary)] ring-2 ring-[var(--color-primary)]/20 scale-105"
+                                    : "border-transparent hover:border-[var(--color-border)] hover:scale-105",
                                   opt.stock === 0 && "cursor-not-allowed opacity-40",
                                 )}
                                 title={opt.label + (opt.priceModifier > 0 ? ` (+EUR ${opt.priceModifier.toFixed(2)})` : "")}
                                 aria-label={opt.label}
                                 aria-pressed={selectedId === opt.id}
                               >
-                                <span
-                                  className="absolute inset-0.5 rounded-full"
-                                  style={{ backgroundColor: opt.color ?? "#ccc" }}
-                                />
+                                {opt.imageUrl ? (
+                                  <>
+                                    {/* Product image preview */}
+                                    <img
+                                      src={opt.imageUrl}
+                                      alt={opt.label}
+                                      className="absolute inset-0 h-full w-full object-cover"
+                                      loading="lazy"
+                                    />
+                                    {/* Color accent strip at bottom */}
+                                    <span
+                                      className="absolute bottom-0 left-0 right-0 h-1.5"
+                                      style={{ backgroundColor: opt.color ?? "#ccc" }}
+                                    />
+                                    {/* Selected checkmark overlay */}
+                                    {selectedId === opt.id && (
+                                      <span className="absolute inset-0 flex items-center justify-center bg-[var(--color-primary)]/20">
+                                        <Check className="h-4 w-4 text-white drop-shadow-md" />
+                                      </span>
+                                    )}
+                                  </>
+                                ) : (
+                                  /* Fallback: plain color circle */
+                                  <span
+                                    className="absolute inset-0.5 rounded-full"
+                                    style={{ backgroundColor: opt.color ?? "#ccc" }}
+                                  />
+                                )}
                               </button>
                             ))}
                           </div>
 
-                        /* BUTTON type — default pill buttons */
                         ) : (
                           <div className="flex flex-wrap gap-2">
                             {group.options.map((opt) => (

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { Plus, Trash2, GripVertical, Copy } from "lucide-react";
+import { Plus, Trash2, GripVertical, Copy, ImageIcon, X } from "lucide-react";
 import type { VariantConfig, VariantGroup, VariantOption, VariantControlType } from "~/lib/types/variant-config";
 import { VariantConfigSchema } from "~/lib/types/variant-config";
 import { SANDALI_VARIANT_CONFIG, PELLETTERIA_VARIANT_CONFIG } from "~/lib/types/variant-config";
@@ -303,53 +303,90 @@ function GroupEditor({
           </button>
         </div>
 
-        <div className="space-y-1.5">
+        <div className="space-y-2">
           {group.options.map((opt, optIndex) => (
-            <div key={opt.value} className="flex items-center gap-2">
-              {/* Color preview for color-swatch type */}
-              {group.type === "color-swatch" && (
-                <input
-                  type="color"
-                  value={opt.color ?? "#000000"}
-                  onChange={(e) => onUpdateOption(optIndex, { color: e.target.value })}
-                  className="h-7 w-7 shrink-0 cursor-pointer rounded border border-[var(--color-border)]"
-                />
-              )}
+            <div key={opt.value} className="rounded-[var(--radius-md)] border border-[var(--color-border-light)] bg-[var(--color-muted)]/10 p-2">
+              {/* Main option row */}
+              <div className="flex items-center gap-2">
+                {/* Color preview for color-swatch type */}
+                {group.type === "color-swatch" && (
+                  <div className="relative">
+                    {opt.imageUrl ? (
+                      <img
+                        src={opt.imageUrl}
+                        alt={opt.label}
+                        className="h-7 w-7 shrink-0 rounded border border-[var(--color-border)] object-cover"
+                      />
+                    ) : (
+                      <input
+                        type="color"
+                        value={opt.color ?? "#000000"}
+                        onChange={(e) => onUpdateOption(optIndex, { color: e.target.value })}
+                        className="h-7 w-7 shrink-0 cursor-pointer rounded border border-[var(--color-border)]"
+                      />
+                    )}
+                  </div>
+                )}
 
-              <input
-                type="text"
-                value={opt.value}
-                onChange={(e) => onUpdateOption(optIndex, { value: e.target.value })}
-                placeholder="Valore"
-                className="h-7 w-28 shrink-0 rounded border border-[var(--color-border)] bg-transparent px-2 text-xs font-mono text-[var(--color-text-muted)] placeholder:text-[var(--color-text-muted)]/50 focus:border-[var(--color-primary)] focus:outline-none"
-              />
-              <input
-                type="text"
-                value={opt.label}
-                onChange={(e) => onUpdateOption(optIndex, { label: e.target.value })}
-                placeholder="Label"
-                className="h-7 flex-1 rounded border border-[var(--color-border)] bg-transparent px-2 text-xs text-[var(--color-text)] placeholder:text-[var(--color-text-muted)]/50 focus:border-[var(--color-primary)] focus:outline-none"
-              />
-              <div className="flex items-center gap-1">
-                <span className="text-[10px] text-[var(--color-text-muted)]">€</span>
                 <input
-                  type="number"
-                  min={0}
-                  step={0.01}
-                  value={opt.priceModifier ?? 0}
-                  onChange={(e) => onUpdateOption(optIndex, { priceModifier: parseFloat(e.target.value) || 0 })}
-                  placeholder="0"
-                  className="h-7 w-16 shrink-0 rounded border border-[var(--color-border)] bg-transparent px-2 text-right text-xs text-[var(--color-text)] placeholder:text-[var(--color-text-muted)]/50 focus:border-[var(--color-primary)] focus:outline-none"
+                  type="text"
+                  value={opt.value}
+                  onChange={(e) => onUpdateOption(optIndex, { value: e.target.value })}
+                  placeholder="Valore"
+                  className="h-7 w-28 shrink-0 rounded border border-[var(--color-border)] bg-transparent px-2 text-xs font-mono text-[var(--color-text-muted)] placeholder:text-[var(--color-text-muted)]/50 focus:border-[var(--color-primary)] focus:outline-none"
                 />
+                <input
+                  type="text"
+                  value={opt.label}
+                  onChange={(e) => onUpdateOption(optIndex, { label: e.target.value })}
+                  placeholder="Label"
+                  className="h-7 flex-1 rounded border border-[var(--color-border)] bg-transparent px-2 text-xs text-[var(--color-text)] placeholder:text-[var(--color-text-muted)]/50 focus:border-[var(--color-primary)] focus:outline-none"
+                />
+                <div className="flex items-center gap-1">
+                  <span className="text-[10px] text-[var(--color-text-muted)]">€</span>
+                  <input
+                    type="number"
+                    min={0}
+                    step={0.01}
+                    value={opt.priceModifier ?? 0}
+                    onChange={(e) => onUpdateOption(optIndex, { priceModifier: parseFloat(e.target.value) || 0 })}
+                    placeholder="0"
+                    className="h-7 w-16 shrink-0 rounded border border-[var(--color-border)] bg-transparent px-2 text-right text-xs text-[var(--color-text)] placeholder:text-[var(--color-text-muted)]/50 focus:border-[var(--color-primary)] focus:outline-none"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => onRemoveOption(optIndex)}
+                  className="p-1 text-[var(--color-text-muted)] hover:text-[var(--color-destructive)]"
+                  aria-label="Rimuovi opzione"
+                >
+                  <Trash2 className="h-3 w-3" />
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={() => onRemoveOption(optIndex)}
-                className="p-1 text-[var(--color-text-muted)] hover:text-[var(--color-destructive)]"
-                aria-label="Rimuovi opzione"
-              >
-                <Trash2 className="h-3 w-3" />
-              </button>
+
+              {/* Image URL row for color-swatch type */}
+              {group.type === "color-swatch" && (
+                <div className="mt-1.5 flex items-center gap-2 pl-1">
+                  <ImageIcon className="h-3 w-3 shrink-0 text-[var(--color-text-muted)]" />
+                  <input
+                    type="text"
+                    value={opt.imageUrl ?? ""}
+                    onChange={(e) => onUpdateOption(optIndex, { imageUrl: e.target.value || undefined })}
+                    placeholder="/images/products/colore-nero.jpg"
+                    className="h-6 flex-1 rounded border border-[var(--color-border)] bg-transparent px-2 text-[11px] font-mono text-[var(--color-text-muted)] placeholder:text-[var(--color-text-muted)]/40 focus:border-[var(--color-primary)] focus:outline-none"
+                  />
+                  {opt.imageUrl && (
+                    <button
+                      type="button"
+                      onClick={() => onUpdateOption(optIndex, { imageUrl: undefined })}
+                      className="p-0.5 text-[var(--color-text-muted)] hover:text-[var(--color-destructive)]"
+                      aria-label="Rimuovi immagine"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
           ))}
         </div>

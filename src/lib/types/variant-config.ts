@@ -64,6 +64,8 @@ interface VariantOption {
   color?: string;
   /** Optional price modifier (added to base price) */
   priceModifier?: number;
+  /** Optional image URL — when this option is selected, show this image on the product page */
+  imageUrl?: string;
 }
 
 /** A group of variant options (e.g., "Tipo di Pelle") */
@@ -94,6 +96,7 @@ const VariantOptionSchema = z.object({
   label: z.string().min(1),
   color: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(),
   priceModifier: z.number().min(0).optional(),
+  imageUrl: z.string().min(1).optional(),
 });
 
 const VariantGroupSchema = z.object({

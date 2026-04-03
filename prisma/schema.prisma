@@ -467,3 +467,24 @@ model DiscountCode {
   @@index([startsAt])
   @@index([expiresAt])
 }
+
+// ─── Variant Template ──────────────────────────────────────────────────
+// Reusable variant form templates. Each template defines groups of options
+// (e.g., "Colore" with swatches, "Tacco" with select) that produce a JSON config.
+// Templates are applied to products by copying the JSON to product.variantConfig.
+
+model VariantTemplate {
+  id          String   @id @default(cuid())
+  name        String                              // e.g. "Gioiello Samantha Colori"
+  slug        String   @unique
+  description String?                             // optional notes
+  config      Json                                // the VariantConfig JSON (groups, options, images)
+  sortOrder   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([slug])
+  @@index([isActive])
+  @@index([sortOrder])
+}
