@@ -310,8 +310,8 @@ function CatalogoPage(): ReactNode {
               {/* Active filter pills */}
               {(activeCategory || query) && (
                 <div className="mb-6 flex flex-wrap items-center gap-2">
-                  <span className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">
-                    Filtri attivi:
+                  <span className="text-xs font-medium text-[var(--color-text-muted)]">
+                    Filtri attivi
                   </span>
                   {query && (
                     <span className="inline-flex items-center gap-1 rounded-full bg-[var(--color-primary)]/10 px-3 py-1 text-xs font-medium text-[var(--color-primary)]">
@@ -469,8 +469,8 @@ function CatalogSidebar({
     <div className="space-y-8">
       {/* Search */}
       <div>
-        <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
-          Cerca
+        <h3 className="mb-4 font-display text-[var(--text-sm)] font-semibold text-[var(--color-text)]">
+          Cerca nel catalogo
         </h3>
         <form onSubmit={onSearch} className="relative">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-text-muted)]" />
@@ -497,9 +497,12 @@ function CatalogSidebar({
 
       {/* Category tree */}
       <nav aria-label="Categorie prodotti">
-        <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
-          Categorie
-        </h3>
+        <div className="mb-4 flex items-center gap-3">
+          <h3 className="font-display text-[var(--text-sm)] font-semibold text-[var(--color-text)]">
+            Sfoglia per categoria
+          </h3>
+          <hr className="stitch-divider--left my-0 flex-1" />
+        </div>
         <ul className="space-y-1" role="tree">
           {/* "All" option */}
           <li role="treeitem" aria-selected={!activeCategory}>
