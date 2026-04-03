@@ -405,17 +405,17 @@ function CatalogProductCard({ product }: { product: ProductListItem }) {
 
       <div className="mt-4">
         {product.category && (
-          <span className="text-xs font-medium tracking-wider text-[var(--color-text-muted)]">
+          <span className="text-[11px] text-[var(--color-text-muted)]">
             {product.category.name}
           </span>
         )}
-        <h3 className="mt-1 text-sm font-medium leading-snug text-[var(--color-text)]">
+        <h3 className="mt-0.5 text-xs font-medium leading-snug text-[var(--color-text)]">
           <Link to="/prodotti/$slug" params={{ slug: product.slug }} className="hover:text-[var(--color-primary)]">
             {product.name}
           </Link>
         </h3>
-        <div className="mt-2 flex items-center gap-2">
-          <p className="text-sm font-medium text-[var(--color-primary)]">
+        <div className="mt-1 flex items-center gap-2">
+          <p className="text-xs font-medium text-[var(--color-primary)]">
             €{product.price.toFixed(2)}
           </p>
           {product.compareAtPrice && (
