@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState, useCallback, type ReactNode } from "react";
 import { Plus, Search, Loader2, Pencil, Trash2 } from "lucide-react";
 
@@ -101,13 +101,14 @@ function AdminProductsPage(): ReactNode {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-2xl font-bold text-gray-900">Gestione Prodotti</h1>
-        <a
-          href="/admin/prodotti/nuovo"
+        <Link
+          to="/admin/prodotti/$id"
+          params={{ id: "nuovo" }}
           className="inline-flex h-9 items-center gap-2 rounded-md bg-[var(--color-primary)] px-4 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-dark)]"
         >
           <Plus className="h-4 w-4" />
           Nuovo Prodotto
-        </a>
+        </Link>
       </div>
 
       <div className="flex flex-col gap-3 sm:flex-row">
@@ -175,13 +176,14 @@ function AdminProductsPage(): ReactNode {
                     <td className="whitespace-nowrap px-4 py-3">{statusBadge(product)}</td>
                     <td className="whitespace-nowrap px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <a
-                          href={`/admin/prodotti/${product.id}`}
+                        <Link
+                          to="/admin/prodotti/$id"
+                          params={{ id: product.id }}
                           className="inline-flex h-8 items-center gap-1 rounded-md border border-gray-300 px-2.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-50"
                         >
                           <Pencil className="h-3.5 w-3.5" />
                           Modifica
-                        </a>
+                        </Link>
                         <button
                           onClick={() => handleDelete(product.id, product.name)}
                           className="inline-flex h-8 items-center gap-1 rounded-md border border-red-300 px-2.5 text-xs font-medium text-red-700 transition-colors hover:bg-red-50"

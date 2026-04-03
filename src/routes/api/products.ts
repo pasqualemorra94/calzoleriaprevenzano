@@ -8,7 +8,7 @@ import { apiSuccess, apiError } from "~/lib/api-response";
 import { requireAdmin } from "~/lib/sdk-auth.server";
 import { getProducts, getFeaturedProducts } from "~/lib/products.server";
 import { listProductsSchema, createProductSchema } from "~/lib/validators/products";
-import { prisma } from "~/lib/db.server";
+import { adminCreateProduct } from "~/lib/admin.server";
 
 export const Route = createFileRoute("/api/products")({
   server: {
@@ -49,7 +49,7 @@ export const Route = createFileRoute("/api/products")({
           return apiError("VALIDATION_ERROR", "Dati non validi", 422);
         }
 
-        const product = await prisma.product.create({ data: parsed.data });
+        const product = await adminCreateProduct(parsed.data);
         return apiSuccess(product, 201);
       },
     },

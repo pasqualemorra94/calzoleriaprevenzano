@@ -331,7 +331,24 @@ export async function getAdminProduct(id: string): Promise<AdminProductDetail | 
   };
 }
 
-export async function adminCreateProduct(data: {
+interface VariantPayload {
+  name: string;
+  color?: string | null;
+  size?: string | null;
+  price?: number | null;
+  stock: number;
+  sku?: string | null;
+  isActive: boolean;
+  sortOrder: number;
+}
+
+interface ImagePayload {
+  url: string;
+  alt?: string | null;
+  sortOrder: number;
+}
+
+interface ProductWithRelationsInput {
   name: string;
   slug: string;
   description: string;
@@ -345,12 +362,94 @@ export async function adminCreateProduct(data: {
   weight?: number;
   materials?: string;
   categoryId?: string;
-}) {
-  return prisma.product.create({ data });
+  variants?: VariantPayload[];
+  images?: ImagePayload[];
+}
+
+export async function adminCreateProduct(data: ProductWithRelationsInput) {
+  const { variants, images, ...productData } = data;
+
+  return prisma.product.create({
+    data: {
+      ...productData,
+      ...(variants && variants.length > 0
+        ? {
+            variants: {
+              create: variants.map((v) => ({
+                name: v.name,
+                color: v.color ?? null,
+                size: v.size ?? null,
+                price: v.price ?? null,
+                stock: v.stock,
+                sku: v.sku ?? null,
+                isActive: v.isActive,
+                sortOrder: v.sortOrder,
+              })),
+            },
+          }
+        : {}),
+      ...(images && images.length > 0
+        ? {
+            images: {
+              create: images.map((img) => ({
+                url: img.url,
+                alt: img.alt ?? null,
+                sortOrder: img.sortOrder,
+              })),
+            },
+          }
+        : {}),
+    },
+  });
 }
 
 export async function adminUpdateProduct(id: string, data: Record<string, unknown>) {
-  return prisma.product.update({ where: { id }, data });
+  const { variants, images, ...productData } = data as ProductWithRelationsInput & Record<string, unknown>;
+
+  return prisma.$transaction(async (tx: Parameters<Parameters<typeof prisma.$transaction>[0]>[0]) => {
+    // Update base product fields
+    const product = await tx.product.update({
+      where: { id },
+      data: productData,
+    });
+
+    // Handle variants — delete existing and recreate
+    if (Array.isArray(variants)) {
+      await tx.productVariant.deleteMany({ where: { productId: id } });
+      if (variants.length > 0) {
+        await tx.productVariant.createMany({
+          data: variants.map((v: VariantPayload) => ({
+            productId: id,
+            name: v.name,
+            color: v.color ?? null,
+            size: v.size ?? null,
+            price: v.price ?? null,
+            stock: v.stock,
+            sku: v.sku ?? null,
+            isActive: v.isActive,
+            sortOrder: v.sortOrder,
+          })),
+        });
+      }
+    }
+
+    // Handle images — delete existing and recreate
+    if (Array.isArray(images)) {
+      await tx.productImage.deleteMany({ where: { productId: id } });
+      if (images.length > 0) {
+        await tx.productImage.createMany({
+          data: images.map((img: ImagePayload) => ({
+            productId: id,
+            url: img.url,
+            alt: img.alt ?? null,
+            sortOrder: img.sortOrder,
+          })),
+        });
+      }
+    }
+
+    return product;
+  });
 }
 
 export async function adminDeleteProduct(id: string, adminUserId: string) {

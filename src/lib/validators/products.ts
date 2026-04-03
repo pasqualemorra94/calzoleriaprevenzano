@@ -18,6 +18,27 @@ export const listProductsSchema = z.object({
 
 export type ListProductsInput = z.infer<typeof listProductsSchema>;
 
+/** Variant payload (create/update) */
+const productVariantSchema = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+  color: z.string().nullable().optional(),
+  size: z.string().nullable().optional(),
+  price: z.number().positive().nullable().optional(),
+  stock: z.number().int().min(0),
+  sku: z.string().nullable().optional(),
+  isActive: z.boolean().default(true),
+  sortOrder: z.number().int().min(0).default(0),
+});
+
+/** Image payload (create/update) */
+const productImageSchema = z.object({
+  id: z.string().optional(),
+  url: z.string().min(1),
+  alt: z.string().nullable().optional(),
+  sortOrder: z.number().int().min(0).default(0),
+});
+
 /** Create product (admin) */
 export const createProductSchema = z.object({
   name: z.string().min(1, "Il nome è obbligatorio").max(200),
@@ -33,6 +54,8 @@ export const createProductSchema = z.object({
   weight: z.number().min(0).optional(),
   materials: z.string().optional(),
   categoryId: z.string().optional(),
+  variants: z.array(productVariantSchema).optional(),
+  images: z.array(productImageSchema).optional(),
 });
 
 export type CreateProductInput = z.infer<typeof createProductSchema>;
