@@ -6,7 +6,7 @@ import { StaggeredGrid, StaggeredItem } from "~/components/ui/StaggeredGrid";
 import { m } from "motion/react";
 import {
   Search, X, ChevronLeft, ChevronRight, ChevronDown,
-  ShoppingBag, Heart, SlidersHorizontal, Filter,
+  ShoppingBag, Heart, SlidersHorizontal, Filter, Tag,
 } from "lucide-react";
 
 // ── Types ──────────────────────────────────────────────────
@@ -310,7 +310,8 @@ function CatalogoPage(): ReactNode {
               {/* Active filter pills */}
               {(activeCategory || query) && (
                 <div className="mb-6 flex flex-wrap items-center gap-2">
-                  <span className="text-xs font-medium text-[var(--color-text-muted)]">
+                  <span className="inline-flex items-center gap-1.5 rounded-[var(--radius-sm)] bg-[var(--color-primary)]/8 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[var(--color-primary)]">
+                    <SlidersHorizontal className="h-2.5 w-2.5" />
                     Filtri attivi
                   </span>
                   {query && (
@@ -469,9 +470,10 @@ function CatalogSidebar({
     <div className="space-y-8">
       {/* Search */}
       <div>
-        <h3 className="mb-4 font-display text-[var(--text-sm)] font-semibold text-[var(--color-text)]">
-          Cerca nel catalogo
-        </h3>
+        <span className="mb-3 inline-flex items-center gap-1.5 rounded-[var(--radius-sm)] bg-[var(--color-primary)]/8 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-[var(--color-primary)]">
+          <Search className="h-3 w-3" />
+          Cerca
+        </span>
         <form onSubmit={onSearch} className="relative">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-text-muted)]" />
           <input
@@ -497,12 +499,10 @@ function CatalogSidebar({
 
       {/* Category tree */}
       <nav aria-label="Categorie prodotti">
-        <div className="mb-4 flex items-center gap-3">
-          <h3 className="font-display text-[var(--text-sm)] font-semibold text-[var(--color-text)]">
-            Sfoglia per categoria
-          </h3>
-          <hr className="stitch-divider--left my-0 flex-1" />
-        </div>
+        <span className="mb-3 inline-flex items-center gap-1.5 rounded-[var(--radius-sm)] bg-[var(--color-primary)]/8 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-[var(--color-primary)]">
+          <Tag className="h-3 w-3" />
+          Categorie
+        </span>
         <ul className="space-y-1" role="tree">
           {/* "All" option */}
           <li role="treeitem" aria-selected={!activeCategory}>
