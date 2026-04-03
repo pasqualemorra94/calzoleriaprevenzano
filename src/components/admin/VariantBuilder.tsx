@@ -524,27 +524,25 @@ function GroupEditor({
                       <Trash2 className="h-3 w-3" />
                     </button>
                   </div>
-                  {/* Image URL for color-swatch */}
-                  {group.type === "color-swatch" && (
-                    <div className="mt-1.5 flex items-center gap-2 pl-1">
-                      <ImageIcon className="h-3 w-3 shrink-0 text-[var(--color-text-muted)]" />
-                      <input type="text" value={opt.imageUrl ?? ""} onChange={(e) => onUpdateOption(optIndex, { imageUrl: e.target.value || undefined })} placeholder="/images/products/colore-nero.jpg" className="h-6 flex-1 rounded border border-[var(--color-border)] bg-transparent px-2 text-[11px] font-mono text-[var(--color-text-muted)] focus:border-[var(--color-primary)] focus:outline-none" />
-                      <button
-                        type="button"
-                        onClick={() => setMediaPickerTarget(optIndex)}
-                        className="inline-flex h-6 items-center gap-1 rounded border border-[var(--color-border)] px-1.5 text-[10px] font-medium text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
-                        title="Scegli dalla libreria"
-                        aria-label="Scegli immagine dalla libreria"
-                      >
-                        <FolderOpen className="h-3 w-3" />
+                  {/* Image URL — available for all option types */}
+                  <div className="mt-1.5 flex items-center gap-2 pl-1">
+                    <ImageIcon className="h-3 w-3 shrink-0 text-[var(--color-text-muted)]" />
+                    <input type="text" value={opt.imageUrl ?? ""} onChange={(e) => onUpdateOption(optIndex, { imageUrl: e.target.value || undefined })} placeholder="/images/products/foto-opzione.jpg" className="h-6 flex-1 rounded border border-[var(--color-border)] bg-transparent px-2 text-[11px] font-mono text-[var(--color-text-muted)] focus:border-[var(--color-primary)] focus:outline-none" />
+                    <button
+                      type="button"
+                      onClick={() => setMediaPickerTarget(optIndex)}
+                      className="inline-flex h-6 items-center gap-1 rounded border border-[var(--color-border)] px-1.5 text-[10px] font-medium text-[var(--color-text-muted)] transition-colors hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
+                      title="Scegli dalla libreria"
+                      aria-label="Scegli immagine dalla libreria"
+                    >
+                      <FolderOpen className="h-3 w-3" />
+                    </button>
+                    {opt.imageUrl && (
+                      <button type="button" onClick={() => onUpdateOption(optIndex, { imageUrl: undefined })} className="p-0.5 text-[var(--color-text-muted)] hover:text-[var(--color-destructive)]" aria-label="Rimuovi immagine">
+                        <X className="h-3 w-3" />
                       </button>
-                      {opt.imageUrl && (
-                        <button type="button" onClick={() => onUpdateOption(optIndex, { imageUrl: undefined })} className="p-0.5 text-[var(--color-text-muted)] hover:text-[var(--color-destructive)]" aria-label="Rimuovi immagine">
-                          <X className="h-3 w-3" />
-                        </button>
-                      )}
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
