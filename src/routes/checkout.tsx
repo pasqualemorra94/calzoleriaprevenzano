@@ -42,6 +42,7 @@ function CheckoutPage(): ReactNode {
   const [redirecting, setRedirecting] = useState(false);
 
   const [form, setForm] = useState({
+    email: "",
     firstName: "",
     lastName: "",
     address1: "",
@@ -62,6 +63,8 @@ function CheckoutPage(): ReactNode {
 
   const validateForm = (): boolean => {
     const errs: Record<string, string> = {};
+    if (!form.email.trim()) errs.email = "L'email è obbligatoria";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) errs.email = "Email non valida";
     if (!form.firstName.trim()) errs.firstName = "Il nome è obbligatorio";
     if (!form.lastName.trim()) errs.lastName = "Il cognome è obbligatorio";
     if (!form.address1.trim()) errs.address1 = "L'indirizzo è obbligatorio";
@@ -78,14 +81,8 @@ function CheckoutPage(): ReactNode {
   };
 
   useEffect(() => {
-    async function checkAuthAndCart() {
+    async function checkCart() {
       try {
-        const ordersRes = await fetch("/api/orders");
-        if (ordersRes.status === 401) {
-          navigate({ to: "/auth/login" });
-          return;
-        }
-
         const cartRes = await fetch("/api/cart");
         const cartJson = await cartRes.json();
         if (cartJson.ok && cartJson.data.items.length === 0) {
@@ -97,7 +94,7 @@ function CheckoutPage(): ReactNode {
       setAuthChecked(true);
       setLoading(false);
     }
-    checkAuthAndCart();
+    checkCart();
   }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -112,7 +109,18 @@ function CheckoutPage(): ReactNode {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          address: form,
+          email: form.email,
+          firstName: form.firstName,
+          lastName: form.lastName,
+          address: {
+            address1: form.address1,
+            address2: form.address2,
+            city: form.city,
+            province: form.province,
+            postalCode: form.postalCode,
+            country: "IT",
+            phone: form.phone || undefined,
+          },
           shippingMethod: "standard",
           discountCode: discountCode || undefined,
           notes: notes || undefined,
@@ -246,6 +254,21 @@ function CheckoutPage(): ReactNode {
                 )}
 
                 <div className="space-y-5">
+                  <div className="space-y-2">
+                    <label htmlFor="checkout-email" className={LABEL_CLASS}>Email</label>
+                    <input
+                      id="checkout-email"
+                      type="email"
+                      required
+                      placeholder="mario@esempio.it"
+                      autoComplete="email"
+                      value={form.email}
+                      onChange={(e) => updateField("email", e.target.value)}
+                      className={`${INPUT_CLASS} ${errors.email ? "border-[var(--color-destructive)]" : ""}`}
+                    />
+                    {errors.email && <p className="text-xs text-[var(--color-destructive)]">{errors.email}</p>}
+                  </div>
+
                   <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                     <div className="space-y-2">
                       <label htmlFor="checkout-firstName" className={LABEL_CLASS}>Nome</label>

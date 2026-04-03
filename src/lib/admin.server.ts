@@ -174,14 +174,14 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     totalUsers,
     recentOrders: recentOrdersRaw.map((o: {
       id: string; orderNumber: string; status: string; total: unknown;
-      createdAt: Date; user: { name: string | null };
+      createdAt: Date; user: { name: string | null } | null; guestEmail: string | null;
     }) => ({
       id: o.id,
       orderNumber: o.orderNumber,
       status: o.status,
       total: Number(o.total),
       createdAt: o.createdAt.toISOString(),
-      userName: o.user.name,
+      userName: o.user?.name ?? o.guestEmail ?? "Ospite",
     })),
   };
 }
@@ -494,6 +494,7 @@ export async function getAdminOrders(
         { orderNumber: { contains: query, mode: "insensitive" } },
         { user: { name: { contains: query, mode: "insensitive" } } },
         { user: { email: { contains: query, mode: "insensitive" } } },
+        { guestEmail: { contains: query, mode: "insensitive" } },
       ],
     });
   }
@@ -520,7 +521,8 @@ export async function getAdminOrders(
       id: string; orderNumber: string; status: string; total: unknown;
       shippingMethod: string | null; trackingNumber: string | null;
       createdAt: Date;
-      user: { id: string; name: string | null; email: string };
+      user: { id: string; name: string | null; email: string } | null;
+      guestEmail: string | null;
       items: Array<{ quantity: number }>;
     }) => ({
       id: o.id,
@@ -530,7 +532,9 @@ export async function getAdminOrders(
       shippingMethod: o.shippingMethod,
       trackingNumber: o.trackingNumber,
       createdAt: o.createdAt.toISOString(),
-      user: { id: o.user.id, name: o.user.name, email: o.user.email },
+      user: o.user
+        ? { id: o.user.id, name: o.user.name, email: o.user.email }
+        : { id: "", name: "Ospite", email: o.guestEmail ?? "" },
       itemCount: o.items.reduce((sum: number, item: { quantity: number }) => sum + item.quantity, 0),
     })),
     total,
@@ -570,7 +574,9 @@ export async function getAdminOrder(orderId: string): Promise<AdminOrderDetail |
     notes: order.notes,
     createdAt: order.createdAt.toISOString(),
     updatedAt: order.updatedAt.toISOString(),
-    user: { id: order.user.id, name: order.user.name, email: order.user.email },
+    user: order.user
+      ? { id: order.user.id, name: order.user.name, email: order.user.email }
+      : { id: "", name: "Ospite", email: order.guestEmail ?? "" },
     items: order.items.map((item: {
       id: string; name: string; variantName: string | null;
       price: unknown; quantity: number;

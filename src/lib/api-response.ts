@@ -7,11 +7,11 @@
 
 import type { ApiErrorResponse, ApiSuccessResponse } from "~/lib/types/api";
 
-/** Success response with data envelope */
-export function apiSuccess<T>(data: T, status = 200): Response {
+/** Success response with data envelope (optional extra headers) */
+export function apiSuccess<T>(data: T, status = 200, headers?: Record<string, string>): Response {
   return Response.json(
     { ok: true, data } satisfies ApiSuccessResponse<T>,
-    { status },
+    { status, headers },
   );
 }
 

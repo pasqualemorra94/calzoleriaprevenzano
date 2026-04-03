@@ -3,10 +3,13 @@ import { useEffect, useState, useCallback, type ReactNode } from "react";
 import {
   ArrowLeft, Loader2, Save, Plus, Trash2, GripVertical,
   ImageIcon, ChevronDown, ChevronUp, AlertCircle, CheckCircle, Layers, Download,
+  FolderOpen,
 } from "lucide-react";
 import { cn } from "~/lib/utils/cn";
 import { VariantBuilder } from "~/components/admin/VariantBuilder";
+import { MediaPicker } from "~/components/admin/MediaPicker";
 import type { VariantConfig } from "~/lib/types/variant-config";
+import type { SelectedMedia } from "~/components/admin/MediaPicker";
 
 export const Route = createFileRoute("/admin/prodotti/$id")({
   component: AdminProductEditPage,
@@ -136,6 +139,7 @@ function AdminProductEditPage(): ReactNode {
   const [touched, setTouched] = useState<Set<string>>(new Set());
   const [templates, setTemplates] = useState<Array<{ id: string; name: string; description: string | null }>>([]);
   const [categoryTemplateApplied, setCategoryTemplateApplied] = useState(false);
+  const [mediaPickerOpen, setMediaPickerOpen] = useState(false);
 
   const fetchCategories = useCallback(async () => {
     try {
@@ -290,6 +294,19 @@ function AdminProductEditPage(): ReactNode {
 
   const addImage = () =>
     setForm((prev) => ({ ...prev, images: [...prev.images, { ...emptyImage, sortOrder: prev.images.length }] }));
+
+  const addImagesFromMedia = (selected: SelectedMedia[]) => {
+    setForm((prev) => {
+      const startOrder = prev.images.length;
+      const newImages = selected.map((m, i) => ({
+        id: undefined,
+        url: m.url,
+        alt: m.alt ?? m.originalName,
+        sortOrder: startOrder + i,
+      }));
+      return { ...prev, images: [...prev.images, ...newImages] };
+    });
+  };
 
   const updateImage = (index: number, field: keyof ProductImageForm, value: string | number) => {
     setForm((prev) => {
@@ -893,11 +910,19 @@ function AdminProductEditPage(): ReactNode {
 
               <button
                 type="button"
-                onClick={addImage}
+                onClick={() => setMediaPickerOpen(true)}
                 className="mt-3 inline-flex items-center gap-1.5 rounded-md border border-gray-300 px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
               >
+                <FolderOpen className="h-4 w-4" />
+                Scegli dalla libreria
+              </button>
+              <button
+                type="button"
+                onClick={addImage}
+                className="mt-3 inline-flex items-center gap-1.5 rounded-md border border-dashed border-gray-300 px-3 py-2 text-sm font-medium text-gray-400 transition-colors hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]"
+              >
                 <Plus className="h-4 w-4" />
-                Aggiungi immagine
+                Inserisci URL manuale
               </button>
             </div>
           </div>
@@ -1048,6 +1073,15 @@ function AdminProductEditPage(): ReactNode {
             Annulla
           </Link>
         </div>
+
+        {/* Media Picker Modal */}
+        <MediaPicker
+          open={mediaPickerOpen}
+          onClose={() => setMediaPickerOpen(false)}
+          onSelect={addImagesFromMedia}
+          multiple={true}
+          maxSelections={20}
+        />
       </form>
     </div>
   );

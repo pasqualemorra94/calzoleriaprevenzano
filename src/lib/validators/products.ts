@@ -124,7 +124,7 @@ export const contactSchema = z.object({
 
 export type ContactInput = z.infer<typeof contactSchema>;
 
-/** Checkout input */
+/** Checkout input (authenticated — uses saved addressId) */
 export const checkoutSchema = z.object({
   addressId: z.string().min(1, "L'indirizzo di spedizione è obbligatorio"),
   shippingMethod: z.string().default("standard"),
@@ -133,6 +133,27 @@ export const checkoutSchema = z.object({
 });
 
 export type CheckoutInput = z.infer<typeof checkoutSchema>;
+
+/** Checkout input (guest — includes inline shipping data + email) */
+export const checkoutGuestSchema = z.object({
+  email: z.string().email("Email non valida"),
+  firstName: z.string().min(1, "Il nome è obbligatorio").max(100),
+  lastName: z.string().min(1, "Il cognome è obbligatorio").max(100),
+  address: z.object({
+    address1: z.string().min(1, "L'indirizzo è obbligatorio").max(200),
+    address2: z.string().max(200).optional(),
+    city: z.string().min(1, "La città è obbligatoria").max(100),
+    province: z.string().min(2, "La provincia è obbligatoria").max(2),
+    postalCode: z.string().min(5, "Il CAP deve avere 5 caratteri").max(5),
+    country: z.string().default("IT"),
+    phone: z.string().max(20).optional(),
+  }),
+  shippingMethod: z.string().default("standard"),
+  notes: z.string().max(1000).optional(),
+  discountCode: z.string().max(50).optional(),
+});
+
+export type CheckoutGuestInput = z.infer<typeof checkoutGuestSchema>;
 
 /** Create address */
 export const createAddressSchema = z.object({

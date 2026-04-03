@@ -5,7 +5,7 @@
  */
 
 import { prisma } from "~/lib/db.server";
-import type { CheckoutInput } from "~/lib/validators/products";
+import type { CheckoutInput, CheckoutGuestInput } from "~/lib/validators/products";
 import type { PaginatedData } from "~/lib/types/api";
 
 // ─── Types ────────────────────────────────────────────────────────────
@@ -92,23 +92,53 @@ interface CartItemFull {
 
 // ─── Public service functions ──────────────────────────────────────────
 
-/** Create order from cart */
+/** Create order from cart (supports both authenticated and guest) */
 export async function createOrder(
-  userId: string,
-  input: CheckoutInput,
+  userId: string | null,
+  sessionId: string | null,
+  input: CheckoutInput | CheckoutGuestInput,
   ipAddress: string | null,
   userAgent: string | null,
 ): Promise<
   | { ok: true; order: OrderCreatedData }
   | { ok: false; error: string }
 > {
-  // Validate address belongs to user
-  const address = await prisma.address.findFirst({ where: { id: input.addressId, userId } });
-  if (!address) return { ok: false, error: "Indirizzo non trovato" };
+  // Build addressId from either saved address or inline guest address
+  let addressId: string;
 
-  // Get user's active cart
+  if ("addressId" in input) {
+    // Authenticated: validate address belongs to user
+    if (!userId) return { ok: false, error: "Utente non autenticato" };
+    const address = await prisma.address.findFirst({ where: { id: input.addressId, userId } });
+    if (!address) return { ok: false, error: "Indirizzo non trovato" };
+    addressId = address.id;
+  } else {
+    // Guest: create address on the fly (no userId)
+    const addr = await prisma.address.create({
+      data: {
+        firstName: input.firstName,
+        lastName: input.lastName,
+        address1: input.address.address1,
+        address2: input.address.address2 ?? null,
+        city: input.address.city,
+        province: input.address.province,
+        postalCode: input.address.postalCode,
+        country: input.address.country,
+        phone: input.address.phone ?? null,
+        isDefault: false,
+        guestEmail: input.email,
+      },
+    });
+    addressId = addr.id;
+  }
+
+  // Find the active cart (by userId or sessionId)
+  const cartWhere = userId
+    ? { userId, expiresAt: { gt: new Date() } }
+    : { sessionId, expiresAt: { gt: new Date() } };
+
   const cart = await prisma.cart.findFirst({
-    where: { userId, expiresAt: { gt: new Date() } },
+    where: cartWhere,
     include: {
       items: {
         include: {
@@ -182,6 +212,7 @@ export async function createOrder(
   const orderNumber = `CP-${new Date().getFullYear()}-${String(orderCount + 1).padStart(4, "0")}`;
 
   // Create order with items
+  const isGuest = !userId && "email" in input;
   const order = await prisma.order.create({
     data: {
       orderNumber,
@@ -196,11 +227,12 @@ export async function createOrder(
       notes: input.notes,
       ipAddress,
       userAgent,
+      ...(isGuest ? { guestEmail: input.email } : {}),
       items: {
         create: cartItems.map((item: CartItemFull) => ({
           productId: item.productId,
           variantId: item.variantId,
-          addressId: address.id,
+          addressId,
           name: item.product.name,
           variantName: item.variant?.name,
           price: Number(item.price),
@@ -327,15 +359,19 @@ export async function getOrderDetail(userId: string, orderId: string): Promise<O
   };
 }
 
-/** Create Stripe checkout session for an order */
+/** Create Stripe checkout session for an order (supports guest email) */
 export async function createCheckoutSession(
   orderId: string,
   orderNumber: string,
   totalEuros: number,
-  userId: string,
+  userId: string | null,
+  guestEmail?: string,
 ) {
   const { stripe } = await import("~/lib/stripe.server");
   const baseUrl = process.env.APP_URL ?? "http://localhost:3000";
+
+  const metadata: Record<string, string> = { orderId };
+  if (userId) metadata.userId = userId;
 
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
@@ -350,7 +386,8 @@ export async function createCheckoutSession(
         quantity: 1,
       },
     ],
-    metadata: { orderId, userId },
+    metadata,
+    ...(guestEmail ? { customer_email: guestEmail } : {}),
     success_url: `${baseUrl}/ordine-confermato?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${baseUrl}/carrello`,
   });

@@ -49,6 +49,7 @@ model user {
   carts         Cart[]
   reviews       Review[]
   wishlistItems Wishlist[]
+  uploadedMedia Media[]
 
   @@index([email])
   @@map("users") // avoid PostgreSQL reserved word "user"
@@ -265,11 +266,14 @@ model ProductImage {
   sortOrder Int      @default(0)
   width     Int?
   height    Int?
+  mediaId   String?  // optional FK to Media library
 
   product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  media     Media?   @relation(fields: [mediaId], references: [id], onDelete: SetNull)
 
   @@index([productId])
   @@index([sortOrder])
+  @@index([mediaId])
 }
 
 // ─── Review ───────────────────────────────────────────────────────────────
@@ -298,7 +302,7 @@ model Review {
 
 model Address {
   id         String   @id @default(cuid())
-  userId     String
+  userId     String?
   firstName  String
   lastName   String
   address1   String
@@ -311,8 +315,9 @@ model Address {
   isDefault  Boolean  @default(false)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
+  guestEmail String?  // email for guest orders (no user account)
 
-  user       user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       user?    @relation(fields: [userId], references: [id], onDelete: Cascade)
   orderItems OrderItem[]
 
   @@index([userId])
@@ -359,7 +364,7 @@ model CartItem {
 model Order {
   id             String         @id @default(cuid())
   orderNumber    String         @unique // numero ordine leggibile: "CP-2026-0001"
-  userId         String
+  userId         String?
   status         String         @default("pending") // "pending" | "confirmed" | "processing" | "shipped" | "delivered" | "cancelled" | "refunded"
   subtotal       Decimal        @db.Decimal(10, 2)
   shippingCost   Decimal        @db.Decimal(10, 2) @default(0)
@@ -371,12 +376,13 @@ model Order {
   notes          String?        @db.Text
   ipAddress      String?
   userAgent      String?
+  guestEmail     String?        // email for guest orders (no user account)
   createdAt      DateTime       @default(now())
   updatedAt      DateTime       @updatedAt
   deletedAt      DateTime?
   deletedBy      String?
 
-  user           user           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user           user?          @relation(fields: [userId], references: [id], onDelete: Cascade)
   items          OrderItem[]
   payments       Payment[]
 
@@ -487,4 +493,33 @@ model VariantTemplate {
   @@index([slug])
   @@index([isActive])
   @@index([sortOrder])
+}
+
+// ─── Media ──────────────────────────────────────────────────────────────
+// Centralized media library. Uploaded files are stored in public/uploads/YYYY/MM/
+// and tracked in this table. ProductImage can optionally reference a Media record.
+
+model Media {
+  id           String   @id @default(cuid())
+  filename     String                              // stored filename (unique)
+  originalName String                              // original user-provided name
+  mimeType     String                              // "image/jpeg", "image/png", "image/webp"
+  size         Int                                 // bytes
+  width        Int?                                // image width (null for non-images)
+  height       Int?                                // image height (null for non-images)
+  alt          String?                             // alt text / description
+  folder       String   @default("")                // virtual folder (e.g. "products", "categories")
+  url          String                              // public URL path: /uploads/YYYY/MM/filename
+  uploadedById String?
+
+  uploadedBy   user?    @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  productImages ProductImage[]
+
+  createdAt    DateTime @default(now())
+
+  @@index([uploadedById])
+  @@index([mimeType])
+  @@index([folder])
+  @@index([createdAt])
+  @@unique([filename])                               // prevent duplicate stored filenames
 }

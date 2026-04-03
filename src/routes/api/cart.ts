@@ -1,6 +1,9 @@
 /**
  * GET /api/cart — Get current cart
  * POST /api/cart — Add item to cart
+ *
+ * Supports both authenticated users and anonymous guests.
+ * For guests, auto-generates a cart_session_id cookie on first interaction.
  */
 
 import { createFileRoute } from "@tanstack/react-router";
@@ -8,20 +11,16 @@ import { apiSuccess, apiError } from "~/lib/api-response";
 import { getUser } from "~/lib/sdk-auth.server";
 import { getCart, addToCart } from "~/lib/cart.server";
 import { addToCartSchema } from "~/lib/validators/products";
-
-function getSessionId(request: Request): string | null {
-  const cookies = request.headers.get("cookie") ?? "";
-  const match = cookies.match(/cart_session_id=([^;]+)/);
-  return match?.[1] ?? null;
-}
+import { getSessionId, generateSessionId, buildSessionCookie } from "~/lib/cart-session";
 
 export const Route = createFileRoute("/api/cart")({
   server: {
     handlers: {
       GET: async ({ request }) => {
         const user = await getUser(request);
-        const sessionId = getSessionId(request);
+        let sessionId = getSessionId(request);
 
+        // For guests without session: return empty cart
         if (!user && !sessionId) {
           return apiSuccess({ id: "", items: [], itemCount: 0, subtotal: 0 });
         }
@@ -32,10 +31,13 @@ export const Route = createFileRoute("/api/cart")({
 
       POST: async ({ request }) => {
         const user = await getUser(request);
-        const sessionId = getSessionId(request);
+        let sessionId = getSessionId(request);
 
+        // For guests without session: auto-generate one
+        let newSessionCookie: string | null = null;
         if (!user && !sessionId) {
-          return apiError("BAD_REQUEST", "Sessione non valida", 400);
+          sessionId = generateSessionId();
+          newSessionCookie = buildSessionCookie(sessionId);
         }
 
         const body = await request.json() as unknown;
@@ -50,7 +52,13 @@ export const Route = createFileRoute("/api/cart")({
         }
 
         const cart = await getCart(user?.id ?? null, sessionId);
-        return apiSuccess(cart, 201);
+
+        const headers: Record<string, string> = {};
+        if (newSessionCookie) {
+          headers["Set-Cookie"] = newSessionCookie;
+        }
+
+        return apiSuccess(cart, 201, headers);
       },
     },
   },
