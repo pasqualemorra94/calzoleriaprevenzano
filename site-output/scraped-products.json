@@ -1,0 +1,5381 @@
+{
+  "scrapedAt": "2026-04-03T09:53:25.574Z",
+  "totalProducts": 118,
+  "totalImages": 775,
+  "categories": [
+    "Accessori",
+    "Borselli",
+    "Cinture",
+    "Agende",
+    "Solette",
+    "Classici",
+    "Con infradito",
+    "Sandali",
+    "Schiava",
+    "Fasce",
+    "Gioiello",
+    "Aggiunta ciondolo",
+    "Strass",
+    "Cavigliera",
+    "Bambini",
+    "Infradito",
+    "No infradito"
+  ],
+  "products": [
+    {
+      "name": "Astuccio cubo nero",
+      "slug": "astuccio-cubo-nero",
+      "price": 20,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/astuccio-cubo-nero/",
+      "description": "Astuccio Cubo realizzato in vera pelle\nDimensioni 9x8x7cm",
+      "shortDescription": "",
+      "categories": [
+        "Accessori"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/astuccio-cubo-nero-2.png",
+          "localPath": "/images/products/astuccio-cubo-nero-2.png",
+          "alt": "Astuccio cubo nero"
+        },
+        {
+          "originalUrl": "/images/products/astuccio-cubo-nero-2.png",
+          "localPath": "/images/products/astuccio-cubo-nero-2.png",
+          "alt": "Astuccio cubo nero"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Astuccio cubo blu",
+      "slug": "astuccio-cubo-blu",
+      "price": 20,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/astuccio-cubo-blu/",
+      "description": "Astuccio Cubo realizzato in vera pelle\nDimensioni 9x8x7cm",
+      "shortDescription": "",
+      "categories": [
+        "Accessori"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/astuccio-cubo-blu-2.png",
+          "localPath": "/images/products/astuccio-cubo-blu-2.png",
+          "alt": "Astuccio cubo blu"
+        },
+        {
+          "originalUrl": "/images/products/astuccio-cubo-blu-2.png",
+          "localPath": "/images/products/astuccio-cubo-blu-2.png",
+          "alt": "Astuccio cubo blu"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Borsello verde",
+      "slug": "borsello-verde",
+      "price": 45,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/borsello-verde/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Borselli"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/borsello-verde-3.png",
+          "localPath": "/images/products/borsello-verde-3.png",
+          "alt": "Borsello verde"
+        },
+        {
+          "originalUrl": "/images/products/borsello-verde-3.png",
+          "localPath": "/images/products/borsello-verde-3.png",
+          "alt": "Borsello verde"
+        },
+        {
+          "originalUrl": "/images/products/borsello-verde-3.png",
+          "localPath": "/images/products/borsello-verde-3.png",
+          "alt": "Borsello verde"
+        },
+        {
+          "originalUrl": "/images/products/borsello-verde-3.png",
+          "localPath": "/images/products/borsello-verde-3.png",
+          "alt": "Borsello verde"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Borsello porta telefono stampato cocco",
+      "slug": "borsello-porta-telefono-stampato-cocco",
+      "price": 49.9,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/borsello-porta-telefono-stampato-cocco/",
+      "description": "Dimensioni 20x14x9cm\nPratico Borsello porta telefono realizzato a mano in Vera Pelle con pratica Tracolla regolabile",
+      "shortDescription": "",
+      "categories": [
+        "Borselli"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/borsello-porta-telefono-stampato-cocco-4.png",
+          "localPath": "/images/products/borsello-porta-telefono-stampato-cocco-4.png",
+          "alt": "Borsello porta telefono stampato cocco"
+        },
+        {
+          "originalUrl": "/images/products/borsello-porta-telefono-stampato-cocco-4.png",
+          "localPath": "/images/products/borsello-porta-telefono-stampato-cocco-4.png",
+          "alt": "Borsello porta telefono stampato cocco"
+        },
+        {
+          "originalUrl": "/images/products/borsello-porta-telefono-stampato-cocco-4.png",
+          "localPath": "/images/products/borsello-porta-telefono-stampato-cocco-4.png",
+          "alt": "Borsello porta telefono stampato cocco"
+        },
+        {
+          "originalUrl": "/images/products/borsello-porta-telefono-stampato-cocco-4.png",
+          "localPath": "/images/products/borsello-porta-telefono-stampato-cocco-4.png",
+          "alt": "Borsello porta telefono stampato cocco"
+        },
+        {
+          "originalUrl": "/images/products/borsello-porta-telefono-stampato-cocco-4.png",
+          "localPath": "/images/products/borsello-porta-telefono-stampato-cocco-4.png",
+          "alt": "Borsello porta telefono stampato cocco"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Borsello porta telefono nero",
+      "slug": "borsello-porta-telefono-nero",
+      "price": 49.9,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/borsello-porta-telefono-nero/",
+      "description": "Dimensioni 20x14x9cm\nPratico Borsello porta telefono realizzato a mano in Vera Pelle con pratica Tracolla regolabile",
+      "shortDescription": "",
+      "categories": [
+        "Borselli"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/borsello-porta-telefono-nero-3.png",
+          "localPath": "/images/products/borsello-porta-telefono-nero-3.png",
+          "alt": "Borsello porta telefono nero"
+        },
+        {
+          "originalUrl": "/images/products/borsello-porta-telefono-nero-3.png",
+          "localPath": "/images/products/borsello-porta-telefono-nero-3.png",
+          "alt": "Borsello porta telefono nero"
+        },
+        {
+          "originalUrl": "/images/products/borsello-porta-telefono-nero-3.png",
+          "localPath": "/images/products/borsello-porta-telefono-nero-3.png",
+          "alt": "Borsello porta telefono nero"
+        },
+        {
+          "originalUrl": "/images/products/borsello-porta-telefono-nero-3.png",
+          "localPath": "/images/products/borsello-porta-telefono-nero-3.png",
+          "alt": "Borsello porta telefono nero"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Borsello cuoio",
+      "slug": "borsello-cuoio",
+      "price": 45,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/borsello-cuoio/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Borselli"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/borsello-cuoio-3.png",
+          "localPath": "/images/products/borsello-cuoio-3.png",
+          "alt": "Borsello cuoio"
+        },
+        {
+          "originalUrl": "/images/products/borsello-cuoio-3.png",
+          "localPath": "/images/products/borsello-cuoio-3.png",
+          "alt": "Borsello cuoio"
+        },
+        {
+          "originalUrl": "/images/products/borsello-cuoio-3.png",
+          "localPath": "/images/products/borsello-cuoio-3.png",
+          "alt": "Borsello cuoio"
+        },
+        {
+          "originalUrl": "/images/products/borsello-cuoio-3.png",
+          "localPath": "/images/products/borsello-cuoio-3.png",
+          "alt": "Borsello cuoio"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Borsello nero",
+      "slug": "borsello-nero",
+      "price": 45,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/borsello-nero/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Borselli"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/borsello-nero-3.png",
+          "localPath": "/images/products/borsello-nero-3.png",
+          "alt": "Borsello nero"
+        },
+        {
+          "originalUrl": "/images/products/borsello-nero-3.png",
+          "localPath": "/images/products/borsello-nero-3.png",
+          "alt": "Borsello nero"
+        },
+        {
+          "originalUrl": "/images/products/borsello-nero-3.png",
+          "localPath": "/images/products/borsello-nero-3.png",
+          "alt": "Borsello nero"
+        },
+        {
+          "originalUrl": "/images/products/borsello-nero-3.png",
+          "localPath": "/images/products/borsello-nero-3.png",
+          "alt": "Borsello nero"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Borsello blu",
+      "slug": "borsello-blu",
+      "price": 45,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/borsello-blu/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Borselli"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/borsello-blu-4.png",
+          "localPath": "/images/products/borsello-blu-4.png",
+          "alt": "Borsello blu"
+        },
+        {
+          "originalUrl": "/images/products/borsello-blu-4.png",
+          "localPath": "/images/products/borsello-blu-4.png",
+          "alt": "Borsello blu"
+        },
+        {
+          "originalUrl": "/images/products/borsello-blu-4.png",
+          "localPath": "/images/products/borsello-blu-4.png",
+          "alt": "Borsello blu"
+        },
+        {
+          "originalUrl": "/images/products/borsello-blu-4.png",
+          "localPath": "/images/products/borsello-blu-4.png",
+          "alt": "Borsello blu"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Cintura Vitello 030 testa di moro",
+      "slug": "cintura-vitello-030-testa-di-moro",
+      "price": 25,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/cintura-vitello-030-testa-di-moro/",
+      "description": "Cintura Realizzata Con Vitelli Pieno Fiore\nFinitura laterale Bombata\nFoderata e Cucita larghezza 30mm",
+      "shortDescription": "",
+      "categories": [
+        "Cinture"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/cintura-vitello-030-testa-di-moro-2.png",
+          "localPath": "/images/products/cintura-vitello-030-testa-di-moro-2.png",
+          "alt": "Cintura Vitello 030 testa di moro"
+        },
+        {
+          "originalUrl": "/images/products/cintura-vitello-030-testa-di-moro-2.png",
+          "localPath": "/images/products/cintura-vitello-030-testa-di-moro-2.png",
+          "alt": "Cintura Vitello 030 testa di moro"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Cintura Vitello 030 blu",
+      "slug": "cintura-vitello-030-blu",
+      "price": 25,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/cintura-vitello-030-blu/",
+      "description": "Cintura Realizzata Con Vitelli Pieno Fiore\nFinitura laterale Bombata\nFoderata e Cucita larghezza 30mm",
+      "shortDescription": "",
+      "categories": [
+        "Cinture"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/cintura-vitello-030-blu-2.png",
+          "localPath": "/images/products/cintura-vitello-030-blu-2.png",
+          "alt": "Cintura Vitello 030 blu"
+        },
+        {
+          "originalUrl": "/images/products/cintura-vitello-030-blu-2.png",
+          "localPath": "/images/products/cintura-vitello-030-blu-2.png",
+          "alt": "Cintura Vitello 030 blu"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Cintura Vitello 030 nero",
+      "slug": "cintura-vitello-030-nero",
+      "price": 25,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/cintura-vitello-030-nero/",
+      "description": "Cintura Realizzata Con Vitelli Pieno Fiore\nFinitura laterale Bombata\nFoderata e Cucita larghezza 30mm",
+      "shortDescription": "",
+      "categories": [
+        "Cinture"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/cintura-vitello-030-nero-2.png",
+          "localPath": "/images/products/cintura-vitello-030-nero-2.png",
+          "alt": "Cintura Vitello 030 nero"
+        },
+        {
+          "originalUrl": "/images/products/cintura-vitello-030-nero-2.png",
+          "localPath": "/images/products/cintura-vitello-030-nero-2.png",
+          "alt": "Cintura Vitello 030 nero"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Cintura Vitello 035 nero",
+      "slug": "cintura-vitello-035-nero",
+      "price": 25,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/cintura-vitello-035-nero/",
+      "description": "Cintura Realizzata con Vitelli Pieno Fiore\nFinitura laterale bombata\nFoderata e Cucita  larghezza 35mm",
+      "shortDescription": "",
+      "categories": [
+        "Cinture"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/cintura-vitello-035-nero-2.png",
+          "localPath": "/images/products/cintura-vitello-035-nero-2.png",
+          "alt": "Cintura Vitello 035 nero"
+        },
+        {
+          "originalUrl": "/images/products/cintura-vitello-035-nero-2.png",
+          "localPath": "/images/products/cintura-vitello-035-nero-2.png",
+          "alt": "Cintura Vitello 035 nero"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Cintura Vitello 035 blu",
+      "slug": "cintura-vitello-035-blu",
+      "price": 25,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/cintura-vitello-035-blu/",
+      "description": "Cintura Realizzata con Vitelli Pieno Fiore\nFinitura laterale bombata\nFoderata e Cucita  larghezza 35mm",
+      "shortDescription": "",
+      "categories": [
+        "Cinture"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/cintura-vitello-035-blu-2.png",
+          "localPath": "/images/products/cintura-vitello-035-blu-2.png",
+          "alt": "Cintura Vitello 035 blu"
+        },
+        {
+          "originalUrl": "/images/products/cintura-vitello-035-blu-2.png",
+          "localPath": "/images/products/cintura-vitello-035-blu-2.png",
+          "alt": "Cintura Vitello 035 blu"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Cintura Cuoio 035  testa di moro",
+      "slug": "cintura-cuoio-035-testa-di-moro",
+      "price": 20,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/cintura-cuoio-035-testa-di-moro/",
+      "description": "Cintura Realizzata con Gropponi in cuoio\nUnico corpo  larghezza 35mm",
+      "shortDescription": "",
+      "categories": [
+        "Cinture"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/cintura-cuoio-035-testa-di-moro-2.png",
+          "localPath": "/images/products/cintura-cuoio-035-testa-di-moro-2.png",
+          "alt": "Cintura Cuoio 035  testa di moro"
+        },
+        {
+          "originalUrl": "/images/products/cintura-cuoio-035-testa-di-moro-2.png",
+          "localPath": "/images/products/cintura-cuoio-035-testa-di-moro-2.png",
+          "alt": "Cintura Cuoio 035  testa di moro"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Cintura Cuoio 035  rosso inglese",
+      "slug": "cintura-cuoio-035-rosso-inglese",
+      "price": 20,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/cintura-cuoio-035-rosso-inglese/",
+      "description": "Cintura Realizzata con Gropponi in cuoio\nUnico corpo  larghezza 35mm",
+      "shortDescription": "",
+      "categories": [
+        "Cinture"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/cintura-cuoio-035-rosso-inglese-2.png",
+          "localPath": "/images/products/cintura-cuoio-035-rosso-inglese-2.png",
+          "alt": "Cintura Cuoio 035  rosso inglese"
+        },
+        {
+          "originalUrl": "/images/products/cintura-cuoio-035-rosso-inglese-2.png",
+          "localPath": "/images/products/cintura-cuoio-035-rosso-inglese-2.png",
+          "alt": "Cintura Cuoio 035  rosso inglese"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Cintura Cuoio 035  marrone chiaro",
+      "slug": "cintura-cuoio-035-marrone-chiaro",
+      "price": 20,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/cintura-cuoio-035-marrone-chiaro/",
+      "description": "Cintura Realizzata con Gropponi in cuoio\nUnico corpo  larghezza 35mm",
+      "shortDescription": "",
+      "categories": [
+        "Cinture"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/cintura-cuoio-035-marrone-chiaro-2.png",
+          "localPath": "/images/products/cintura-cuoio-035-marrone-chiaro-2.png",
+          "alt": "Cintura Cuoio 035  marrone chiaro"
+        },
+        {
+          "originalUrl": "/images/products/cintura-cuoio-035-marrone-chiaro-2.png",
+          "localPath": "/images/products/cintura-cuoio-035-marrone-chiaro-2.png",
+          "alt": "Cintura Cuoio 035  marrone chiaro"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Cintura Cuoio 035  nero",
+      "slug": "cintura-cuoio-035-nero",
+      "price": 20,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/cintura-cuoio-035-nero/",
+      "description": "Cintura Realizzata con Gropponi in cuoio\nUnico corpo  larghezza 35mm",
+      "shortDescription": "",
+      "categories": [
+        "Cinture"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/cintura-cuoio-035-nero-2.png",
+          "localPath": "/images/products/cintura-cuoio-035-nero-2.png",
+          "alt": "Cintura Cuoio 035  nero"
+        },
+        {
+          "originalUrl": "/images/products/cintura-cuoio-035-nero-2.png",
+          "localPath": "/images/products/cintura-cuoio-035-nero-2.png",
+          "alt": "Cintura Cuoio 035  nero"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Cintura Cuoio 035  blu",
+      "slug": "cintura-cuoio-035-blu",
+      "price": 20,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/cintura-cuoio-035-blu/",
+      "description": "Cintura Realizzata con Gropponi in cuoio\nUnico corpo  larghezza 35mm",
+      "shortDescription": "",
+      "categories": [
+        "Cinture"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/cintura-cuoio-035-blu-2.png",
+          "localPath": "/images/products/cintura-cuoio-035-blu-2.png",
+          "alt": "Cintura Cuoio 035  blu"
+        },
+        {
+          "originalUrl": "/images/products/cintura-cuoio-035-blu-2.png",
+          "localPath": "/images/products/cintura-cuoio-035-blu-2.png",
+          "alt": "Cintura Cuoio 035  blu"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Cintura Cuoio 040 testa di moro",
+      "slug": "cintura-cuoio-040-testa-di-moro",
+      "price": 20,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/cintura-cuoio-040-testa-di-moro/",
+      "description": "Cintura Realizzata con Gropponi in Cuoio\nUnico corpo  larghezza 40mm",
+      "shortDescription": "",
+      "categories": [
+        "Cinture"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/cintura-cuoio-040-testa-di-moro-2.png",
+          "localPath": "/images/products/cintura-cuoio-040-testa-di-moro-2.png",
+          "alt": "Cintura Cuoio 040 testa di moro"
+        },
+        {
+          "originalUrl": "/images/products/cintura-cuoio-040-testa-di-moro-2.png",
+          "localPath": "/images/products/cintura-cuoio-040-testa-di-moro-2.png",
+          "alt": "Cintura Cuoio 040 testa di moro"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Cintura Cuoio 040 rosso inglese",
+      "slug": "cintura-cuoio-040-rosso-inglese",
+      "price": 20,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/cintura-cuoio-040-rosso-inglese/",
+      "description": "Cintura Realizzata con Gropponi in Cuoio\nUnico corpo  larghezza 40mm",
+      "shortDescription": "",
+      "categories": [
+        "Cinture"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/cintura-cuoio-040-rosso-inglese-2.png",
+          "localPath": "/images/products/cintura-cuoio-040-rosso-inglese-2.png",
+          "alt": "Cintura Cuoio 040 rosso inglese"
+        },
+        {
+          "originalUrl": "/images/products/cintura-cuoio-040-rosso-inglese-2.png",
+          "localPath": "/images/products/cintura-cuoio-040-rosso-inglese-2.png",
+          "alt": "Cintura Cuoio 040 rosso inglese"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Cintura Cuoio 040 nero",
+      "slug": "cintura-cuoio-040-nero",
+      "price": 20,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/cintura-cuoio-040-nero/",
+      "description": "Cintura Realizzata con Gropponi in Cuoio\nUnico corpo  larghezza 40mm",
+      "shortDescription": "",
+      "categories": [
+        "Cinture"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/cintura-cuoio-040-nero-2.png",
+          "localPath": "/images/products/cintura-cuoio-040-nero-2.png",
+          "alt": "Cintura Cuoio 040 nero"
+        },
+        {
+          "originalUrl": "/images/products/cintura-cuoio-040-nero-2.png",
+          "localPath": "/images/products/cintura-cuoio-040-nero-2.png",
+          "alt": "Cintura Cuoio 040 nero"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Cintura Cuoio 040 blu",
+      "slug": "cintura-cuoio-040-blu",
+      "price": 20,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/cintura-cuoio-040-blu/",
+      "description": "Cintura Realizzata con Gropponi in Cuoio\nUnico corpo  larghezza 40mm",
+      "shortDescription": "",
+      "categories": [
+        "Cinture"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/cintura-cuoio-040-blu-2.png",
+          "localPath": "/images/products/cintura-cuoio-040-blu-2.png",
+          "alt": "Cintura Cuoio 040 blu"
+        },
+        {
+          "originalUrl": "/images/products/cintura-cuoio-040-blu-2.png",
+          "localPath": "/images/products/cintura-cuoio-040-blu-2.png",
+          "alt": "Cintura Cuoio 040 blu"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Agenda cuoio",
+      "slug": "agenda-cuoio",
+      "price": 29,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/agenda-cuoio/",
+      "description": "Pratica Agendina realizzata con cuoio naturale tinto a mano\nAccessoriata da Matita e Taccuino Bianco\nChiusura con Pomello\nDimensioni 18x12cm",
+      "shortDescription": "",
+      "categories": [
+        "Agende"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/agenda-cuoio-3.png",
+          "localPath": "/images/products/agenda-cuoio-3.png",
+          "alt": "Agenda cuoio"
+        },
+        {
+          "originalUrl": "/images/products/agenda-cuoio-3.png",
+          "localPath": "/images/products/agenda-cuoio-3.png",
+          "alt": "Agenda cuoio"
+        },
+        {
+          "originalUrl": "/images/products/agenda-cuoio-3.png",
+          "localPath": "/images/products/agenda-cuoio-3.png",
+          "alt": "Agenda cuoio"
+        },
+        {
+          "originalUrl": "/images/products/agenda-cuoio-3.png",
+          "localPath": "/images/products/agenda-cuoio-3.png",
+          "alt": "Agenda cuoio"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Agenda cuoio verde",
+      "slug": "agenda-cuoio-verde",
+      "price": 29,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/agenda-cuoio-verde/",
+      "description": "Pratica Agendina realizzata con cuoio naturale tinto a mano\nAccessoriata da Matita e Taccuino Bianco\nChiusura con Pomello\nDimensioni 18x12cm",
+      "shortDescription": "",
+      "categories": [
+        "Agende"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/agenda-cuoio-verde-3.png",
+          "localPath": "/images/products/agenda-cuoio-verde-3.png",
+          "alt": "Agenda cuoio verde"
+        },
+        {
+          "originalUrl": "/images/products/agenda-cuoio-verde-3.png",
+          "localPath": "/images/products/agenda-cuoio-verde-3.png",
+          "alt": "Agenda cuoio verde"
+        },
+        {
+          "originalUrl": "/images/products/agenda-cuoio-verde-3.png",
+          "localPath": "/images/products/agenda-cuoio-verde-3.png",
+          "alt": "Agenda cuoio verde"
+        },
+        {
+          "originalUrl": "/images/products/agenda-cuoio-verde-3.png",
+          "localPath": "/images/products/agenda-cuoio-verde-3.png",
+          "alt": "Agenda cuoio verde"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Agenda cuoio rosso",
+      "slug": "agenda-cuoio-rosso",
+      "price": 29,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/agenda-cuoio-rosso/",
+      "description": "Pratica Agendina realizzata con cuoio naturale tinto a mano\nAccessoriata da Matita e Taccuino Bianco\nChiusura con Pomello\nDimensioni 18x12cm",
+      "shortDescription": "",
+      "categories": [
+        "Agende"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/agenda-cuoio-rosso-3.png",
+          "localPath": "/images/products/agenda-cuoio-rosso-3.png",
+          "alt": "Agenda cuoio rosso"
+        },
+        {
+          "originalUrl": "/images/products/agenda-cuoio-rosso-3.png",
+          "localPath": "/images/products/agenda-cuoio-rosso-3.png",
+          "alt": "Agenda cuoio rosso"
+        },
+        {
+          "originalUrl": "/images/products/agenda-cuoio-rosso-3.png",
+          "localPath": "/images/products/agenda-cuoio-rosso-3.png",
+          "alt": "Agenda cuoio rosso"
+        },
+        {
+          "originalUrl": "/images/products/agenda-cuoio-rosso-3.png",
+          "localPath": "/images/products/agenda-cuoio-rosso-3.png",
+          "alt": "Agenda cuoio rosso"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Agenda cuoio blu",
+      "slug": "agenda-cuoio-blu",
+      "price": 29,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/agenda-cuoio-blu/",
+      "description": "Pratica Agendina realizzata con cuoio naturale tinto a mano\nAccessoriata da Matita e Taccuino Bianco\nChiusura con Pomello\nDimensioni 18x12cm",
+      "shortDescription": "",
+      "categories": [
+        "Agende"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/agenda-cuoio-blu-3.png",
+          "localPath": "/images/products/agenda-cuoio-blu-3.png",
+          "alt": "Agenda cuoio blu"
+        },
+        {
+          "originalUrl": "/images/products/agenda-cuoio-blu-3.png",
+          "localPath": "/images/products/agenda-cuoio-blu-3.png",
+          "alt": "Agenda cuoio blu"
+        },
+        {
+          "originalUrl": "/images/products/agenda-cuoio-blu-3.png",
+          "localPath": "/images/products/agenda-cuoio-blu-3.png",
+          "alt": "Agenda cuoio blu"
+        },
+        {
+          "originalUrl": "/images/products/agenda-cuoio-blu-3.png",
+          "localPath": "/images/products/agenda-cuoio-blu-3.png",
+          "alt": "Agenda cuoio blu"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "BSMI3",
+      "slug": "bsmi3",
+      "price": 8,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/bsmi3/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Solette"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/bsmi3-2.jpg",
+          "localPath": "/images/products/bsmi3-2.jpg",
+          "alt": "BSMI3"
+        },
+        {
+          "originalUrl": "/images/products/bsmi3-2.jpg",
+          "localPath": "/images/products/bsmi3-2.jpg",
+          "alt": "BSMI3"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Cuscinetto Prestige",
+      "slug": "cuscinetto-prestige",
+      "price": 5,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/cuscinetto-prestige/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Solette"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/cuscinetto-prestige-2.jpg",
+          "localPath": "/images/products/cuscinetto-prestige-2.jpg",
+          "alt": "Cuscinetto Prestige"
+        },
+        {
+          "originalUrl": "/images/products/cuscinetto-prestige-2.jpg",
+          "localPath": "/images/products/cuscinetto-prestige-2.jpg",
+          "alt": "Cuscinetto Prestige"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Bama Kids",
+      "slug": "bama-kids",
+      "price": 5,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/bama-kids/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Solette"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/bama-kids-2.jpg",
+          "localPath": "/images/products/bama-kids-2.jpg",
+          "alt": "Bama Kids"
+        },
+        {
+          "originalUrl": "/images/products/bama-kids-2.jpg",
+          "localPath": "/images/products/bama-kids-2.jpg",
+          "alt": "Bama Kids"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Prestige pelle Kids",
+      "slug": "prestige-pelle-kids",
+      "price": 5,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/prestige-pelle-kids/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Solette"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/prestige-pelle-kids-2.jpg",
+          "localPath": "/images/products/prestige-pelle-kids-2.jpg",
+          "alt": "Prestige pelle Kids"
+        },
+        {
+          "originalUrl": "/images/products/prestige-pelle-kids-2.jpg",
+          "localPath": "/images/products/prestige-pelle-kids-2.jpg",
+          "alt": "Prestige pelle Kids"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Dinamica Prestige",
+      "slug": "dinamica-prestige",
+      "price": 16,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/dinamica-prestige/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Solette"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/dinamica-prestige-2.jpg",
+          "localPath": "/images/products/dinamica-prestige-2.jpg",
+          "alt": "Dinamica Prestige"
+        },
+        {
+          "originalUrl": "/images/products/dinamica-prestige-2.jpg",
+          "localPath": "/images/products/dinamica-prestige-2.jpg",
+          "alt": "Dinamica Prestige"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42",
+            "43",
+            "44",
+            "45",
+            "46"
+          ]
+        }
+      ],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Plantare Memory Gel Prestige",
+      "slug": "plantare-memory-gel-prestige",
+      "price": 18,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/plantare-memory-gel-prestige/",
+      "description": "Innovativa soletta in gel e Memory, lievemente anatomica. Adatta a ogni tipo di calzatura. La struttura in gel, materiale duttile e termoplastico, ha proprietà ammortizzanti e garantisce un confortevole sostegno. Il morbido strato di Memory, con la sua caratteristica di mantenere densità e forma a ogni passo, assicura il massimo comfort.",
+      "shortDescription": "",
+      "categories": [
+        "Solette"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/plantare-memory-gel-prestige-2.jpg",
+          "localPath": "/images/products/plantare-memory-gel-prestige-2.jpg",
+          "alt": "Plantare Memory Gel Prestige"
+        },
+        {
+          "originalUrl": "/images/products/plantare-memory-gel-prestige-2.jpg",
+          "localPath": "/images/products/plantare-memory-gel-prestige-2.jpg",
+          "alt": "Plantare Memory Gel Prestige"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42",
+            "43",
+            "44",
+            "45",
+            "46"
+          ]
+        }
+      ],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Plantare Memory Prestige",
+      "slug": "plantare-memory-prestige",
+      "price": 15,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/plantare-memory-prestige/",
+      "description": "L’evoluzione anatomica della soletta in Memory foam, che possiede la proprietà unica di riacquistare forma e densità originale dopo ogni pressione del piede. Struttura a plantare in Memory, più compatto e voluminoso in prossimità dei punti di appoggio e di carico: tallone, metatarso e arco plantare. Tessuto superiore in morbida microfibra traspirante. Memory Plus: la migliore soluzione per attutire gli urti, garantire massimo comfort e alleviare la fatica del piede durante la camminata. Lavabile.",
+      "shortDescription": "",
+      "categories": [
+        "Solette"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/plantare-memory-prestige-2.jpg",
+          "localPath": "/images/products/plantare-memory-prestige-2.jpg",
+          "alt": "Plantare Memory Prestige"
+        },
+        {
+          "originalUrl": "/images/products/plantare-memory-prestige-2.jpg",
+          "localPath": "/images/products/plantare-memory-prestige-2.jpg",
+          "alt": "Plantare Memory Prestige"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42",
+            "43",
+            "44",
+            "45",
+            "46"
+          ]
+        }
+      ],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Soletta Memory A Ritaglio",
+      "slug": "soletta-memory-a-ritaglio",
+      "price": 6,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/soletta-memory-a-ritaglio/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Solette"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/soletta-memory-a-ritaglio-2.jpg",
+          "localPath": "/images/products/soletta-memory-a-ritaglio-2.jpg",
+          "alt": "Soletta Memory A Ritaglio"
+        },
+        {
+          "originalUrl": "/images/products/soletta-memory-a-ritaglio-2.jpg",
+          "localPath": "/images/products/soletta-memory-a-ritaglio-2.jpg",
+          "alt": "Soletta Memory A Ritaglio"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Plantare Light Insole Prestige",
+      "slug": "plantare-light-insole-prestige",
+      "price": 15,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/plantare-light-insole-prestige/",
+      "description": "Soletta anatomica particolarmente leggera e versatile. Consigliata per la pratica dello sport, ma anche per camminare e per il tempo libero, indossata con sneakers. La forma anatomica, sostenuta da un supporto più rigido, si adatta al piede e favorisce stabilità e la distribuzione del peso. Il cuscinetto in gel sul tallone e il cuscinetto metatarsale in EVA ammortizzano e assorbono gli urti. Lo strato in schiuma PU e di schiuma poliolefinica, materiale particolarmente leggero, garantiscono morbidezza e confort. Tessuto superiore in poliestere che favorisce l’assorbimento del sudore. Si consiglia di rimuovere la soletta originale della calzatura e sostituirla con la soletta Sport Leggera. Lavabile a mano, max 30°.",
+      "shortDescription": "",
+      "categories": [
+        "Solette"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/plantare-light-insole-prestige-2.jpg",
+          "localPath": "/images/products/plantare-light-insole-prestige-2.jpg",
+          "alt": "Plantare Light Insole Prestige"
+        },
+        {
+          "originalUrl": "/images/products/plantare-light-insole-prestige-2.jpg",
+          "localPath": "/images/products/plantare-light-insole-prestige-2.jpg",
+          "alt": "Plantare Light Insole Prestige"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42",
+            "43",
+            "44",
+            "45",
+            "46"
+          ]
+        }
+      ],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Soletta Pelle Pregiata Prestige",
+      "slug": "soletta-pelle-pregiata-prestige",
+      "price": 7,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/soletta-pelle-pregiata-prestige/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Solette"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/soletta-pelle-pregiata-prestige-2.jpg",
+          "localPath": "/images/products/soletta-pelle-pregiata-prestige-2.jpg",
+          "alt": "Soletta Pelle Pregiata Prestige"
+        },
+        {
+          "originalUrl": "/images/products/soletta-pelle-pregiata-prestige-2.jpg",
+          "localPath": "/images/products/soletta-pelle-pregiata-prestige-2.jpg",
+          "alt": "Soletta Pelle Pregiata Prestige"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42",
+            "43",
+            "44",
+            "45",
+            "46"
+          ]
+        }
+      ],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Samantha",
+      "slug": "samantha",
+      "price": 65,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/samantha/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/samantha-6.jpeg",
+          "localPath": "/images/products/samantha-6.jpeg",
+          "alt": "Samantha"
+        },
+        {
+          "originalUrl": "/images/products/samantha-6.jpeg",
+          "localPath": "/images/products/samantha-6.jpeg",
+          "alt": "Samantha"
+        },
+        {
+          "originalUrl": "/images/products/Samantha-dimensioni-grandi.jpeg",
+          "localPath": "/images/products/Samantha-dimensioni-grandi.jpeg",
+          "alt": "Samantha"
+        },
+        {
+          "originalUrl": "/images/products/samantha-6.jpeg",
+          "localPath": "/images/products/samantha-6.jpeg",
+          "alt": "Samantha"
+        },
+        {
+          "originalUrl": "/images/products/samantha-6.jpeg",
+          "localPath": "/images/products/samantha-6.jpeg",
+          "alt": "Samantha"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Alessandra",
+      "slug": "alessandra",
+      "price": 65,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/alessandra/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/alessandra-4.jpeg",
+          "localPath": "/images/products/alessandra-4.jpeg",
+          "alt": "Alessandra"
+        },
+        {
+          "originalUrl": "/images/products/alessandra-4.jpeg",
+          "localPath": "/images/products/alessandra-4.jpeg",
+          "alt": "Alessandra"
+        },
+        {
+          "originalUrl": "/images/products/alessandra-4.jpeg",
+          "localPath": "/images/products/alessandra-4.jpeg",
+          "alt": "Alessandra"
+        },
+        {
+          "originalUrl": "/images/products/alessandra-4.jpeg",
+          "localPath": "/images/products/alessandra-4.jpeg",
+          "alt": "Alessandra"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Noemi",
+      "slug": "noemi",
+      "price": 70,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/noemi/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/noemi-8.jpeg",
+          "localPath": "/images/products/noemi-8.jpeg",
+          "alt": "Noemi"
+        },
+        {
+          "originalUrl": "/images/products/noemi-8.jpeg",
+          "localPath": "/images/products/noemi-8.jpeg",
+          "alt": "Noemi"
+        },
+        {
+          "originalUrl": "/images/products/noemi-8.jpeg",
+          "localPath": "/images/products/noemi-8.jpeg",
+          "alt": "Noemi"
+        },
+        {
+          "originalUrl": "/images/products/noemi-8.jpeg",
+          "localPath": "/images/products/noemi-8.jpeg",
+          "alt": "Noemi"
+        },
+        {
+          "originalUrl": "/images/products/noemi-8.jpeg",
+          "localPath": "/images/products/noemi-8.jpeg",
+          "alt": "Noemi"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Schiava 6",
+      "slug": "schiava-6",
+      "price": 90,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/schiava-6/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Sandali",
+        "Schiava"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/schiava-6-2.jpeg",
+          "localPath": "/images/products/schiava-6-2.jpeg",
+          "alt": "Schiava 6"
+        },
+        {
+          "originalUrl": "/images/products/schiava-6-2.jpeg",
+          "localPath": "/images/products/schiava-6-2.jpeg",
+          "alt": "Schiava 6"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Iris",
+      "slug": "iris",
+      "price": 75,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/iris/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/iris-4.jpeg",
+          "localPath": "/images/products/iris-4.jpeg",
+          "alt": "Iris"
+        },
+        {
+          "originalUrl": "/images/products/iris-4.jpeg",
+          "localPath": "/images/products/iris-4.jpeg",
+          "alt": "Iris"
+        },
+        {
+          "originalUrl": "/images/products/iris-4.jpeg",
+          "localPath": "/images/products/iris-4.jpeg",
+          "alt": "Iris"
+        },
+        {
+          "originalUrl": "/images/products/iris-4.jpeg",
+          "localPath": "/images/products/iris-4.jpeg",
+          "alt": "Iris"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Pompei",
+      "slug": "pompei",
+      "price": 100,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/pompei/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Sandali",
+        "Schiava"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/pompei-2.jpg",
+          "localPath": "/images/products/pompei-2.jpg",
+          "alt": "Pompei"
+        },
+        {
+          "originalUrl": "/images/products/pompei.jpg",
+          "localPath": "/images/products/pompei.jpg",
+          "alt": "Pompei"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Sole",
+      "slug": "sole",
+      "price": 140,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/sole/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Fasce",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/sole-16.jpeg",
+          "localPath": "/images/products/sole-16.jpeg",
+          "alt": "Sole"
+        },
+        {
+          "originalUrl": "/images/products/sole-16.jpeg",
+          "localPath": "/images/products/sole-16.jpeg",
+          "alt": "Sole"
+        },
+        {
+          "originalUrl": "/images/products/sole-16.jpeg",
+          "localPath": "/images/products/sole-16.jpeg",
+          "alt": "Sole"
+        },
+        {
+          "originalUrl": "/images/products/sole-16.jpeg",
+          "localPath": "/images/products/sole-16.jpeg",
+          "alt": "Sole"
+        },
+        {
+          "originalUrl": "/images/products/sole-16.jpeg",
+          "localPath": "/images/products/sole-16.jpeg",
+          "alt": "Sole"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Ghiaccio",
+      "slug": "ghiaccio",
+      "price": 120,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/ghiaccio/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/ghiaccio-10.jpeg",
+          "localPath": "/images/products/ghiaccio-10.jpeg",
+          "alt": "Ghiaccio"
+        },
+        {
+          "originalUrl": "/images/products/ghiaccio-10.jpeg",
+          "localPath": "/images/products/ghiaccio-10.jpeg",
+          "alt": "Ghiaccio"
+        },
+        {
+          "originalUrl": "/images/products/ghiaccio-10.jpeg",
+          "localPath": "/images/products/ghiaccio-10.jpeg",
+          "alt": "Ghiaccio"
+        },
+        {
+          "originalUrl": "/images/products/ghiaccio-10.jpeg",
+          "localPath": "/images/products/ghiaccio-10.jpeg",
+          "alt": "Ghiaccio"
+        },
+        {
+          "originalUrl": "/images/products/ghiaccio-10.jpeg",
+          "localPath": "/images/products/ghiaccio-10.jpeg",
+          "alt": "Ghiaccio"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Lucia",
+      "slug": "lucia",
+      "price": 150,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/lucia/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/lucia-24.jpeg",
+          "localPath": "/images/products/lucia-24.jpeg",
+          "alt": "Lucia"
+        },
+        {
+          "originalUrl": "/images/products/lucia-24.jpeg",
+          "localPath": "/images/products/lucia-24.jpeg",
+          "alt": "Lucia"
+        },
+        {
+          "originalUrl": "/images/products/lucia-24.jpeg",
+          "localPath": "/images/products/lucia-24.jpeg",
+          "alt": "Lucia"
+        },
+        {
+          "originalUrl": "/images/products/lucia-24.jpeg",
+          "localPath": "/images/products/lucia-24.jpeg",
+          "alt": "Lucia"
+        },
+        {
+          "originalUrl": "/images/products/lucia-24.jpeg",
+          "localPath": "/images/products/lucia-24.jpeg",
+          "alt": "Lucia"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Francesca",
+      "slug": "francesca",
+      "price": 170,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/francesca/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Aggiunta ciondolo",
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/francesca-5.jpeg",
+          "localPath": "/images/products/francesca-5.jpeg",
+          "alt": "Francesca"
+        },
+        {
+          "originalUrl": "/images/products/francesca-5.jpeg",
+          "localPath": "/images/products/francesca-5.jpeg",
+          "alt": "Francesca"
+        },
+        {
+          "originalUrl": "/images/products/francesca-5.jpeg",
+          "localPath": "/images/products/francesca-5.jpeg",
+          "alt": "Francesca"
+        },
+        {
+          "originalUrl": "/images/products/francesca-5.jpeg",
+          "localPath": "/images/products/francesca-5.jpeg",
+          "alt": "Francesca"
+        },
+        {
+          "originalUrl": "/images/products/francesca-5.jpeg",
+          "localPath": "/images/products/francesca-5.jpeg",
+          "alt": "Francesca"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Giorgia",
+      "slug": "giorgia",
+      "price": 170,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/giorgia/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Aggiunta ciondolo",
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/giorgia-5.jpeg",
+          "localPath": "/images/products/giorgia-5.jpeg",
+          "alt": "Giorgia"
+        },
+        {
+          "originalUrl": "/images/products/giorgia-5.jpeg",
+          "localPath": "/images/products/giorgia-5.jpeg",
+          "alt": "Giorgia"
+        },
+        {
+          "originalUrl": "/images/products/giorgia-5.jpeg",
+          "localPath": "/images/products/giorgia-5.jpeg",
+          "alt": "Giorgia"
+        },
+        {
+          "originalUrl": "/images/products/giorgia-5.jpeg",
+          "localPath": "/images/products/giorgia-5.jpeg",
+          "alt": "Giorgia"
+        },
+        {
+          "originalUrl": "/images/products/giorgia-5.jpeg",
+          "localPath": "/images/products/giorgia-5.jpeg",
+          "alt": "Giorgia"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Gaia",
+      "slug": "gaia",
+      "price": 170,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/gaia/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Aggiunta ciondolo",
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/gaia-5.jpeg",
+          "localPath": "/images/products/gaia-5.jpeg",
+          "alt": "Gaia"
+        },
+        {
+          "originalUrl": "/images/products/gaia-5.jpeg",
+          "localPath": "/images/products/gaia-5.jpeg",
+          "alt": "Gaia"
+        },
+        {
+          "originalUrl": "/images/products/gaia-5.jpeg",
+          "localPath": "/images/products/gaia-5.jpeg",
+          "alt": "Gaia"
+        },
+        {
+          "originalUrl": "/images/products/gaia-5.jpeg",
+          "localPath": "/images/products/gaia-5.jpeg",
+          "alt": "Gaia"
+        },
+        {
+          "originalUrl": "/images/products/gaia-5.jpeg",
+          "localPath": "/images/products/gaia-5.jpeg",
+          "alt": "Gaia"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Nicole",
+      "slug": "nicole",
+      "price": 170,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/nicole/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Aggiunta ciondolo",
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/nicole-5.jpeg",
+          "localPath": "/images/products/nicole-5.jpeg",
+          "alt": "Nicole"
+        },
+        {
+          "originalUrl": "/images/products/nicole-5.jpeg",
+          "localPath": "/images/products/nicole-5.jpeg",
+          "alt": "Nicole"
+        },
+        {
+          "originalUrl": "/images/products/nicole-5.jpeg",
+          "localPath": "/images/products/nicole-5.jpeg",
+          "alt": "Nicole"
+        },
+        {
+          "originalUrl": "/images/products/nicole-5.jpeg",
+          "localPath": "/images/products/nicole-5.jpeg",
+          "alt": "Nicole"
+        },
+        {
+          "originalUrl": "/images/products/nicole-5.jpeg",
+          "localPath": "/images/products/nicole-5.jpeg",
+          "alt": "Nicole"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Ginevra",
+      "slug": "ginevra",
+      "price": 170,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/ginevra/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Aggiunta ciondolo",
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/ginevra-5.jpeg",
+          "localPath": "/images/products/ginevra-5.jpeg",
+          "alt": "Ginevra"
+        },
+        {
+          "originalUrl": "/images/products/ginevra-5.jpeg",
+          "localPath": "/images/products/ginevra-5.jpeg",
+          "alt": "Ginevra"
+        },
+        {
+          "originalUrl": "/images/products/ginevra-5.jpeg",
+          "localPath": "/images/products/ginevra-5.jpeg",
+          "alt": "Ginevra"
+        },
+        {
+          "originalUrl": "/images/products/ginevra-5.jpeg",
+          "localPath": "/images/products/ginevra-5.jpeg",
+          "alt": "Ginevra"
+        },
+        {
+          "originalUrl": "/images/products/ginevra-5.jpeg",
+          "localPath": "/images/products/ginevra-5.jpeg",
+          "alt": "Ginevra"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Irene",
+      "slug": "irene",
+      "price": 75,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/irene/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/irene-5.jpeg",
+          "localPath": "/images/products/irene-5.jpeg",
+          "alt": "Irene"
+        },
+        {
+          "originalUrl": "/images/products/irene-5.jpeg",
+          "localPath": "/images/products/irene-5.jpeg",
+          "alt": "Irene"
+        },
+        {
+          "originalUrl": "/images/products/irene-5.jpeg",
+          "localPath": "/images/products/irene-5.jpeg",
+          "alt": "Irene"
+        },
+        {
+          "originalUrl": "/images/products/irene-5.jpeg",
+          "localPath": "/images/products/irene-5.jpeg",
+          "alt": "Irene"
+        },
+        {
+          "originalUrl": "/images/products/irene-5.jpeg",
+          "localPath": "/images/products/irene-5.jpeg",
+          "alt": "Irene"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Paola",
+      "slug": "paola",
+      "price": 75,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/paola/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/paola-3.jpeg",
+          "localPath": "/images/products/paola-3.jpeg",
+          "alt": "Paola"
+        },
+        {
+          "originalUrl": "/images/products/paola-3.jpeg",
+          "localPath": "/images/products/paola-3.jpeg",
+          "alt": "Paola"
+        },
+        {
+          "originalUrl": "/images/products/paola-3.jpeg",
+          "localPath": "/images/products/paola-3.jpeg",
+          "alt": "Paola"
+        },
+        {
+          "originalUrl": "/images/products/paola-3.jpeg",
+          "localPath": "/images/products/paola-3.jpeg",
+          "alt": "Paola"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Flor",
+      "slug": "flor",
+      "price": 140,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/flor/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Fasce",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/flor-4.jpeg",
+          "localPath": "/images/products/flor-4.jpeg",
+          "alt": "Flor"
+        },
+        {
+          "originalUrl": "/images/products/flor-4.jpeg",
+          "localPath": "/images/products/flor-4.jpeg",
+          "alt": "Flor"
+        },
+        {
+          "originalUrl": "/images/products/flor-4.jpeg",
+          "localPath": "/images/products/flor-4.jpeg",
+          "alt": "Flor"
+        },
+        {
+          "originalUrl": "/images/products/flor-4.jpeg",
+          "localPath": "/images/products/flor-4.jpeg",
+          "alt": "Flor"
+        },
+        {
+          "originalUrl": "/images/products/flor-4.jpeg",
+          "localPath": "/images/products/flor-4.jpeg",
+          "alt": "Flor"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Asia",
+      "slug": "asia",
+      "price": 140,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/asia/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Fasce",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/asia-16.jpeg",
+          "localPath": "/images/products/asia-16.jpeg",
+          "alt": "Asia"
+        },
+        {
+          "originalUrl": "/images/products/asia-16.jpeg",
+          "localPath": "/images/products/asia-16.jpeg",
+          "alt": "Asia"
+        },
+        {
+          "originalUrl": "/images/products/asia-16.jpeg",
+          "localPath": "/images/products/asia-16.jpeg",
+          "alt": "Asia"
+        },
+        {
+          "originalUrl": "/images/products/asia-16.jpeg",
+          "localPath": "/images/products/asia-16.jpeg",
+          "alt": "Asia"
+        },
+        {
+          "originalUrl": "/images/products/asia-16.jpeg",
+          "localPath": "/images/products/asia-16.jpeg",
+          "alt": "Asia"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Stella Marina",
+      "slug": "stella-marina",
+      "price": 150,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/stella-marina/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/stella-marina-12.jpeg",
+          "localPath": "/images/products/stella-marina-12.jpeg",
+          "alt": "Stella Marina"
+        },
+        {
+          "originalUrl": "/images/products/stella-marina-12.jpeg",
+          "localPath": "/images/products/stella-marina-12.jpeg",
+          "alt": "Stella Marina"
+        },
+        {
+          "originalUrl": "/images/products/stella-marina-12.jpeg",
+          "localPath": "/images/products/stella-marina-12.jpeg",
+          "alt": "Stella Marina"
+        },
+        {
+          "originalUrl": "/images/products/stella-marina-12.jpeg",
+          "localPath": "/images/products/stella-marina-12.jpeg",
+          "alt": "Stella Marina"
+        },
+        {
+          "originalUrl": "/images/products/stella-marina-12.jpeg",
+          "localPath": "/images/products/stella-marina-12.jpeg",
+          "alt": "Stella Marina"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Medaglia",
+      "slug": "medaglia",
+      "price": 130,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/medaglia/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/medaglia-17.jpeg",
+          "localPath": "/images/products/medaglia-17.jpeg",
+          "alt": "Medaglia"
+        },
+        {
+          "originalUrl": "/images/products/medaglia-17.jpeg",
+          "localPath": "/images/products/medaglia-17.jpeg",
+          "alt": "Medaglia"
+        },
+        {
+          "originalUrl": "/images/products/medaglia-17.jpeg",
+          "localPath": "/images/products/medaglia-17.jpeg",
+          "alt": "Medaglia"
+        },
+        {
+          "originalUrl": "/images/products/medaglia-17.jpeg",
+          "localPath": "/images/products/medaglia-17.jpeg",
+          "alt": "Medaglia"
+        },
+        {
+          "originalUrl": "/images/products/medaglia-17.jpeg",
+          "localPath": "/images/products/medaglia-17.jpeg",
+          "alt": "Medaglia"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Fiore blue",
+      "slug": "fiore-blue",
+      "price": 140,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/fiore-blue/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/fiore-blue-5.jpeg",
+          "localPath": "/images/products/fiore-blue-5.jpeg",
+          "alt": "Fiore blue"
+        },
+        {
+          "originalUrl": "/images/products/fiore-blue-5.jpeg",
+          "localPath": "/images/products/fiore-blue-5.jpeg",
+          "alt": "Fiore blue"
+        },
+        {
+          "originalUrl": "/images/products/fiore-blue-5.jpeg",
+          "localPath": "/images/products/fiore-blue-5.jpeg",
+          "alt": "Fiore blue"
+        },
+        {
+          "originalUrl": "/images/products/fiore-blue-5.jpeg",
+          "localPath": "/images/products/fiore-blue-5.jpeg",
+          "alt": "Fiore blue"
+        },
+        {
+          "originalUrl": "/images/products/fiore-blue-5.jpeg",
+          "localPath": "/images/products/fiore-blue-5.jpeg",
+          "alt": "Fiore blue"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Fiore multi",
+      "slug": "fiore-multi",
+      "price": 140,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/fiore-multi/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/fiore-multi-6.jpeg",
+          "localPath": "/images/products/fiore-multi-6.jpeg",
+          "alt": "Fiore multi"
+        },
+        {
+          "originalUrl": "/images/products/fiore-multi-6.jpeg",
+          "localPath": "/images/products/fiore-multi-6.jpeg",
+          "alt": "Fiore multi"
+        },
+        {
+          "originalUrl": "/images/products/fiore-multi-6.jpeg",
+          "localPath": "/images/products/fiore-multi-6.jpeg",
+          "alt": "Fiore multi"
+        },
+        {
+          "originalUrl": "/images/products/fiore-multi-6.jpeg",
+          "localPath": "/images/products/fiore-multi-6.jpeg",
+          "alt": "Fiore multi"
+        },
+        {
+          "originalUrl": "/images/products/fiore-multi-6.jpeg",
+          "localPath": "/images/products/fiore-multi-6.jpeg",
+          "alt": "Fiore multi"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Vipera",
+      "slug": "vipera",
+      "price": 160,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/vipera/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/vipera-24.jpeg",
+          "localPath": "/images/products/vipera-24.jpeg",
+          "alt": "Vipera"
+        },
+        {
+          "originalUrl": "/images/products/vipera-24.jpeg",
+          "localPath": "/images/products/vipera-24.jpeg",
+          "alt": "Vipera"
+        },
+        {
+          "originalUrl": "/images/products/vipera-24.jpeg",
+          "localPath": "/images/products/vipera-24.jpeg",
+          "alt": "Vipera"
+        },
+        {
+          "originalUrl": "/images/products/vipera-24.jpeg",
+          "localPath": "/images/products/vipera-24.jpeg",
+          "alt": "Vipera"
+        },
+        {
+          "originalUrl": "/images/products/vipera-24.jpeg",
+          "localPath": "/images/products/vipera-24.jpeg",
+          "alt": "Vipera"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Margherita",
+      "slug": "margherita",
+      "price": 110,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/margherita/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/margherita-24.jpeg",
+          "localPath": "/images/products/margherita-24.jpeg",
+          "alt": "Margherita"
+        },
+        {
+          "originalUrl": "/images/products/margherita-24.jpeg",
+          "localPath": "/images/products/margherita-24.jpeg",
+          "alt": "Margherita"
+        },
+        {
+          "originalUrl": "/images/products/margherita-24.jpeg",
+          "localPath": "/images/products/margherita-24.jpeg",
+          "alt": "Margherita"
+        },
+        {
+          "originalUrl": "/images/products/margherita-24.jpeg",
+          "localPath": "/images/products/margherita-24.jpeg",
+          "alt": "Margherita"
+        },
+        {
+          "originalUrl": "/images/products/margherita-24.jpeg",
+          "localPath": "/images/products/margherita-24.jpeg",
+          "alt": "Margherita"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Jasmine",
+      "slug": "jasmine",
+      "price": 140,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/jasmine/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/jasmine-29.jpeg",
+          "localPath": "/images/products/jasmine-29.jpeg",
+          "alt": "Jasmine"
+        },
+        {
+          "originalUrl": "/images/products/jasmine-29.jpeg",
+          "localPath": "/images/products/jasmine-29.jpeg",
+          "alt": "Jasmine"
+        },
+        {
+          "originalUrl": "/images/products/jasmine-29.jpeg",
+          "localPath": "/images/products/jasmine-29.jpeg",
+          "alt": "Jasmine"
+        },
+        {
+          "originalUrl": "/images/products/jasmine-29.jpeg",
+          "localPath": "/images/products/jasmine-29.jpeg",
+          "alt": "Jasmine"
+        },
+        {
+          "originalUrl": "/images/products/jasmine-29.jpeg",
+          "localPath": "/images/products/jasmine-29.jpeg",
+          "alt": "Jasmine"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Goccia",
+      "slug": "goccia",
+      "price": 140,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/goccia/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/goccia-10.jpeg",
+          "localPath": "/images/products/goccia-10.jpeg",
+          "alt": "Goccia"
+        },
+        {
+          "originalUrl": "/images/products/goccia-10.jpeg",
+          "localPath": "/images/products/goccia-10.jpeg",
+          "alt": "Goccia"
+        },
+        {
+          "originalUrl": "/images/products/goccia-10.jpeg",
+          "localPath": "/images/products/goccia-10.jpeg",
+          "alt": "Goccia"
+        },
+        {
+          "originalUrl": "/images/products/goccia-10.jpeg",
+          "localPath": "/images/products/goccia-10.jpeg",
+          "alt": "Goccia"
+        },
+        {
+          "originalUrl": "/images/products/goccia-10.jpeg",
+          "localPath": "/images/products/goccia-10.jpeg",
+          "alt": "Goccia"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Maya",
+      "slug": "maya",
+      "price": 190,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/maya/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/maya-4.jpeg",
+          "localPath": "/images/products/maya-4.jpeg",
+          "alt": "Maya"
+        },
+        {
+          "originalUrl": "/images/products/maya-4.jpeg",
+          "localPath": "/images/products/maya-4.jpeg",
+          "alt": "Maya"
+        },
+        {
+          "originalUrl": "/images/products/maya-4.jpeg",
+          "localPath": "/images/products/maya-4.jpeg",
+          "alt": "Maya"
+        },
+        {
+          "originalUrl": "/images/products/maya-4.jpeg",
+          "localPath": "/images/products/maya-4.jpeg",
+          "alt": "Maya"
+        },
+        {
+          "originalUrl": "/images/products/maya-4.jpeg",
+          "localPath": "/images/products/maya-4.jpeg",
+          "alt": "Maya"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Cocorito",
+      "slug": "cocorito",
+      "price": 190,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/cocorito/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/cocorito-5.jpeg",
+          "localPath": "/images/products/cocorito-5.jpeg",
+          "alt": "Cocorito"
+        },
+        {
+          "originalUrl": "/images/products/cocorito-5.jpeg",
+          "localPath": "/images/products/cocorito-5.jpeg",
+          "alt": "Cocorito"
+        },
+        {
+          "originalUrl": "/images/products/cocorito-5.jpeg",
+          "localPath": "/images/products/cocorito-5.jpeg",
+          "alt": "Cocorito"
+        },
+        {
+          "originalUrl": "/images/products/cocorito-5.jpeg",
+          "localPath": "/images/products/cocorito-5.jpeg",
+          "alt": "Cocorito"
+        },
+        {
+          "originalUrl": "/images/products/cocorito-5.jpeg",
+          "localPath": "/images/products/cocorito-5.jpeg",
+          "alt": "Cocorito"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Cavalluccio",
+      "slug": "cavalluccio",
+      "price": 140,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/cavalluccio/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/cavalluccio-9.jpeg",
+          "localPath": "/images/products/cavalluccio-9.jpeg",
+          "alt": "Cavalluccio"
+        },
+        {
+          "originalUrl": "/images/products/cavalluccio-9.jpeg",
+          "localPath": "/images/products/cavalluccio-9.jpeg",
+          "alt": "Cavalluccio"
+        },
+        {
+          "originalUrl": "/images/products/cavalluccio-9.jpeg",
+          "localPath": "/images/products/cavalluccio-9.jpeg",
+          "alt": "Cavalluccio"
+        },
+        {
+          "originalUrl": "/images/products/cavalluccio-9.jpeg",
+          "localPath": "/images/products/cavalluccio-9.jpeg",
+          "alt": "Cavalluccio"
+        },
+        {
+          "originalUrl": "/images/products/cavalluccio-9.jpeg",
+          "localPath": "/images/products/cavalluccio-9.jpeg",
+          "alt": "Cavalluccio"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Discoteca",
+      "slug": "discoteca",
+      "price": 140,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/discoteca/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/discoteca-22.jpeg",
+          "localPath": "/images/products/discoteca-22.jpeg",
+          "alt": "Discoteca"
+        },
+        {
+          "originalUrl": "/images/products/discoteca-22.jpeg",
+          "localPath": "/images/products/discoteca-22.jpeg",
+          "alt": "Discoteca"
+        },
+        {
+          "originalUrl": "/images/products/discoteca-22.jpeg",
+          "localPath": "/images/products/discoteca-22.jpeg",
+          "alt": "Discoteca"
+        },
+        {
+          "originalUrl": "/images/products/discoteca-22.jpeg",
+          "localPath": "/images/products/discoteca-22.jpeg",
+          "alt": "Discoteca"
+        },
+        {
+          "originalUrl": "/images/products/discoteca-22.jpeg",
+          "localPath": "/images/products/discoteca-22.jpeg",
+          "alt": "Discoteca"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Rosellina 39",
+      "slug": "rosellina-39",
+      "price": 130,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/rosellina-39/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/rosellina-39-15.jpeg",
+          "localPath": "/images/products/rosellina-39-15.jpeg",
+          "alt": "Rosellina 39"
+        },
+        {
+          "originalUrl": "/images/products/rosellina-39-15.jpeg",
+          "localPath": "/images/products/rosellina-39-15.jpeg",
+          "alt": "Rosellina 39"
+        },
+        {
+          "originalUrl": "/images/products/rosellina-39-15.jpeg",
+          "localPath": "/images/products/rosellina-39-15.jpeg",
+          "alt": "Rosellina 39"
+        },
+        {
+          "originalUrl": "/images/products/rosellina-39-15.jpeg",
+          "localPath": "/images/products/rosellina-39-15.jpeg",
+          "alt": "Rosellina 39"
+        },
+        {
+          "originalUrl": "/images/products/rosellina-39-15.jpeg",
+          "localPath": "/images/products/rosellina-39-15.jpeg",
+          "alt": "Rosellina 39"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Catena",
+      "slug": "catena",
+      "price": 120,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/catena/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/catena-18.jpeg",
+          "localPath": "/images/products/catena-18.jpeg",
+          "alt": "Catena"
+        },
+        {
+          "originalUrl": "/images/products/catena-18.jpeg",
+          "localPath": "/images/products/catena-18.jpeg",
+          "alt": "Catena"
+        },
+        {
+          "originalUrl": "/images/products/catena-18.jpeg",
+          "localPath": "/images/products/catena-18.jpeg",
+          "alt": "Catena"
+        },
+        {
+          "originalUrl": "/images/products/catena-18.jpeg",
+          "localPath": "/images/products/catena-18.jpeg",
+          "alt": "Catena"
+        },
+        {
+          "originalUrl": "/images/products/catena-18.jpeg",
+          "localPath": "/images/products/catena-18.jpeg",
+          "alt": "Catena"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Artemide",
+      "slug": "artemide",
+      "price": 65,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/artemide/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/artemide-2.png",
+          "localPath": "/images/products/artemide-2.png",
+          "alt": "Artemide"
+        },
+        {
+          "originalUrl": "/images/products/artemide-2.png",
+          "localPath": "/images/products/artemide-2.png",
+          "alt": "Artemide"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "treccina",
+      "slug": "treccina",
+      "price": 0,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/treccina/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [],
+      "images": [],
+      "variantTypes": [],
+      "isFeatured": false,
+      "inStock": true
+    },
+    {
+      "name": "Schiava 5",
+      "slug": "schiava-5",
+      "price": 90,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/schiava-5/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Sandali",
+        "Schiava"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/schiava-5-4.png",
+          "localPath": "/images/products/schiava-5-4.png",
+          "alt": "Schiava 5"
+        },
+        {
+          "originalUrl": "/images/products/schiava-5-4.png",
+          "localPath": "/images/products/schiava-5-4.png",
+          "alt": "Schiava 5"
+        },
+        {
+          "originalUrl": "/images/products/schiava-5-4.png",
+          "localPath": "/images/products/schiava-5-4.png",
+          "alt": "Schiava 5"
+        },
+        {
+          "originalUrl": "/images/products/schiava-5-4.png",
+          "localPath": "/images/products/schiava-5-4.png",
+          "alt": "Schiava 5"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Rosellina 29",
+      "slug": "rosellina-29",
+      "price": 120,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/rosellina-29/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/rosellina-29-2.jpg",
+          "localPath": "/images/products/rosellina-29-2.jpg",
+          "alt": "Rosellina 29"
+        },
+        {
+          "originalUrl": "/images/products/rosellina-29-2.jpg",
+          "localPath": "/images/products/rosellina-29-2.jpg",
+          "alt": "Rosellina 29"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Sandra Multicolor",
+      "slug": "sandra-multicolor",
+      "price": 130,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/sandra-multicolor/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/sandra-multicolor-2.jpg",
+          "localPath": "/images/products/sandra-multicolor-2.jpg",
+          "alt": "Sandra Multicolor"
+        },
+        {
+          "originalUrl": "/images/products/sandra-multicolor-2.jpg",
+          "localPath": "/images/products/sandra-multicolor-2.jpg",
+          "alt": "Sandra Multicolor"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Sandra",
+      "slug": "sandra",
+      "price": 130,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/sandra/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/sandra-2.jpg",
+          "localPath": "/images/products/sandra-2.jpg",
+          "alt": "Sandra"
+        },
+        {
+          "originalUrl": "/images/products/sandra-2.jpg",
+          "localPath": "/images/products/sandra-2.jpg",
+          "alt": "Sandra"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Schiava 3",
+      "slug": "schiava-3",
+      "price": 65,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/schiava-3/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Sandali",
+        "Schiava"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/schiava-3-2.png",
+          "localPath": "/images/products/schiava-3-2.png",
+          "alt": "Schiava 3"
+        },
+        {
+          "originalUrl": "/images/products/schiava-3-2.png",
+          "localPath": "/images/products/schiava-3-2.png",
+          "alt": "Schiava 3"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Schiava 4",
+      "slug": "schiava-4",
+      "price": 90,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/schiava-4/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Sandali",
+        "Schiava"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/schiava-4-6.png",
+          "localPath": "/images/products/schiava-4-6.png",
+          "alt": "Schiava 4"
+        },
+        {
+          "originalUrl": "/images/products/schiava-4-6.png",
+          "localPath": "/images/products/schiava-4-6.png",
+          "alt": "Schiava 4"
+        },
+        {
+          "originalUrl": "/images/products/schiava-4-6.png",
+          "localPath": "/images/products/schiava-4-6.png",
+          "alt": "Schiava 4"
+        },
+        {
+          "originalUrl": "/images/products/schiava-4-6.png",
+          "localPath": "/images/products/schiava-4-6.png",
+          "alt": "Schiava 4"
+        },
+        {
+          "originalUrl": "/images/products/schiava-4-6.png",
+          "localPath": "/images/products/schiava-4-6.png",
+          "alt": "Schiava 4"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Schiava 2",
+      "slug": "schiava-2",
+      "price": 90,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/schiava-2/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Sandali",
+        "Schiava"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/schiava-2-2.png",
+          "localPath": "/images/products/schiava-2-2.png",
+          "alt": "Schiava 2"
+        },
+        {
+          "originalUrl": "/images/products/schiava-2-2.png",
+          "localPath": "/images/products/schiava-2-2.png",
+          "alt": "Schiava 2"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Schiava 1",
+      "slug": "schiava-1",
+      "price": 90,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/schiava-1/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Sandali",
+        "Schiava"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/schiava-1-2.png",
+          "localPath": "/images/products/schiava-1-2.png",
+          "alt": "Schiava 1"
+        },
+        {
+          "originalUrl": "/images/products/schiava-1-2.png",
+          "localPath": "/images/products/schiava-1-2.png",
+          "alt": "Schiava 1"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Maratea",
+      "slug": "maratea",
+      "price": 75,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/maratea/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/maratea-2.png",
+          "localPath": "/images/products/maratea-2.png",
+          "alt": "Maratea"
+        },
+        {
+          "originalUrl": "/images/products/maratea-2.png",
+          "localPath": "/images/products/maratea-2.png",
+          "alt": "Maratea"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Strass 1010",
+      "slug": "strass-1010",
+      "price": 90,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/strass-1010/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Gioiello",
+        "Sandali",
+        "Strass"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/strass-1010-2.jpg",
+          "localPath": "/images/products/strass-1010-2.jpg",
+          "alt": "Strass 1010"
+        },
+        {
+          "originalUrl": "/images/products/strass-1010-2.jpg",
+          "localPath": "/images/products/strass-1010-2.jpg",
+          "alt": "Strass 1010"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Strass 1014",
+      "slug": "strass-1014",
+      "price": 90,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/strass-1014/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Gioiello",
+        "Sandali",
+        "Strass"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/strass-1014-2.jpg",
+          "localPath": "/images/products/strass-1014-2.jpg",
+          "alt": "Strass 1014"
+        },
+        {
+          "originalUrl": "/images/products/strass-1014-2.jpg",
+          "localPath": "/images/products/strass-1014-2.jpg",
+          "alt": "Strass 1014"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Strass 1012",
+      "slug": "strass-1012",
+      "price": 90,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/strass-1012/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Gioiello",
+        "Sandali",
+        "Strass"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/strass-1012-2.jpg",
+          "localPath": "/images/products/strass-1012-2.jpg",
+          "alt": "Strass 1012"
+        },
+        {
+          "originalUrl": "/images/products/strass-1012-2.jpg",
+          "localPath": "/images/products/strass-1012-2.jpg",
+          "alt": "Strass 1012"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Strass 1016",
+      "slug": "strass-1016",
+      "price": 90,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/strass-1016/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Gioiello",
+        "Sandali",
+        "Strass"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/strass-1016-2.jpg",
+          "localPath": "/images/products/strass-1016-2.jpg",
+          "alt": "Strass 1016"
+        },
+        {
+          "originalUrl": "/images/products/strass-1016-2.jpg",
+          "localPath": "/images/products/strass-1016-2.jpg",
+          "alt": "Strass 1016"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Creta",
+      "slug": "creta",
+      "price": 180,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/creta/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Cavigliera",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/creta-2.jpg",
+          "localPath": "/images/products/creta-2.jpg",
+          "alt": "Creta"
+        },
+        {
+          "originalUrl": "/images/products/creta-2.jpg",
+          "localPath": "/images/products/creta-2.jpg",
+          "alt": "Creta"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Giunone",
+      "slug": "giunone",
+      "price": 180,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/giunone/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Cavigliera",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/giunone-2.jpg",
+          "localPath": "/images/products/giunone-2.jpg",
+          "alt": "Giunone"
+        },
+        {
+          "originalUrl": "/images/products/giunone-2.jpg",
+          "localPath": "/images/products/giunone-2.jpg",
+          "alt": "Giunone"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Atena",
+      "slug": "atena",
+      "price": 180,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/atena/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Cavigliera",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/atena-2.jpg",
+          "localPath": "/images/products/atena-2.jpg",
+          "alt": "Atena"
+        },
+        {
+          "originalUrl": "/images/products/atena-2.jpg",
+          "localPath": "/images/products/atena-2.jpg",
+          "alt": "Atena"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Rodi",
+      "slug": "rodi",
+      "price": 180,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/rodi/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Cavigliera",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/rodi-2.jpg",
+          "localPath": "/images/products/rodi-2.jpg",
+          "alt": "Rodi"
+        },
+        {
+          "originalUrl": "/images/products/rodi-2.jpg",
+          "localPath": "/images/products/rodi-2.jpg",
+          "alt": "Rodi"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Corallo",
+      "slug": "corallo",
+      "price": 130,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/corallo/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/corallo-4.jpeg",
+          "localPath": "/images/products/corallo-4.jpeg",
+          "alt": "Corallo"
+        },
+        {
+          "originalUrl": "/images/products/corallo-4.jpeg",
+          "localPath": "/images/products/corallo-4.jpeg",
+          "alt": "Corallo"
+        },
+        {
+          "originalUrl": "/images/products/corallo-4.jpeg",
+          "localPath": "/images/products/corallo-4.jpeg",
+          "alt": "Corallo"
+        },
+        {
+          "originalUrl": "/images/products/corallo-4.jpeg",
+          "localPath": "/images/products/corallo-4.jpeg",
+          "alt": "Corallo"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Stella",
+      "slug": "stella",
+      "price": 150,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/stella/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Fasce",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/Stella-150E.png",
+          "localPath": "/images/products/Stella-150E.png",
+          "alt": "Stella"
+        }
+      ],
+      "variantTypes": [],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Rossella",
+      "slug": "rossella",
+      "price": 50,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/rossella/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Bambini",
+        "Infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/rossella-50-1.png",
+          "localPath": "/images/products/rossella-50-1.png",
+          "alt": "Rossella"
+        },
+        {
+          "originalUrl": "/images/products/rossella-1.png",
+          "localPath": "/images/products/rossella-1.png",
+          "alt": "Rossella"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "Gomma",
+            "Cuoio"
+          ]
+        },
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Roberta",
+      "slug": "roberta",
+      "price": 50,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/roberta/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Bambini",
+        "No infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/roberta-50-2.png",
+          "localPath": "/images/products/roberta-50-2.png",
+          "alt": "Roberta"
+        },
+        {
+          "originalUrl": "/images/products/roberta-1.png",
+          "localPath": "/images/products/roberta-1.png",
+          "alt": "Roberta"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "Gomma",
+            "Cuoio"
+          ]
+        },
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Ludovica",
+      "slug": "ludovica",
+      "price": 50,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/ludovica/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Bambini",
+        "No infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/ludovica-50-2.png",
+          "localPath": "/images/products/ludovica-50-2.png",
+          "alt": "Ludovica"
+        },
+        {
+          "originalUrl": "/images/products/ludovica-50-2.png",
+          "localPath": "/images/products/ludovica-50-2.png",
+          "alt": "Ludovica"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "Gomma",
+            "Cuoio"
+          ]
+        },
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Giusy",
+      "slug": "giusy",
+      "price": 50,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/giusy/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Bambini",
+        "Infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/giusy-50-2.png",
+          "localPath": "/images/products/giusy-50-2.png",
+          "alt": "Giusy"
+        },
+        {
+          "originalUrl": "/images/products/giusy-1.png",
+          "localPath": "/images/products/giusy-1.png",
+          "alt": "Giusy"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "Gomma",
+            "Cuoio"
+          ]
+        },
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Greta",
+      "slug": "greta",
+      "price": 50,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/greta/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Bambini",
+        "No infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/greta-50-2.png",
+          "localPath": "/images/products/greta-50-2.png",
+          "alt": "Greta"
+        },
+        {
+          "originalUrl": "/images/products/greta-1.png",
+          "localPath": "/images/products/greta-1.png",
+          "alt": "Greta"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "Gomma",
+            "Cuoio"
+          ]
+        },
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Raffaella Maria",
+      "slug": "raffaella-maria",
+      "price": 50,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/raffaella-maria/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Bambini",
+        "No infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/raffaella-maria-1.png",
+          "localPath": "/images/products/raffaella-maria-1.png",
+          "alt": "Raffaella Maria"
+        },
+        {
+          "originalUrl": "/images/products/raffaella-maria-1.png",
+          "localPath": "/images/products/raffaella-maria-1.png",
+          "alt": "Raffaella Maria"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "Gomma",
+            "Cuoio"
+          ]
+        },
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Sonia",
+      "slug": "sonia",
+      "price": 75,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/sonia/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/sonia75.png",
+          "localPath": "/images/products/sonia75.png",
+          "alt": "Sonia"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Serena",
+      "slug": "serena",
+      "price": 65,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/serena/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/serena65-3.png",
+          "localPath": "/images/products/serena65-3.png",
+          "alt": "Serena"
+        },
+        {
+          "originalUrl": "/images/products/serena-2.png",
+          "localPath": "/images/products/serena-2.png",
+          "alt": "Serena"
+        },
+        {
+          "originalUrl": "/images/products/serena-2.png",
+          "localPath": "/images/products/serena-2.png",
+          "alt": "Serena"
+        },
+        {
+          "originalUrl": "/images/products/serena-2.png",
+          "localPath": "/images/products/serena-2.png",
+          "alt": "Serena"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Rita",
+      "slug": "rita",
+      "price": 75,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/rita/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/rita75-1.png",
+          "localPath": "/images/products/rita75-1.png",
+          "alt": "Rita"
+        },
+        {
+          "originalUrl": "/images/products/rita-2.png",
+          "localPath": "/images/products/rita-2.png",
+          "alt": "Rita"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Morena",
+      "slug": "morena",
+      "price": 65,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/morena/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/morena65-1.png",
+          "localPath": "/images/products/morena65-1.png",
+          "alt": "Morena"
+        },
+        {
+          "originalUrl": "/images/products/morena-2.png",
+          "localPath": "/images/products/morena-2.png",
+          "alt": "Morena"
+        },
+        {
+          "originalUrl": "/images/products/morena-2.png",
+          "localPath": "/images/products/morena-2.png",
+          "alt": "Morena"
+        },
+        {
+          "originalUrl": "/images/products/morena-2.png",
+          "localPath": "/images/products/morena-2.png",
+          "alt": "Morena"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Marlena",
+      "slug": "marlena",
+      "price": 65,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/marlena/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/marlena-6.png",
+          "localPath": "/images/products/marlena-6.png",
+          "alt": "Marlena"
+        },
+        {
+          "originalUrl": "/images/products/marlena-6.png",
+          "localPath": "/images/products/marlena-6.png",
+          "alt": "Marlena"
+        },
+        {
+          "originalUrl": "/images/products/marlena-6.png",
+          "localPath": "/images/products/marlena-6.png",
+          "alt": "Marlena"
+        },
+        {
+          "originalUrl": "/images/products/marlena-6.png",
+          "localPath": "/images/products/marlena-6.png",
+          "alt": "Marlena"
+        },
+        {
+          "originalUrl": "/images/products/marlena-6.png",
+          "localPath": "/images/products/marlena-6.png",
+          "alt": "Marlena"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Laura",
+      "slug": "laura",
+      "price": 130,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/laura/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/laura130-2.png",
+          "localPath": "/images/products/laura130-2.png",
+          "alt": "Laura"
+        },
+        {
+          "originalUrl": "/images/products/laura-3.png",
+          "localPath": "/images/products/laura-3.png",
+          "alt": "Laura"
+        },
+        {
+          "originalUrl": "/images/products/laura-3.png",
+          "localPath": "/images/products/laura-3.png",
+          "alt": "Laura"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Sofia",
+      "slug": "sofia",
+      "price": 130,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/sofia/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/sofia130-2.png",
+          "localPath": "/images/products/sofia130-2.png",
+          "alt": "Sofia"
+        },
+        {
+          "originalUrl": "/images/products/sofia-2.png",
+          "localPath": "/images/products/sofia-2.png",
+          "alt": "Sofia"
+        },
+        {
+          "originalUrl": "/images/products/sofia-2.png",
+          "localPath": "/images/products/sofia-2.png",
+          "alt": "Sofia"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Marta",
+      "slug": "marta",
+      "price": 130,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/marta/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/marta130-3.png",
+          "localPath": "/images/products/marta130-3.png",
+          "alt": "Marta"
+        },
+        {
+          "originalUrl": "/images/products/marta-3.png",
+          "localPath": "/images/products/marta-3.png",
+          "alt": "Marta"
+        },
+        {
+          "originalUrl": "/images/products/marta-3.png",
+          "localPath": "/images/products/marta-3.png",
+          "alt": "Marta"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Melissa",
+      "slug": "melissa",
+      "price": 150,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/melissa/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Con infradito",
+        "Gioiello",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/melissa150-2.png",
+          "localPath": "/images/products/melissa150-2.png",
+          "alt": "Melissa"
+        },
+        {
+          "originalUrl": "/images/products/melissa-2.png",
+          "localPath": "/images/products/melissa-2.png",
+          "alt": "Melissa"
+        },
+        {
+          "originalUrl": "/images/products/melissa-2.png",
+          "localPath": "/images/products/melissa-2.png",
+          "alt": "Melissa"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Vittoria",
+      "slug": "vittoria",
+      "price": 75,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/vittoria/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/vittoria65-1.png",
+          "localPath": "/images/products/vittoria65-1.png",
+          "alt": "Vittoria"
+        },
+        {
+          "originalUrl": "/images/products/vittoria-2.png",
+          "localPath": "/images/products/vittoria-2.png",
+          "alt": "Vittoria"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Raffaella",
+      "slug": "raffaella",
+      "price": 60,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/raffaella/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/raffaella50-2.png",
+          "localPath": "/images/products/raffaella50-2.png",
+          "alt": "Raffaella"
+        },
+        {
+          "originalUrl": "/images/products/raffaella-1.png",
+          "localPath": "/images/products/raffaella-1.png",
+          "alt": "Raffaella"
+        },
+        {
+          "originalUrl": "/images/products/raffaella-1.png",
+          "localPath": "/images/products/raffaella-1.png",
+          "alt": "Raffaella"
+        },
+        {
+          "originalUrl": "/images/products/raffaella-1.png",
+          "localPath": "/images/products/raffaella-1.png",
+          "alt": "Raffaella"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Mia",
+      "slug": "mia",
+      "price": 65,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/mia/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/mia55-1.png",
+          "localPath": "/images/products/mia55-1.png",
+          "alt": "Mia"
+        },
+        {
+          "originalUrl": "/images/products/mia-2.png",
+          "localPath": "/images/products/mia-2.png",
+          "alt": "Mia"
+        },
+        {
+          "originalUrl": "/images/products/mia-2.png",
+          "localPath": "/images/products/mia-2.png",
+          "alt": "Mia"
+        },
+        {
+          "originalUrl": "/images/products/mia-2.png",
+          "localPath": "/images/products/mia-2.png",
+          "alt": "Mia"
+        },
+        {
+          "originalUrl": "/images/products/mia-2.png",
+          "localPath": "/images/products/mia-2.png",
+          "alt": "Mia"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Matilde",
+      "slug": "matilde",
+      "price": 75,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/matilde/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/matilde65-2.png",
+          "localPath": "/images/products/matilde65-2.png",
+          "alt": "Matilde"
+        },
+        {
+          "originalUrl": "/images/products/matilde-2.png",
+          "localPath": "/images/products/matilde-2.png",
+          "alt": "Matilde"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Maria",
+      "slug": "maria",
+      "price": 65,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/maria/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/maria55.png",
+          "localPath": "/images/products/maria55.png",
+          "alt": "Maria"
+        },
+        {
+          "originalUrl": "/images/products/maria-2.png",
+          "localPath": "/images/products/maria-2.png",
+          "alt": "Maria"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Isabella",
+      "slug": "isabella",
+      "price": 65,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/isabella/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/isabella55-1.png",
+          "localPath": "/images/products/isabella55-1.png",
+          "alt": "Isabella"
+        },
+        {
+          "originalUrl": "/images/products/isabella-3.png",
+          "localPath": "/images/products/isabella-3.png",
+          "alt": "Isabella"
+        },
+        {
+          "originalUrl": "/images/products/isabella-3.png",
+          "localPath": "/images/products/isabella-3.png",
+          "alt": "Isabella"
+        },
+        {
+          "originalUrl": "/images/products/isabella-3.png",
+          "localPath": "/images/products/isabella-3.png",
+          "alt": "Isabella"
+        },
+        {
+          "originalUrl": "/images/products/isabella-3.png",
+          "localPath": "/images/products/isabella-3.png",
+          "alt": "Isabella"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Giulia",
+      "slug": "giulia",
+      "price": 75,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/giulia/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/giulia65.png",
+          "localPath": "/images/products/giulia65.png",
+          "alt": "Giulia"
+        },
+        {
+          "originalUrl": "/images/products/giulia-2.png",
+          "localPath": "/images/products/giulia-2.png",
+          "alt": "Giulia"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Foglia",
+      "slug": "foglia",
+      "price": 75,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/foglia/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/foglia-3.png",
+          "localPath": "/images/products/foglia-3.png",
+          "alt": "Foglia"
+        },
+        {
+          "originalUrl": "/images/products/foglia-3.png",
+          "localPath": "/images/products/foglia-3.png",
+          "alt": "Foglia"
+        },
+        {
+          "originalUrl": "/images/products/foglia-3.png",
+          "localPath": "/images/products/foglia-3.png",
+          "alt": "Foglia"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Eleonora",
+      "slug": "eleonora",
+      "price": 75,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/eleonora/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/eleonora75-3.png",
+          "localPath": "/images/products/eleonora75-3.png",
+          "alt": "Eleonora"
+        },
+        {
+          "originalUrl": "/images/products/eleonora-2.png",
+          "localPath": "/images/products/eleonora-2.png",
+          "alt": "Eleonora"
+        },
+        {
+          "originalUrl": "/images/products/eleonora-2.png",
+          "localPath": "/images/products/eleonora-2.png",
+          "alt": "Eleonora"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Desireè",
+      "slug": "desiree",
+      "price": 75,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/desiree/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/desiree-2.png",
+          "localPath": "/images/products/desiree-2.png",
+          "alt": "Desireè"
+        },
+        {
+          "originalUrl": "/images/products/desiree-2.png",
+          "localPath": "/images/products/desiree-2.png",
+          "alt": "Desireè"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Denise",
+      "slug": "denise",
+      "price": 90,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/denise/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/denise-2.png",
+          "localPath": "/images/products/denise-2.png",
+          "alt": "Denise"
+        },
+        {
+          "originalUrl": "/images/products/denise-2.png",
+          "localPath": "/images/products/denise-2.png",
+          "alt": "Denise"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Aquilone",
+      "slug": "aquilone",
+      "price": 75,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/aquilone/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/aquilone65-2.png",
+          "localPath": "/images/products/aquilone65-2.png",
+          "alt": "Aquilone"
+        },
+        {
+          "originalUrl": "/images/products/aquilone-2.png",
+          "localPath": "/images/products/aquilone-2.png",
+          "alt": "Aquilone"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Alessia",
+      "slug": "alessia",
+      "price": 65,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/alessia/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/alessia55-2.png",
+          "localPath": "/images/products/alessia55-2.png",
+          "alt": "Alessia"
+        },
+        {
+          "originalUrl": "/images/products/alessia-2.png",
+          "localPath": "/images/products/alessia-2.png",
+          "alt": "Alessia"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    },
+    {
+      "name": "Chiara",
+      "slug": "chiara",
+      "price": 75,
+      "originalUrl": "https://calzoleriaprevenzano.it/prodotto/chiara/",
+      "description": "",
+      "shortDescription": "",
+      "categories": [
+        "Classici",
+        "Con infradito",
+        "Sandali"
+      ],
+      "images": [
+        {
+          "originalUrl": "/images/products/chiara-3.png",
+          "localPath": "/images/products/chiara-3.png",
+          "alt": "Chiara"
+        },
+        {
+          "originalUrl": "/images/products/chiara-3.png",
+          "localPath": "/images/products/chiara-3.png",
+          "alt": "Chiara"
+        },
+        {
+          "originalUrl": "/images/products/chiara-3.png",
+          "localPath": "/images/products/chiara-3.png",
+          "alt": "Chiara"
+        }
+      ],
+      "variantTypes": [
+        {
+          "group": "",
+          "label": "",
+          "options": [
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42"
+          ]
+        }
+      ],
+      "isFeatured": true,
+      "inStock": true
+    }
+  ]
+}
