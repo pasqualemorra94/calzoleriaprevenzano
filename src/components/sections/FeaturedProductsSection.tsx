@@ -84,7 +84,7 @@ function ProductCard({ product }: { product: Product }) {
             {product.category.name}
           </span>
         )}
-        <h3 className="mt-1.5 font-display text-[var(--text-base)] font-semibold leading-snug text-[var(--color-text)] transition-colors duration-200 group-hover:text-[var(--color-primary)]">
+        <h3 className="mt-1.5 text-sm font-medium leading-snug text-[var(--color-text)] transition-colors duration-200 group-hover:text-[var(--color-primary)]">
           <Link to="/prodotti/$slug" params={{ slug: product.slug }} className="block">
             {product.name}
           </Link>

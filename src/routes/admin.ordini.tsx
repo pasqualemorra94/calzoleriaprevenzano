@@ -111,7 +111,7 @@ function AdminOrdersList(): ReactNode {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-base font-medium text-gray-900">Gestione ordini</h1>
+      <h1 className="text-sm font-medium text-gray-900">Gestione ordini</h1>
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1">

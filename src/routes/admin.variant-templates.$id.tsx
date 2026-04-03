@@ -122,7 +122,7 @@ export default function VariantTemplateEditPage(): ReactNode {
           >
             <ArrowLeft className="h-4 w-4" />
           </Link>
-          <h1 className="text-base font-medium text-gray-900">
+          <h1 className="text-sm font-medium text-gray-900">
             {isNew ? "Nuovo template" : "Modifica template"}
           </h1>
         </div>

@@ -115,7 +115,7 @@ function AdminProductsList(): ReactNode {
   return (
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-base font-medium text-gray-900">Gestione prodotti</h1>
+        <h1 className="text-sm font-medium text-gray-900">Gestione prodotti</h1>
         <Link
           to="/admin/prodotti/$id"
           params={{ id: "nuovo" }}

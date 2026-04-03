@@ -53,7 +53,7 @@ export default function VariantTemplatesListPage(): ReactNode {
         <div className="mx-auto flex max-w-5xl items-center justify-between">
           <div className="flex items-center gap-3">
             <Layers className="h-4 w-4 text-[var(--color-primary)]" />
-            <h1 className="text-base font-medium text-gray-900">Variant templates</h1>
+            <h1 className="text-sm font-medium text-gray-900">Variant templates</h1>
             <span className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600">
               {templates.length}
             </span>

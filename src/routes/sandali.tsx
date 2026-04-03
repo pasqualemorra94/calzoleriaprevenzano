@@ -317,7 +317,7 @@ function SandaloProductCard({ product }: { product: ProductListItem }) {
             {product.category.name}
           </span>
         )}
-        <h3 className="mt-1 font-display text-[var(--text-base)] font-semibold leading-snug text-[var(--color-text)]">
+        <h3 className="mt-1 text-sm font-medium leading-snug text-[var(--color-text)]">
           <Link to="/prodotti/$slug" params={{ slug: product.slug }} className="hover:text-[var(--color-primary)]">
             {product.name}
           </Link>

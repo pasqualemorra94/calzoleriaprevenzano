@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { useState, useEffect, useCallback } from "react";
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
@@ -60,9 +60,18 @@ function buildUrl(params: {
 
 export const Route = createFileRoute("/catalogo")({
   component: CatalogoPage,
+  validateSearch: (search: Record<string, string>): { category?: string; query?: string; page?: string; sort?: string } => {
+    return {
+      category: search.category,
+      query: search.query,
+      page: search.page,
+      sort: search.sort,
+    };
+  },
 });
 
 function CatalogoPage(): ReactNode {
+  const routeSearch = useSearch({ from: "/catalogo" });
   const [products, setProducts] = useState<ProductListItem[]>([]);
   const [categories, setCategories] = useState<CategoryWithChildren[]>([]);
   const [total, setTotal] = useState(0);
@@ -70,7 +79,7 @@ function CatalogoPage(): ReactNode {
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
   const [searchInput, setSearchInput] = useState("");
-  const [activeCategory, setActiveCategory] = useState<string | undefined>(undefined);
+  const [activeCategory, setActiveCategory] = useState<string | undefined>(routeSearch.category);
   const [sort, setSort] = useState<SortOption>("newest");
   const [loading, setLoading] = useState(true);
 
@@ -97,6 +106,14 @@ function CatalogoPage(): ReactNode {
     } catch { /* ignore */ }
     setLoading(false);
   }, [page, activeCategory, query, sort]);
+
+  // Sync category from URL when navigating via megamenu
+  useEffect(() => {
+    if (routeSearch.category !== activeCategory) {
+      setActiveCategory(routeSearch.category);
+      setPage(1);
+    }
+  }, [routeSearch.category]);
 
   useEffect(() => {
     fetchCategories();
@@ -392,7 +409,7 @@ function CatalogProductCard({ product }: { product: ProductListItem }) {
             {product.category.name}
           </span>
         )}
-        <h3 className="mt-1 font-display text-[var(--text-base)] font-semibold leading-snug text-[var(--color-text)]">
+        <h3 className="mt-1 text-sm font-medium leading-snug text-[var(--color-text)]">
           <Link to="/prodotti/$slug" params={{ slug: product.slug }} className="hover:text-[var(--color-primary)]">
             {product.name}
           </Link>
