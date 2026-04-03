@@ -333,7 +333,7 @@ function ProdottoPage(): ReactNode {
   if (notFound || !product) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center px-[var(--page-padding-x)]">
-        <p className="mb-4 text-5xl font-display font-bold text-[var(--color-primary)]">!</p>
+        <p className="mb-4 text-4xl font-display font-bold text-[var(--color-primary)]">!</p>
         <h1 className="mb-4 text-center text-xl font-display font-semibold text-[var(--color-text)]">
           Prodotto non trovato
         </h1>
@@ -443,7 +443,7 @@ function ProdottoPage(): ReactNode {
                 </span>
               )}
 
-              <h1 className="font-display text-[var(--text-xl)] font-semibold tracking-tight md:text-[var(--text-2xl)]">
+              <h1 className="font-display text-[var(--text-lg)] font-semibold tracking-tight md:text-[var(--text-xl)]">
                 {product.name}
               </h1>
 
@@ -452,7 +452,7 @@ function ProdottoPage(): ReactNode {
                   <AnimatePresence mode="wait">
                     <m.p
                       key={priceBreakdown.total}
-                      className="text-[var(--text-lg)] font-semibold text-[var(--color-primary)]"
+                      className="text-base font-semibold text-[var(--color-primary)]"
                       initial={{ opacity: 0, y: -4 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 4 }}
@@ -462,7 +462,7 @@ function ProdottoPage(): ReactNode {
                     </m.p>
                   </AnimatePresence>
                   {product.compareAtPrice && (
-                    <p className="text-lg text-[var(--color-text-muted)] line-through">
+                    <p className="text-sm text-[var(--color-text-muted)] line-through">
                       EUR {product.compareAtPrice.toFixed(2)}
                     </p>
                   )}
@@ -679,7 +679,7 @@ function ProdottoPage(): ReactNode {
                 <div>
                   <label
                     htmlFor="customer-note"
-                    className="mb-2 block text-sm font-medium text-[var(--color-text)]"
+                    className="mb-1 block text-xs font-medium text-[var(--color-text-muted)]"
                   >
                     Note personalizzazione
                     <span className="ml-1 text-xs font-normal text-[var(--color-text-muted)]">(opzionale)</span>

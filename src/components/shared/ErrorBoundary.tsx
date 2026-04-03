@@ -38,7 +38,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       return (
         <main className="flex min-h-screen flex-col items-center justify-center px-4 bg-[var(--color-background)]">
           <div className="text-center max-w-lg">
-            <p className="text-6xl mb-6 text-[var(--color-primary)]">
+            <p className="text-4xl mb-4 text-[var(--color-primary)]">
               ⚠
             </p>
             <h1 className="text-xl font-display font-semibold text-[var(--color-text)] mb-4">

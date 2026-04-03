@@ -215,7 +215,7 @@ function CheckoutPage(): ReactNode {
               <span className="mx-2">/</span>
               <span className="text-[var(--color-text)]">Checkout</span>
             </nav>
-            <h1 className="font-display text-[var(--text-xl)] font-semibold tracking-tight md:text-[var(--text-2xl)]">
+            <h1 className="font-display text-[var(--text-lg)] font-semibold tracking-tight md:text-[var(--text-xl)]">
               Checkout
             </h1>
           </m.div>

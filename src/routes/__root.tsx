@@ -121,7 +121,7 @@ function RootComponent() {
 function NotFoundComponent(): ReactNode {
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center px-[var(--page-padding-x)]">
-      <p className="mb-4 text-6xl font-display font-bold text-[var(--color-primary)]">
+      <p className="mb-4 text-4xl font-display font-bold text-[var(--color-primary)]">
         404
       </p>
       <h1 className="mb-4 text-center text-xl font-display font-semibold text-[var(--color-text)]">

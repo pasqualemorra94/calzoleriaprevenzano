@@ -473,7 +473,7 @@ function AdminProductEditPage(): ReactNode {
           <ArrowLeft className="h-4 w-4" />
           Indietro
         </Link>
-        <h1 className="text-lg font-medium text-gray-900">{isNew ? "Nuovo Prodotto" : "Modifica Prodotto"}</h1>
+        <h1 className="text-base font-medium text-gray-900">{isNew ? "Nuovo Prodotto" : "Modifica Prodotto"}</h1>
       </div>
 
       {error && (

@@ -88,7 +88,7 @@ function AdminDashboardPage(): ReactNode {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-lg font-medium text-gray-900">Dashboard</h1>
+      <h1 className="text-base font-medium text-gray-900">Dashboard</h1>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {statCards.map((card) => {
@@ -101,7 +101,7 @@ function AdminDashboardPage(): ReactNode {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-500">{card.label}</p>
-                  <p className="text-xl font-bold text-gray-900">{card.value}</p>
+                  <p className="text-lg font-bold text-gray-900">{card.value}</p>
                 </div>
               </div>
             </div>

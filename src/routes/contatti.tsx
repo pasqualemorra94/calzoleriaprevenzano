@@ -70,7 +70,7 @@ function ContattiPage(): ReactNode {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           >
-            <h1 className="font-display text-[var(--text-xl)] font-semibold tracking-tight md:text-[var(--text-2xl)]">
+            <h1 className="font-display text-[var(--text-lg)] font-semibold tracking-tight md:text-[var(--text-xl)]">
               {CONTACT_INFO.headline}
             </h1>
             <p className="mt-4 text-[var(--text-lg)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">

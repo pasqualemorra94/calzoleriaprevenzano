@@ -10,7 +10,7 @@ function LoginPage() {
     <div className="flex min-h-[70vh] items-center justify-center px-[var(--page-padding-x)]">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <h1 className="font-display text-xl font-semibold text-[var(--color-text)]">
+          <h1 className="font-display text-lg font-semibold text-[var(--color-text)]">
             Accedi
           </h1>
           <p className="mt-2 text-sm text-[var(--color-text-secondary)]">

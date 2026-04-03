@@ -174,7 +174,7 @@ function AdminOrderDetailPage(): ReactNode {
           Torna alla lista
         </Link>
         <div className="flex items-center gap-3">
-          <h1 className="text-lg font-medium text-gray-900">Ordine {order.orderNumber}</h1>
+          <h1 className="text-base font-medium text-gray-900">Ordine {order.orderNumber}</h1>
           <span className={`inline-flex rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_COLORS[order.status] ?? "bg-gray-100 text-gray-800"}`}>
             {STATUS_LABELS[order.status] ?? order.status}
           </span>
