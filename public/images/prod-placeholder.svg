@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 533" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="prodBg" x1="0" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#3d2317"/>
+      <stop offset="50%" stop-color="#2c1810"/>
+      <stop offset="100%" stop-color="#1a0f0a"/>
+    </linearGradient>
+    <pattern id="prodStitch" x="0" y="0" width="30" height="30" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="15" x2="30" y2="15" stroke="#C9A84C" stroke-opacity="0.06" stroke-width="0.6" stroke-dasharray="2,5"/>
+    </pattern>
+    <radialGradient id="prodSpotlight" cx="0.5" cy="0.4" r="0.6">
+      <stop offset="0%" stop-color="#C9A84C" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#C9A84C" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="400" height="533" fill="url(#prodBg)"/>
+  <rect width="400" height="533" fill="url(#prodStitch)"/>
+  <rect width="400" height="533" fill="url(#prodSpotlight)"/>
+  <!-- Sandal silhouette centered -->
+  <g transform="translate(100, 160)" opacity="0.1">
+    <path d="M0,180 Q30,195 60,180 L90,180 Q120,195 150,180 L180,183 Q200,186 220,178 L240,183 Q260,186 280,173 L300,180 Q320,185 340,170 L340,200 L0,200 Z" fill="#C9A84C"/>
+    <path d="M50,140 Q90,75 150,95 Q190,105 190,140" fill="none" stroke="#C9A84C" stroke-width="5" stroke-linecap="round"/>
+    <path d="M150,95 Q210,65 270,85 Q310,95 310,140" fill="none" stroke="#C9A84C" stroke-width="4" stroke-linecap="round"/>
+    <path d="M90,95 Q130,55 170,75" fill="none" stroke="#C9A84C" stroke-width="3.5" stroke-linecap="round"/>
+    <line x1="190" y1="140" x2="190" y2="55" stroke="#C9A84C" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="190" cy="45" r="10" fill="none" stroke="#C9A84C" stroke-width="3.5"/>
+  </g>
+  <!-- Brand hint at bottom -->
+  <text x="200" y="480" text-anchor="middle" font-family="serif" font-size="12" fill="#C9A84C" opacity="0.15" letter-spacing="4">PREVENZANO</text>
+</svg>

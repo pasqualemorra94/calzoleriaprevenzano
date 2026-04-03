@@ -31,16 +31,16 @@ const TABS: { key: ProductTab; label: string; description: string }[] = [
 
 const PRODUCTS: Record<ProductTab, Product[]> = {
   nuove: [
-    { id: "n1", name: "Gioiello Infradito Camoscio", price: 89, image: "/images/prod-placeholder-1.webp", category: "Collezione Gioiello" },
-    { id: "n2", name: "Cavigliera Vitello Oro", price: 95, image: "/images/prod-placeholder-2.webp", category: "Collezione Gioiello" },
-    { id: "n3", name: "Fascia Cuoio Naturale", price: 78, image: "/images/prod-placeholder-3.webp", category: "Collezione Classica" },
-    { id: "n4", name: "Treccia Pelle Sabbia", price: 85, image: "/images/prod-placeholder-4.webp", category: "Collezione Classica" },
+    { id: "n1", name: "Gioiello Infradito Camoscio", price: 89, image: "/images/prod-placeholder.svg", category: "Collezione Gioiello" },
+    { id: "n2", name: "Cavigliera Vitello Oro", price: 95, image: "/images/prod-placeholder.svg", category: "Collezione Gioiello" },
+    { id: "n3", name: "Fascia Cuoio Naturale", price: 78, image: "/images/prod-placeholder.svg", category: "Collezione Classica" },
+    { id: "n4", name: "Treccia Pelle Sabbia", price: 85, image: "/images/prod-placeholder.svg", category: "Collezione Classica" },
   ],
   bestseller: [
-    { id: "b1", name: "Gioiello Infradito Nero", price: 85, image: "/images/prod-placeholder-5.webp", category: "Collezione Gioiello" },
-    { id: "b2", name: "Schiava Vitello Beige", price: 75, image: "/images/prod-placeholder-6.webp", category: "Collezione Classica" },
-    { id: "b3", name: "Cavigliera Camoscio Marrone", price: 92, image: "/images/prod-placeholder-7.webp", category: "Collezione Gioiello" },
-    { id: "b4", name: "Infradito Classico Cuoio", price: 68, image: "/images/prod-placeholder-8.webp", category: "Collezione Classica" },
+    { id: "b1", name: "Gioiello Infradito Nero", price: 85, image: "/images/prod-placeholder.svg", category: "Collezione Gioiello" },
+    { id: "b2", name: "Schiava Vitello Beige", price: 75, image: "/images/prod-placeholder.svg", category: "Collezione Classica" },
+    { id: "b3", name: "Cavigliera Camoscio Marrone", price: 92, image: "/images/prod-placeholder.svg", category: "Collezione Gioiello" },
+    { id: "b4", name: "Infradito Classico Cuoio", price: 68, image: "/images/prod-placeholder.svg", category: "Collezione Classica" },
   ],
 };
 
@@ -172,7 +172,7 @@ export function FeaturedProductsSection() {
         {/* View all CTA */}
         <div className="mt-12 text-center">
           <a
-            href="/sandali"
+            href="/catalogo"
             className="inline-flex items-center gap-2 text-sm font-medium text-[var(--color-primary)] transition-colors duration-[var(--transition-base)] hover:text-[var(--color-primary-dark)]"
           >
             Vedi tutti i prodotti

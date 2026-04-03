@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="labBg" x1="0" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#1a0f0a"/>
+      <stop offset="40%" stop-color="#2c1810"/>
+      <stop offset="100%" stop-color="#3d2317"/>
+    </linearGradient>
+    <radialGradient id="lampLight" cx="0.5" cy="0.2" r="0.5">
+      <stop offset="0%" stop-color="#C9A84C" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#1a0f0a" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="labStitch" x="0" y="0" width="45" height="45" patternUnits="userSpaceOnUse" patternTransform="rotate(15)">
+      <line x1="22" y1="0" x2="22" y2="45" stroke="#C9A84C" stroke-opacity="0.04" stroke-width="0.6" stroke-dasharray="2,6"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="600" fill="url(#labBg)"/>
+  <rect width="800" height="600" fill="url(#lampLight)"/>
+  <rect width="800" height="600" fill="url(#labStitch)"/>
+  <!-- Workbench silhouette -->
+  <g opacity="0.09" fill="#C9A84C">
+    <!-- Work table -->
+    <rect x="100" y="300" width="600" height="15" rx="3"/>
+    <rect x="120" y="315" width="20" height="200"/>
+    <rect x="660" y="315" width="20" height="200"/>
+    <!-- Tools on bench -->
+    <rect x="150" y="250" width="8" height="50" rx="2" transform="rotate(-10, 154, 275)"/>
+    <rect x="180" y="260" width="6" height="40" rx="2" transform="rotate(-5, 183, 280)"/>
+    <rect x="210" y="255" width="7" height="45" rx="2"/>
+    <rect x="240" y="265" width="5" height="35" rx="2" transform="rotate(8, 242, 282)"/>
+    <!-- Leather piece being worked on -->
+    <path d="M350,280 Q400,250 450,260 Q500,270 480,300 L320,300 Z" opacity="0.7"/>
+    <!-- Hammer -->
+    <rect x="550" y="240" width="12" height="60" rx="3" transform="rotate(15, 556, 270)"/>
+    <rect x="540" y="230" width="32" height="18" rx="4" transform="rotate(15, 556, 239)"/>
+    <!-- Last (shoemaker's form) -->
+    <path d="M620,230 Q630,200 640,210 Q650,220 645,260 Q640,290 620,300 Q600,290 605,260 Q608,240 620,230 Z"/>
+  </g>
+  <!-- Stitch decorative lines -->
+  <line x1="100" y1="560" x2="700" y2="560" stroke="#C9A84C" stroke-opacity="0.15" stroke-width="1" stroke-dasharray="5,5"/>
+  <text x="400" y="585" text-anchor="middle" font-family="serif" font-size="11" fill="#C9A84C" opacity="0.12" letter-spacing="5">LABORATORIO ARTIGIANALE</text>
+</svg>

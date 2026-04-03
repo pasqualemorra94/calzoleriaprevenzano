@@ -73,7 +73,7 @@ export function LaBottegaSection() {
           >
             <div className="overflow-hidden rounded-[var(--radius-lg)]">
               <img
-                src="/images/bottega-laboratorio.webp"
+                src="/images/bottega-laboratorio.svg"
                 alt="Il laboratorio artigianale di Calzoleria Prevenzano a Napoli"
                 className="aspect-[4/3] w-full object-cover"
                 loading="lazy"

@@ -1,14 +1,13 @@
 "use client";
 
-import { ShoppingBag, Heart, Search, X } from "lucide-react";
+import { ShoppingBag, X } from "lucide-react";
 import { APP_CONFIG } from "~/lib/constants/app";
 import type { NavItem } from "~/lib/types/models";
 import { cn } from "~/lib/utils/cn";
 
 const NAV_ITEMS: NavItem[] = [
   { label: "Sandali", href: "/sandali" },
-  { label: "Accessori", href: "/accessori" },
-  { label: "Pelletteria", href: "/pelletteria" },
+  { label: "Catalogo", href: "/catalogo" },
   { label: "La Bottega", href: "/la-bottega" },
   { label: "Contatti", href: "/contatti" },
 ];
@@ -67,33 +66,17 @@ export function MobileMenu({ isOpen, onClose, cartCount, menuRef }: MobileMenuPr
           ))}
         </ul>
 
-        {/* Mobile actions */}
-        <div className="flex items-center justify-around border-t border-[var(--color-border)] px-[var(--page-padding-x)] py-4">
-          <a
-            href="/ricerca" onClick={onClose}
-            aria-label="Cerca"
-            className="flex flex-col items-center gap-1 text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-primary)]"
-          >
-            <Search className="h-5 w-5" />
-            <span className="text-xs">Cerca</span>
-          </a>
-          <a
-            href="/wishlist" onClick={onClose}
-            aria-label="Lista desideri"
-            className="relative flex flex-col items-center gap-1 text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-primary)]"
-          >
-            <Heart className="h-5 w-5" />
-            <span className="text-xs">Desideri</span>
-          </a>
+        {/* Mobile actions — carrello only */}
+        <div className="flex items-center justify-center border-t border-[var(--color-border)] px-[var(--page-padding-x)] py-4">
           <a
             href="/carrello" onClick={onClose}
             aria-label="Carrello"
-            className="relative flex flex-col items-center gap-1 text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-primary)]"
+            className="relative flex items-center gap-2 text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-primary)]"
           >
             <ShoppingBag className="h-5 w-5" />
-            <span className="text-xs">Carrello</span>
+            <span className="text-sm font-medium">Carrello</span>
             {cartCount > 0 && (
-              <span className="absolute -top-1 right-2 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--color-primary)] text-[10px] font-medium text-[var(--color-primary-foreground)]">
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[var(--color-primary)] text-[10px] font-medium text-[var(--color-primary-foreground)]">
                 {cartCount}
               </span>
             )}

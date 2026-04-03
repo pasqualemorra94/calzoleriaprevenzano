@@ -16,14 +16,14 @@ interface Product {
 }
 
 const MOCK_PRODUCTS: Product[] = [
-  { id: "1", name: "Gioiello Infradito Camoscio", price: 89, image: "/images/prod-placeholder-1.webp", category: "Gioiello", isNew: true },
-  { id: "2", name: "Gioiello Infradito Nero", price: 85, image: "/images/prod-placeholder-5.webp", category: "Gioiello" },
-  { id: "3", name: "Gioiello Cavigliera Vitello Oro", price: 95, image: "/images/prod-placeholder-2.webp", category: "Gioiello", isNew: true },
-  { id: "4", name: "Gioiello Cavigliera Camoscio Marrone", price: 92, image: "/images/prod-placeholder-7.webp", category: "Gioiello" },
-  { id: "5", name: "Classica Schiava Vitello Beige", price: 75, image: "/images/prod-placeholder-6.webp", category: "Classica" },
-  { id: "6", name: "Classica Infradito Cuoio", price: 68, image: "/images/prod-placeholder-8.webp", category: "Classica" },
-  { id: "7", name: "Classica Fascia Cuoio Naturale", price: 78, image: "/images/prod-placeholder-3.webp", category: "Classica", isNew: true },
-  { id: "8", name: "Classica Treccia Pelle Sabbia", price: 85, image: "/images/prod-placeholder-4.webp", category: "Classica" },
+  { id: "1", name: "Gioiello Infradito Camoscio", price: 89, image: "/images/prod-placeholder.svg", category: "Gioiello", isNew: true },
+  { id: "2", name: "Gioiello Infradito Nero", price: 85, image: "/images/prod-placeholder.svg", category: "Gioiello" },
+  { id: "3", name: "Gioiello Cavigliera Vitello Oro", price: 95, image: "/images/prod-placeholder.svg", category: "Gioiello", isNew: true },
+  { id: "4", name: "Gioiello Cavigliera Camoscio Marrone", price: 92, image: "/images/prod-placeholder.svg", category: "Gioiello" },
+  { id: "5", name: "Classica Schiava Vitello Beige", price: 75, image: "/images/prod-placeholder.svg", category: "Classica" },
+  { id: "6", name: "Classica Infradito Cuoio", price: 68, image: "/images/prod-placeholder.svg", category: "Classica" },
+  { id: "7", name: "Classica Fascia Cuoio Naturale", price: 78, image: "/images/prod-placeholder.svg", category: "Classica", isNew: true },
+  { id: "8", name: "Classica Treccia Pelle Sabbia", price: 85, image: "/images/prod-placeholder.svg", category: "Classica" },
 ];
 
 export const Route = createFileRoute("/sandali")({

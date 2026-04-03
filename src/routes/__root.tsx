@@ -4,6 +4,7 @@ import {
   Outlet,
   Scripts,
   createRootRoute,
+  useRouterState,
 } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { APP_CONFIG } from "~/lib/constants/app";
@@ -11,6 +12,7 @@ import { MotionProvider } from "~/providers/MotionProvider";
 import { Navbar } from "~/components/shared/Navbar";
 import { Footer } from "~/components/shared/Footer";
 import { StructuredData } from "~/components/seo/StructuredData";
+import { cn } from "~/lib/utils/cn";
 import appCss from "~/styles/app.css?url";
 
 const ORG_SCHEMA = {
@@ -90,17 +92,26 @@ function RootDocument({ children }: { children: ReactNode }) {
 }
 
 function RootComponent() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isAdmin = pathname.startsWith("/admin");
+
   return (
     <MotionProvider>
       <a href="#main-content" className="skip-to-content">
         Vai al contenuto principale
       </a>
       <StructuredData data={ORG_SCHEMA} />
-      <Navbar />
-      <main id="main-content" className="min-h-screen pt-[var(--navbar-height)] md:pt-[var(--navbar-height-md)]">
+      {!isAdmin && <Navbar />}
+      <main
+        id="main-content"
+        className={cn(
+          "min-h-screen",
+          !isAdmin && "pt-[var(--navbar-height)] md:pt-[var(--navbar-height-md)]",
+        )}
+      >
         <Outlet />
       </main>
-      <Footer />
+      {!isAdmin && <Footer />}
     </MotionProvider>
   );
 }

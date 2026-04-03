@@ -7,9 +7,9 @@ const HERO_COPY = {
   subtitle:
     "Personalizza ogni dettaglio — tipo di pelle, colore, tacco e gioiello. Sandali unici, creati a mano nel nostro laboratorio di Napoli.",
   primaryCta: "Scopri la Collezione",
-  primaryCtaHref: "/sandali",
-  secondaryCta: "Personalizza il tuo sandalo",
-  secondaryCtaHref: "/personalizzazione",
+  primaryCtaHref: "/catalogo",
+  secondaryCta: "La nostra storia",
+  secondaryCtaHref: "/la-bottega",
 } as const;
 
 export function HeroSection() {
@@ -20,7 +20,7 @@ export function HeroSection() {
         <div
           className="h-full w-full bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: "url('/images/hero-bottega.webp')",
+            backgroundImage: "url('/images/hero-bottega.svg')",
           }}
         />
         {/* Dark gradient: bottom-up for text legibility */}

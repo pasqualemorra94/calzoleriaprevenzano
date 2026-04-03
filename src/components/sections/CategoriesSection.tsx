@@ -19,7 +19,7 @@ const CATEGORIES: Category[] = [
       "La collezione completa — dal classico infradito al modello gioiello. Ogni sandalo è personalizzabile nei materiali e nei dettagli.",
     cta: "Esplora i sandali",
     href: "/sandali",
-    image: "/images/cat-sandali.webp",
+    image: "/images/cat-sandali.svg",
     featured: true,
   },
   {
@@ -27,16 +27,16 @@ const CATEGORIES: Category[] = [
     description:
       "Solette, calzature per la cura delle scarpe e accessori tecnici per chi bada al dettaglio.",
     cta: "Scopri gli accessori",
-    href: "/accessori",
-    image: "/images/cat-accessori.webp",
+    href: "/catalogo",
+    image: "/images/cat-accessori.svg",
   },
   {
     title: "Pelletteria",
     description:
       "Portafogli, cinture e borselli in pelle italiana — piccoli oggetti che raccontano la stessa artigianalità dei nostri sandali.",
     cta: "Vedi la pelletteria",
-    href: "/pelletteria",
-    image: "/images/cat-pelletteria.webp",
+    href: "/catalogo",
+    image: "/images/cat-pelletteria.svg",
   },
 ];
 

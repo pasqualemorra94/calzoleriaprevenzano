@@ -86,7 +86,7 @@ function BottegaInfoBlock(): ReactNode {
     <section ref={ref} className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
       <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
         <m.img
-          src="/images/bottega-interna.webp"
+          src="/images/bottega-interna.svg"
           alt="L'interno della bottega Calzoleria Prevenzano"
           className="aspect-[4/3] w-full rounded-[var(--radius-lg)] object-cover"
           loading="lazy"

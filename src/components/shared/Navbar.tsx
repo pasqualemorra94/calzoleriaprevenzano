@@ -2,25 +2,19 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import type { ReactNode } from "react";
-import { Menu, X, ShoppingBag, Heart, Search } from "lucide-react";
+import { Menu, X, ShoppingBag } from "lucide-react";
 import { APP_CONFIG } from "~/lib/constants/app";
 import type { NavItem } from "~/lib/types/models";
 import { MobileMenu } from "./MobileMenu";
 
 const NAV_ITEMS: NavItem[] = [
   { label: "Sandali", href: "/sandali" },
-  { label: "Accessori", href: "/accessori" },
-  { label: "Pelletteria", href: "/pelletteria" },
+  { label: "Catalogo", href: "/catalogo" },
   { label: "La Bottega", href: "/la-bottega" },
   { label: "Contatti", href: "/contatti" },
 ];
 
-interface NavbarProps {
-  cartCount?: number;
-  wishlistCount?: number;
-}
-
-export function Navbar({ cartCount = 0, wishlistCount = 0 }: NavbarProps): ReactNode {
+export function Navbar({ cartCount = 0 }: { cartCount?: number }): ReactNode {
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -75,17 +69,6 @@ export function Navbar({ cartCount = 0, wishlistCount = 0 }: NavbarProps): React
 
         {/* Desktop Actions */}
         <div className="hidden items-center gap-4 md:flex">
-          <a href="/ricerca" aria-label="Cerca prodotti" className="text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-primary)]">
-            <Search className="h-5 w-5" />
-          </a>
-          <a href="/wishlist" aria-label="Lista desideri" className="relative text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-primary)]">
-            <Heart className="h-5 w-5" />
-            {wishlistCount > 0 && (
-              <span className="absolute -right-2 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--color-primary)] text-[10px] font-medium text-[var(--color-primary-foreground)]">
-                {wishlistCount}
-              </span>
-            )}
-          </a>
           <a href="/carrello" aria-label="Carrello" className="relative text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-primary)]">
             <ShoppingBag className="h-5 w-5" />
             {cartCount > 0 && (
