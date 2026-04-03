@@ -333,8 +333,8 @@ function ProdottoPage(): ReactNode {
   if (notFound || !product) {
     return (
       <div className="flex min-h-[60vh] flex-col items-center justify-center px-[var(--page-padding-x)]">
-        <p className="mb-4 text-7xl font-display font-bold text-[var(--color-primary)]">!</p>
-        <h1 className="mb-4 text-center text-2xl font-display font-semibold text-[var(--color-text)] md:text-3xl">
+        <p className="mb-4 text-5xl font-display font-bold text-[var(--color-primary)]">!</p>
+        <h1 className="mb-4 text-center text-xl font-display font-semibold text-[var(--color-text)]">
           Prodotto non trovato
         </h1>
         <p className="mb-8 max-w-md text-center leading-relaxed text-[var(--color-text-secondary)]">
@@ -443,7 +443,7 @@ function ProdottoPage(): ReactNode {
                 </span>
               )}
 
-              <h1 className="font-display text-[var(--text-3xl)] font-semibold tracking-tight md:text-[var(--text-4xl)]">
+              <h1 className="font-display text-[var(--text-xl)] font-semibold tracking-tight md:text-[var(--text-2xl)]">
                 {product.name}
               </h1>
 
@@ -452,7 +452,7 @@ function ProdottoPage(): ReactNode {
                   <AnimatePresence mode="wait">
                     <m.p
                       key={priceBreakdown.total}
-                      className="text-[var(--text-2xl)] font-semibold text-[var(--color-primary)]"
+                      className="text-[var(--text-lg)] font-semibold text-[var(--color-primary)]"
                       initial={{ opacity: 0, y: -4 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 4 }}

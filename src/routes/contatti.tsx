@@ -70,7 +70,7 @@ function ContattiPage(): ReactNode {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           >
-            <h1 className="font-display text-[var(--text-4xl)] font-semibold tracking-tight md:text-[var(--text-5xl)]">
+            <h1 className="font-display text-[var(--text-xl)] font-semibold tracking-tight md:text-[var(--text-2xl)]">
               {CONTACT_INFO.headline}
             </h1>
             <p className="mt-4 text-[var(--text-lg)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
@@ -144,7 +144,7 @@ function ContattiPage(): ReactNode {
               {formState === "success" ? (
                 <div className="rounded-lg border border-green-200 bg-green-50 p-6 text-center">
                   <Check className="mx-auto mb-3 h-8 w-8 text-green-600" />
-                  <p className="font-display text-lg font-semibold text-[var(--color-text)]">
+                  <p className="font-display text-base font-semibold text-[var(--color-text)]">
                     Messaggio inviato!
                   </p>
                   <p className="mt-2 text-sm text-[var(--color-text-secondary)]">

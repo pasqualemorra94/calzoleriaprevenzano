@@ -67,7 +67,7 @@ function CategoryCard({ category }: { category: Category }) {
         <span className="mb-2 inline-block w-fit rounded-[var(--radius-sm)] bg-[var(--color-accent)]/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--color-accent-foreground)]">
           Collezione
         </span>
-        <h3 className={`font-display font-semibold text-white ${isFeatured ? "text-[var(--text-3xl)] md:text-[var(--text-4xl)]" : "text-[var(--text-2xl)] md:text-[var(--text-3xl)]"}`}>
+        <h3 className={`font-display font-semibold text-white ${isFeatured ? "text-[var(--text-xl)] md:text-[var(--text-2xl)]" : "text-lg md:text-[var(--text-xl)]"}`}>
           {category.title}
         </h3>
         <p className="mt-2 line-clamp-2 max-w-md text-sm leading-relaxed text-white/75 md:text-base">
@@ -100,7 +100,7 @@ export function CategoriesSection() {
             </span>
             <span className="h-px w-12 bg-[var(--color-accent)]/50" />
           </div>
-          <h2 className="font-display text-[var(--text-4xl)] font-semibold tracking-tight">
+          <h2 className="font-display text-[var(--text-lg)] font-semibold tracking-tight md:text-[var(--text-xl)]">
             Artigianato che racconta
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">

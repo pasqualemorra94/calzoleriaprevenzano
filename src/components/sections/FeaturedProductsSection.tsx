@@ -144,7 +144,7 @@ export function FeaturedProductsSection() {
           <span className="mb-4 inline-block text-xs font-medium uppercase tracking-[0.2em] text-[var(--color-text-muted)]">
             Catalogo
           </span>
-          <h2 className="font-display text-[var(--text-4xl)] font-semibold tracking-tight">
+          <h2 className="font-display text-[var(--text-lg)] font-semibold tracking-tight md:text-[var(--text-xl)]">
             Novità e bestseller
           </h2>
         </div>

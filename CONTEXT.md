@@ -73,7 +73,18 @@ Agende (4), Astucci (2), Borselli (6), Cinture (14) — all non-variant products
 - Francesca → has Ginevra's images (may be correct — same "Aggiunta ciondolo" pattern)
 - BSMI3, Bama Kids, Cuscinetto, Kids, Soletta Memory → taglia-only, no images needed
 
+## Typography Rules (USER IS VERY STRICT)
+- **NO large section/subsection titles** — user explicitly called them "enormi e bruttissime"
+- Admin section h2s: REMOVED entirely (fields have their own labels)
+- Admin page h1s: `text-lg font-medium` (NOT `text-2xl font-bold`)
+- Public page subsection titles: subtle `<p className="text-xs font-medium uppercase tracking-wider text-[var(--color-text-muted)]">`
+- Hero section h1s (`text-4xl`/`text-5xl`) are OK
+- Stat card numbers can be `text-2xl font-bold`
+- Auth page h1s (`text-3xl font-semibold`) are OK
+- Homepage section h2s (`text-4xl`/`text-5xl`) are OK — hero-style
+
 ## Known Issues
 - Zod/Better Auth warning: `z$1.email` — ignore (library issue)
 - Scripts in `scripts/` use intentional `any` — not app code
 - `app/` directory is OLD and UNUSED
+- Homepage section title sizes NOT yet reviewed with user

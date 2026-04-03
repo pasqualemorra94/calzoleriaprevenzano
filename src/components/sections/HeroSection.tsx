@@ -38,7 +38,7 @@ export function HeroSection() {
           <ScrollCounter
             target={1965}
             suffix=""
-            className="font-display text-3xl font-bold text-white"
+            className="font-display text-xl font-bold text-white"
           />
           <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-white/50">Anno di fondazione</p>
         </div>
@@ -46,7 +46,7 @@ export function HeroSection() {
           <ScrollCounter
             target={118}
             suffix=""
-            className="font-display text-3xl font-bold text-[var(--color-accent)]"
+            className="font-display text-xl font-bold text-[var(--color-accent)]"
           />
           <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-white/50">Modelli unici</p>
         </div>
@@ -75,7 +75,7 @@ export function HeroSection() {
         {/* Headline */}
         <m.h1
           variants={heroStaggerItem}
-          className="font-display text-[var(--text-5xl)] font-bold leading-[1.08] tracking-tight text-white md:text-[var(--text-7xl)]"
+          className="font-display text-[var(--text-xl)] font-bold leading-[1.08] tracking-tight text-white md:text-[var(--text-3xl)]"
         >
           {HERO_COPY.headline}
         </m.h1>

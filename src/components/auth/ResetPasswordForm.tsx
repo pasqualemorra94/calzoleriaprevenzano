@@ -57,7 +57,7 @@ export function ResetPasswordForm() {
         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
           <Check className="h-6 w-6 text-green-600" />
         </div>
-        <h2 className="font-display text-xl font-semibold text-[var(--color-text)]">
+        <h2 className="font-display text-base font-semibold text-[var(--color-text)]">
           Password aggiornata!
         </h2>
         <p className="mt-2 text-sm text-[var(--color-text-secondary)]">

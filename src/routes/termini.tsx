@@ -15,7 +15,7 @@ function TerminiPage(): ReactNode {
         &larr; Torna alla homepage
       </a>
 
-      <h1 className="font-display text-4xl font-semibold text-[var(--color-text)] mb-2">
+      <h1 className="text-2xl font-semibold text-[var(--color-text)] mb-2">
         Termini e Condizioni Generali di Vendita
       </h1>
       <div className="mb-12 h-[var(--stitch-width)] w-16 bg-[var(--color-accent)]" />
@@ -28,7 +28,7 @@ function TerminiPage(): ReactNode {
 
           {/* Preambolo */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               Preambolo
             </h2>
             <p>
@@ -48,7 +48,7 @@ function TerminiPage(): ReactNode {
 
           {/* 1. Definizioni */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               1. Definizioni
             </h2>
             <ul className="space-y-2 mt-4">
@@ -85,7 +85,7 @@ function TerminiPage(): ReactNode {
 
           {/* 2. Oggetto del Servizio */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               2. Oggetto del Servizio
             </h2>
             <p>
@@ -108,7 +108,7 @@ function TerminiPage(): ReactNode {
 
           {/* 3. Registrazione e Account */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               3. Registrazione e Account
             </h2>
             <p>
@@ -137,7 +137,7 @@ function TerminiPage(): ReactNode {
 
           {/* 4. Prodotti e Prezzi */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               4. Prodotti e Prezzi
             </h2>
             <p>
@@ -165,7 +165,7 @@ function TerminiPage(): ReactNode {
 
           {/* 5. Processo di Acquisto */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               5. Processo di Acquisto
             </h2>
             <p>
@@ -213,7 +213,7 @@ function TerminiPage(): ReactNode {
 
           {/* 6. Pagamenti */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               6. Pagamenti
             </h2>
             <p>
@@ -250,14 +250,14 @@ function TerminiPage(): ReactNode {
 
           {/* 7. Spedizione e Consegna */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               7. Spedizione e Consegna
             </h2>
             <p>
               Il Venditore effettua spedizioni in Italia e all&apos;estero. Le tempistiche di spedizione variano
               in funzione della destinazione e del tipo di prodotto ordinato.
             </p>
-            <h3 className="font-display text-xl font-semibold text-[var(--color-text)] mt-4 mb-2">
+            <h3 className="text-sm font-semibold text-[var(--color-text)] mt-4 mb-2">
               Prodotti pronti (a magazzino)
             </h3>
             <ul className="list-disc pl-6 space-y-2 mt-2">
@@ -266,7 +266,7 @@ function TerminiPage(): ReactNode {
               <li><strong className="text-[var(--color-text)]">Resto del mondo:</strong> 7-15 giorni lavorativi dalla spedizione</li>
             </ul>
 
-            <h3 className="font-display text-xl font-semibold text-[var(--color-text)] mt-6 mb-2">
+            <h3 className="text-sm font-semibold text-[var(--color-text)] mt-6 mb-2">
               Prodotti personalizzati su misura
             </h3>
             <p>
@@ -298,7 +298,7 @@ function TerminiPage(): ReactNode {
 
           {/* 8. Diritto di Recesso */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               8. Diritto di Recesso
             </h2>
             <p>
@@ -308,7 +308,7 @@ function TerminiPage(): ReactNode {
               di ricevimento dei Prodotti.
             </p>
 
-            <h3 className="font-display text-xl font-semibold text-[var(--color-text)] mt-4 mb-2">
+            <h3 className="text-sm font-semibold text-[var(--color-text)] mt-4 mb-2">
               Esercizio del diritto di recesso
             </h3>
             <p>
@@ -325,7 +325,7 @@ function TerminiPage(): ReactNode {
               non lavati, non danneggiati e completi di tutte le etichette, confezione originale e accessori.
             </p>
 
-            <h3 className="font-display text-xl font-semibold text-[var(--color-text)] mt-6 mb-2">
+            <h3 className="text-sm font-semibold text-[var(--color-text)] mt-6 mb-2">
               Eccezioni al diritto di recesso
             </h3>
             <p>
@@ -344,7 +344,7 @@ function TerminiPage(): ReactNode {
               </li>
             </ul>
 
-            <h3 className="font-display text-xl font-semibold text-[var(--color-text)] mt-6 mb-2">
+            <h3 className="text-sm font-semibold text-[var(--color-text)] mt-6 mb-2">
               Rimborso
             </h3>
             <p>
@@ -362,7 +362,7 @@ function TerminiPage(): ReactNode {
 
           {/* 9. Garanzia */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               9. Garanzia
             </h2>
             <p>
@@ -395,7 +395,7 @@ function TerminiPage(): ReactNode {
 
           {/* 10. Responsabilità */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               10. Responsabilit&agrave; e Limitazioni
             </h2>
             <p>
@@ -421,7 +421,7 @@ function TerminiPage(): ReactNode {
 
           {/* 11. Proprietà Intellettuale */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               11. Propriet&agrave; Intellettuale
             </h2>
             <p>
@@ -439,7 +439,7 @@ function TerminiPage(): ReactNode {
 
           {/* 12. Tutela della Privacy */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               12. Tutela della Privacy e Trattamento dei Dati
             </h2>
             <p>
@@ -456,7 +456,7 @@ function TerminiPage(): ReactNode {
 
           {/* 13. Risoluzione delle Controversie */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               13. Risoluzione delle Controversie
             </h2>
             <p>
@@ -478,7 +478,7 @@ function TerminiPage(): ReactNode {
 
           {/* 14. Foro Competente e Legge Applicabile */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               14. Legge Applicabile e Foro Competente
             </h2>
             <p>
@@ -495,7 +495,7 @@ function TerminiPage(): ReactNode {
 
           {/* 15. Clausola di salvaguardia */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               15. Clausola di Salvaguardia
             </h2>
             <p>
@@ -509,7 +509,7 @@ function TerminiPage(): ReactNode {
 
           {/* 16. Contatti */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               16. Contatti
             </h2>
             <p>

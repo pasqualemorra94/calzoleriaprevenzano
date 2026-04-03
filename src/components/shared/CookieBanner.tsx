@@ -90,7 +90,7 @@ export function CookieBanner({ className }: CookieBannerProps): ReactNode {
         </button>
 
         <div className="flex-1 mb-5 pr-8">
-          <h3 className="font-display text-lg font-semibold text-[var(--color-text)] mb-2">
+          <h3 className="font-display text-base font-semibold text-[var(--color-text)] mb-2">
             Rispettiamo la tua privacy
           </h3>
           <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">

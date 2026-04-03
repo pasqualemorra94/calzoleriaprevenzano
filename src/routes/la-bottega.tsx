@@ -36,7 +36,7 @@ function LaBottegaPage(): ReactNode {
             <span className="mb-4 inline-block text-xs font-medium uppercase tracking-[var(--tracking-widest)] text-[var(--color-text-muted)]">
               Chi Siamo
             </span>
-            <h1 className="font-display text-[var(--text-4xl)] font-semibold tracking-tight md:text-[var(--text-5xl)]">
+            <h1 className="font-display text-[var(--text-xl)] font-semibold tracking-tight md:text-[var(--text-2xl)]">
               {ABOUT_COPY.headline}
             </h1>
           </m.div>

@@ -151,7 +151,7 @@ function CookiePage(): ReactNode {
         &larr; Torna alla homepage
       </a>
 
-      <h1 className="font-display text-4xl font-semibold text-[var(--color-text)] mb-2">
+      <h1 className="text-2xl font-semibold text-[var(--color-text)] mb-2">
         Cookie Policy
       </h1>
       <div className="mb-12 h-[var(--stitch-width)] w-16 bg-[var(--color-accent)]" />
@@ -164,7 +164,7 @@ function CookiePage(): ReactNode {
 
           {/* 1. Cosa sono i cookie */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               1. Cosa sono i Cookie
             </h2>
             <p>
@@ -188,7 +188,7 @@ function CookiePage(): ReactNode {
 
           {/* 2. Tipologie di cookie */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               2. Tipologie di Cookie Utilizzati
             </h2>
             <p>
@@ -244,7 +244,7 @@ function CookiePage(): ReactNode {
 
           {/* 3. Cookie tecnici — Dettaglio */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               3. Cookie Tecnici (Esenti da Consenso)
             </h2>
             <p>
@@ -261,7 +261,7 @@ function CookiePage(): ReactNode {
 
           {/* 4. Cookie analitici — Dettaglio */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               4. Cookie Analitici (Previo Consenso)
             </h2>
             <p>
@@ -284,7 +284,7 @@ function CookiePage(): ReactNode {
 
           {/* 5. Cookie di marketing — Dettaglio */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               5. Cookie di Marketing (Previo Consenso)
             </h2>
             <p>
@@ -307,7 +307,7 @@ function CookiePage(): ReactNode {
 
           {/* 6. Come gestire le preferenze */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               6. Come Gestire le Tue Preferenze sui Cookie
             </h2>
             <p>
@@ -387,7 +387,7 @@ function CookiePage(): ReactNode {
 
           {/* 7. Cookie di terze parti */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               7. Cookie di Terze Parti
             </h2>
             <p>
@@ -418,7 +418,7 @@ function CookiePage(): ReactNode {
 
           {/* 8. I  Cookie e il diritto all'oblio */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               8. Cookie e Diritto all&apos;Oblio
             </h2>
             <p>
@@ -432,7 +432,7 @@ function CookiePage(): ReactNode {
 
           {/* 9. Modifiche */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               9. Modifiche alla Cookie Policy
             </h2>
             <p>
@@ -449,7 +449,7 @@ function CookiePage(): ReactNode {
 
           {/* 10. Contatti */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               10. Contatti
             </h2>
             <p>

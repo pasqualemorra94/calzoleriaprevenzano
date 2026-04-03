@@ -66,7 +66,7 @@ function TrustCard({ item, index }: { item: TrustItem; index: number }) {
           <ScrollCounter
             target={item.counter.target}
             suffix={item.counter.suffix}
-            className="text-xl font-bold text-[var(--color-accent)] md:text-2xl"
+            className="text-lg font-bold text-[var(--color-accent)] md:text-xl"
           />
         </div>
       ) : null}

@@ -53,7 +53,7 @@ export function Footer(): ReactNode {
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-16">
           {/* Brand Column */}
           <div>
-            <h3 className="font-display text-xl font-semibold tracking-tight mb-4">
+            <h3 className="font-display text-base font-semibold tracking-tight mb-4">
               {APP_CONFIG.site.name}
             </h3>
             <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed mb-6">

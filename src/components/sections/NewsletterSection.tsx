@@ -53,7 +53,7 @@ export function NewsletterSection() {
               <path d="M22 4L12 13L2 4" />
             </svg>
           </div>
-          <h2 className="font-display text-[var(--text-3xl)] font-semibold tracking-tight md:text-[var(--text-4xl)]">
+          <h2 className="font-display text-[var(--text-xl)] font-semibold tracking-tight md:text-[var(--text-2xl)]">
             Resta aggiornato sulle nuove collezioni
           </h2>
           <p className="mt-4 text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">

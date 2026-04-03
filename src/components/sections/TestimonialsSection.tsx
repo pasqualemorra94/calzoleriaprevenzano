@@ -87,7 +87,7 @@ export function TestimonialsSection() {
               Clienti
             </span>
           </div>
-          <h2 className="font-display text-[var(--text-4xl)] font-semibold tracking-tight">
+          <h2 className="font-display text-[var(--text-lg)] font-semibold tracking-tight md:text-[var(--text-xl)]">
             Cosa dicono di noi
           </h2>
           <p className="mx-auto mt-4 max-w-lg text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">

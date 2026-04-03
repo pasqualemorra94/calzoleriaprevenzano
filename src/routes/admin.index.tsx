@@ -101,7 +101,7 @@ function AdminDashboardPage(): ReactNode {
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-500">{card.label}</p>
-                  <p className="text-2xl font-bold text-gray-900">{card.value}</p>
+                  <p className="text-xl font-bold text-gray-900">{card.value}</p>
                 </div>
               </div>
             </div>

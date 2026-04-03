@@ -143,7 +143,7 @@ function CatalogoPage(): ReactNode {
               <span className="mx-2">/</span>
               <span className="text-[var(--color-text)]">Catalogo</span>
             </nav>
-            <h1 className="font-display text-[var(--text-4xl)] font-semibold tracking-tight md:text-[var(--text-5xl)]">
+            <h1 className="font-display text-[var(--text-xl)] font-semibold tracking-tight md:text-[var(--text-2xl)]">
               Catalogo
             </h1>
             <p className="mt-4 max-w-2xl text-[var(--text-lg)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">

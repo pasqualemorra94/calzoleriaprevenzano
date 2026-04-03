@@ -89,7 +89,7 @@ function StepCard({ step, index }: { step: PersonalizationStep; index: number })
       <hr className="stitch-divider mb-4" />
 
       {/* Title */}
-      <h3 className="font-display text-[var(--text-2xl)] font-semibold tracking-tight md:text-[var(--text-3xl)]">
+      <h3 className="font-display text-[var(--text-lg)] font-semibold tracking-tight md:text-[var(--text-xl)]">
         {step.title}
       </h3>
 
@@ -114,7 +114,7 @@ export function PersonalizationSection() {
             </span>
             <span className="h-px w-8 bg-[var(--color-accent)]/40" />
           </div>
-          <h2 className="font-display text-[var(--text-4xl)] font-semibold tracking-tight">
+          <h2 className="font-display text-[var(--text-lg)] font-semibold tracking-tight md:text-[var(--text-xl)]">
             Crea il tuo sandalo in 3 passi
           </h2>
           <p className="mx-auto mt-4 max-w-lg text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">

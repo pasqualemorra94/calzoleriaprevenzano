@@ -184,7 +184,7 @@ function CheckoutPage(): ReactNode {
       <div className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)] py-[var(--section-padding-y)]">
         <div className="mx-auto max-w-lg text-center">
           <Loader2 className="mx-auto mb-6 h-8 w-8 animate-spin text-[var(--color-primary)]" />
-          <h1 className="mb-2 font-display text-[var(--text-2xl)] font-semibold">
+          <h1 className="mb-2 font-display text-[var(--text-lg)] font-semibold">
             Reindirizzamento al pagamento...
           </h1>
           <p className="text-sm text-[var(--color-text-secondary)]">
@@ -215,7 +215,7 @@ function CheckoutPage(): ReactNode {
               <span className="mx-2">/</span>
               <span className="text-[var(--color-text)]">Checkout</span>
             </nav>
-            <h1 className="font-display text-[var(--text-4xl)] font-semibold tracking-tight md:text-[var(--text-5xl)]">
+            <h1 className="font-display text-[var(--text-xl)] font-semibold tracking-tight md:text-[var(--text-2xl)]">
               Checkout
             </h1>
           </m.div>

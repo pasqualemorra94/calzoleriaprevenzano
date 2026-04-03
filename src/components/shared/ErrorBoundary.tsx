@@ -41,7 +41,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
             <p className="text-6xl mb-6 text-[var(--color-primary)]">
               ⚠
             </p>
-            <h1 className="text-2xl font-display font-semibold text-[var(--color-text)] mb-4">
+            <h1 className="text-xl font-display font-semibold text-[var(--color-text)] mb-4">
               Qualcosa è andato storto
             </h1>
             <p className="text-[var(--color-text-secondary)] mb-8 leading-relaxed">

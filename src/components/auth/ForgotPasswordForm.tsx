@@ -49,7 +49,7 @@ export function ForgotPasswordForm() {
         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
           <Mail className="h-6 w-6 text-blue-600" />
         </div>
-        <h2 className="font-display text-xl font-semibold text-[var(--color-text)]">
+        <h2 className="font-display text-base font-semibold text-[var(--color-text)]">
           Email inviata
         </h2>
         <p className="mt-2 text-sm text-[var(--color-text-secondary)]">

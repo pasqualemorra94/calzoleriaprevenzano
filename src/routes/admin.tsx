@@ -61,7 +61,7 @@ function AdminLayout(): ReactNode {
         aria-label="Menu di navigazione admin"
       >
         <div className="flex h-16 shrink-0 items-center justify-between border-b border-gray-800 px-6">
-          <Link to="/admin" className="text-lg font-semibold tracking-tight text-white">
+          <Link to="/admin" className="text-base font-medium tracking-tight text-white">
             <span className="text-[var(--color-primary-light)]">Prevenzano</span>
             {" "}Admin
           </Link>

@@ -15,7 +15,7 @@ function PrivacyPage(): ReactNode {
         &larr; Torna alla homepage
       </a>
 
-      <h1 className="font-display text-4xl font-semibold text-[var(--color-text)] mb-2">
+      <h1 className="text-2xl font-semibold text-[var(--color-text)] mb-2">
         Informativa sulla Privacy
       </h1>
       <div className="mb-12 h-[var(--stitch-width)] w-16 bg-[var(--color-accent)]" />
@@ -28,7 +28,7 @@ function PrivacyPage(): ReactNode {
 
           {/* 1. Titolare del Trattamento */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               1. Titolare del Trattamento
             </h2>
             <p>
@@ -53,7 +53,7 @@ function PrivacyPage(): ReactNode {
 
           {/* 2. Tipologie di Dati Raccolti */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               2. Dati Personali Raccolti
             </h2>
             <p>
@@ -88,7 +88,7 @@ function PrivacyPage(): ReactNode {
 
           {/* 3. Finalità del Trattamento */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               3. Finalit&agrave; del Trattamento
             </h2>
             <p>I tuoi dati personali sono trattati per le seguenti finalit&agrave;:</p>
@@ -140,7 +140,7 @@ function PrivacyPage(): ReactNode {
 
           {/* 4. Base Giuridica */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               4. Base Giuridica del Trattamento
             </h2>
             <p>
@@ -165,7 +165,7 @@ function PrivacyPage(): ReactNode {
 
           {/* 5. Modalità del Trattamento */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               5. Modalit&agrave; del Trattamento
             </h2>
             <p>
@@ -190,7 +190,7 @@ function PrivacyPage(): ReactNode {
 
           {/* 6. Tempi di Conservazione */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               6. Tempi di Conservazione
             </h2>
             <p>I dati personali saranno conservati per i seguenti periodi:</p>
@@ -225,7 +225,7 @@ function PrivacyPage(): ReactNode {
 
           {/* 7. Destinatari e Categorie di Destinatari */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               7. Destinatari dei Dati
             </h2>
             <p>
@@ -257,7 +257,7 @@ function PrivacyPage(): ReactNode {
 
           {/* 8. Trasferimento dati all'estero */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               8. Trasferimento dei Dati all&apos;Estero
             </h2>
             <p>
@@ -276,7 +276,7 @@ function PrivacyPage(): ReactNode {
 
           {/* 9. Diritti dell'Interessato */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               9. Diritti dell&apos;Interessato
             </h2>
             <p>
@@ -329,7 +329,7 @@ function PrivacyPage(): ReactNode {
 
           {/* 10. Natura obbligatoria o facoltativa del conferimento */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               10. Natura del Conferimento dei Dati
             </h2>
             <p>
@@ -346,7 +346,7 @@ function PrivacyPage(): ReactNode {
 
           {/* 11. Sicurezza dei Dati */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               11. Misure di Sicurezza
             </h2>
             <p>
@@ -367,7 +367,7 @@ function PrivacyPage(): ReactNode {
 
           {/* 12. Modifiche alla Privacy Policy */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               12. Modifiche alla presente Informativa
             </h2>
             <p>
@@ -384,7 +384,7 @@ function PrivacyPage(): ReactNode {
 
           {/* 13. Informazioni specifiche per l'e-commerce */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               13. Informazioni Specifiche per l&apos;E-commerce
             </h2>
             <p>
@@ -400,7 +400,7 @@ function PrivacyPage(): ReactNode {
 
           {/* 14. Contatti */}
           <section>
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-text)] mb-4">
+            <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               14. Contatti
             </h2>
             <p>

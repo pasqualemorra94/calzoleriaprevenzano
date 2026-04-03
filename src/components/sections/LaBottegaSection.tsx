@@ -36,7 +36,7 @@ export function LaBottegaSection() {
               La nostra storia
             </span>
           </div>
-          <h2 className="font-display text-[var(--text-4xl)] font-semibold tracking-tight md:text-[var(--text-5xl)]">
+          <h2 className="font-display text-[var(--text-lg)] font-semibold tracking-tight md:text-[var(--text-xl)]">
             {BOTTEGA_COPY.headline}
           </h2>
         </div>
@@ -96,7 +96,7 @@ export function LaBottegaSection() {
 
             {/* Floating proof badge */}
             <div className="absolute -bottom-4 -left-4 rounded-[var(--radius-lg)] bg-[var(--color-surface)] px-5 py-3 shadow-lg md:-bottom-6 md:-left-6 md:px-6 md:py-4">
-              <p className="font-display text-2xl font-bold text-[var(--color-primary)]">70+</p>
+              <p className="font-display text-lg font-bold text-[var(--color-primary)]">70+</p>
               <p className="text-xs font-medium text-[var(--color-text-muted)]">Anni di tradizione</p>
             </div>
           </m.div>
