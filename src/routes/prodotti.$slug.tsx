@@ -295,10 +295,19 @@ function ProdottoPage(): ReactNode {
     if (!product || !canAddToCart || effectiveStock === 0 || cartStatus === "loading") return;
     setCartStatus("loading");
     try {
+      const body: Record<string, unknown> = {
+        productId: product.id,
+        variantId: selectedVariantId,
+        quantity,
+      };
+      // For variantConfig products, send resolved selectedOptions
+      if (parsedConfig) {
+        body.selectedOptions = Object.fromEntries(selectedOptions);
+      }
       const res = await fetch("/api/cart", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ productId: product.id, variantId: selectedVariantId, quantity }),
+        body: JSON.stringify(body),
       });
       const json = await res.json();
       if (json.ok) {

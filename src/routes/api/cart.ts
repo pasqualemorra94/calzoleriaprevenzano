@@ -49,7 +49,7 @@ export const Route = createFileRoute("/api/cart")({
 
         const result = await addToCart(user?.id ?? null, sessionId, parsed.data);
         if (!result.ok) {
-          return apiError("BAD_REQUEST", result.error, 400);
+          return apiError("BAD_REQUEST", result.error, 400, result.details);
         }
 
         const cart = await getCart(user?.id ?? null, sessionId);

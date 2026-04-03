@@ -343,12 +343,13 @@ model Cart {
 // ─── CartItem ─────────────────────────────────────────────────────────────
 
 model CartItem {
-  id         String          @id @default(cuid())
-  cartId     String
-  productId  String
-  variantId  String?
-  quantity   Int
-  price      Decimal         @db.Decimal(10, 2) // prezzo snapshot al momento dell'aggiunta
+  id              String          @id @default(cuid())
+  cartId          String
+  productId       String
+  variantId       String?
+  quantity        Int
+  price           Decimal         @db.Decimal(10, 2) // prezzo snapshot al momento dell'aggiunta
+  selectedOptions Json?           // [{ label: "Taglia", value: "38", color?: "#fff" }] — risolto dal variantConfig
 
   cart       Cart            @relation(fields: [cartId], references: [id], onDelete: Cascade)
   product    Product         @relation(fields: [productId], references: [id])
@@ -396,15 +397,16 @@ model Order {
 // ─── OrderItem ────────────────────────────────────────────────────────────
 
 model OrderItem {
-  id          String   @id @default(cuid())
-  orderId     String
-  productId   String
-  variantId   String?
-  addressId   String?
-  name        String   // nome prodotto snapshot
-  variantName String?  // nome variante snapshot
-  price       Decimal  @db.Decimal(10, 2) // prezzo unitario snapshot
-  quantity    Int
+  id              String   @id @default(cuid())
+  orderId         String
+  productId       String
+  variantId       String?
+  addressId       String?
+  name            String   // nome prodotto snapshot
+  variantName     String?  // nome variante snapshot
+  price           Decimal  @db.Decimal(10, 2) // prezzo unitario snapshot
+  quantity        Int
+  selectedOptions Json?    // copiato da CartItem — scelte cliente visibili nell'ordine
 
   order       Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product     Product         @relation(fields: [productId], references: [id])

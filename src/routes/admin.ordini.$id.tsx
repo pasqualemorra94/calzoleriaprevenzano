@@ -28,6 +28,7 @@ interface OrderDetail {
     price: number;
     quantity: number;
     sku: string | null;
+    selectedOptions: Array<{ label: string; value: string; color?: string }> | null;
   }[];
   payments: {
     id: string;
@@ -209,7 +210,18 @@ function AdminOrderDetailPage(): ReactNode {
                   {order.items.map((item) => (
                     <tr key={item.id}>
                       <td className="py-3 pr-4 font-medium text-gray-900">{item.name}</td>
-                      <td className="py-3 pr-4 text-gray-500">{item.variantName ?? "—"}</td>
+                      <td className="py-3 pr-4 text-gray-500">
+                        {item.selectedOptions && item.selectedOptions.length > 0
+                          ? item.selectedOptions.map((o: { label: string; value: string; color?: string }) => (
+                              <span key={o.label} className="inline-flex items-center gap-1 mr-2 last:mr-0 text-xs">
+                                {o.color && (
+                                  <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: o.color }} />
+                                )}
+                                {o.value}
+                              </span>
+                            ))
+                          : (item.variantName ?? "—")}
+                      </td>
                       <td className="py-3 pr-4 text-gray-500">{item.sku ?? "—"}</td>
                       <td className="py-3 pr-4 text-right text-gray-900">{fmt(item.price)}</td>
                       <td className="py-3 pr-4 text-right text-gray-900">{item.quantity}</td>

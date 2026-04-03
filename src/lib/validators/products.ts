@@ -70,6 +70,7 @@ export type UpdateProductInput = z.infer<typeof updateProductSchema>;
 export const addToCartSchema = z.object({
   productId: z.string().min(1),
   variantId: z.string().nullable().optional(),
+  selectedOptions: z.record(z.string(), z.string()).optional(),
   quantity: z.number().int().min(1).max(APP_CONFIG.cart.maxQuantityPerItem),
 });
 

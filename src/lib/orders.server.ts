@@ -70,6 +70,7 @@ interface CartItemFull {
   variantId: string | null;
   quantity: number;
   price: unknown;
+  selectedOptions: unknown;
   product: {
     id: string;
     name: string;
@@ -237,6 +238,7 @@ export async function createOrder(
           variantName: item.variant?.name,
           price: Number(item.price),
           quantity: item.quantity,
+          ...(item.selectedOptions ? { selectedOptions: JSON.parse(JSON.stringify(item.selectedOptions)) } : {}),
         })),
       },
     },

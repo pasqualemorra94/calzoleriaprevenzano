@@ -12,6 +12,7 @@ interface CartItemDetail {
   price: number;
   product: { name: string; slug: string };
   variant: { name: string; color: string | null; size: string | null } | null;
+  selectedOptions: Array<{ label: string; value: string; color?: string }> | null;
 }
 
 interface CartResult {
@@ -184,6 +185,21 @@ function CarrelloPage(): ReactNode {
                         {item.variant && (
                           <p className="mt-1 text-sm text-[var(--color-text-muted)]">
                             {[item.variant.color, item.variant.size].filter(Boolean).join(" / ")}
+                          </p>
+                        )}
+                        {item.selectedOptions && item.selectedOptions.length > 0 && (
+                          <p className="mt-1 text-sm text-[var(--color-text-muted)]">
+                            {item.selectedOptions.map((opt) => (
+                              <span key={opt.label} className="inline-flex items-center gap-1 mr-3 last:mr-0">
+                                {opt.color && (
+                                  <span
+                                    className="inline-block h-3 w-3 rounded-full border border-[var(--color-border)]"
+                                    style={{ backgroundColor: opt.color }}
+                                  />
+                                )}
+                                {opt.value}
+                              </span>
+                            ))}
                           </p>
                         )}
                       </div>

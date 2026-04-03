@@ -579,7 +579,7 @@ export async function getAdminOrder(orderId: string): Promise<AdminOrderDetail |
       : { id: "", name: "Ospite", email: order.guestEmail ?? "" },
     items: order.items.map((item: {
       id: string; name: string; variantName: string | null;
-      price: unknown; quantity: number;
+      price: unknown; quantity: number; selectedOptions: unknown;
       variant: { sku: string | null } | null;
       product: { sku: string | null };
     }) => ({
@@ -589,6 +589,7 @@ export async function getAdminOrder(orderId: string): Promise<AdminOrderDetail |
       price: Number(item.price),
       quantity: item.quantity,
       sku: item.variant?.sku ?? item.product.sku,
+      selectedOptions: item.selectedOptions as Array<{ label: string; value: string; color?: string }> | null,
     })),
     payments: order.payments.map((p: {
       id: string; amount: unknown; status: string;

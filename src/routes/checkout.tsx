@@ -12,6 +12,7 @@ interface CartItemDetail {
   price: number;
   product: { name: string; slug: string };
   variant: { name: string; color: string | null; size: string | null } | null;
+  selectedOptions: Array<{ label: string; value: string; color?: string }> | null;
 }
 
 interface CartResult {
@@ -465,6 +466,21 @@ function CheckoutPage(): ReactNode {
                             )}
                             {!item.variant && (
                               <p className="text-xs text-[var(--color-text-muted)]">x{item.quantity}</p>
+                            )}
+                            {item.selectedOptions && item.selectedOptions.length > 0 && (
+                              <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">
+                                {item.selectedOptions.map((opt) => (
+                                  <span key={opt.label} className="inline-flex items-center gap-1 mr-2 last:mr-0">
+                                    {opt.color && (
+                                      <span
+                                        className="inline-block h-2.5 w-2.5 rounded-full border border-[var(--color-border)]"
+                                        style={{ backgroundColor: opt.color }}
+                                      />
+                                    )}
+                                    {opt.value}
+                                  </span>
+                                ))}
+                              </p>
                             )}
                           </div>
                         </div>
