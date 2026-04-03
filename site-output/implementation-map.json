@@ -1,0 +1,242 @@
+{
+  "version": 15,
+  "generatedAt": "2026-04-02T00:00:00.000Z",
+  "projectSlug": "calzoleria-prevenzano",
+  "framework": "tanstack",
+  "siteType": "ecommerce",
+  "authProvider": "better-auth",
+  "routes": {
+    "pages": [
+      { "path": "/", "file": "src/routes/index.tsx", "auth": "none", "type": "public" },
+      { "path": "/catalogo", "file": "src/routes/catalogo.tsx", "auth": "none", "type": "public" },
+      { "path": "/prodotti/$slug", "file": "src/routes/prodotti.$slug.tsx", "auth": "none", "type": "public" },
+      { "path": "/sandali", "file": "src/routes/sandali.tsx", "auth": "none", "type": "public" },
+      { "path": "/la-bottega", "file": "src/routes/la-bottega.tsx", "auth": "none", "type": "public" },
+      { "path": "/contatti", "file": "src/routes/contatti.tsx", "auth": "none", "type": "public" },
+      { "path": "/guida-taglia", "file": "src/routes/guida-taglia.tsx", "auth": "none", "type": "public" },
+      { "path": "/carrello", "file": "src/routes/carrello.tsx", "auth": "none", "type": "public" },
+      { "path": "/checkout", "file": "src/routes/checkout.tsx", "auth": "none", "type": "public" },
+      { "path": "/privacy", "file": "src/routes/privacy.tsx", "auth": "none", "type": "legal" },
+      { "path": "/cookie", "file": "src/routes/cookie.tsx", "auth": "none", "type": "legal" },
+      { "path": "/termini", "file": "src/routes/termini.tsx", "auth": "none", "type": "legal" },
+      { "path": "/auth/login", "file": "src/routes/auth/login.tsx", "auth": "none", "type": "auth" },
+      { "path": "/auth/register", "file": "src/routes/auth/register.tsx", "auth": "none", "type": "auth" },
+      { "path": "/auth/forgot-password", "file": "src/routes/auth/forgot-password.tsx", "auth": "none", "type": "auth" },
+      { "path": "/auth/reset-password", "file": "src/routes/auth/reset-password.tsx", "auth": "none", "type": "auth" },
+      { "path": "/admin", "file": "src/routes/admin.index.tsx", "auth": "admin", "type": "admin" },
+      { "path": "/admin/prodotti", "file": "src/routes/admin.prodotti.tsx", "auth": "admin", "type": "admin" },
+      { "path": "/admin/prodotti/$id", "file": "src/routes/admin.prodotti.$id.tsx", "auth": "admin", "type": "admin" },
+      { "path": "/admin/media", "file": "src/routes/admin.media.tsx", "auth": "admin", "type": "admin" },
+      { "path": "/admin/media/$id", "file": "src/routes/admin.media.$id.tsx", "auth": "admin", "type": "admin" },
+      { "path": "/admin/ordini", "file": "src/routes/admin.ordini.tsx", "auth": "admin", "type": "admin" },
+      { "path": "/admin/ordini/$id", "file": "src/routes/admin.ordini.$id.tsx", "auth": "admin", "type": "admin" }
+    ],
+    "api": [
+      { "path": "/api/auth/*", "file": "src/routes/api/auth/$.ts", "methods": ["GET", "POST"], "auth": "better-auth" },
+      { "path": "/api/products", "file": "src/routes/api/products.ts", "methods": ["GET", "POST"], "auth": "POST=admin" },
+      { "path": "/api/products/$slug", "file": "src/routes/api/products.$slug.ts", "methods": ["GET"], "auth": "none" },
+      { "path": "/api/products/$slug/reviews", "file": "src/routes/api/products.$slug.reviews.ts", "methods": ["GET", "POST"], "auth": "POST=required" },
+      { "path": "/api/categories", "file": "src/routes/api/categories.ts", "methods": ["GET"], "auth": "none" },
+      { "path": "/api/cart", "file": "src/routes/api/cart.ts", "methods": ["GET", "POST"], "auth": "none" },
+      { "path": "/api/cart/items/$itemId", "file": "src/routes/api/cart.items.$itemId.ts", "methods": ["PATCH", "DELETE"], "auth": "none" },
+      { "path": "/api/orders", "file": "src/routes/api/orders.ts", "methods": ["GET"], "auth": "required" },
+      { "path": "/api/orders/$id", "file": "src/routes/api/orders.$id.ts", "methods": ["GET"], "auth": "required" },
+      { "path": "/api/checkout", "file": "src/routes/api/checkout.ts", "methods": ["POST"], "auth": "none" },
+      { "path": "/api/contact", "file": "src/routes/api/contact.ts", "methods": ["POST"], "auth": "none" },
+      { "path": "/api/newsletter", "file": "src/routes/api/newsletter.ts", "methods": ["POST"], "auth": "none" },
+      { "path": "/api/wishlist", "file": "src/routes/api/wishlist.ts", "methods": ["GET", "POST", "DELETE"], "auth": "required" },
+      { "path": "/api/webhooks/stripe", "file": "src/routes/api/webhooks/stripe.ts", "methods": ["POST"], "auth": "webhook" },
+      { "path": "/api/upload", "file": "src/routes/api/upload.ts", "methods": ["POST"], "auth": "admin" },
+      { "path": "/api/admin/stats", "file": "src/routes/api/admin/stats.ts", "methods": ["GET"], "auth": "admin" },
+      { "path": "/api/admin/products", "file": "src/routes/api/admin/products.ts", "methods": ["GET"], "auth": "admin" },
+      { "path": "/api/admin/products/$id", "file": "src/routes/api/admin/products.$id.ts", "methods": ["GET", "PUT", "DELETE"], "auth": "admin" },
+      { "path": "/api/admin/orders", "file": "src/routes/api/admin/orders.ts", "methods": ["GET"], "auth": "admin" },
+      { "path": "/api/admin/orders/$id", "file": "src/routes/api/admin/orders.$id.ts", "methods": ["GET", "PATCH"], "auth": "admin" },
+      { "path": "/api/admin/categories", "file": "src/routes/api/admin/categories.ts", "methods": ["GET", "POST"], "auth": "admin" },
+      { "path": "/api/admin/categories/$id", "file": "src/routes/api/admin/categories.$id.ts", "methods": ["PUT", "DELETE"], "auth": "admin" },
+      { "path": "/api/admin/media", "file": "src/routes/api/admin/media.ts", "methods": ["GET"], "auth": "admin" },
+      { "path": "/api/admin/media/$id", "file": "src/routes/api/admin/media.$id.ts", "methods": ["GET", "PUT", "DELETE"], "auth": "admin" },
+      { "path": "/api/site/media", "file": "src/routes/api/site/media.ts", "methods": ["GET"], "auth": "none" }
+    ]
+  },
+  "components": {
+    "sections": [
+      "src/components/sections/HeroSection.tsx",
+      "src/components/sections/CategoriesSection.tsx",
+      "src/components/sections/PersonalizationSection.tsx",
+      "src/components/sections/FeaturedProductsSection.tsx",
+      "src/components/sections/LaBottegaSection.tsx",
+      "src/components/sections/TrustStripSection.tsx",
+      "src/components/sections/TestimonialsSection.tsx",
+      "src/components/sections/NewsletterSection.tsx"
+    ],
+    "shared": [
+      "src/components/shared/Navbar.tsx",
+      "src/components/shared/MegaMenu.tsx",
+      "src/components/shared/Footer.tsx",
+      "src/components/shared/MobileMenu.tsx",
+      "src/components/shared/MobileBottomNav.tsx",
+      "src/components/shared/CookieBanner.tsx",
+      "src/components/shared/CookiePreferencesPanel.tsx",
+      "src/components/shared/ErrorBoundary.tsx"
+    ],
+    "admin": [
+      "src/components/admin/VariantBuilder.tsx",
+      "src/components/admin/MediaPicker.tsx"
+    ],
+    "auth": [
+      "src/components/auth/LoginForm.tsx",
+      "src/components/auth/RegisterForm.tsx",
+      "src/components/auth/ForgotPasswordForm.tsx",
+      "src/components/auth/ResetPasswordForm.tsx",
+      "src/components/auth/FormField.tsx",
+      "src/components/auth/GdprConsentFields.tsx",
+      "src/components/auth/RegisterSuccessView.tsx"
+    ],
+    "seo": [
+      "src/components/seo/StructuredData.tsx"
+    ],
+    "ui": [
+      "src/components/ui/ScrollAnimatedSection.tsx",
+      "src/components/ui/ScrollCounter.tsx",
+      "src/components/ui/StaggeredGrid.tsx"
+    ]
+  },
+  "database": {
+    "models": [
+      "user", "session", "account", "verification",
+      "AuditLog",
+      "ConsentLog", "DataRequest", "StripeEvent",
+      "Category", "Product", "ProductVariant", "ProductImage",
+      "Review", "Address", "Cart", "CartItem",
+      "Order", "OrderItem", "Payment", "Wishlist", "DiscountCode",
+      "VariantTemplate", "Media"
+    ]
+  },
+  "lib": {
+    "server": [
+      "src/lib/db.server.ts",
+      "src/lib/auth.ts",
+      "src/lib/auth.server.ts",
+      "src/lib/sdk-auth.server.ts",
+      "src/lib/products.server.ts",
+      "src/lib/cart.server.ts",
+      "src/lib/orders.server.ts",
+      "src/lib/admin.server.ts",
+      "src/lib/media.server.ts",
+      "src/lib/wishlist.server.ts",
+      "src/lib/reviews.server.ts",
+      "src/lib/contact.server.ts",
+      "src/lib/stripe.server.ts",
+      "src/lib/webhook-stripe.server.ts",
+      "src/lib/email.server.ts",
+      "src/lib/email-templates.server.ts",
+      "src/lib/email-brand.server.ts",
+      "src/lib/auth-email.server.ts",
+      "src/lib/cart-session.ts",
+      "src/lib/cookieConsent.ts",
+      "src/lib/security-headers.server.ts",
+      "src/lib/logger.server.ts"
+    ],
+    "client": [
+      "src/lib/auth-client.ts"
+    ],
+    "validators": [
+      "src/lib/validators/auth.ts",
+      "src/lib/validators/products.ts",
+      "src/lib/validators/admin.ts",
+      "src/lib/validators/format.ts",
+      "src/lib/validators/media.ts"
+    ],
+    "types": [
+      "src/lib/types/api.ts",
+      "src/lib/types/models.ts",
+      "src/lib/types/variant-config.ts"
+    ],
+    "constants": [
+      "src/lib/constants/app.ts"
+    ],
+    "animation": [
+      "src/lib/animation-variants.ts"
+    ],
+    "api": [
+      "src/lib/api-response.ts",
+      "src/lib/query-client.ts"
+    ]
+  },
+  "regressionBoundaries": {
+    "immutable": [
+      "src/lib/db.server.ts",
+      "src/lib/auth.ts",
+      "src/lib/auth.server.ts",
+      "src/lib/sdk-auth.server.ts",
+      "src/lib/stripe.server.ts",
+      "src/lib/webhook-stripe.server.ts",
+      "src/routes/api/webhooks/stripe.ts",
+      "src/styles/design-tokens.css",
+      "src/providers/MotionProvider.tsx"
+    ],
+    "guarded": [
+      "src/routes/__root.tsx",
+      "src/components/shared/MegaMenu.tsx",
+      "src/components/shared/Footer.tsx",
+      "src/routes/api/products.ts",
+      "src/routes/api/checkout.ts",
+      "src/routes/api/cart.ts",
+      "prisma/schema.prisma"
+    ]
+  },
+  "modules": {
+    "auth": true,
+    "gdpr": true,
+    "payments": true,
+    "seo": true,
+    "security": true,
+    "admin": true,
+    "email": true
+  },
+  "authConfig": {
+    "provider": "better-auth",
+    "plugins": ["admin", "tanstackStartCookies"],
+    "emailAndPassword": true,
+    "sessionExpiryDays": 30,
+    "passwordHashing": "scrypt",
+    "adminRoles": ["admin"],
+    "auditLogging": "databaseHooks",
+    "envSecret": "BETTER_AUTH_SECRET",
+    "envUrl": "BETTER_AUTH_URL"
+  },
+  "anomalies": {
+    "featureCreep": [],
+    "featureGap": [
+      "Pagina /ricerca non implementata — rimossa dal Navbar",
+      "Pagina /wishlist non implementata — rimossa dal Navbar",
+      "Pagina /personalizzazione non implementata — CTA Hero redirect a /la-bottega",
+      "Admin product edit non integra ancora VariantBuilder nel form (variantConfig salvabile via API)",
+      "Bottoni Heart/ShoppingBag nel catalogo non hanno handler funzionanti (solo visivi)",
+      "Carrello non mostra immagine prodotto — usa solo icona placeholder ShoppingBag"
+    ],
+    "notes": [
+      "2026-04-03: MegaMenu sostituisce Navbar come navigazione desktop principale",
+      "2026-04-03: Pagina /sandali riscritta con dati reali dal DB (era mock)",
+      "2026-04-03: VariantConfig JSON aggiunto a 108 prodotti (81 sandali + 27 pelletteria)",
+      "2026-04-03: Catalogo supporta filtro gerarchico categorie (parent+children+grandchildren)",
+      "2026-04-03: Catalogo riscritto con sidebar filtri a sinistra, griglia 3 colonne, albero categorie espandibile, drawer mobile",
+      "2026-04-03: Variant templates — rimosso layout duplicato (era min-h-screen dentro admin layout), aggiunto filtro ricerca, titolo ridotto",
+      "2026-04-03: Guest checkout — cart_session_id auto-generato dal server, checkout accessibile senza login, Address/Order userId nullable",
+      "2026-04-03: Media Library — modello Media + upload endpoint + griglia admin + MediaPicker per selezione immagini nei form",
+      "2026-04-03: VariantConfig validation nel carrello — selectedOptions su CartItem/OrderItem, prezzo con modifier, errori dettagliati",
+      "2026-04-03: Media Library Migration — 1355 immagini registrate nella Media Library (1143 prodotti + 209 swatches + 3 template SVG)",
+      "2026-04-03: Media Library Migration — 369 ProductImage linkate a Media records via mediaId FK",
+      "2026-04-03: Media Library Migration — HeroSection/LaBottegaSection/CategoriesSection accettano immagini dinamiche da Media Library (con fallback hardcoded)",
+      "2026-04-03: Media Library Migration — Seed aggiorna Category.image per 3 macro-categorie (Sandali, Pelletteria, Articoli calzature)",
+      "2026-04-03: API /api/site/media — endpoint pubblico per template media usati nelle pagine pubbliche",
+      "2026-04-03: Import immagini reference — 16 immagini scaricate da calzoleriaprevenzano.it e registrate in Media Library (hero, banners, personalizzazione, team, chi-siamo, guida-taglia)",
+      "2026-04-03: HeroSection riscritto con slider a 2 slide con immagini reali, frecce navigazione e dots indicatori",
+      "2026-04-03: LaBottegaSection — immagine placeholder sostituita con foto reale personalizzazione",
+      "2026-04-03: PersonalizationSection — aggiunta immagine showcase e icone reali dal reference, layout migliorato",
+      "2026-04-03: Pagina /la-bottega — aggiunto team section con foto Nunzio/Francesca, testi migliorati con storia reale dal 1984",
+      "2026-04-03: Pagina /guida-taglia — aggiunta immagine tutorial, istruzioni dettagliate, layout 2 colonne, link WhatsApp"
+    ]
+  }
+}

@@ -3,11 +3,29 @@ import { slideInLeft, slideInRight, fadeInUp } from "~/lib/animation-variants";
 import { m, useInView } from "motion/react";
 import { useRef } from "react";
 
+// ─── Customization Icons (from reference site) ───────────────────────
+
+function CustomizationIcon({ src, alt }: { src: string; alt: string }) {
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className="h-10 w-10 object-contain"
+      loading="lazy"
+      width={40}
+      height={40}
+    />
+  );
+}
+
+// ─── Steps Data ──────────────────────────────────────────────────────
+
 interface PersonalizationStep {
   number: string;
   title: string;
   description: string;
-  icon: string;
+  iconSrc: string;
+  iconAlt: string;
 }
 
 const STEPS: PersonalizationStep[] = [
@@ -15,51 +33,27 @@ const STEPS: PersonalizationStep[] = [
     number: "01",
     title: "Scegli il modello",
     description:
-      "Infradito, cavigliera, fascia, treccia: trova la forma che si adatta al tuo stile.",
-    icon: "shoe",
+      "Infradito, cavigliera, fascia, treccia, schiava: trova la forma che si adatta al tuo stile tra le nostre collezioni.",
+    iconSrc: "/uploads/2026/04/icon-sandalo.png",
+    iconAlt: "Sandali artigianali personalizzabili",
   },
   {
     number: "02",
     title: "Scegli la pelle",
     description:
-      "Vitello, camoscio, cuoio: ogni materiale ha la sua texture, il suo profumo, la sua storia.",
-    icon: "leather",
+      "Vitello, camoscio, cuoio toscano certificato: ogni materiale ha la sua texture, il suo profumo, la sua storia.",
+    iconSrc: "/uploads/2026/04/icon-pelle.png",
+    iconAlt: "Scegli il tipo e colore di pelle",
   },
   {
     number: "03",
     title: "Personalizza i dettagli",
     description:
-      "Colore, altezza del tacco, tipo di cucitura e il gioiello che rende il sandalo tuo.",
-    icon: "gem",
+      "Colore, altezza del tacco, tipo di cucitura e il gioiello Swarovski che rende il sandalo unico e tuo.",
+    iconSrc: "/uploads/2026/04/icon-gioiello.png",
+    iconAlt: "Scegli il gioiello",
   },
 ];
-
-function StepIcon({ type }: { type: string }) {
-  if (type === "shoe") {
-    return (
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--color-accent)]" aria-hidden="true">
-        <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
-        <line x1="4" y1="22" x2="20" y2="22" />
-      </svg>
-    );
-  }
-  if (type === "leather") {
-    return (
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--color-accent)]" aria-hidden="true">
-        <rect x="3" y="3" width="18" height="18" rx="2" />
-        <path d="M3 9h18" />
-        <path d="M9 3v18" />
-      </svg>
-    );
-  }
-  return (
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--color-accent)]" aria-hidden="true">
-      <path d="M6 3h12l4 6-10 13L2 9z" />
-      <path d="M11 3L2 9l10 13 10-13-9-6" />
-      <path d="M2 9h20" />
-    </svg>
-  );
-}
 
 function StepCard({ step, index }: { step: PersonalizationStep; index: number }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -77,7 +71,7 @@ function StepCard({ step, index }: { step: PersonalizationStep; index: number })
       {/* Number + Icon circle */}
       <div className="relative mb-4">
         <div className="flex h-20 w-20 items-center justify-center rounded-full border border-[var(--color-accent)]/20 bg-[var(--color-surface)] shadow-sm transition-all duration-300 group-hover:border-[var(--color-accent)]/40 group-hover:shadow-md">
-          <StepIcon type={step.icon} />
+          <CustomizationIcon src={step.iconSrc} alt={step.iconAlt} />
         </div>
         {/* Floating number */}
         <span className="absolute -top-1 -right-1 flex h-7 w-7 items-center justify-center rounded-full bg-[var(--color-primary)] text-[10px] font-bold text-white">
@@ -85,7 +79,7 @@ function StepCard({ step, index }: { step: PersonalizationStep; index: number })
         </span>
       </div>
 
-      {/* 🧬 DNA: Stitch divider under icon */}
+      {/* DNA: Stitch divider under icon */}
       <hr className="stitch-divider mb-4" />
 
       {/* Title */}
@@ -102,10 +96,13 @@ function StepCard({ step, index }: { step: PersonalizationStep; index: number })
 }
 
 export function PersonalizationSection() {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
+
   return (
     <ScrollAnimatedSection className="bg-[var(--color-surface)] py-[var(--section-padding-y-lg)]" variants={fadeInUp}>
       <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
-        {/* 🧬 Section header — Craftsmanship themed */}
+        {/* Section header — Craftsmanship themed */}
         <div className="mb-16 text-center md:mb-20">
           <div className="inline-flex items-center gap-4 mb-6">
             <span className="h-px w-8 bg-[var(--color-accent)]/40" />
@@ -123,20 +120,55 @@ export function PersonalizationSection() {
           </p>
         </div>
 
-        {/* Connecting line behind cards (desktop only) */}
-        <div className="relative">
-          <div className="absolute top-10 left-[16.67%] right-[16.67%] hidden h-px bg-[var(--color-accent)]/15 md:block" />
+        <div ref={ref} className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[2fr_3fr] lg:gap-16 mb-16">
+          {/* Left — Personalization showcase image */}
+          <m.div
+            variants={slideInLeft}
+            initial="hidden"
+            animate={isInView ? "visible" : "hidden"}
+            className="relative order-2 lg:order-1"
+          >
+            <div className="overflow-hidden rounded-[var(--radius-lg)]">
+              <img
+                src="/uploads/2026/04/personalizzazione-sandalo.jpg"
+                alt="Sandalo personalizzabile — scegli pelle, tacco e gioiello Swarovski"
+                className="w-full object-cover"
+                loading="lazy"
+                width={700}
+                height={819}
+              />
+            </div>
 
-          {/* 3 steps — horizontal on desktop, stacked on mobile */}
-          <div className="grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-8">
-            {STEPS.map((step, index) => (
-              <StepCard key={step.number} step={step} index={index} />
-            ))}
-          </div>
+            {/* Floating badge */}
+            <div className="absolute -bottom-4 -right-4 rounded-[var(--radius-lg)] bg-[var(--color-surface)] px-5 py-3 shadow-lg md:-bottom-6 md:-right-6 md:px-6 md:py-4">
+              <p className="font-display text-lg font-bold text-[var(--color-primary)]">100%</p>
+              <p className="text-xs font-medium text-[var(--color-text-muted)]">Fatto a mano</p>
+            </div>
+          </m.div>
+
+          {/* Right — 3 Steps */}
+          <m.div
+            variants={slideInRight}
+            initial="hidden"
+            animate={isInView ? "visible" : "hidden"}
+            className="order-1 lg:order-2"
+          >
+            {/* Connecting line behind cards (desktop only) */}
+            <div className="relative">
+              <div className="absolute top-10 left-[16.67%] right-[16.67%] hidden h-px bg-[var(--color-accent)]/15 md:block" />
+
+              {/* 3 steps */}
+              <div className="grid grid-cols-1 gap-12 md:grid-cols-3 md:gap-8">
+                {STEPS.map((step, index) => (
+                  <StepCard key={step.number} step={step} index={index} />
+                ))}
+              </div>
+            </div>
+          </m.div>
         </div>
 
         {/* CTA */}
-        <div className="mt-16 text-center">
+        <div className="text-center">
           <a
             href="/catalogo"
             className="inline-flex h-12 items-center justify-center gap-2 rounded-[var(--radius-md)] border border-[var(--color-accent)] px-8 text-sm font-medium text-[var(--color-primary)] transition-colors duration-[var(--transition-base)] hover:bg-[var(--color-accent)]/10"

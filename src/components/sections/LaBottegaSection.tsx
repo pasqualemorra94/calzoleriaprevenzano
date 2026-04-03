@@ -15,7 +15,13 @@ const BOTTEGA_COPY = {
   ctaHref: "/la-bottega",
 } as const;
 
-export function LaBottegaSection() {
+const BOTTEGA_IMAGE = "/uploads/2026/04/personalizzazione-sandalo.jpg";
+
+interface LaBottegaSectionProps {
+  imageUrl?: string;
+}
+
+export function LaBottegaSection({ imageUrl }: LaBottegaSectionProps) {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
 
@@ -82,8 +88,8 @@ export function LaBottegaSection() {
           >
             <div className="overflow-hidden rounded-[var(--radius-lg)]">
               <img
-                src="/images/bottega-laboratorio.svg"
-                alt="Il laboratorio artigianale di Calzoleria Prevenzano a Napoli"
+                src={imageUrl ?? BOTTEGA_IMAGE}
+                alt="Sandalo artigianale personalizzabile con dettagli in pelle e gioiello — Calzoleria Prevenzano"
                 className="aspect-[4/3] w-full object-cover"
                 loading="lazy"
                 width={800}
