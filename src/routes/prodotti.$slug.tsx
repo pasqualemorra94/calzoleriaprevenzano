@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
 import { m, AnimatePresence } from "motion/react";
-import { ShoppingBag, Minus, Plus, Check, ChevronRight, Loader2 } from "lucide-react";
+import { ShoppingBag, Minus, Plus, Check, ChevronRight, ChevronDown, Loader2 } from "lucide-react";
 import { cn } from "~/lib/utils/cn";
 import { VariantConfigSchema } from "~/lib/types/variant-config";
 
@@ -115,6 +115,7 @@ function ProdottoPage(): ReactNode {
   const [quantity, setQuantity] = useState(1);
   const [cartStatus, setCartStatus] = useState<"idle" | "loading" | "success">("idle");
   const [customerNote, setCustomerNote] = useState("");
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
 
   const fetchProduct = useCallback(async () => {
     setLoading(true);
@@ -523,14 +524,32 @@ function ProdottoPage(): ReactNode {
                           exit={{ opacity: 0, y: -8 }}
                           transition={{ duration: 0.2 }}
                         >
-                          <span className="mb-2.5 block text-sm font-medium text-[var(--color-text)]">
-                            {group.label}
+                          <button
+                            type="button"
+                            onClick={() => setCollapsedGroups((prev) => {
+                              const next = new Set(prev);
+                              if (next.has(group.type)) next.delete(group.type);
+                              else next.add(group.type);
+                              return next;
+                            })}
+                            className="mb-2.5 flex w-full items-center gap-2 text-left"
+                          >
+                            {collapsedGroups.has(group.type) ? (
+                              <ChevronRight className="h-4 w-4 text-[var(--color-text-muted)]" />
+                            ) : (
+                              <ChevronDown className="h-4 w-4 text-[var(--color-text-muted)]" />
+                            )}
+                            <span className="text-sm font-medium text-[var(--color-text)]">
+                              {group.label}
+                            </span>
                             {selectedId && (
-                              <span className="ml-2 text-xs font-normal text-[var(--color-text-muted)]">
+                              <span className="text-xs font-normal text-[var(--color-text-muted)]">
                                 — {group.options.find((o) => o.id === selectedId)?.label}
                               </span>
                             )}
-                          </span>
+                          </button>
+
+                          {!collapsedGroups.has(group.type) && <>
 
                         {/* SELECT type — dropdown */}
                         {controlType === "select" ? (
@@ -647,6 +666,7 @@ function ProdottoPage(): ReactNode {
                             ))}
                           </div>
                         )}
+                        </>}
                         </m.div>
                       </AnimatePresence>
                     );
