@@ -11,6 +11,7 @@ import { apiSuccess, apiError } from "~/lib/api-response";
 import { getUser } from "~/lib/sdk-auth.server";
 import { getCart, addToCart } from "~/lib/cart.server";
 import { addToCartSchema } from "~/lib/validators/products";
+import { formatZodErrors } from "~/lib/validators/format";
 import { getSessionId, generateSessionId, buildSessionCookie } from "~/lib/cart-session";
 
 export const Route = createFileRoute("/api/cart")({
@@ -43,7 +44,7 @@ export const Route = createFileRoute("/api/cart")({
         const body = await request.json() as unknown;
         const parsed = addToCartSchema.safeParse(body);
         if (!parsed.success) {
-          return apiError("VALIDATION_ERROR", "Dati non validi", 422);
+          return apiError("VALIDATION_ERROR", "Dati non validi", 422, formatZodErrors(parsed.error));
         }
 
         const result = await addToCart(user?.id ?? null, sessionId, parsed.data);

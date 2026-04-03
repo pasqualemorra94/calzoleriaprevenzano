@@ -208,12 +208,14 @@ function AdminMediaPage(): ReactNode {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-sm font-medium text-gray-900">Media Library</h1>
-          {data && (
-            <p className="text-xs text-gray-500">
-              {data.stats.totalFiles} file · {formatFileSize(data.stats.totalSize)}
-            </p>
-          )}
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
+            Media Library
+            {data && (
+              <span className="ml-1.5 inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-500">
+                {data.stats.totalFiles}
+              </span>
+            )}
+          </span>
         </div>
         <div className="flex items-center gap-2">
           <input

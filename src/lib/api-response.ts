@@ -15,10 +15,15 @@ export function apiSuccess<T>(data: T, status = 200, headers?: Record<string, st
   );
 }
 
-/** Error response with code + message envelope */
-export function apiError(code: string, message: string, status: number): Response {
+/** Error response with code + message envelope (optional validation details) */
+export function apiError(
+  code: string,
+  message: string,
+  status: number,
+  details?: Array<{ field: string; message: string }>,
+): Response {
   return Response.json(
-    { ok: false, error: { code, message } } satisfies ApiErrorResponse,
+    { ok: false, error: { code, message, ...(details ? { details } : {}) } } satisfies ApiErrorResponse,
     { status },
   );
 }

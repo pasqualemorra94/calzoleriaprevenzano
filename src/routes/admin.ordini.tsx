@@ -111,7 +111,12 @@ function AdminOrdersList(): ReactNode {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-sm font-medium text-gray-900">Gestione ordini</h1>
+      <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
+        Gestione ordini
+        <span className="ml-1.5 inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-500">
+          {total}
+        </span>
+      </span>
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <div className="relative flex-1">

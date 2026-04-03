@@ -490,7 +490,7 @@ function AdminProductEditPage(): ReactNode {
           <ArrowLeft className="h-4 w-4" />
           Indietro
         </Link>
-        <h1 className="text-sm font-medium text-gray-900">{isNew ? "Nuovo prodotto" : "Modifica prodotto"}</h1>
+        <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">{isNew ? "Nuovo prodotto" : "Modifica prodotto"}</span>
       </div>
 
       {error && (
