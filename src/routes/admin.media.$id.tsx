@@ -5,6 +5,8 @@ import {
   ImageIcon, HardDrive, Calendar, User, FileText,
 } from "lucide-react";
 import { cn } from "~/lib/utils/cn";
+import { toast } from "sonner";
+import { ConfirmDialog } from "~/components/admin/ConfirmDialog";
 
 export const Route = createFileRoute("/admin/media/$id")({
   component: AdminMediaDetailPage,
@@ -47,6 +49,7 @@ function AdminMediaDetailPage(): ReactNode {
   const [success, setSuccess] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // Editable fields
   const [alt, setAlt] = useState("");
@@ -96,17 +99,17 @@ function AdminMediaDetailPage(): ReactNode {
   };
 
   const handleDelete = async () => {
-    if (!confirm("Eliminare questo file dalla libreria media?")) return;
     try {
       const res = await fetch(`/api/admin/media/${id}`, { method: "DELETE" });
       if (res.status === 204 || res.ok) {
+        toast.success("File eliminato");
         window.history.back();
       } else {
         const json = await res.json();
-        setError(json.error?.message ?? "Errore durante l'eliminazione");
+        toast.error(json.error?.message ?? "Errore durante l'eliminazione");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Errore durante l'eliminazione");
+      toast.error(err instanceof Error ? err.message : "Errore durante l'eliminazione");
     }
   };
 
@@ -297,7 +300,7 @@ function AdminMediaDetailPage(): ReactNode {
                 </button>
                 <button
                   type="button"
-                  onClick={handleDelete}
+                  onClick={() => setShowDeleteConfirm(true)}
                   className="inline-flex h-9 items-center gap-2 rounded-md border border-red-200 px-4 text-sm font-medium text-red-600 transition-colors hover:bg-red-50"
                 >
                   <Trash2 className="h-4 w-4" />
@@ -307,6 +310,15 @@ function AdminMediaDetailPage(): ReactNode {
             </div>
           </div>
         </div>
+
+        <ConfirmDialog
+          open={showDeleteConfirm}
+          title="Elimina file"
+          message="Eliminare questo file dalla libreria media?"
+          confirmLabel="Elimina"
+          onConfirm={handleDelete}
+          onCancel={() => setShowDeleteConfirm(false)}
+        />
       </div>
     </div>
   );

@@ -5,7 +5,9 @@ import {
   Image as ImageIcon, Loader2, X, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { cn } from "~/lib/utils/cn";
+import { toast } from "sonner";
 import { MediaGridItem, MediaListItemRow, type MediaItem } from "~/components/admin/media-library";
+import { ConfirmDialog } from "~/components/admin/ConfirmDialog";
 
 export const Route = createFileRoute("/admin/media")({
   component: AdminMediaPage,
@@ -41,6 +43,7 @@ function AdminMediaPage(): ReactNode {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dragCounterRef = useRef(0);
 
@@ -123,14 +126,13 @@ function AdminMediaPage(): ReactNode {
   // ── Delete ──
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Eliminare questo file dalla libreria media?")) return;
     try {
       const res = await fetch(`/api/admin/media/${id}`, { method: "DELETE" });
       const json = await res.json();
       if (!json.ok && res.status !== 204) throw new Error(json.error?.message ?? "Errore");
       await fetchMedia(page, searchQuery, activeFolder);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Errore durante l'eliminazione");
+      toast.error(err instanceof Error ? err.message : "Errore durante l'eliminazione");
     }
   };
 
@@ -335,7 +337,7 @@ function AdminMediaPage(): ReactNode {
                   copied={copiedId === item.id}
                   onSelect={() => toggleSelect(item.id)}
                   onCopy={() => handleCopyUrl(item)}
-                  onDelete={() => handleDelete(item.id)}
+                  onDelete={() => setDeleteTargetId(item.id)}
                 />
               ))}
             </div>
@@ -358,7 +360,7 @@ function AdminMediaPage(): ReactNode {
                       item={item}
                       copied={copiedId === item.id}
                       onCopy={() => handleCopyUrl(item)}
-                      onDelete={() => handleDelete(item.id)}
+                      onDelete={() => setDeleteTargetId(item.id)}
                     />
                   ))}
                 </tbody>
@@ -394,6 +396,17 @@ function AdminMediaPage(): ReactNode {
           )}
         </>
       ) : null}
+
+      <ConfirmDialog
+        open={deleteTargetId !== null}
+        title="Elimina file"
+        message="Eliminare questo file dalla libreria media?"
+        confirmLabel="Elimina"
+        onConfirm={() => {
+          if (deleteTargetId) handleDelete(deleteTargetId);
+        }}
+        onCancel={() => setDeleteTargetId(null)}
+      />
     </div>
   );
 }

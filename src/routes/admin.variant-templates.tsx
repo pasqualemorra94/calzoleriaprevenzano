@@ -2,6 +2,8 @@ import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-r
 import type { ReactNode } from "react";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { Plus, Edit, Trash2, Layers, ChevronRight, Search } from "lucide-react";
+import { toast } from "sonner";
+import { ConfirmDialog } from "~/components/admin/ConfirmDialog";
 
 interface TemplateListItem {
   id: string;
@@ -37,6 +39,7 @@ function VariantTemplatesList(): ReactNode {
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
 
   const fetchTemplates = useCallback(async () => {
     setLoading(true);
@@ -53,11 +56,11 @@ function VariantTemplatesList(): ReactNode {
   }, [fetchTemplates]);
 
   const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Eliminare il template "${name}"?`)) return;
     setDeleting(id);
     try {
       await fetch(`/api/admin/variant-templates/${id}`, { method: "DELETE" });
       setTemplates((prev) => prev.filter((t) => t.id !== id));
+      toast.success(`Template "${name}" eliminato`);
     } catch { /* ignore */ }
     setDeleting(null);
   };
@@ -188,7 +191,7 @@ function VariantTemplatesList(): ReactNode {
                 <button
                   type="button"
                   disabled={deleting === t.id}
-                  onClick={() => handleDelete(t.id, t.name)}
+                  onClick={() => setDeleteTarget({ id: t.id, name: t.name })}
                   className="flex items-center gap-1 rounded-md border border-red-200 px-2.5 py-1.5 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 disabled:opacity-50"
                 >
                   <Trash2 className="h-3 w-3" />
@@ -199,6 +202,17 @@ function VariantTemplatesList(): ReactNode {
           ))}
         </div>
       )}
+
+      <ConfirmDialog
+        open={deleteTarget !== null}
+        title="Elimina template"
+        message={deleteTarget ? `Eliminare il template "${deleteTarget.name}"?` : ""}
+        confirmLabel="Elimina"
+        onConfirm={() => {
+          if (deleteTarget) handleDelete(deleteTarget.id, deleteTarget.name);
+        }}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }

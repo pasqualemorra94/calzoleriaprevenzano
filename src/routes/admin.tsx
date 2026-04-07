@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, useMatchRoute } from "@tanstack/react-router";
 import { useState, useEffect, type ReactNode } from "react";
-import { Menu, X, LayoutDashboard, Package, ShoppingCart, Layers, ExternalLink, ImageIcon } from "lucide-react";
+import { Menu, X, LayoutDashboard, Package, ShoppingCart, Layers, ExternalLink, ImageIcon, LogOut } from "lucide-react";
 import { cn } from "~/lib/utils/cn";
 
 export const Route = createFileRoute("/admin")({
@@ -18,6 +18,18 @@ const NAV_ITEMS = [
 function AdminLayout(): ReactNode {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const matchRoute = useMatchRoute();
+
+  useEffect(() => {
+    const originalFetch = window.fetch;
+    window.fetch = async (input, init) => {
+      const res = await originalFetch(input, init);
+      if (res.status === 403 || res.status === 401) {
+        window.location.href = "/auth/login";
+      }
+      return res;
+    };
+    return () => { window.fetch = originalFetch; };
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -103,6 +115,16 @@ function AdminLayout(): ReactNode {
         </nav>
 
         <div className="shrink-0 border-t border-gray-700 p-3 space-y-1">
+          <button
+            onClick={async () => {
+              await fetch("/api/auth/signout", { method: "POST" });
+              window.location.href = "/auth/login";
+            }}
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-800 hover:text-white"
+          >
+            <LogOut className="h-5 w-5 shrink-0" />
+            Logout
+          </button>
           <Link
             to="/"
             className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-gray-300 transition-colors hover:bg-gray-800 hover:text-white"

@@ -1,6 +1,8 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, useCallback, type ReactNode } from "react";
 import { Plus, Search, Loader2, Pencil, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+import { ConfirmDialog } from "~/components/admin/ConfirmDialog";
 
 export const Route = createFileRoute("/admin/prodotti")({
   component: AdminProductsPage,
@@ -58,6 +60,7 @@ function AdminProductsList(): ReactNode {
   const [sort, setSort] = useState("newest");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
@@ -88,14 +91,14 @@ function AdminProductsList(): ReactNode {
   }, [fetchProducts]);
 
   const handleDelete = async (id: string, name: string) => {
-    if (!window.confirm(`Eliminare il prodotto "${name}"?`)) return;
     try {
       const res = await fetch(`/api/admin/products/${id}`, { method: "DELETE" });
       const json = await res.json();
       if (!res.ok && json.error) throw new Error(json.error.message);
+      toast.success(`Prodotto "${name}" eliminato`);
       fetchProducts();
     } catch (err) {
-      alert(err instanceof Error ? err.message : "Errore durante l'eliminazione");
+      toast.error(err instanceof Error ? err.message : "Errore durante l'eliminazione");
     }
   };
 
@@ -205,7 +208,7 @@ function AdminProductsList(): ReactNode {
                           Modifica
                         </Link>
                         <button
-                          onClick={() => handleDelete(product.id, product.name)}
+                          onClick={() => setDeleteTarget({ id: product.id, name: product.name })}
                           className="inline-flex h-8 items-center gap-1 rounded-md border border-red-300 px-2.5 text-xs font-medium text-red-700 transition-colors hover:bg-red-50"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
@@ -243,6 +246,17 @@ function AdminProductsList(): ReactNode {
           </div>
         )}
       </div>
+
+      <ConfirmDialog
+        open={deleteTarget !== null}
+        title="Elimina prodotto"
+        message={deleteTarget ? `Eliminare il prodotto "${deleteTarget.name}"?` : ""}
+        confirmLabel="Elimina"
+        onConfirm={() => {
+          if (deleteTarget) handleDelete(deleteTarget.id, deleteTarget.name);
+        }}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }

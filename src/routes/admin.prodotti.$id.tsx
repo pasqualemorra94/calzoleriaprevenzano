@@ -1,7 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { useEffect, useState, useCallback } from "react";
-import { Loader2, Save, ArrowLeft, AlertCircle, CheckCircle } from "lucide-react";
+import { Loader2, Save, ArrowLeft } from "lucide-react";
+import { toast } from "sonner";
 import { cn } from "~/lib/utils/cn";
 import { MediaPicker } from "~/components/admin/MediaPicker";
 import type { SelectedMedia } from "~/components/admin/MediaPicker";
@@ -31,8 +32,6 @@ function AdminProductEditPage(): ReactNode {
   const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
   const [touched, setTouched] = useState<Set<string>>(new Set());
@@ -61,7 +60,6 @@ function AdminProductEditPage(): ReactNode {
   const fetchProduct = useCallback(async () => {
     if (isNew) return;
     setLoading(true);
-    setError(null);
     try {
       const res = await fetch(`/api/admin/products/${id}`);
       const json = await res.json();
@@ -102,7 +100,7 @@ function AdminProductEditPage(): ReactNode {
       for (const v of mappedVariants) initialGroups.add(v.optionGroup || "Generale");
       setExpandedGroups(initialGroups);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Errore di caricamento");
+      toast.error(err instanceof Error ? err.message : "Errore di caricamento");
     } finally {
       setLoading(false);
     }
@@ -212,7 +210,7 @@ function AdminProductEditPage(): ReactNode {
 
   const handleApplyTemplate = async (templateId: string) => {
     try {
-      const res = await fetch(`/api/admin/variant-templates/${templateId}`);
+        const res = await fetch(`/api/admin/variant-templates/${templateId}`);
       const json = await res.json();
       if (json.ok && json.data?.config) {
         const incoming: VariantConfig = typeof json.data.config === "string"
@@ -242,9 +240,7 @@ function AdminProductEditPage(): ReactNode {
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-    setSuccess(null);
-    if (!validateForm()) { setError("Compila tutti i campi obbligatori"); return; }
+    if (!validateForm()) { toast.error("Compila tutti i campi obbligatori"); return; }
 
     setSaving(true);
     try {
@@ -279,10 +275,10 @@ function AdminProductEditPage(): ReactNode {
 
       const json = await res.json();
       if (!json.ok) throw new Error(json.error?.message ?? "Errore durante il salvataggio");
-      setSuccess("Prodotto salvato con successo");
+      toast.success("Prodotto salvato con successo");
       setTimeout(() => navigate({ to: "/admin/prodotti" }), 1200);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Errore durante il salvataggio");
+      toast.error(err instanceof Error ? err.message : "Errore durante il salvataggio");
     } finally {
       setSaving(false);
     }
@@ -321,17 +317,6 @@ function AdminProductEditPage(): ReactNode {
           {isNew ? "Nuovo prodotto" : "Modifica prodotto"}
         </span>
       </div>
-
-      {error && (
-        <div className="flex items-center gap-2 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-          <AlertCircle className="h-4 w-4 shrink-0" />{error}
-        </div>
-      )}
-      {success && (
-        <div className="flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-700">
-          <CheckCircle className="h-4 w-4 shrink-0" />{success}
-        </div>
-      )}
 
       <form onSubmit={handleSave} className="space-y-6">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
