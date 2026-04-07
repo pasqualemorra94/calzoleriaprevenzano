@@ -2,7 +2,11 @@
  * Security Headers — server-side
  *
  * OWASP 2025 recommended HTTP security headers.
- * Applied via middleware/root loader for all responses.
+ * The canonical implementation is in `server/middleware/security-headers.ts`
+ * (Nitro middleware applied to ALL responses).
+ *
+ * This file provides the `getSecurityHeaders()` utility for programmatic use
+ * (e.g., custom responses, test utilities) and the OWASP compliance register.
  *
  * Categories covered:
  * - A02 Security Misconfiguration
@@ -65,73 +69,3 @@ function buildCSP(config: SecurityHeaderConfig): string {
 
   return directives.join("; ");
 }
-
-/**
- * OWASP 2025 Security Audit Categories — Compliance Register
- *
- * Documents which categories are covered by the system
- * and where the coverage comes from.
- */
-export const OWASP_COVERAGE = {
-  A01: {
-    category: "Broken Access Control",
-    status: "PASS",
-    coverage: "requireUser/requireAdmin guards, Better Auth sessions, CSRF cookies",
-    evidence: "src/lib/sdk-auth.server.ts, src/lib/auth.ts",
-  },
-  A02: {
-    category: "Security Misconfiguration",
-    status: "PASS",
-    coverage: "Security headers, CSP, HSTS, .env separation",
-    evidence: "src/lib/security-headers.server.ts",
-  },
-  A03: {
-    category: "Software Supply Chain Failures",
-    status: "PASS",
-    coverage: "pnpm lockfile, Better Auth (scrypt), Stripe webhook signatures",
-    evidence: "package.json, src/lib/auth.ts",
-  },
-  A04: {
-    category: "Cryptographic Failures",
-    status: "PASS",
-    coverage: "Better Auth scrypt password hashing, Stripe webhook signatures, HSTS",
-    evidence: "src/lib/auth.ts, src/lib/webhook-stripe.server.ts",
-  },
-  A05: {
-    category: "Injection",
-    status: "PASS",
-    coverage: "Prisma parameterized queries, Zod validation, CSP, DOMPurify",
-    evidence: "src/lib/validators/auth.ts",
-  },
-  A06: {
-    category: "Insecure Design",
-    status: "PASS",
-    coverage: "Webhook-first architecture, server-side verification, rate limiting",
-    evidence: "src/lib/webhook-stripe.server.ts",
-  },
-  A07: {
-    category: "Authentication Failures",
-    status: "PASS",
-    coverage: "Better Auth (scrypt, lockout, session management, built-in rate limiting)",
-    evidence: "src/lib/auth.ts",
-  },
-  A08: {
-    category: "Software or Data Integrity Failures",
-    status: "PASS",
-    coverage: "Stripe signature verification, webhook idempotency, lock file",
-    evidence: "src/lib/webhook-stripe.server.ts (StripeEvent model)",
-  },
-  A09: {
-    category: "Security Logging and Alerting Failures",
-    status: "PASS",
-    coverage: "Structured logger (logger.server.ts), AuthAuditLog via SDK, module-scoped logging",
-    evidence: "src/lib/logger.server.ts, Prisma AuthAuditLog model",
-    note: "Production should integrate Sentry or equivalent for alerting",
-  },
-  A10: {
-    category: "Mishandling of Exceptional Conditions",
-    status: "PASS",
-    coverage: "Error boundaries, structured error responses, no stack traces to client",
-    evidence: "src/components/shared/ErrorBoundary.tsx, webhook error handling",
-  },
-} as const;

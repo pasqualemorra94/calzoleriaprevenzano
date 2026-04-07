@@ -8,6 +8,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { apiSuccess, apiError } from "~/lib/api-response";
 import { z } from "zod";
 import { createLogger } from "~/lib/logger.server";
+import { checkRateLimit, getClientIp } from "~/lib/rate-limit.server";
 
 const log = createLogger("newsletter");
 
@@ -19,6 +20,15 @@ export const Route = createFileRoute("/api/newsletter")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        // ── Rate limit ──
+        const ip = getClientIp(request);
+        const limit = checkRateLimit(ip, "FORM");
+        if (!limit.success) {
+          return apiError("RATE_LIMITED", "Troppe richieste. Riprova tra qualche minuto.", 429, undefined, {
+            "Retry-After": String(Math.ceil(limit.retryAfterMs / 1000)),
+          });
+        }
+
         const body = await request.json() as unknown;
         const parsed = newsletterSchema.safeParse(body);
 
