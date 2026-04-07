@@ -24,6 +24,9 @@
   --color-background: #FAF6F1;
   --color-foreground: #2D2D2D;
 
+  /* Hero — Crema pergamena, evoca cuoio e artigianalità */
+  --color-hero: #EFE5D8;
+
   /* Text */
   --color-text: #2D2D2D;
   --color-text-secondary: #5A5A5A;
@@ -115,7 +118,7 @@
   --section-padding-y: clamp(4rem, 2.5rem + 6vw, 7rem);
   --section-padding-y-lg: clamp(5rem, 2.5rem + 8vw, 10rem);
   --navbar-height: 4rem;
-  --navbar-height-md: 5rem;
+  --navbar-height-md: 8.5rem;
 
   /* ── Transitions ───────────────────────────────────────── */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);

@@ -8,6 +8,7 @@ import type { NavItem } from "~/lib/types/models";
 import { MobileMenu } from "./MobileMenu";
 
 const NAV_ITEMS: NavItem[] = [
+  { label: "Home", href: "/" },
   { label: "Sandali", href: "/sandali" },
   { label: "Catalogo", href: "/catalogo" },
   { label: "La Bottega", href: "/la-bottega" },
@@ -48,9 +49,16 @@ export function Navbar({ cartCount = 0 }: { cartCount?: number }): ReactNode {
         {/* Logo */}
         <a
           href="/"
-          className="font-display text-lg font-semibold tracking-tight text-[var(--color-text)] md:text-xl"
+          className="flex items-center"
+          aria-label={APP_CONFIG.site.name}
         >
-          {APP_CONFIG.site.name}
+          <img
+            src="/images/logo.png"
+            alt=""
+            className="h-10 w-auto md:h-14"
+            width={180}
+            height={109}
+          />
         </a>
 
         {/* Desktop Navigation */}

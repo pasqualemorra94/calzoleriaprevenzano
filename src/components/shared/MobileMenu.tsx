@@ -6,6 +6,7 @@ import type { NavItem } from "~/lib/types/models";
 import { cn } from "~/lib/utils/cn";
 
 const NAV_ITEMS: NavItem[] = [
+  { label: "Home", href: "/" },
   { label: "Sandali", href: "/sandali" },
   { label: "Catalogo", href: "/catalogo" },
   { label: "La Bottega", href: "/la-bottega" },
@@ -39,9 +40,19 @@ export function MobileMenu({ isOpen, onClose, cartCount, menuRef }: MobileMenuPr
       <div className="flex h-full flex-col">
         {/* Mobile menu header */}
         <div className="flex h-[var(--navbar-height)] items-center justify-between px-[var(--page-padding-x)] border-b border-[var(--color-border)]">
-          <span className="font-display text-lg font-semibold text-[var(--color-text)]">
-            {APP_CONFIG.site.name}
-          </span>
+          <a
+            href="/"
+            className="flex items-center"
+            aria-label={APP_CONFIG.site.name}
+          >
+            <img
+              src="/images/logo.png"
+              alt=""
+              className="h-7 w-auto"
+              width={132}
+              height={80}
+            />
+          </a>
           <button
             onClick={onClose}
             aria-label="Chiudi menu"
