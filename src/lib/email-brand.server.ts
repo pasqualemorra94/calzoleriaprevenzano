@@ -10,7 +10,7 @@ export const emailBrand = {
   // Identity
   brandName: "Calzoleria Prevenzano",
   siteUrl: process.env.APP_URL ?? "https://calzoleriaprevenzano.it",
-  logoUrl: "",
+  logoUrl: "/images/logo.png",
 
   // Colors (resolved from design-tokens.css)
   primaryColor: "#8B5E3C",

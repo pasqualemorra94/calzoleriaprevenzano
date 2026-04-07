@@ -16,15 +16,17 @@ export function apiSuccess<T>(data: T, status = 200, headers?: Record<string, st
 }
 
 /** Error response with code + message envelope (optional validation details) */
+/** Error response with code + message envelope (optional validation details + headers) */
 export function apiError(
   code: string,
   message: string,
   status: number,
   details?: Array<{ field: string; message: string }>,
+  headers?: Record<string, string>,
 ): Response {
   return Response.json(
     { ok: false, error: { code, message, ...(details ? { details } : {}) } } satisfies ApiErrorResponse,
-    { status },
+    { status, headers },
   );
 }
 

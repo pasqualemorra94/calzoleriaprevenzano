@@ -63,7 +63,15 @@ export const createProductSchema = z.object({
 export type CreateProductInput = z.infer<typeof createProductSchema>;
 
 /** Update product (admin) */
-export const updateProductSchema = createProductSchema.partial();
+export const updateProductSchema = createProductSchema
+  .partial()
+  .extend({
+    compareAtPrice: z.number().positive().nullable().optional(),
+    weight: z.number().min(0).nullable().optional(),
+    materials: z.string().nullable().optional(),
+    sku: z.string().nullable().optional(),
+    categoryId: z.string().nullable().optional(),
+  });
 
 export type UpdateProductInput = z.infer<typeof updateProductSchema>;
 
@@ -84,14 +92,7 @@ export const updateCartItemSchema = z.object({
 
 export type UpdateCartItemInput = z.infer<typeof updateCartItemSchema>;
 
-/** Remove from cart */
-export const removeFromCartSchema = z.object({
-  itemId: z.string().min(1),
-});
-
-export type RemoveFromCartItem = z.infer<typeof removeFromCartSchema>;
-
-/** Create review */
+/** List reviews query */
 export const createReviewSchema = z.object({
   rating: z.number().int().min(1).max(5),
   title: z.string().max(200).optional(),
