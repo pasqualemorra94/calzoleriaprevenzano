@@ -46,6 +46,19 @@
 | `/admin/ordini` | `src/routes/admin.ordini.tsx` | Lista ordini con filtri |
 | `/admin/ordini/$id` | `src/routes/admin.ordini.$id.tsx` | Dettaglio ordine + aggiorna stato/tracking |
 
+## Routes — Account (Frontoffice)
+
+| URL | File | Description |
+|-----|------|-------------|
+| `/account` | `src/routes/account.tsx` | Layout account con sidebar navigazione |
+| `/account/` | `src/routes/account/index.tsx` | Dashboard — saluto, stats, ordini recenti |
+| `/account/ordini` | `src/routes/account/ordini.index.tsx` | Storico ordini con paginazione |
+| `/account/ordini/$orderId` | `src/routes/account/ordini.$orderId.tsx` | Dettaglio ordine con tracking |
+| `/account/wishlist` | `src/routes/account/wishlist.tsx` | Lista desideri |
+| `/account/profilo` | `src/routes/account/profilo.tsx` | Gestione profilo (nome/email) |
+| `/account/password` | `src/routes/account/password.tsx` | Cambio password |
+| `/account/indirizzi` | `src/routes/account/indirizzi.tsx` | Gestione indirizzi di spedizione |
+
 ## Routes — API
 
 | URL | Methods | Auth | Description |
@@ -63,6 +76,9 @@
 | `/api/contact` | POST | none | Form contatto |
 | `/api/newsletter` | POST | none | Iscrizione newsletter |
 | `/api/wishlist` | GET, POST, DELETE | required | Lista desideri |
+| `/api/user/profile` | PUT, POST | required | Update profilo / cambio password (delega Better Auth) |
+| `/api/addresses` | GET, POST | required | Lista / crea indirizzo |
+| `/api/addresses/$id` | PUT, DELETE | required | Update / elimina indirizzo |
 | `/api/webhooks/stripe` | POST | webhook | Stripe webhook handler |
 | `/api/admin/stats` | GET | admin | Dashboard statistics |
 | `/api/admin/products` | GET | admin | Lista tutti prodotti (incl. inattivi/eliminati) |
@@ -92,6 +108,7 @@ E-commerce: Category, Product, ProductVariant, ProductImage, Review, Address, Ca
 | `orders.server.ts` | DATA | Order creation, listing, Stripe checkout |
 | `admin.server.ts` | DATA | Admin stats, product/order/category CRUD |
 | `wishlist.server.ts` | DATA | Wishlist toggle |
+| `address.server.ts` | DATA | Address CRUD with isDefault management |
 | `reviews.server.ts` | DATA | Product reviews |
 | `stripe.server.ts` | INFRA | Stripe client |
 | `webhook-stripe.server.ts` | INFRA | Stripe webhook signature verification |
@@ -1081,3 +1098,160 @@ Questi file mantengono la vecchia API di import per evitare breaking changes:
 - TypeScript: ✅ zero errors (in corso — da verificare)
 - Build: ✅ (in corso — da verificare)
 - Funzionalità: ✅ nessuna modifica comportamentale
+
+---
+
+## 🆕 Feature aggiunta: Product Image Zoom & Swatch Magnifier | 2026-04-05
+
+### Descrizione
+Due miglioramenti UX per la pagina prodotto:
+1. **Hover Zoom** sull'immagine principale — effetto e-commerce classico con zoom 2.2x che segue il cursore + pannello lente laterale
+2. **Lente d'ingrandimento** sulle thumbnail gallery e swatch varianti con immagine — preview zoomata 3x in floating popup
+
+### Nuovi file creati
+
+| File | Tipo | Layer | Scopo |
+|------|------|-------|-------|
+| `src/lib/hooks/use-prefers-reduced-motion.ts` | hook | UI | Hook condiviso per rilevare `prefers-reduced-motion` (WCAG 2.1) |
+
+### File modificati
+
+| File | Modifica | Giustificazione |
+|------|----------|-----------------|
+| `src/components/product/ProductGallery.tsx` | Riscritto con ZoomableImage (hover zoom 2.2x + crosshair + lente laterale), MagnifiableThumbnail (lente 3x su hover/long-press) | Miglioramento UX prodotto — zoom immagini |
+| `src/components/product/VariantSelector.tsx` | Estratto MagnifiableSwatch per swatch con immagine (lente 3x su hover/long-press), aggiunto ZoomIn icon hint | Miglioramento UX varianti — lente d'ingrandimento |
+
+### Nuovi componenti
+
+| Nome | File | Props | Usato in |
+|------|------|-------|----------|
+| ZoomableImage | `ProductGallery.tsx` | src, alt, naturalWidth, naturalHeight, empty | ProductGallery |
+| ZoomLensPanel | `ProductGallery.tsx` | src, alt, position, containerRef, zoomScale, lensSize | ZoomableImage |
+| MagnifiableThumbnail | `ProductGallery.tsx` | src, alt, isActive, onClick, label | ProductGallery (thumbnails) |
+| MagnifiableSwatch | `VariantSelector.tsx` | option, isSelected, onSelect | OptionGroupControl (color-swatch) |
+
+### Dettaglio implementazione
+
+**Hover Zoom (immagine principale):**
+- Al passaggio del mouse, l'immagine si ingrandisce a 2.2x con `transform: scale(2.2)` e `transformOrigin` che segue il cursore
+- Un indicatore crosshair bianco mostra il punto di zoom
+- Un badge "Zoom" con icona ZoomIn appare nell'angolo basso-destra come hint
+- Un pannello lente laterale (180x180px) appare a destra dell'immagine con zoom ingrandito
+- Su viewport stretti (< 200px spazio a destra), il pannello si nasconde automaticamente
+- Su mobile/touch: il touch disabilita lo zoom (nessun hover su touch)
+- Su `prefers-reduced-motion`: zoom disabilitato, immagine statica
+
+**Magnifier Thumbnail (gallery):**
+- Su hover delle thumbnail, appare un popup flottante (120x120px) con zoom 3x
+- Il popup si posiziona sopra la thumbnail centrato sul cursore
+- Su mobile: attivabile con long-press (500ms), disattivabile rilasciando il dito
+- Su `prefers-reduced-motion`: magnifier disabilitato
+
+**Magnifier Swatch (varianti):**
+- Solo per swatch con `imageUrl` (non per swatch color solido)
+- Su hover, appare un popup flottante (140x140px) con zoom 3x
+- Icona ZoomIn come hint in hover
+- Su mobile: long-press per attivare
+- Su `prefers-reduced-motion`: magnifier disabilitato
+
+### Accessibilità
+- `usePrefersReducedMotion` hook — rispetta l'impostazione OS per utenti sensibili alle animazioni
+- `aria-hidden="true"` su tutti gli elementi decorativi (lente, crosshair, zoom hint)
+- `aria-label` aggiornati con hint zoom sulle immagini
+- `cursor-crosshair` sull'immagine principale per indicare l'interazione
+
+### Performance
+- Zero pacchetti npm aggiunti — implementazione CSS transform + React state
+- `will-change: transform` gestito dal browser via CSS `transition`
+- `draggable={false}` su tutte le immagini con magnifier per evitare drag nativo
+- Immagini magnifier non precaricate — riutilizzano la stessa `src` dell'immagine originale
+
+### Flusso utente
+1. Utente visita pagina prodotto `/prodotti/$slug`
+2. Passa il mouse sopra l'immagine principale → lo zoom si attiva fluidamente (2.2x)
+3. Muove il cursore → lo zoom segue con crosshair + lente laterale
+5. Passa il mouse sopra una thumbnail gallery → preview zoomata 3x appare sopra
+6. Passa il mouse sopra uno swatch variante con immagine → preview zoomata 3x appare
+7. Su mobile: long-press su thumbnail/swatch → preview zoomata appare, rilascio → scompare
+8. Utenti con `prefers-reduced-motion` → nessun zoom, comportamento statico originale
+
+### Verifiche
+- TypeScript: ✅ zero errors, zero `any`
+- Build: ✅ success (1.54s)
+- Implementation Map: aggiornata (v18 → v19)
+
+---
+
+## 🆕 Feature aggiunta: Area Cliente (Frontoffice Account) | 2026-04-07
+
+### Descrizione
+Area clienti completa con dashboard, storico ordini, wishlist, gestione profilo, cambio password e gestione indirizzi. Include aggiornamenti alla navigazione (MegaMenu icona utente, MobileBottomNav link account) e layout dedicato con sidebar responsive.
+
+### Nuovi file creati (12)
+
+| File | Tipo | Layer | Scopo |
+|------|------|-------|-------|
+| `src/routes/account.tsx` | layout | UI | Layout account con sidebar navigazione, drawer mobile, auth guard via fetch interceptor |
+| `src/routes/account/index.tsx` | page | UI | Dashboard account — saluto, quick stats (ordini/wishlist), ordini recenti |
+| `src/routes/account/ordini.index.tsx` | page | UI | Lista ordini con paginazione, status badges |
+| `src/routes/account/ordini.$orderId.tsx` | page | UI | Dettaglio ordine — info spedizione, tracking, lista articoli, storico pagamenti |
+| `src/routes/account/wishlist.tsx` | page | UI | Griglia wishlist con immagine, prezzo, remove con toast |
+| `src/routes/account/profilo.tsx` | page | UI | Form edit nome/email con validazione client-side |
+| `src/routes/account/password.tsx` | page | UI | Form cambio password (delega a Better Auth) |
+| `src/routes/account/indirizzi.tsx` | page | UI | Lista indirizzi, form crea/modifica con AnimatePresence, delete con confirm |
+| `src/lib/address.server.ts` | service | DATA | CRUD indirizzi con gestione isDefault (unset altri quando se ne imposta uno nuovo) |
+| `src/routes/api/user/profile.ts` | api | BIZ | PUT update profilo, POST cambio password (delega a Better Auth con cookie forwarding) |
+| `src/routes/api/addresses.ts` | api | BIZ | GET lista indirizzi, POST crea indirizzo |
+| `src/routes/api/addresses.$id.ts` | api | BIZ | PUT update indirizzo, DELETE indirizzo |
+
+### File modificati (3)
+
+| File | Modifica | Giustificazione |
+|------|----------|-----------------|
+| `src/routes/__root.tsx` | Aggiunto `isAccount` check per nascondere padding bottom e MobileBottomNav sulle route `/account/*` | Area account non deve mostrare MobileBottomNav |
+| `src/components/shared/MegaMenu.tsx` | Aggiunta icona User nella top bar desktop (prima del carrello) che linka a `/account` | Accesso rapido area cliente |
+| `src/components/shared/MobileBottomNav.tsx` | Tab Account ora punta a `/account` invece di `/auth/login` | Gli utenti loggati vanno direttamente al loro account |
+
+### Nuove route
+
+| URL Pattern | File | Auth | Type |
+|-------------|------|------|------|
+| `/account` | `account.tsx` | required | ACCOUNT (layout) |
+| `/account/` | `account/index.tsx` | required | ACCOUNT |
+| `/account/ordini` | `account/ordini.index.tsx` | required | ACCOUNT |
+| `/account/ordini/$orderId` | `account/ordini.$orderId.tsx` | required | ACCOUNT |
+| `/account/wishlist` | `account/wishlist.tsx` | required | ACCOUNT |
+| `/account/profilo` | `account/profilo.tsx` | required | ACCOUNT |
+| `/account/password` | `account/password.tsx` | required | ACCOUNT |
+| `/account/indirizzi` | `account/indirizzi.tsx` | required | ACCOUNT |
+| `/api/user/profile` | `api/user/profile.ts` | required | API |
+| `/api/addresses` | `api/addresses.ts` | required | API |
+| `/api/addresses/$id` | `api/addresses.$id.ts`` | required | API |
+
+### Flusso utente
+
+1. Utente loggato → click icona User (desktop) o tab Account (mobile) → `/account`
+2. Dashboard mostra saluto, stats (ordini totali, wishlist count), ordini recenti
+3. Click "Vai allo storico ordini" → lista paginata con status badges (pending/confirmed/processing/shipped/delivered/cancelled/refunded)
+4. Click ordine → dettaglio con info spedizione, tracking number, lista articoli con link prodotto, riepilogo totaled
+5. Click "Vai alla wishlist" → griglia prodotti con remove
+6. "Il mio profilo" → form edit nome/email con validazione
+7. "Cambia password" → form con password attuale/nuova/conferma, delega a Better Auth `/api/auth/change-password`
+8. "I miei indirizzi" → lista con default badge, form animato per crea/modifica, validazione Zod (createAddressSchema)
+
+### Backend esistente riutilizzato
+
+Il backend per l'area cliente era già ~70% pronto:
+- API ordini: `/api/orders` (GET), `/api/orders/$id` (GET) — già esistenti
+- API wishlist: `/api/wishlist` (GET/POST/DELETE) — già esistente
+- Server lib: `orders.server.ts` (getUserOrders, getOrderDetail), `wishlist.server.ts`
+- Validator: `createAddressSchema` in `validators/products.ts`
+
+### Nota architetturale
+
+L'area account usa il navbar/footer del sito (non un layout separato come admin). L'`__root.tsx` nasconde solo il MobileBottomNav e il padding bottom per le route `/account/*`.
+
+### Verifiche
+- TypeScript: ✅ zero errors, zero `any`
+- Build: ✅ success (1.30s)
+- Implementation Map: aggiornata (v20 → v21)

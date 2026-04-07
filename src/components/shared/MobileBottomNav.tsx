@@ -10,7 +10,7 @@ const NAV_ITEMS = [
   { label: "Catalogo", to: "/catalogo", icon: Store, matchPath: "/catalogo" as const },
   { label: "Cerca", to: "/catalogo", icon: Search, matchPath: "/sandali" as const, exact: true },
   { label: "Carrello", to: "/carrello", icon: ShoppingBag, matchPath: "/carrello" as const },
-  { label: "Account", to: "/auth/login", icon: User, matchPath: "/auth" as const },
+  { label: "Account", to: "/account", icon: User, matchPath: "/account" as const },
 ];
 
 /**

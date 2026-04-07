@@ -1,5 +1,5 @@
 {
-  "version": 18,
+  "version": 21,
   "generatedAt": "2026-04-02T00:00:00.000Z",
   "projectSlug": "calzoleria-prevenzano",
   "framework": "tanstack",
@@ -102,6 +102,48 @@
         "file": "src/routes/auth/reset-password.tsx",
         "auth": "none",
         "type": "auth"
+      },
+      {
+        "path": "/account",
+        "file": "src/routes/account.tsx",
+        "auth": "required",
+        "type": "account"
+      },
+      {
+        "path": "/account/ordini",
+        "file": "src/routes/account/ordini.index.tsx",
+        "auth": "required",
+        "type": "account"
+      },
+      {
+        "path": "/account/ordini/$orderId",
+        "file": "src/routes/account/ordini.$orderId.tsx",
+        "auth": "required",
+        "type": "account"
+      },
+      {
+        "path": "/account/wishlist",
+        "file": "src/routes/account/wishlist.tsx",
+        "auth": "required",
+        "type": "account"
+      },
+      {
+        "path": "/account/profilo",
+        "file": "src/routes/account/profilo.tsx",
+        "auth": "required",
+        "type": "account"
+      },
+      {
+        "path": "/account/password",
+        "file": "src/routes/account/password.tsx",
+        "auth": "required",
+        "type": "account"
+      },
+      {
+        "path": "/account/indirizzi",
+        "file": "src/routes/account/indirizzi.tsx",
+        "auth": "required",
+        "type": "account"
       },
       {
         "path": "/admin",
@@ -360,6 +402,33 @@
           "GET"
         ],
         "auth": "none"
+      },
+      {
+        "path": "/api/user/profile",
+        "file": "src/routes/api/user/profile.ts",
+        "methods": [
+          "PUT",
+          "POST"
+        ],
+        "auth": "required"
+      },
+      {
+        "path": "/api/addresses",
+        "file": "src/routes/api/addresses.ts",
+        "methods": [
+          "GET",
+          "POST"
+        ],
+        "auth": "required"
+      },
+      {
+        "path": "/api/addresses/$id",
+        "file": "src/routes/api/addresses.$id.ts",
+        "methods": [
+          "PUT",
+          "DELETE"
+        ],
+        "auth": "required"
       }
     ]
   },
@@ -478,6 +547,7 @@
       "src/lib/admin/index.ts",
       "src/lib/media.server.ts",
       "src/lib/wishlist.server.ts",
+      "src/lib/address.server.ts",
       "src/lib/reviews.server.ts",
       "src/lib/contact.server.ts",
       "src/lib/stripe.server.ts",
@@ -515,6 +585,9 @@
     "api": [
       "src/lib/api-response.ts",
       "src/lib/query-client.ts"
+    ],
+    "hooks": [
+      "src/lib/hooks/use-prefers-reduced-motion.ts"
     ]
   },
   "regressionBoundaries": {

@@ -12,8 +12,10 @@ import { MotionProvider } from "~/providers/MotionProvider";
 import { MegaMenu } from "~/components/shared/MegaMenu";
 import { Footer } from "~/components/shared/Footer";
 import { MobileBottomNav } from "~/components/shared/MobileBottomNav";
+import { ErrorBoundary } from "~/components/shared/ErrorBoundary";
 import { StructuredData } from "~/components/seo/StructuredData";
 import { cn } from "~/lib/utils/cn";
+import { Toaster } from "sonner";
 import appCss from "~/styles/app.css?url";
 
 const ORG_SCHEMA = {
@@ -95,6 +97,7 @@ function RootDocument({ children }: { children: ReactNode }) {
 function RootComponent() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isAdmin = pathname.startsWith("/admin");
+  const isAccount = pathname.startsWith("/account");
 
   return (
     <MotionProvider>
@@ -107,13 +110,45 @@ function RootComponent() {
         id="main-content"
         className={cn(
           "min-h-screen",
-          !isAdmin && "pt-[var(--navbar-height)] md:pt-[var(--navbar-height-md)] pb-20 md:pb-0",
+          !isAdmin && !isAccount && "pt-[var(--navbar-height)] md:pt-[var(--navbar-height-md)] pb-20 md:pb-0",
         )}
       >
-        <Outlet />
+        <ErrorBoundary
+          fallback={
+            <div className="flex min-h-[60vh] flex-col items-center justify-center px-4">
+              <div className="text-center max-w-lg">
+                <p className="text-4xl mb-4 text-[var(--color-primary)]">⚠</p>
+                <h1 className="text-xl font-display font-semibold text-[var(--color-text)] mb-4">
+                  Qualcosa è andato storto
+                </h1>
+                <p className="text-[var(--color-text-secondary)] mb-8 leading-relaxed">
+                  Si è verificato un errore imprevisto.
+                  Riprova o contattaci se il problema persiste.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <a
+                    href="/"
+                    className="inline-flex items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-primary)] px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-dark)]"
+                  >
+                    Torna alla homepage
+                  </a>
+                  <button
+                    onClick={() => window.location.reload()}
+                    className="inline-flex items-center justify-center rounded-[var(--radius-md)] border border-[var(--color-border)] px-6 py-3 text-sm font-medium text-[var(--color-text)] transition-colors hover:bg-[var(--color-muted)]"
+                  >
+                    Ricarica la pagina
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        >
+          <Outlet />
+        </ErrorBoundary>
       </main>
       {!isAdmin && <Footer />}
-      {!isAdmin && <MobileBottomNav />}
+      {!isAdmin && !isAccount && <MobileBottomNav />}
+      <Toaster position="bottom-right" richColors closeButton />
     </MotionProvider>
   );
 }
