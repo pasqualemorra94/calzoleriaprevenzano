@@ -65,7 +65,7 @@ export async function requireUser(request: Request): Promise<AuthUser> {
 export async function requireAdmin(request: Request): Promise<AuthUser> {
   const user = await requireUser(request);
   if (user.role !== "admin") {
-    throw new Response("Forbidden", { status: 403 });
+    throw redirect({ to: "/auth/login" } as never);
   }
   return user;
 }
