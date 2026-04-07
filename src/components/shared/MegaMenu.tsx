@@ -328,21 +328,6 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
 
             <div className="h-4 w-[1px] bg-[var(--color-border)]" />
 
-            {/* Account */}
-            <Link
-              to="/account"
-              className="relative flex h-8 items-center gap-1.5 rounded-full px-2 py-1 text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-primary)]"
-              aria-label="Il mio account"
-            >
-              <div className="flex h-6 w-6 items-center justify-center">
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632l-4.352-4.352a3.75 3.75 0 0 0 0-5.304 0 3.75 3.75 0 0 0 5.304 0l4.352 4.352a3.75 3.75 0 0 1-5.304 0M15.75 6a3.75 3.75 0 0 1-7.5 0" />
-                </svg>
-              </div>
-            </Link>
-
-            <div className="h-4 w-[1px] bg-[var(--color-border)]" />
-
             {/* Cart */}
             <Link
               to="/carrello"
@@ -424,6 +409,12 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
 
           <Link to="/contatti" className={navLinkClass} onClick={handleItemClick}>
             Contatti
+          </Link>
+
+          <span className="h-1 w-1 rounded-full bg-[var(--color-accent)]/50" />
+
+          <Link to="/account" className={navLinkClass} onClick={handleItemClick}>
+            Il mio account
           </Link>
         </nav>
 
