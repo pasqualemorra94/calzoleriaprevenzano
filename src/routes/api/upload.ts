@@ -12,6 +12,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import { apiSuccess, apiError } from "~/lib/api-response";
 import { requireAdmin } from "~/lib/sdk-auth.server";
 import { uploadMedia } from "~/lib/media.server";
+import { z } from "zod";
+
+const uploadFolderSchema = z
+  .string()
+  .max(100)
+  .regex(/^[a-zA-Z0-9/_-]*$/, "Il nome della cartella contiene caratteri non validi")
+  .optional()
+  .default("");
 
 export const Route = createFileRoute("/api/upload")({
   server: {
@@ -34,7 +42,8 @@ export const Route = createFileRoute("/api/upload")({
         }
 
         // ── Extract folder (optional) ──
-        const folder = formData.get("folder") as string | null ?? "";
+        const rawFolder = formData.get("folder");
+        const folder = uploadFolderSchema.parse(rawFolder ?? "");
 
         // ── Extract files ──
         const fileEntries = formData.getAll("files");
