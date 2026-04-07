@@ -106,7 +106,7 @@ function SandaliPage(): ReactNode {
   return (
     <>
       {/* Page header */}
-      <section className="bg-[var(--color-surface)] py-[var(--section-padding-y)]">
+      <section className="bg-[var(--color-hero)] py-[var(--section-padding-y)] border-b border-[var(--stitch-color)]/20">
         <div className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
           <m.div
             initial={{ opacity: 0, y: 24 }}
