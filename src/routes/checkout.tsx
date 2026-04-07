@@ -214,7 +214,6 @@ function CheckoutPage(): ReactNode {
                   items={cart.items} subtotal={cart.subtotal} shippingCost={shippingCost}
                   freeShippingThreshold={FREE_SHIPPING_THRESHOLD}
                   submitStatus={submitStatus} isCheckout
-                  onAction={null}
                 />
               </div>
             </div>

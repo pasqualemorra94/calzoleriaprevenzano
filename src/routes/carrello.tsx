@@ -4,17 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { m } from "motion/react";
 import { ShoppingBag, Minus, Plus, Trash2, Loader2, ArrowRight } from "lucide-react";
 import { OrderSummary } from "~/components/checkout/OrderSummary";
-
-interface CartItemDetail {
-  id: string;
-  productId: string;
-  variantId: string | null;
-  quantity: number;
-  price: number;
-  product: { name: string; slug: string };
-  variant: { name: string; color: string | null; size: string | null } | null;
-  selectedOptions: Array<{ label: string; value: string; color?: string }> | null;
-}
+import type { CartItemDetail } from "~/components/checkout/OrderSummary";
 
 interface CartResult {
   id: string;
@@ -53,7 +43,7 @@ function CarrelloPage(): ReactNode {
     try {
       const res = await fetch(`/api/cart/items/${itemId}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ quantity: newQuantity }) });
       const json = await res.json();
-      if (json.ok) setCart(json.data);
+      if (json.ok) { setCart(json.data); window.dispatchEvent(new Event("cart-updated")); }
     } catch { /* ignore */ }
     setUpdatingId(null);
   };
@@ -63,7 +53,7 @@ function CarrelloPage(): ReactNode {
     try {
       const res = await fetch(`/api/cart/items/${itemId}`, { method: "DELETE" });
       const json = await res.json();
-      if (json.ok) setCart(json.data);
+      if (json.ok) { setCart(json.data); window.dispatchEvent(new Event("cart-updated")); }
     } catch { /* ignore */ }
     setUpdatingId(null);
   };
@@ -135,7 +125,11 @@ function CarrelloPage(): ReactNode {
                 return (
                   <m.div key={item.id} className="flex gap-4 py-6 first:pt-0" layout initial={false}>
                     <div className="h-24 w-24 shrink-0 overflow-hidden rounded-[var(--radius-md)] bg-[var(--color-muted)]">
-                      <ShoppingBag className="flex h-full w-full items-center justify-center p-4 text-[var(--color-text-muted)]" />
+                      {item.product.image ? (
+                        <img src={item.product.image} alt={item.product.name} className="h-full w-full object-cover" />
+                      ) : (
+                        <ShoppingBag className="flex h-full w-full items-center justify-center p-4 text-[var(--color-text-muted)]" />
+                      )}
                     </div>
                     <div className="flex flex-1 flex-col justify-between">
                       <div>

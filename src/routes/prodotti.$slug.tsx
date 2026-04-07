@@ -192,7 +192,7 @@ function ProdottoPage(): ReactNode {
       if (parsedConfig) body.selectedOptions = Object.fromEntries(selectedOptions);
       const res = await fetch("/api/cart", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
       const json = await res.json();
-      if (json.ok) { setCartStatus("success"); setTimeout(() => setCartStatus("idle"), 3000); }
+      if (json.ok) { setCartStatus("success"); setTimeout(() => setCartStatus("idle"), 3000); window.dispatchEvent(new Event("cart-updated")); }
       else { setCartStatus("idle"); }
     } catch { setCartStatus("idle"); }
   };

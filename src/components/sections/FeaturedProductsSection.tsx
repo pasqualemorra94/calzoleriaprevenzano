@@ -34,12 +34,17 @@ const TABS: { key: ProductTab; label: string; description: string }[] = [
 
 function ProductCard({ product }: { product: Product }) {
   return (
-    <m.article
-      className="group"
-      whileHover={{ y: -6 }}
-      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-    >
-      <div className="relative aspect-[3/4] overflow-hidden rounded-[var(--radius-lg)] bg-[var(--color-muted)]">
+    <article className="group relative">
+      <Link
+        to="/prodotti/$slug"
+        params={{ slug: product.slug }}
+        className="absolute inset-0 z-10 rounded-[var(--radius-lg)]"
+        aria-label={`Vedi ${product.name}`}
+      >
+        <span className="sr-only">Vedi {product.name}</span>
+      </Link>
+
+      <div className="relative aspect-[3/4] overflow-hidden rounded-[var(--radius-lg)] bg-[var(--color-muted)] transition-shadow duration-300 group-hover:shadow-[0_8px_30px_rgba(139,94,60,0.12)]">
         {product.image ? (
           <img
             src={product.image.url}
@@ -61,23 +66,17 @@ function ProductCard({ product }: { product: Product }) {
           </span>
         )}
 
-        {/* Quick add overlay */}
         <div className="absolute inset-x-0 bottom-0 flex justify-center p-4 translate-y-full opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-          <Link
-            to="/prodotti/$slug"
-            params={{ slug: product.slug }}
-            className="inline-flex h-11 items-center gap-2 rounded-[var(--radius-md)] bg-[var(--color-primary)] px-5 text-xs font-semibold tracking-wide text-white shadow-[0_4px_20px_rgba(139,94,60,0.3)] transition-all hover:bg-[var(--color-primary-dark)]"
-          >
+          <span className="pointer-events-none inline-flex h-11 items-center gap-2 rounded-[var(--radius-md)] bg-[var(--color-primary)] px-5 text-xs font-semibold tracking-wide text-white shadow-[0_4px_20px_rgba(139,94,60,0.3)]">
             <ShoppingBag className="h-4 w-4" />
             Vedi dettaglio
-          </Link>
+          </span>
         </div>
 
-        {/* Hover border */}
+        <div className="absolute inset-0 bg-[var(--color-primary)]/0 transition-colors duration-300 group-hover:bg-[var(--color-primary)]/[0.03]" />
         <div className="pointer-events-none absolute inset-0 rounded-[var(--radius-lg)] border border-[var(--color-accent)]/0 transition-all duration-300 group-hover:border-[var(--color-accent)]/25" />
       </div>
 
-      {/* Product info */}
       <div className="mt-5">
         {product.category && (
           <span className="text-[11px] font-medium tracking-[0.15em] text-[var(--color-text-muted)]">
@@ -85,9 +84,7 @@ function ProductCard({ product }: { product: Product }) {
           </span>
         )}
         <h3 className="mt-1.5 text-sm font-medium leading-snug text-[var(--color-text)] transition-colors duration-200 group-hover:text-[var(--color-primary)]">
-          <Link to="/prodotti/$slug" params={{ slug: product.slug }} className="block">
-            {product.name}
-          </Link>
+          {product.name}
         </h3>
         <div className="mt-2 flex items-center gap-2">
           <p className="text-sm font-semibold text-[var(--color-primary)]">
@@ -100,7 +97,7 @@ function ProductCard({ product }: { product: Product }) {
           )}
         </div>
       </div>
-    </m.article>
+    </article>
   );
 }
 

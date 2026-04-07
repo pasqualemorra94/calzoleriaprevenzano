@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { m } from "motion/react";
+import { Link } from "@tanstack/react-router";
 import { ShoppingBag } from "lucide-react";
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
 
@@ -44,8 +44,17 @@ export function RelatedProducts({ products, currentProductId }: RelatedProductsP
 
 function RelatedProductCard({ product }: { product: ProductListItem }): ReactNode {
   return (
-    <m.article className="group" whileHover={{ y: -4 }} transition={{ duration: 0.25, ease: "easeOut" }}>
-      <div className="relative aspect-[3/4] overflow-hidden rounded-[var(--radius-lg)] bg-[var(--color-muted)]">
+    <article className="group relative">
+      <Link
+        to="/prodotti/$slug"
+        params={{ slug: product.slug }}
+        className="absolute inset-0 z-10 rounded-[var(--radius-lg)]"
+        aria-label={`Vedi ${product.name}`}
+      >
+        <span className="sr-only">Vedi {product.name}</span>
+      </Link>
+
+      <div className="relative aspect-[3/4] overflow-hidden rounded-[var(--radius-lg)] bg-[var(--color-muted)] transition-shadow duration-300 group-hover:shadow-[0_8px_30px_rgba(139,94,60,0.12)]">
         {product.image ? (
           <img src={product.image.url} alt={product.image.alt ?? product.name}
             className="h-full w-full object-cover transition-transform duration-[var(--transition-slow)] group-hover:scale-[1.05]"
@@ -55,14 +64,15 @@ function RelatedProductCard({ product }: { product: ProductListItem }): ReactNod
             <ShoppingBag className="h-12 w-12" />
           </div>
         )}
+        <div className="absolute inset-0 bg-[var(--color-primary)]/0 transition-colors duration-300 group-hover:bg-[var(--color-primary)]/[0.03]" />
         <div className="pointer-events-none absolute inset-0 rounded-[var(--radius-lg)] border border-[var(--color-accent)]/0 transition-colors duration-[var(--transition-base)] group-hover:border-[var(--color-accent)]/30" />
       </div>
       <div className="mt-4">
         {product.category && (
           <span className="text-xs font-medium tracking-wider text-[var(--color-text-muted)]">{product.category.name}</span>
         )}
-        <h3 className="mt-1 text-sm font-medium leading-snug text-[var(--color-text)]">
-          <a href={`/prodotti/${product.slug}`} className="hover:text-[var(--color-primary)]">{product.name}</a>
+        <h3 className="mt-1 text-sm font-medium leading-snug text-[var(--color-text)] transition-colors duration-200 group-hover:text-[var(--color-primary)]">
+          {product.name}
         </h3>
         <div className="mt-2 flex items-center gap-2">
           <p className="text-sm font-medium text-[var(--color-primary)]">EUR {product.price.toFixed(2)}</p>
@@ -71,6 +81,6 @@ function RelatedProductCard({ product }: { product: ProductListItem }): ReactNod
           )}
         </div>
       </div>
-    </m.article>
+    </article>
   );
 }

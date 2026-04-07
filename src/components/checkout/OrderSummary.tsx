@@ -7,7 +7,7 @@ export interface CartItemDetail {
   variantId: string | null;
   quantity: number;
   price: number;
-  product: { name: string; slug: string };
+  product: { name: string; slug: string; image: string | null };
   variant: { name: string; color: string | null; size: string | null } | null;
   selectedOptions: Array<{ label: string; value: string; color?: string }> | null;
 }
@@ -19,12 +19,11 @@ interface OrderSummaryProps {
   freeShippingThreshold: number;
   submitStatus?: "idle" | "loading" | "success" | "error";
   isCheckout?: boolean;
-  onAction?: ReactNode;
 }
 
 export function OrderSummary({
   items, subtotal, shippingCost, freeShippingThreshold,
-  submitStatus = "idle", isCheckout = false, onAction,
+  submitStatus = "idle", isCheckout = false,
 }: OrderSummaryProps): ReactNode {
   const total = subtotal + shippingCost;
 
@@ -37,8 +36,12 @@ export function OrderSummary({
         {items.map((item) => (
           <div key={item.id} className="flex items-start justify-between gap-3">
             <div className="flex items-start gap-3">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-muted)]">
-                <ShoppingBag className="h-5 w-5 text-[var(--color-text-muted)]" />
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-[var(--radius-md)] bg-[var(--color-muted)]">
+                {item.product.image ? (
+                  <img src={item.product.image} alt={item.product.name} className="h-full w-full object-cover" />
+                ) : (
+                  <ShoppingBag className="h-5 w-5 text-[var(--color-text-muted)]" />
+                )}
               </div>
               <div className="min-w-0">
                 <p className="text-sm font-medium leading-snug text-[var(--color-text)] truncate">{item.product.name}</p>
@@ -93,7 +96,7 @@ export function OrderSummary({
         </div>
       </div>
 
-      {isCheckout && onAction && (
+      {isCheckout && (
         <>
           <button type="submit" disabled={submitStatus === "loading"}
             className="mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-[var(--radius-md)] bg-[var(--color-primary)] px-6 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-dark)] disabled:cursor-not-allowed disabled:opacity-60">

@@ -29,7 +29,7 @@ interface CartItemDetail {
   variantId: string | null;
   quantity: number;
   price: number;
-  product: { name: string; slug: string };
+  product: { name: string; slug: string; image: string | null };
   variant: { name: string; color: string | null; size: string | null } | null;
   selectedOptions: ResolvedOption[] | null;
 }
@@ -41,7 +41,7 @@ interface CartItemWithProduct {
   quantity: number;
   price: unknown;
   selectedOptions: unknown;
-  product: { id: string; name: string; slug: string; isActive: boolean; deletedAt: Date | null };
+  product: { id: string; name: string; slug: string; isActive: boolean; deletedAt: Date | null; images: Array<{ url: string }> };
   variant: { id: string; name: string; color: string | null; size: string | null; isActive: boolean } | null;
 }
 
@@ -102,6 +102,15 @@ function validateOptionsAgainstConfig(
   let priceModifier = 0;
 
   for (const group of config.groups) {
+    // If this group depends on another group's value, check the condition first.
+    // If the parent's selected value does NOT match, skip this group entirely.
+    if (group.dependsOn) {
+      const parentValue = selectedOptions[group.dependsOn.groupId];
+      if (parentValue !== group.dependsOn.optionValue) {
+        continue;
+      }
+    }
+
     const selected = selectedOptions[group.id];
 
     if (!selected) {
@@ -140,7 +149,7 @@ async function getOrCreateCart(userId: string | null, sessionId: string | null):
     include: {
       items: {
         include: {
-          product: { select: { id: true, name: true, slug: true, isActive: true, deletedAt: true } },
+          product: { select: { id: true, name: true, slug: true, isActive: true, deletedAt: true, images: { select: { url: true }, orderBy: { sortOrder: "asc" }, take: 1 } } },
           variant: { select: { id: true, name: true, color: true, size: true, isActive: true } },
         },
         orderBy: { id: "asc" },
@@ -158,7 +167,7 @@ async function getOrCreateCart(userId: string | null, sessionId: string | null):
       include: {
         items: {
           include: {
-            product: { select: { id: true, name: true, slug: true, isActive: true, deletedAt: true } },
+            product: { select: { id: true, name: true, slug: true, isActive: true, deletedAt: true, images: { select: { url: true }, orderBy: { sortOrder: "asc" }, take: 1 } } },
             variant: { select: { id: true, name: true, color: true, size: true, isActive: true } },
           },
           orderBy: { id: "asc" },
@@ -183,7 +192,7 @@ function mapCartItem(item: CartItemWithProduct): CartItemDetail {
     variantId: item.variantId,
     quantity: item.quantity,
     price: Number(item.price),
-    product: { name: item.product.name, slug: item.product.slug },
+    product: { name: item.product.name, slug: item.product.slug, image: item.product.images?.[0]?.url ?? null },
     variant: item.variant ? { name: item.variant.name, color: item.variant.color, size: item.variant.size } : null,
     selectedOptions: (item.selectedOptions as ResolvedOption[] | null) ?? null,
   };
