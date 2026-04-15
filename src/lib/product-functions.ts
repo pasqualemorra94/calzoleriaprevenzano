@@ -42,23 +42,24 @@ export const $getCategoryImages = createServerFn({ method: "GET" }).handler(asyn
 /**
  * Get paginated products for catalog page.
  */
-// @ts-expect-error — TanStack Start virtual module typing; works at runtime
-export const $getCatalogProducts = createServerFn({ method: "GET" }).handler(async (input: {
-  page?: number;
-  perPage?: number;
-  category?: string;
-  query?: string;
-  sort?: string;
-}) => {
-  const result = await getProducts({
-    page: input.page ?? 1,
-    perPage: input.perPage ?? 12,
-    category: input.category,
-    query: input.query,
-    sort: (input.sort ?? "newest") as "newest" | "price_asc" | "price_desc" | "name",
+export const $getCatalogProducts = createServerFn({ method: "GET" })
+  .inputValidator((data: {
+    page?: number;
+    perPage?: number;
+    category?: string;
+    query?: string;
+    sort?: string;
+  }) => data)
+  .handler(async ({ data }) => {
+    const result = await getProducts({
+      page: data.page ?? 1,
+      perPage: data.perPage ?? 12,
+      category: data.category,
+      query: data.query,
+      sort: (data.sort ?? "newest") as "newest" | "price_asc" | "price_desc" | "name",
+    });
+    return result satisfies PaginatedData<ProductListItem>;
   });
-  return result satisfies PaginatedData<ProductListItem>;
-});
 
 /**
  * Get all categories for catalog sidebar.
@@ -74,17 +75,19 @@ export const $getCategories = createServerFn({ method: "GET" }).handler(async ()
  * Get full product detail by slug.
  * Returns null if product not found.
  */
-// @ts-expect-error — TanStack Start virtual module typing; works at runtime
-export const $getProductBySlug = createServerFn({ method: "GET" }).handler(async (slug: string) => {
-  const product = await getProductBySlug(slug);
-  return product satisfies ProductDetail | null;
-});
+export const $getProductBySlug = createServerFn({ method: "GET" })
+  .inputValidator((data: { slug: string }) => data)
+  .handler(async ({ data }) => {
+    const product = await getProductBySlug(data.slug);
+    return product satisfies ProductDetail | null;
+  });
 
 /**
  * Get featured products (for related products section).
  */
-// @ts-expect-error — TanStack Start virtual module typing; works at runtime
-export const $getFeaturedProducts = createServerFn({ method: "GET" }).handler(async (limit: number) => {
-  const products = await getFeaturedProducts(limit);
-  return products satisfies ProductListItem[];
-});
+export const $getFeaturedProducts = createServerFn({ method: "GET" })
+  .inputValidator((data: { limit: number }) => data)
+  .handler(async ({ data }) => {
+    const products = await getFeaturedProducts(data.limit);
+    return products satisfies ProductListItem[];
+  });

@@ -27,11 +27,11 @@ export const Route = createFileRoute("/sandali")({
   beforeLoad: async ({ search }) => {
     const [categories, productsData] = await Promise.all([
       $getCategories(),
-      $getCatalogProducts({
+      $getCatalogProducts({ data: {
         page: search.page ? Number(search.page) : 1,
         category: search.category ?? "sandali",
         query: search.query,
-      }),
+      } }),
     ]);
 
     // Extract sandali subcategories from the full category tree
@@ -69,12 +69,12 @@ function SandaliPage(): ReactNode {
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await $getCatalogProducts({
+      const data = await $getCatalogProducts({ data: {
         page,
         category: activeCategory ?? "sandali",
         query,
         sort: "newest",
-      });
+      } });
       const result = data as PaginatedData<ProductListItem>;
       setProducts(result.items);
       setTotal(result.total);

@@ -37,12 +37,12 @@ export const Route = createFileRoute("/catalogo")({
   beforeLoad: async ({ search }: { search: Record<string, string> }) => {
     const [categories, productsData] = await Promise.all([
       $getCategories(),
-      $getCatalogProducts({
+      $getCatalogProducts({ data: {
         page: search.page ? Number(search.page) : 1,
         category: search.category,
         query: search.query,
         sort: search.sort,
-      }),
+      } }),
     ]);
     return { categories, productsData };
   },
@@ -74,12 +74,12 @@ function CatalogoPage(): ReactNode {
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await $getCatalogProducts({
+      const data = await $getCatalogProducts({ data: {
         page,
         category: activeCategory,
         query,
         sort,
-      });
+      } });
       const result = data as PaginatedData<ProductListItem>;
       setProducts(result.items);
       setTotal(result.total);
