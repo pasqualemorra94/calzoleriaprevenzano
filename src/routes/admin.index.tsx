@@ -1,27 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState, type ReactNode } from "react";
-import { ShoppingCart, Euro, Package, Clock, ArrowRight, Loader2 } from "lucide-react";
-
-export const Route = createFileRoute("/admin/")({
-  component: AdminDashboardPage,
-});
-
-interface DashboardStats {
-  totalOrders: number;
-  totalRevenue: number;
-  pendingOrders: number;
-  totalProducts: number;
-  activeProducts: number;
-  totalUsers: number;
-  recentOrders: {
-    id: string;
-    orderNumber: string;
-    status: string;
-    total: number;
-    createdAt: string;
-    userName: string;
-  }[];
-}
+import { ShoppingCart, Euro, Package, Clock, ArrowRight } from "lucide-react";
+import { $getDashboardStats } from "~/lib/admin-functions";
 
 const STATUS_COLORS: Record<string, string> = {
   pending: "bg-yellow-100 text-yellow-800",
@@ -43,41 +22,16 @@ const STATUS_LABELS: Record<string, string> = {
   refunded: "Rimborsato",
 };
 
-function AdminDashboardPage(): ReactNode {
-  const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export const Route = createFileRoute("/admin/")({
+  beforeLoad: async () => {
+    const stats = await $getDashboardStats();
+    return { stats };
+  },
+  component: AdminDashboardPage,
+});
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await fetch("/api/admin/stats");
-        const json = await res.json();
-        if (!json.ok) throw new Error(json.error?.message ?? "Errore");
-        setStats(json.data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Errore di caricamento");
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-[var(--color-primary)]" />
-      </div>
-    );
-  }
-
-  if (error || !stats) {
-    return (
-      <div className="rounded-lg border border-red-200 bg-red-50 p-6 text-center">
-        <p className="text-sm text-red-700">{error ?? "Impossibile caricare le statistiche"}</p>
-      </div>
-    );
-  }
+function AdminDashboardPage() {
+  const { stats } = Route.useRouteContext();
 
   const statCards = [
     { label: "Ordini Totali", value: stats.totalOrders, icon: ShoppingCart, color: "bg-blue-500" },

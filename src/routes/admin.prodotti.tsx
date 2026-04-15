@@ -1,18 +1,20 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
-import { useEffect, useState, useCallback, type ReactNode } from "react";
+import { useState, useCallback, useEffect, type ReactNode } from "react";
 import { Plus, Search, Loader2, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { ConfirmDialog } from "~/components/admin/ConfirmDialog";
+import { $getAdminProducts } from "~/lib/admin-functions";
+import type { AdminProductListItem } from "~/lib/admin-functions";
+import type { PaginatedData } from "~/lib/types/api";
 
 export const Route = createFileRoute("/admin/prodotti")({
+  beforeLoad: async () => {
+    const data = await $getAdminProducts({ data: { page: 1, perPage: 20, query: "", status: "all", sort: "newest" } });
+    return { initialProducts: data as PaginatedData<AdminProductListItem> };
+  },
   component: AdminProductsPage,
 });
 
-/**
- * Layout wrapper: renders child route (edit page) or product list.
- * Without <Outlet />, navigating to /admin/prodotti/$id would show
- * the list instead of the edit form.
- */
 function AdminProductsPage(): ReactNode {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
@@ -21,19 +23,6 @@ function AdminProductsPage(): ReactNode {
   }
 
   return <AdminProductsList />;
-}
-
-interface ProductListItem {
-  id: string;
-  name: string;
-  slug: string;
-  price: number;
-  stock: number;
-  isActive: boolean;
-  deletedAt: string | null;
-  category: { id: string; name: string } | null;
-  image: { id: string; url: string } | null;
-  createdAt: string;
 }
 
 const STATUS_FILTERS = [
@@ -51,14 +40,16 @@ const SORT_OPTIONS = [
 ] as const;
 
 function AdminProductsList(): ReactNode {
-  const [products, setProducts] = useState<ProductListItem[]>([]);
-  const [totalPages, setTotalPages] = useState(1);
-  const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(1);
+  const { initialProducts } = Route.useRouteContext();
+
+  const [products, setProducts] = useState<AdminProductListItem[]>(initialProducts.items);
+  const [totalPages, setTotalPages] = useState(initialProducts.totalPages);
+  const [total, setTotal] = useState(initialProducts.total);
+  const [page, setPage] = useState(initialProducts.page);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("all");
   const [sort, setSort] = useState("newest");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
 
@@ -66,19 +57,11 @@ function AdminProductsList(): ReactNode {
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams({
-        page: String(page),
-        perPage: "20",
-        query,
-        status,
-        sort,
-      });
-      const res = await fetch(`/api/admin/products?${params}`);
-      const json = await res.json();
-      if (!json.ok) throw new Error(json.error?.message ?? "Errore");
-      setProducts(json.data.items);
-      setTotalPages(json.data.totalPages);
-      setTotal(json.data.total);
+      const data = await $getAdminProducts({ data: { page, perPage: 20, query, status, sort } });
+      const result = data as PaginatedData<AdminProductListItem>;
+      setProducts(result.items);
+      setTotalPages(result.totalPages);
+      setTotal(result.total);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Errore di caricamento");
     } finally {
@@ -102,7 +85,7 @@ function AdminProductsList(): ReactNode {
     }
   };
 
-  const statusBadge = (product: ProductListItem) => {
+  const statusBadge = (product: AdminProductListItem) => {
     if (product.deletedAt) {
       return <span className="inline-flex rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-800">Eliminato</span>;
     }
@@ -228,7 +211,7 @@ function AdminProductsList(): ReactNode {
             <p className="text-sm text-gray-500">{total} prodotti</p>
             <div className="flex gap-2">
               <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                onClick={() => setPage((p: number) => Math.max(1, p - 1))}
                 disabled={page <= 1}
                 className="rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
               >
@@ -236,7 +219,7 @@ function AdminProductsList(): ReactNode {
               </button>
               <span className="flex items-center px-3 text-sm text-gray-500">{page} / {totalPages}</span>
               <button
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                onClick={() => setPage((p: number) => Math.min(totalPages, p + 1))}
                 disabled={page >= totalPages}
                 className="rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
               >

@@ -1,14 +1,17 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
-import { useEffect, useState, useCallback, type ReactNode } from "react";
+import { useState, useCallback, type ReactNode } from "react";
 import { Search, Loader2, Eye } from "lucide-react";
+import { $getAdminOrders } from "~/lib/admin-functions";
+import type { AdminOrderListItem } from "~/lib/admin-functions";
 
 export const Route = createFileRoute("/admin/ordini")({
+  beforeLoad: async () => {
+    const data = await $getAdminOrders({ data: { page: 1, perPage: 20, status: "", query: "", sort: "newest" } });
+    return { initialOrders: data };
+  },
   component: AdminOrdersPage,
 });
 
-/**
- * Layout wrapper: renders child route (order detail) or order list.
- */
 function AdminOrdersPage(): ReactNode {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
@@ -17,18 +20,6 @@ function AdminOrdersPage(): ReactNode {
   }
 
   return <AdminOrdersList />;
-}
-
-interface OrderListItem {
-  id: string;
-  orderNumber: string;
-  status: string;
-  total: number;
-  shippingMethod: string;
-  trackingNumber: string | null;
-  createdAt: string;
-  user: { id: string; name: string; email: string };
-  itemCount: number;
 }
 
 const STATUS_COLORS: Record<string, string> = {
@@ -68,43 +59,37 @@ const SORT_OPTIONS = [
 ] as const;
 
 function AdminOrdersList(): ReactNode {
-  const [orders, setOrders] = useState<OrderListItem[]>([]);
-  const [totalPages, setTotalPages] = useState(1);
-  const [total, setTotal] = useState(0);
+  const { initialOrders } = Route.useRouteContext();
+
+  const [orders, setOrders] = useState<AdminOrderListItem[]>(initialOrders.items);
+  const [totalPages, setTotalPages] = useState(initialOrders.totalPages);
+  const [total, setTotal] = useState(initialOrders.total);
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("");
   const [sort, setSort] = useState("newest");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchOrders = useCallback(async () => {
+  const fetchOrders = useCallback(async (p: number, q: string, s: string, sortBy: string) => {
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams({
-        page: String(page),
-        perPage: "20",
-        sort,
-      });
-      if (query) params.set("query", query);
-      if (status) params.set("status", status);
-      const res = await fetch(`/api/admin/orders?${params}`);
-      const json = await res.json();
-      if (!json.ok) throw new Error(json.error?.message ?? "Errore");
-      setOrders(json.data.items);
-      setTotalPages(json.data.totalPages);
-      setTotal(json.data.total);
+      const data = await $getAdminOrders({ data: { page: p, perPage: 20, status: s, query: q, sort: sortBy } });
+      setOrders(data.items);
+      setTotalPages(data.totalPages);
+      setTotal(data.total);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Errore di caricamento");
     } finally {
       setLoading(false);
     }
-  }, [page, query, status, sort]);
+  }, []);
 
-  useEffect(() => {
-    fetchOrders();
-  }, [fetchOrders]);
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+    fetchOrders(newPage, query, status, sort);
+  };
 
   const inputClass = "h-9 rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]";
   const selectClass = "h-9 rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]";
@@ -208,7 +193,7 @@ function AdminOrdersList(): ReactNode {
             <p className="text-sm text-gray-500">{total} ordini</p>
             <div className="flex gap-2">
               <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                onClick={() => handlePageChange(Math.max(1, page - 1))}
                 disabled={page <= 1}
                 className="rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
               >
@@ -216,7 +201,7 @@ function AdminOrdersList(): ReactNode {
               </button>
               <span className="flex items-center px-3 text-sm text-gray-500">{page} / {totalPages}</span>
               <button
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                onClick={() => handlePageChange(Math.min(totalPages, page + 1))}
                 disabled={page >= totalPages}
                 className="rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
               >

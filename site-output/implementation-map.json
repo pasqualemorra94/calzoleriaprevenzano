@@ -1,5 +1,5 @@
 {
-  "version": 26,
+  "version": 27,
   "generatedAt": "2026-04-02T00:00:00.000Z",
   "projectSlug": "calzoleria-prevenzano",
   "framework": "tanstack",
@@ -536,6 +536,7 @@
       "src/lib/auth.server.ts",
       "src/lib/auth-functions.ts",
       "src/lib/account-functions.ts",
+      "src/lib/admin-functions.ts",
       "src/lib/product-functions.ts",
       "src/lib/sdk-auth.server.ts",
       "src/lib/products.server.ts",
@@ -684,7 +685,8 @@
       "2026-04-03: Refactoring — admin.server.ts SRP split (711→37 LOC re-export), 5 moduli estratti in src/lib/admin/ (types, dashboard, products, orders, categories)",
         "2026-04-03: Refactoring — backward-compatible re-export shims: src/components/admin/VariantBuilder.tsx → variant-builder/, src/lib/admin.server.ts → admin/index.ts",
       "2026-04-15: M1 SSR refactor — homepage, catalogo, pagina prodotto now use createServerFn ($getCategoryImages, $getCatalogProducts, $getCategories, $getProductBySlug, $getFeaturedProducts) in beforeLoad for server-side data loading; removed useEffect+fetch for initial data; categories loaded once SSR, products re-fetched client-side on filter change",
-      "2026-04-15: M4 SSR refactor — account dashboard pages (ordini, ordini/$orderId, wishlist, indirizzi, profilo) now use createServerFn ($getUserOrders, $getOrderDetail, $getWishlist, $getAddresses, $getUserProfile) in beforeLoad; removed useEffect+fetch for initial data loading; added account-functions.ts server module"
+      "2026-04-15: M4 SSR refactor — account dashboard pages (ordini, ordini/$orderId, wishlist, indirizzi, profilo) now use createServerFn ($getUserOrders, $getOrderDetail, $getWishlist, $getAddresses, $getUserProfile) in beforeLoad; removed useEffect+fetch for initial data loading; added account-functions.ts server module",
+      "2026-04-15: M5 SSR refactor — admin dashboard (stats), prodotti (list), ordini (list), media library now use createServerFn ($getDashboardStats, $getAdminProducts, $getAdminOrders, $getAdminMedia) in beforeLoad; added admin-functions.ts server module; admin edit/detail pages still use client-side fetch (complex forms)"
     ]
   },
   "regressionNotes": {

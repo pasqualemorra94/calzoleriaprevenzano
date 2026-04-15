@@ -1,17 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState, useRef, useCallback, type ReactNode } from "react";
+import { useState, useRef, useCallback, type ReactNode } from "react";
 import {
   Upload, Search, Grid3X3, List,
   Image as ImageIcon, Loader2, X, ChevronLeft, ChevronRight,
 } from "lucide-react";
 import { cn } from "~/lib/utils/cn";
 import { toast } from "sonner";
+import { $getAdminMedia } from "~/lib/admin-functions";
 import { MediaGridItem, MediaListItemRow, type MediaItem } from "~/components/admin/media-library";
 import { ConfirmDialog } from "~/components/admin/ConfirmDialog";
-
-export const Route = createFileRoute("/admin/media")({
-  component: AdminMediaPage,
-});
 
 // ─── Types ──────────────────────────────────────────────────────────
 
@@ -30,11 +27,22 @@ interface MediaListResponse {
   stats: MediaStats;
 }
 
+// ─── Route ──────────────────────────────────────────────────────────
+
+export const Route = createFileRoute("/admin/media")({
+  beforeLoad: async () => {
+    const initialData = await $getAdminMedia({ data: { page: 1, perPage: 40, query: undefined, folder: undefined, type: "image" } });
+    return { initialData };
+  },
+  component: AdminMediaPage,
+});
+
 // ─── Component ──────────────────────────────────────────────────────
 
 function AdminMediaPage(): ReactNode {
-  const [data, setData] = useState<MediaListResponse | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { initialData } = Route.useRouteContext();
+  const [data, setData] = useState<MediaListResponse>(initialData);
+  const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -51,23 +59,16 @@ function AdminMediaPage(): ReactNode {
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams({ page: String(p), perPage: "40", type: "image" });
-      if (q) params.set("query", q);
-      if (folder) params.set("folder", folder);
-      const res = await fetch(`/api/admin/media?${params}`);
-      const json = await res.json();
-      if (!json.ok) throw new Error(json.error?.message ?? "Errore di caricamento");
-      setData(json.data);
+      const result = await $getAdminMedia({
+        data: { page: p, perPage: 40, query: q || undefined, folder: folder || undefined, type: "image" },
+      });
+      setData(result);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Errore di caricamento");
     } finally {
       setLoading(false);
     }
   }, []);
-
-  useEffect(() => {
-    fetchMedia(page, searchQuery, activeFolder);
-  }, [page, searchQuery, activeFolder, fetchMedia]);
 
   // ── Upload handling ──
 
@@ -85,8 +86,8 @@ function AdminMediaPage(): ReactNode {
       const json = await res.json();
       if (!json.ok) throw new Error(json.error?.message ?? "Errore durante l'upload");
 
-      await fetchMedia(1, searchQuery, activeFolder);
       setPage(1);
+      await fetchMedia(1, searchQuery, activeFolder);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Errore durante l'upload");
     } finally {
