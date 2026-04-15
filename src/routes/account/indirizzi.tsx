@@ -1,22 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState, useCallback } from "react";
-import { Loader2, Plus, Trash2, Star, MapPin } from "lucide-react";
+import { useState, useCallback } from "react";
+import { Plus, Trash2, Star, MapPin, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { m, AnimatePresence } from "motion/react";
-
-interface Address {
-  id: string;
-  firstName: string;
-  lastName: string;
-  address1: string;
-  address2: string | null;
-  city: string;
-  province: string;
-  postalCode: string;
-  country: string;
-  phone: string | null;
-  isDefault: boolean;
-}
+import { cn } from "~/lib/utils/cn";
+import { $getAddresses } from "~/lib/account-functions";
+import type { AddressData } from "~/lib/account-functions";
 
 const emptyAddress = {
   firstName: "",
@@ -31,13 +20,20 @@ const emptyAddress = {
   isDefault: false,
 };
 
+const inputClass = "w-full rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-background)] px-4 py-2.5 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] transition-colors focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]";
+const inputErrorClass = "!border-red-300 focus:!border-red-500 focus:!ring-red-500";
+
 export const Route = createFileRoute("/account/indirizzi")({
+  beforeLoad: async () => {
+    const addresses = await $getAddresses();
+    return { addresses };
+  },
   component: AddressesPage,
 });
 
 function AddressesPage() {
-  const [addresses, setAddresses] = useState<Address[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { addresses: ssrAddresses } = Route.useRouteContext();
+  const [addresses, setAddresses] = useState<AddressData[]>(ssrAddresses);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState({ ...emptyAddress });
@@ -45,15 +41,9 @@ function AddressesPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const fetchAddresses = useCallback(async () => {
-    try {
-      const res = await fetch("/api/addresses");
-      const json = await res.json();
-      if (json.ok) setAddresses(json.data);
-    } catch { /* ignore */ }
-    setLoading(false);
+    const result = await $getAddresses();
+    setAddresses(result);
   }, []);
-
-  useEffect(() => { fetchAddresses(); }, [fetchAddresses]);
 
   const openNewForm = () => {
     setForm({ ...emptyAddress });
@@ -61,7 +51,7 @@ function AddressesPage() {
     setShowForm(true);
   };
 
-  const openEditForm = (addr: Address) => {
+  const openEditForm = (addr: AddressData) => {
     setForm({
       firstName: addr.firstName,
       lastName: addr.lastName,
@@ -146,14 +136,6 @@ function AddressesPage() {
   const updateField = (field: string, value: string | boolean) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-6 w-6 animate-spin text-[var(--color-primary)]" />
-      </div>
-    );
-  }
 
   return (
     <m.div
@@ -329,8 +311,3 @@ function AddressesPage() {
     </m.div>
   );
 }
-
-const inputClass = "w-full rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-background)] px-4 py-2.5 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] transition-colors focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]";
-const inputErrorClass = "!border-red-300 focus:!border-red-500 focus:!ring-red-500";
-
-import { cn } from "~/lib/utils/cn";

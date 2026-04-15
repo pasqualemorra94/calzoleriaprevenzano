@@ -1,41 +1,23 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState, useCallback } from "react";
+import { useState } from "react";
 import { Heart, Trash2, Loader2, ShoppingBag } from "lucide-react";
 import { toast } from "sonner";
 import { m } from "motion/react";
-
-interface WishlistItem {
-  id: string;
-  productId: string;
-  addedAt: string;
-  product: {
-    name: string;
-    slug: string;
-    price: number;
-    compareAtPrice: number | null;
-    image: { id: string; url: string; alt: string | null } | null;
-  };
-}
+import { $getWishlist } from "~/lib/account-functions";
+import type { WishlistItem } from "~/lib/account-functions";
 
 export const Route = createFileRoute("/account/wishlist")({
+  beforeLoad: async () => {
+    const items = await $getWishlist();
+    return { items };
+  },
   component: WishlistPage,
 });
 
 function WishlistPage() {
-  const [items, setItems] = useState<WishlistItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { items: ssrItems } = Route.useRouteContext();
+  const [items, setItems] = useState<WishlistItem[]>(ssrItems);
   const [removingId, setRemovingId] = useState<string | null>(null);
-
-  const fetchWishlist = useCallback(async () => {
-    try {
-      const res = await fetch("/api/wishlist");
-      const json = await res.json();
-      if (json.ok) setItems(json.data);
-    } catch { /* ignore */ }
-    setLoading(false);
-  }, []);
-
-  useEffect(() => { fetchWishlist(); }, [fetchWishlist]);
 
   const handleRemove = async (productId: string) => {
     setRemovingId(productId);
@@ -54,14 +36,6 @@ function WishlistPage() {
     } catch { /* ignore */ }
     setRemovingId(null);
   };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-6 w-6 animate-spin text-[var(--color-primary)]" />
-      </div>
-    );
-  }
 
   return (
     <m.div

@@ -1,56 +1,36 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState, useCallback } from "react";
-import { Loader2, Save, User } from "lucide-react";
+import { useState } from "react";
+import { Save, User, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { m } from "motion/react";
-
-interface UserProfile {
-  name: string;
-  email: string;
-}
-
-const updateProfileSchema = {
-  name: (v: string) => v.length >= 2 && v.length <= 100,
-  email: (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
-};
+import { $getUserProfile } from "~/lib/account-functions";
 
 export const Route = createFileRoute("/account/profilo")({
+  beforeLoad: async () => {
+    const profile = await $getUserProfile();
+    return { profile };
+  },
   component: ProfilePage,
 });
 
 function ProfilePage() {
-  const [user, setUser] = useState<UserProfile | null>(null);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(true);
+  const { profile: ssrProfile } = Route.useRouteContext();
+  const [name, setName] = useState(ssrProfile?.name ?? "");
+  const [email, setEmail] = useState(ssrProfile?.email ?? "");
   const [saving, setSaving] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const fetchUser = useCallback(async () => {
-    try {
-      const res = await fetch("/api/auth/get-session");
-      if (res.ok) {
-        const json = await res.json();
-        if (json.data?.user) {
-          const u = json.data.user;
-          setUser({ name: u.name ?? "", email: u.email });
-          setName(u.name ?? "");
-          setEmail(u.email);
-        }
-      }
-    } catch { /* ignore */ }
-    setLoading(false);
-  }, []);
+  const user = ssrProfile;
 
-  useEffect(() => { fetchUser(); }, [fetchUser]);
+  if (!user) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrors({});
 
     const newErrors: Record<string, string> = {};
-    if (!updateProfileSchema.name(name)) newErrors.name = "Il nome deve avere almeno 2 caratteri";
-    if (!updateProfileSchema.email(email)) newErrors.email = "Inserisci un indirizzo email valido";
+    if (name.length < 2 || name.length > 100) newErrors.name = "Il nome deve avere almeno 2 caratteri";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) newErrors.email = "Inserisci un indirizzo email valido";
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -74,16 +54,6 @@ function ProfilePage() {
     }
     setSaving(false);
   };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-6 w-6 animate-spin text-[var(--color-primary)]" />
-      </div>
-    );
-  }
-
-  if (!user) return null;
 
   return (
     <m.div

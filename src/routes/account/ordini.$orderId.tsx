@@ -1,41 +1,8 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { ArrowLeft, Loader2, Package, CreditCard, Truck } from "lucide-react";
+import { Package, CreditCard, Truck } from "lucide-react";
 import { m } from "motion/react";
-
-interface OrderDetailItem {
-  id: string;
-  name: string;
-  variantName: string | null;
-  price: number;
-  quantity: number;
-  product: { slug: string };
-}
-
-interface OrderPayment {
-  id: string;
-  amount: number;
-  status: string;
-  method: string | null;
-  createdAt: string;
-}
-
-interface OrderDetail {
-  id: string;
-  orderNumber: string;
-  status: string;
-  subtotal: number;
-  shippingCost: number;
-  taxAmount: number;
-  total: number;
-  discountAmount: number;
-  shippingMethod: string | null;
-  trackingNumber: string | null;
-  notes: string | null;
-  createdAt: string;
-  items: OrderDetailItem[];
-  payments: OrderPayment[];
-}
+import { cn } from "~/lib/utils/cn";
+import { $getOrderDetail } from "~/lib/account-functions";
 
 const STATUS_LABELS: Record<string, { label: string; className: string }> = {
   pending: { label: "In attesa", className: "bg-yellow-100 text-yellow-800" },
@@ -48,34 +15,16 @@ const STATUS_LABELS: Record<string, { label: string; className: string }> = {
 };
 
 export const Route = createFileRoute("/account/ordini/$orderId")({
+  beforeLoad: async ({ params }) => {
+    const order = await $getOrderDetail({ data: { orderId: params.orderId } });
+    return { order };
+  },
   component: OrderDetailPage,
 });
 
 function OrderDetailPage() {
-  const { orderId } = Route.useParams();
+  const { order } = Route.useRouteContext();
   const router = useRouter();
-  const [order, setOrder] = useState<OrderDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function load() {
-      try {
-        const res = await fetch(`/api/orders/${orderId}`);
-        const json = await res.json();
-        if (json.ok) setOrder(json.data);
-      } catch { /* ignore */ }
-      setLoading(false);
-    }
-    load();
-  }, [orderId]);
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-6 w-6 animate-spin text-[var(--color-primary)]" />
-      </div>
-    );
-  }
 
   if (!order) {
     return (
@@ -105,8 +54,7 @@ function OrderDetailPage() {
         onClick={() => router.navigate({ to: "/account/ordini" })}
         className="flex items-center gap-1.5 text-sm text-[var(--color-text-secondary)] mb-6 transition-colors hover:text-[var(--color-primary)]"
       >
-        <ArrowLeft className="h-4 w-4" />
-        Torna agli ordini
+        ← Torna agli ordini
       </button>
 
       {/* Header */}
@@ -227,5 +175,3 @@ function OrderDetailPage() {
     </m.div>
   );
 }
-
-import { cn } from "~/lib/utils/cn";

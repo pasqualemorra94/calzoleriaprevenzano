@@ -1,6 +1,6 @@
 # Calzoleria Prevenzano — Implementation Map
 
-> Generated: 2026-04-02 | Version: 25 | Framework: TanStack Router + React + Vite
+> Generated: 2026-04-02 | Version: 26 | Framework: TanStack Router + React + Vite
 
 ## Architecture Overview
 

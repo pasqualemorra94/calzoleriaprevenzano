@@ -1,31 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { ChevronRight, ChevronLeft, Loader2, Package } from "lucide-react";
 import { m } from "motion/react";
-
-interface OrderItem {
-  id: string;
-  name: string;
-  price: number;
-  quantity: number;
-  product: { slug: string };
-}
-
-interface Order {
-  id: string;
-  orderNumber: string;
-  status: string;
-  total: number;
-  createdAt: string;
-  items: OrderItem[];
-}
-
-interface OrdersResponse {
-  items: Order[];
-  total: number;
-  page: number;
-  totalPages: number;
-}
+import { cn } from "~/lib/utils/cn";
+import { $getUserOrders } from "~/lib/account-functions";
+import type { OrderListItem } from "~/lib/account-functions";
+import type { PaginatedData } from "~/lib/types/api";
 
 const STATUS_LABELS: Record<string, { label: string; className: string }> = {
   pending: { label: "In attesa", className: "bg-yellow-100 text-yellow-800" },
@@ -38,33 +18,29 @@ const STATUS_LABELS: Record<string, { label: string; className: string }> = {
 };
 
 export const Route = createFileRoute("/account/ordini/")({
+  beforeLoad: async () => {
+    const ordersData = await $getUserOrders({ data: { page: 1, perPage: 10 } });
+    return { ordersData };
+  },
   component: OrdersPage,
 });
 
 function OrdersPage() {
-  const [data, setData] = useState<OrdersResponse | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { ordersData: ssrData } = Route.useRouteContext();
+  const [data, setData] = useState<PaginatedData<OrderListItem> | null>(ssrData);
   const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
 
   const fetchOrders = useCallback(async (p: number) => {
     setLoading(true);
     try {
-      const res = await fetch(`/api/orders?page=${p}&perPage=10`);
-      const json = await res.json();
-      if (json.ok) setData(json.data);
-    } catch { /* ignore */ }
+      const result = await $getUserOrders({ data: { page: p, perPage: 10 } });
+      if (result) setData(result);
+    } catch { /* ignore — SSR data still shown */ }
     setLoading(false);
   }, []);
 
-  useEffect(() => { fetchOrders(page); }, [page, fetchOrders]);
-
-  if (loading && !data) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="h-6 w-6 animate-spin text-[var(--color-primary)]" />
-      </div>
-    );
-  }
+  const goToPage = (p: number) => { setPage(p); fetchOrders(p); };
 
   if (!data) return null;
 
@@ -115,8 +91,6 @@ function OrdersPage() {
                     </div>
                     <p className="text-xs text-[var(--color-text-muted)]">
                       {new Date(order.createdAt).toLocaleDateString("it-IT", { day: "numeric", month: "long", year: "numeric" })}
-                      {" · "}
-                      {order.items.length} {order.items.length === 1 ? "articolo" : "articoli"}
                     </p>
                   </div>
 
@@ -135,19 +109,19 @@ function OrdersPage() {
           {data.totalPages > 1 && (
             <div className="flex items-center justify-center gap-2 mt-8">
               <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page <= 1}
+                onClick={() => goToPage(Math.max(1, page - 1))}
+                disabled={page <= 1 || loading}
                 className="flex h-9 items-center gap-1 rounded-[var(--radius-md)] border border-[var(--color-border)] px-3 text-sm text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-muted)] disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                <ChevronLeft className="h-4 w-4" />
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ChevronLeft className="h-4 w-4" />}
                 Prec.
               </button>
               <span className="px-3 text-sm text-[var(--color-text-secondary)]">
                 Pagina {page} di {data.totalPages}
               </span>
               <button
-                onClick={() => setPage((p) => Math.min(data.totalPages, p + 1))}
-                disabled={page >= data.totalPages}
+                onClick={() => goToPage(Math.min(data.totalPages, page + 1))}
+                disabled={page >= data.totalPages || loading}
                 className="flex h-9 items-center gap-1 rounded-[var(--radius-md)] border border-[var(--color-border)] px-3 text-sm text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-muted)] disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 Succ.
@@ -160,5 +134,3 @@ function OrdersPage() {
     </m.div>
   );
 }
-
-import { cn } from "~/lib/utils/cn";
