@@ -7,7 +7,9 @@ import { m } from "motion/react";
 import { X, SlidersHorizontal, Filter, ChevronLeft, ChevronRight } from "lucide-react";
 import { CatalogSidebar } from "~/components/catalog/CatalogSidebar";
 import { CatalogProductCard } from "~/components/catalog/CatalogProductCard";
-import type { CategoryWithChildren, ProductListItem } from "~/components/catalog";
+import type { ProductListItem } from "~/components/catalog";
+import { $getCatalogProducts, $getCategories } from "~/lib/product-functions";
+import type { PaginatedData } from "~/lib/types/api";
 
 type SortOption = "newest" | "price_asc" | "price_desc" | "name";
 
@@ -18,65 +20,76 @@ const SORT_OPTIONS: { value: SortOption; label: string }[] = [
   { value: "name", label: "Nome A-Z" },
 ];
 
-const PER_PAGE = 12;
-
-function buildUrl(params: { page: number; category?: string; query?: string; sort: SortOption }): string {
-  const sp = new URLSearchParams();
-  sp.set("page", String(params.page));
-  sp.set("perPage", String(PER_PAGE));
-  sp.set("sort", params.sort);
-  if (params.category) sp.set("category", params.category);
-  if (params.query) sp.set("query", params.query);
-  return `/api/products?${sp.toString()}`;
-}
+// ─── Route ──────────────────────────────────────────────────────────
 
 export const Route = createFileRoute("/catalogo")({
-  component: CatalogoPage,
-  validateSearch: (search: Record<string, string>): { category?: string; query?: string; page?: string; sort?: string } => ({
-    category: search.category, query: search.query, page: search.page, sort: search.sort,
+  validateSearch: (search: Record<string, string>): {
+    category?: string;
+    query?: string;
+    page?: string;
+    sort?: string;
+  } => ({
+    category: search.category,
+    query: search.query,
+    page: search.page,
+    sort: search.sort,
   }),
+  beforeLoad: async ({ search }: { search: Record<string, string> }) => {
+    const [categories, productsData] = await Promise.all([
+      $getCategories(),
+      $getCatalogProducts({
+        page: search.page ? Number(search.page) : 1,
+        category: search.category,
+        query: search.query,
+        sort: search.sort,
+      }),
+    ]);
+    return { categories, productsData };
+  },
+  component: CatalogoPage,
 });
 
+// ─── Component ─────────────────────────────────────────────────────
+
 function CatalogoPage(): ReactNode {
+  const { categories, productsData: ssrData } = Route.useRouteContext();
   const routeSearch = useSearch({ from: "/catalogo" });
-  const [products, setProducts] = useState<ProductListItem[]>([]);
-  const [categories, setCategories] = useState<CategoryWithChildren[]>([]);
-  const [total, setTotal] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
-  const [page, setPage] = useState(1);
-  const [query, setQuery] = useState("");
-  const [searchInput, setSearchInput] = useState("");
+
+  // Server-loaded categories (never change client-side)
+  const [categoriesState] = useState(categories);
+
+  // Products — start from SSR data, update client-side on filter change
+  const [products, setProducts] = useState<ProductListItem[]>(ssrData.items);
+  const [total, setTotal] = useState(ssrData.total);
+  const [totalPages, setTotalPages] = useState(ssrData.totalPages);
+  const [page, setPage] = useState(ssrData.page);
+  const [query, setQuery] = useState(routeSearch.query ?? "");
+  const [searchInput, setSearchInput] = useState(routeSearch.query ?? "");
   const [activeCategory, setActiveCategory] = useState<string | undefined>(routeSearch.category);
-  const [sort, setSort] = useState<SortOption>("newest");
-  const [loading, setLoading] = useState(true);
+  const [sort, setSort] = useState<SortOption>((routeSearch.sort as SortOption) ?? "newest");
+  const [loading, setLoading] = useState(false);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
-  const fetchCategories = useCallback(async () => {
-    try {
-      const res = await fetch("/api/categories");
-      const json = await res.json();
-      if (json.ok) setCategories(json.data);
-    } catch { /* ignore */ }
-  }, []);
-
+  // Fetch products client-side when filters change (after initial SSR)
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const url = buildUrl({ page, category: activeCategory, query, sort });
-      const res = await fetch(url);
-      const json = await res.json();
-      if (json.ok) {
-        const data = json.data as { items: ProductListItem[]; total: number; page: number; totalPages: number };
-        setProducts(data.items);
-        setTotal(data.total);
-        setTotalPages(data.totalPages);
-      }
-    } catch { /* ignore */ }
+      const data = await $getCatalogProducts({
+        page,
+        category: activeCategory,
+        query,
+        sort,
+      });
+      const result = data as PaginatedData<ProductListItem>;
+      setProducts(result.items);
+      setTotal(result.total);
+      setTotalPages(result.totalPages);
+    } catch { /* ignore — SSR data still shown */ }
     setLoading(false);
   }, [page, activeCategory, query, sort]);
 
+  // Sync URL search params with state
   useEffect(() => { if (routeSearch.category !== activeCategory) { setActiveCategory(routeSearch.category); setPage(1); } }, [routeSearch.category]);
-  useEffect(() => { fetchCategories(); }, [fetchCategories]);
   useEffect(() => { fetchProducts(); }, [fetchProducts]);
   useEffect(() => { setMobileFiltersOpen(false); }, [activeCategory, query]);
 
@@ -86,14 +99,21 @@ function CatalogoPage(): ReactNode {
   const handleSortChange = (value: SortOption) => { setSort(value); setPage(1); };
 
   const sidebarProps = {
-    categories, activeCategory, searchInput,
-    onCategoryChange: handleCategoryChange, onSearch: handleSearch,
-    onClearSearch: handleClearSearch, onSearchInputChange: setSearchInput,
+    categories: categoriesState,
+    activeCategory,
+    searchInput,
+    onCategoryChange: handleCategoryChange,
+    onSearch: handleSearch,
+    onClearSearch: handleClearSearch,
+    onSearchInputChange: setSearchInput,
   };
 
   const resolveCategoryName = (slug: string | undefined): string | null => {
     if (!slug) return null;
-    const allCats = categories.flatMap((c) => [{ slug: c.slug, name: c.name }, ...c.children.map((ch) => ({ slug: ch.slug, name: ch.name }))]);
+    const allCats = categoriesState.flatMap((c) => [
+      { slug: c.slug, name: c.name },
+      ...c.children.map((ch) => ({ slug: ch.slug, name: ch.name })),
+    ]);
     return allCats.find((c) => c.slug === slug)?.name ?? null;
   };
 
@@ -126,24 +146,40 @@ function CatalogoPage(): ReactNode {
             </aside>
 
             {/* Mobile Filters Toggle */}
-            <button type="button" onClick={() => setMobileFiltersOpen((prev) => !prev)}
+            <button
+              type="button"
+              onClick={() => setMobileFiltersOpen((prev) => !prev)}
               className="fixed bottom-24 left-1/2 z-30 -translate-x-1/2 lg:hidden"
-              aria-expanded={mobileFiltersOpen} aria-controls="mobile-filters-panel"
-              aria-label={mobileFiltersOpen ? "Chiudi filtri" : "Apri filtri"}>
+              aria-expanded={mobileFiltersOpen}
+              aria-controls="mobile-filters-panel"
+              aria-label={mobileFiltersOpen ? "Chiudi filtri" : "Apri filtri"}
+            >
               <span className="flex items-center gap-2 rounded-full bg-[var(--color-primary)] px-5 py-3 text-sm font-medium text-white shadow-lg transition-shadow hover:shadow-xl">
                 <Filter className="h-4 w-4" /> Filtri
               </span>
             </button>
 
             {/* Mobile Filters Overlay */}
-            {mobileFiltersOpen && <div className="fixed inset-0 z-40 bg-black/40 lg:hidden" onClick={() => setMobileFiltersOpen(false)} aria-hidden="true" />}
-            <div id="mobile-filters-panel"
-              className={`fixed inset-y-0 left-0 z-50 w-80 overflow-y-auto bg-[var(--color-surface)] p-6 shadow-xl transition-transform duration-300 lg:hidden ${mobileFiltersOpen ? "translate-x-0" : "-translate-x-full"}`}
-              role="dialog" aria-modal="true" aria-label="Filtri catalogo">
+            {mobileFiltersOpen && (
+              <div className="fixed inset-0 z-40 bg-black/40 lg:hidden" onClick={() => setMobileFiltersOpen(false)} aria-hidden="true" />
+            )}
+            <div
+              id="mobile-filters-panel"
+              className={`fixed inset-y-0 left-0 z-50 w-80 overflow-y-auto bg-[var(--color-surface)] p-6 shadow-xl transition-transform duration-300 lg:hidden ${
+                mobileFiltersOpen ? "translate-x-0" : "-translate-x-full"
+              }`}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Filtri catalogo"
+            >
               <div className="mb-6 flex items-center justify-between">
                 <h2 className="font-display text-lg font-semibold">Filtri</h2>
-                <button type="button" onClick={() => setMobileFiltersOpen(false)} aria-label="Chiudi filtri"
-                  className="rounded-[var(--radius-md)] p-2 text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-text)]">
+                <button
+                  type="button"
+                  onClick={() => setMobileFiltersOpen(false)}
+                  aria-label="Chiudi filtri"
+                  className="rounded-[var(--radius-md)] p-2 text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-text)]"
+                >
                   <X className="h-5 w-5" />
                 </button>
               </div>
@@ -155,14 +191,24 @@ function CatalogoPage(): ReactNode {
               {/* Sort + Results count */}
               <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-sm text-[var(--color-text-muted)]">
-                  {total} {total === 1 ? "prodotto" : "prodotti"}{query && ` per "${query}"`}
-                  {activeCategory && (() => { const n = resolveCategoryName(activeCategory); return n ? ` in "${n}"` : ""; })()}
+                  {total} {total === 1 ? "prodotto" : "prodotti"}
+                  {query && ` per "${query}"`}
+                  {activeCategory && (() => {
+                    const n = resolveCategoryName(activeCategory);
+                    return n ? ` in "${n}"` : "";
+                  })()}
                 </p>
                 <div className="flex items-center gap-3">
                   <SlidersHorizontal className="h-4 w-4 text-[var(--color-text-muted)] lg:hidden" />
-                  <select value={sort} onChange={(e) => handleSortChange(e.target.value as SortOption)} aria-label="Ordina per"
-                    className="h-10 rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text)] transition-colors focus:border-[var(--color-primary)] focus:outline-none">
-                    {SORT_OPTIONS.map((opt) => <option key={opt.value} value={opt.value}>{opt.label}</option>)}
+                  <select
+                    value={sort}
+                    onChange={(e) => handleSortChange(e.target.value as SortOption)}
+                    aria-label="Ordina per"
+                    className="h-10 rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] px-3 text-sm text-[var(--color-text)] transition-colors focus:border-[var(--color-primary)] focus:outline-none"
+                  >
+                    {SORT_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>{opt.label}</option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -176,8 +222,14 @@ function CatalogoPage(): ReactNode {
                   {query && (
                     <span className="inline-flex items-center gap-1 rounded-full bg-[var(--color-primary)]/10 px-3 py-1 text-xs font-medium text-[var(--color-primary)]">
                       &ldquo;{query}&rdquo;
-                      <button type="button" onClick={handleClearSearch} aria-label={`Rimuovi filtro ricerca "${query}"`}
-                        className="ml-0.5 rounded-full p-0.5 transition-colors hover:bg-[var(--color-primary)]/20"><X className="h-3 w-3" /></button>
+                      <button
+                        type="button"
+                        onClick={handleClearSearch}
+                        aria-label={`Rimuovi filtro ricerca "${query}"`}
+                        className="ml-0.5 rounded-full p-0.5 transition-colors hover:bg-[var(--color-primary)]/20"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
                     </span>
                   )}
                   {activeCategory && (() => {
@@ -186,13 +238,24 @@ function CatalogoPage(): ReactNode {
                     return (
                       <span className="inline-flex items-center gap-1 rounded-full bg-[var(--color-primary)]/10 px-3 py-1 text-xs font-medium text-[var(--color-primary)]">
                         {name}
-                        <button type="button" onClick={() => handleCategoryChange(undefined)} aria-label={`Rimuovi filtro categoria ${name}`}
-                          className="ml-0.5 rounded-full p-0.5 transition-colors hover:bg-[var(--color-primary)]/20"><X className="h-3 w-3" /></button>
+                        <button
+                          type="button"
+                          onClick={() => handleCategoryChange(undefined)}
+                          aria-label={`Rimuovi filtro categoria ${name}`}
+                          className="ml-0.5 rounded-full p-0.5 transition-colors hover:bg-[var(--color-primary)]/20"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
                       </span>
                     );
                   })()}
-                  <button type="button" onClick={() => { handleClearSearch(); handleCategoryChange(undefined); }}
-                    className="text-xs font-medium text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-primary)]">Resetta tutto</button>
+                  <button
+                    type="button"
+                    onClick={() => { handleClearSearch(); handleCategoryChange(undefined); }}
+                    className="text-xs font-medium text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-primary)]"
+                  >
+                    Resetta tutto
+                  </button>
                 </div>
               )}
 
@@ -213,32 +276,60 @@ function CatalogoPage(): ReactNode {
               ) : products.length > 0 ? (
                 <StaggeredGrid className="grid grid-cols-2 gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3 lg:gap-8">
                   {products.map((product) => (
-                    <StaggeredItem key={product.id}><CatalogProductCard product={product} /></StaggeredItem>
+                    <StaggeredItem key={product.id}>
+                      <CatalogProductCard product={product} />
+                    </StaggeredItem>
                   ))}
                 </StaggeredGrid>
               ) : (
                 <div className="py-20 text-center">
                   <p className="text-[var(--color-text-muted)]">Nessun prodotto trovato con questi criteri.</p>
-                  <button type="button" onClick={() => { handleClearSearch(); handleCategoryChange(undefined); }}
-                    className="mt-4 text-sm font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]">Resetta filtri</button>
+                  <button
+                    type="button"
+                    onClick={() => { handleClearSearch(); handleCategoryChange(undefined); }}
+                    className="mt-4 text-sm font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]"
+                  >
+                    Resetta filtri
+                  </button>
                 </div>
               )}
 
               {/* Pagination */}
               {!loading && totalPages > 1 && (
                 <nav className="mt-12 flex items-center justify-center gap-1" aria-label="Paginazione">
-                  <button type="button" disabled={page <= 1} onClick={() => setPage((p) => p - 1)}
+                  <button
+                    type="button"
+                    disabled={page <= 1}
+                    onClick={() => setPage((p) => p - 1)}
                     className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-md)] border border-[var(--color-border)] text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface)] disabled:cursor-not-allowed disabled:opacity-40"
-                    aria-label="Pagina precedente"><ChevronLeft className="h-4 w-4" /></button>
+                    aria-label="Pagina precedente"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                    <button key={p} type="button" onClick={() => setPage(p)}
+                    <button
+                      key={p}
+                      type="button"
+                      onClick={() => setPage(p)}
                       className={`flex h-10 w-10 items-center justify-center rounded-[var(--radius-md)] text-sm font-medium transition-colors ${
-                        p === page ? "bg-[var(--color-primary)] text-white" : "border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface)]"
-                      }`} aria-current={p === page ? "page" : undefined}>{p}</button>
+                        p === page
+                          ? "bg-[var(--color-primary)] text-white"
+                          : "border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface)]"
+                      }`}
+                      aria-current={p === page ? "page" : undefined}
+                    >
+                      {p}
+                    </button>
                   ))}
-                  <button type="button" disabled={page >= totalPages} onClick={() => setPage((p) => p + 1)}
+                  <button
+                    type="button"
+                    disabled={page >= totalPages}
+                    onClick={() => setPage((p) => p + 1)}
                     className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-md)] border border-[var(--color-border)] text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface)] disabled:cursor-not-allowed disabled:opacity-40"
-                    aria-label="Pagina successiva"><ChevronRight className="h-4 w-4" /></button>
+                    aria-label="Pagina successiva"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
                 </nav>
               )}
             </div>

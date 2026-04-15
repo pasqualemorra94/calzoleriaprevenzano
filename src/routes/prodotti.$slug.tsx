@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { m } from "motion/react";
 import { ChevronRight } from "lucide-react";
 import { VariantConfigSchema } from "~/lib/types/variant-config";
@@ -9,24 +9,8 @@ import { VariantSelector } from "~/components/product/VariantSelector";
 import type { ProductVariant, OptionGroup } from "~/components/product/VariantSelector";
 import { RelatedProducts } from "~/components/product/RelatedProducts";
 import type { ProductListItem } from "~/components/product/RelatedProducts";
-
-// ── Local types ──
-
-interface ProductDetail {
-  id: string;
-  name: string;
-  slug: string;
-  description: string;
-  shortDescription: string | null;
-  price: number;
-  compareAtPrice: number | null;
-  stock: number;
-  materials: string | null;
-  variantConfig: Record<string, unknown> | null;
-  category: { id: string; name: string; slug: string } | null;
-  images: Array<{ id: string; url: string; alt: string | null; width: number | null; height: number | null }>;
-  variants: ProductVariant[];
-}
+import { $getProductBySlug, $getFeaturedProducts } from "~/lib/product-functions";
+import type { ProductDetail } from "~/lib/product-functions";
 
 // ── Helpers ──
 
@@ -53,57 +37,63 @@ function parseOptionGroups(variants: ProductVariant[]): OptionGroup[] {
 // ── Route ──
 
 export const Route = createFileRoute("/prodotti/$slug")({
+  beforeLoad: async ({ params }) => {
+    const [product, relatedProducts] = await Promise.all([
+      $getProductBySlug(params.slug),
+      $getFeaturedProducts(4),
+    ]);
+    return { product, relatedProducts };
+  },
   component: ProdottoPage,
 });
 
+// ── Component ──
+
 function ProdottoPage(): ReactNode {
-  const { slug } = Route.useParams();
-  const [product, setProduct] = useState<ProductDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [notFound, setNotFound] = useState(false);
+  const { product: ssrProduct, relatedProducts: ssrRelated } = Route.useRouteContext();
+
+  // If SSR returned null, product not found
+  if (!ssrProduct) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center px-[var(--page-padding-x)]">
+        <p className="mb-4 text-4xl font-display font-bold text-[var(--color-primary)]">!</p>
+        <h1 className="mb-4 text-center text-xl font-display font-semibold text-[var(--color-text)]">Prodotto non trovato</h1>
+        <p className="mb-8 max-w-md text-center leading-relaxed text-[var(--color-text-secondary)]">
+          Il prodotto che stai cercando non esiste o è stato rimosso.
+        </p>
+        <Link
+          to="/catalogo"
+          className="inline-flex h-12 items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-primary)] px-6 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-dark)]"
+        >
+          Vai al catalogo
+        </Link>
+      </div>
+    );
+  }
+
+  // Client-side interactive state only
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [selectedOptions, setSelectedOptions] = useState<Map<string, string>>(new Map());
+  const [selectedOptions, setSelectedOptions] = useState<Map<string, string>>(() => {
+    const initial = new Map<string, string>();
+    const config = VariantConfigSchema.safeParse(ssrProduct.variantConfig);
+    if (config.success && config.data.groups.length > 0) {
+      for (const g of config.data.groups) {
+        if (g.required && g.options.length > 0) initial.set(g.id, g.options[0].value);
+      }
+    } else if (ssrProduct.variants.length > 0) {
+      const groups = parseOptionGroups(ssrProduct.variants);
+      for (const g of groups) { if (g.options.length > 0) initial.set(g.type, g.options[0].id); }
+    }
+    return initial;
+  });
   const [quantity, setQuantity] = useState(1);
   const [cartStatus, setCartStatus] = useState<"idle" | "loading" | "success">("idle");
   const [customerNote, setCustomerNote] = useState("");
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
-  const [relatedProducts, setRelatedProducts] = useState<ProductListItem[]>([]);
 
-  const fetchProduct = useCallback(async () => {
-    setLoading(true);
-    setNotFound(false);
-    try {
-      const res = await fetch(`/api/products/${slug}`);
-      const json = await res.json();
-      if (json.ok) {
-        setProduct(json.data);
-        const initial = new Map<string, string>();
-        const config = VariantConfigSchema.safeParse(json.data.variantConfig);
-        if (config.success && config.data.groups.length > 0) {
-          for (const g of config.data.groups) {
-            if (g.required && g.options.length > 0) initial.set(g.id, g.options[0].value);
-          }
-        } else if (json.data.variants.length > 0) {
-          const groups = parseOptionGroups(json.data.variants);
-          for (const g of groups) { if (g.options.length > 0) initial.set(g.type, g.options[0].id); }
-        }
-        setSelectedOptions(initial);
-      } else { setNotFound(true); }
-    } catch { setNotFound(true); }
-    setLoading(false);
-  }, [slug]);
-
-  useEffect(() => { fetchProduct(); }, [fetchProduct]);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await fetch("/api/products?featured=true&perPage=4");
-        const json = await res.json();
-        if (json.ok) setRelatedProducts(json.data.items);
-      } catch { /* ignore */ }
-    })();
-  }, []);
+  // Use SSR data directly (no useState for server-loaded data)
+  const product = ssrProduct satisfies ProductDetail;
+  const relatedProducts = ssrRelated satisfies ProductListItem[];
 
   // Variant logic
   const parsedConfig = useMemo(() => {
@@ -196,37 +186,6 @@ function ProdottoPage(): ReactNode {
       else { setCartStatus("idle"); }
     } catch { setCartStatus("idle"); }
   };
-
-  // ── Loading state ──
-
-  if (loading) {
-    return (
-      <div className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)] py-[var(--section-padding-y)]">
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
-          <div className="animate-pulse"><div className="aspect-square rounded-[var(--radius-lg)] bg-[var(--color-muted)]" /></div>
-          <div className="animate-pulse space-y-4">
-            <div className="h-4 w-32 rounded bg-[var(--color-muted)]" />
-            <div className="h-8 w-3/4 rounded bg-[var(--color-muted)]" />
-            <div className="h-6 w-24 rounded bg-[var(--color-muted)]" />
-            <div className="h-20 w-full rounded bg-[var(--color-muted)]" />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (notFound || !product) {
-    return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center px-[var(--page-padding-x)]">
-        <p className="mb-4 text-4xl font-display font-bold text-[var(--color-primary)]">!</p>
-        <h1 className="mb-4 text-center text-xl font-display font-semibold text-[var(--color-text)]">Prodotto non trovato</h1>
-        <p className="mb-8 max-w-md text-center leading-relaxed text-[var(--color-text-secondary)]">Il prodotto che stai cercando non esiste o è stato rimosso.</p>
-        <Link to="/catalogo" className="inline-flex h-12 items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-primary)] px-6 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-dark)]">Vai al catalogo</Link>
-      </div>
-    );
-  }
-
-  // ── Render ──
 
   return (
     <>

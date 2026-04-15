@@ -1,5 +1,5 @@
 {
-  "version": 21,
+  "version": 25,
   "generatedAt": "2026-04-02T00:00:00.000Z",
   "projectSlug": "calzoleria-prevenzano",
   "framework": "tanstack",
@@ -534,6 +534,8 @@
       "src/lib/db.server.ts",
       "src/lib/auth.ts",
       "src/lib/auth.server.ts",
+      "src/lib/auth-functions.ts",
+      "src/lib/product-functions.ts",
       "src/lib/sdk-auth.server.ts",
       "src/lib/products.server.ts",
       "src/lib/cart.server.ts",
@@ -679,7 +681,9 @@
       "2026-04-03: Refactoring — catalogo.tsx decomposed (680→250 LOC), CatalogSidebar+CatalogProductCard estratti in src/components/catalog/",
       "2026-04-03: Refactoring — checkout.tsx+carrello.tsx decomposed, OrderSummary estratto in src/components/checkout/",
       "2026-04-03: Refactoring — admin.server.ts SRP split (711→37 LOC re-export), 5 moduli estratti in src/lib/admin/ (types, dashboard, products, orders, categories)",
-      "2026-04-03: Refactoring — backward-compatible re-export shims: src/components/admin/VariantBuilder.tsx → variant-builder/, src/lib/admin.server.ts → admin/index.ts"
+        "2026-04-03: Refactoring — backward-compatible re-export shims: src/components/admin/VariantBuilder.tsx → variant-builder/, src/lib/admin.server.ts → admin/index.ts",
+      "2026-04-15: M1 SSR refactor — homepage, catalogo, pagina prodotto now use createServerFn ($getCategoryImages, $getCatalogProducts, $getCategories, $getProductBySlug, $getFeaturedProducts) in beforeLoad for server-side data loading; removed useEffect+fetch for initial data; categories loaded once SSR, products re-fetched client-side on filter change",
+      "2026-04-15: M2 SSR refactor — /sandali route refactored with createServerFn ($getCategories, $getCatalogProducts) in beforeLoad; added validateSearch for typed URL params (category, query, page); MegaMenu links to /sandali updated with explicit search params; removed unused resolveCategoryName helper"
     ]
   },
   "regressionNotes": {

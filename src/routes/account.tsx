@@ -1,9 +1,21 @@
-import { createFileRoute, Link, Outlet, useMatchRoute } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useMatchRoute, redirect } from "@tanstack/react-router";
 import { useState, useEffect, type ReactNode } from "react";
 import { Menu, X, LayoutDashboard, ShoppingCart, Heart, MapPin, User, KeyRound, LogOut, ExternalLink } from "lucide-react";
 import { cn } from "~/lib/utils/cn";
+import { $signOut } from "~/lib/auth-functions";
+
+// ── Server-side auth guard ──
+async function userGuard() {
+  const { $getUser } = await import("~/lib/auth-functions");
+  const user = await $getUser();
+  if (!user) {
+    throw redirect({ to: "/auth/login" });
+  }
+  return user;
+}
 
 export const Route = createFileRoute("/account")({
+  beforeLoad: userGuard,
   component: AccountLayout,
 });
 
@@ -19,19 +31,6 @@ const NAV_ITEMS = [
 function AccountLayout(): ReactNode {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const matchRoute = useMatchRoute();
-
-  // Auth guard: redirect to login if not authenticated
-  useEffect(() => {
-    const originalFetch = window.fetch;
-    window.fetch = async (input, init) => {
-      const res = await originalFetch(input, init);
-      if (res.status === 401) {
-        window.location.href = "/auth/login";
-      }
-      return res;
-    };
-    return () => { window.fetch = originalFetch; };
-  }, []);
 
   // Close sidebar on resize to desktop
   useEffect(() => {
@@ -60,7 +59,7 @@ function AccountLayout(): ReactNode {
   };
 
   const handleLogout = async () => {
-    await fetch("/api/auth/signout", { method: "POST" });
+    await $signOut();
     window.location.href = "/";
   };
 
@@ -92,8 +91,10 @@ function AccountLayout(): ReactNode {
         {/* Sidebar */}
         <aside
           className={cn(
-            "fixed inset-y-0 left-0 z-50 flex w-72 flex-col bg-[var(--color-surface)] shadow-xl transition-transform duration-200 ease-out lg:static lg:translate-x-0 lg:w-56 lg:shrink-0 lg:shadow-none lg:border-r lg:border-[var(--color-border-light)]",
-            sidebarOpen ? "translate-x-0" : "-translate-x-full",
+            "flex-col lg:static lg:flex lg:w-56 lg:shrink-0 lg:shadow-none lg:border-r lg:border-[var(--color-border-light)]",
+            sidebarOpen
+              ? "fixed inset-y-0 left-0 z-50 flex w-72 bg-[var(--color-surface)] shadow-xl"
+              : "hidden",
           )}
           aria-label="Menu account"
         >

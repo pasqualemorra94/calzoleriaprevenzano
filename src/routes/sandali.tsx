@@ -1,21 +1,13 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { useState, useEffect, useCallback } from "react";
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
 import { StaggeredGrid, StaggeredItem } from "~/components/ui/StaggeredGrid";
 import { m } from "motion/react";
 import { Search, X, ChevronLeft, ChevronRight, ShoppingBag, SlidersHorizontal } from "lucide-react";
-
-interface ProductListItem {
-  id: string;
-  name: string;
-  slug: string;
-  shortDescription: string | null;
-  price: number;
-  compareAtPrice: number | null;
-  image: { id: string; url: string; alt: string | null } | null;
-  category: { id: string; name: string; slug: string } | null;
-}
+import { $getCatalogProducts, $getCategories } from "~/lib/product-functions";
+import type { ProductListItem, CategoryItem } from "~/lib/product-functions";
+import type { PaginatedData } from "~/lib/types/api";
 
 interface SubCategory {
   id: string;
@@ -24,84 +16,77 @@ interface SubCategory {
   productCount: number;
 }
 
-const PER_PAGE = 12;
+// ─── Route ──────────────────────────────────────────────────────────
 
 export const Route = createFileRoute("/sandali")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    category: typeof search.category === "string" ? search.category : undefined,
+    query: typeof search.query === "string" ? search.query : undefined,
+    page: typeof search.page === "string" ? search.page : undefined,
+  }),
+  beforeLoad: async ({ search }) => {
+    const [categories, productsData] = await Promise.all([
+      $getCategories(),
+      $getCatalogProducts({
+        page: search.page ? Number(search.page) : 1,
+        category: search.category ?? "sandali",
+        query: search.query,
+      }),
+    ]);
+
+    // Extract sandali subcategories from the full category tree
+    const sandaliCat = (categories as CategoryItem[]).find((c) => c.slug === "sandali");
+    const subCategories: SubCategory[] = sandaliCat
+      ? sandaliCat.children.map((ch) => ({
+          id: ch.id,
+          name: ch.name,
+          slug: ch.slug,
+          productCount: ch.productCount,
+        }))
+      : [];
+
+    return { categories, productsData, subCategories };
+  },
   component: SandaliPage,
 });
 
+// ─── Component ────────────────────────────────────────────────────────
+
 function SandaliPage(): ReactNode {
-  const [products, setProducts] = useState<ProductListItem[]>([]);
-  const [subCategories, setSubCategories] = useState<SubCategory[]>([]);
-  const [total, setTotal] = useState(0);
-  const [totalPages, setTotalPages] = useState(1);
-  const [page, setPage] = useState(1);
-  const [searchInput, setSearchInput] = useState("");
-  const [query, setQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState<string | undefined>(undefined);
-  const [loading, setLoading] = useState(true);
+  const { productsData: ssrData, subCategories: ssrSubs } = Route.useRouteContext();
+  const routeSearch = useSearch({ from: "/sandali" });
+
+  // Products — SSR initial, then client-side RPC on filter change
+  const [products, setProducts] = useState<ProductListItem[]>(ssrData.items);
+  const [total, setTotal] = useState(ssrData.total);
+  const [totalPages, setTotalPages] = useState(ssrData.totalPages);
+  const [page, setPage] = useState(ssrData.page);
+  const [searchInput, setSearchInput] = useState(routeSearch.query ?? "");
+  const [query, setQuery] = useState(routeSearch.query ?? "");
+  const [activeCategory, setActiveCategory] = useState<string | undefined>(routeSearch.category ?? "sandali");
+  const [loading, setLoading] = useState(false);
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     try {
-      const sp = new URLSearchParams();
-      sp.set("page", String(page));
-      sp.set("perPage", String(PER_PAGE));
-      sp.set("sort", "newest");
-      // Always filter by sandali parent category
-      sp.set("category", activeCategory ?? "sandali");
-      if (query) sp.set("query", query);
-
-      const res = await fetch(`/api/products?${sp.toString()}`);
-      const json = await res.json();
-      if (json.ok) {
-        const data = json.data as { items: ProductListItem[]; total: number; totalPages: number };
-        setProducts(data.items);
-        setTotal(data.total);
-        setTotalPages(data.totalPages);
-      }
-    } catch { /* ignore */ }
+      const data = await $getCatalogProducts({
+        page,
+        category: activeCategory ?? "sandali",
+        query,
+        sort: "newest",
+      });
+      const result = data as PaginatedData<ProductListItem>;
+      setProducts(result.items);
+      setTotal(result.total);
+      setTotalPages(result.totalPages);
+    } catch { /* ignore — SSR data still shown */ }
     setLoading(false);
   }, [page, activeCategory, query]);
 
-  // Fetch subcategories for sandali
-  useEffect(() => {
-    async function loadSubs() {
-      try {
-        const res = await fetch("/api/categories");
-        const json = await res.json();
-        if (json.ok) {
-          const sandali = (json.data as Array<{ slug: string; children: SubCategory[] }>).find((c) => c.slug === "sandali");
-          if (sandali) {
-            setSubCategories(
-              sandali.children.map((ch) => ({
-                id: ch.id,
-                name: ch.name,
-                slug: ch.slug,
-                productCount: ch.productCount,
-              })),
-            );
-          }
-        }
-      } catch { /* ignore */ }
-    }
-    loadSubs();
-  }, []);
+  useEffect(() => { fetchProducts(); }, [fetchProducts]);
 
-  useEffect(() => {
-    fetchProducts();
-  }, [fetchProducts]);
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    setPage(1);
-    setQuery(searchInput);
-  };
-
-  const handleCategoryChange = (slug: string | undefined) => {
-    setActiveCategory(slug);
-    setPage(1);
-  };
+  const handleSearch = (e: React.FormEvent) => { e.preventDefault(); setPage(1); setQuery(searchInput); };
+  const handleCategoryChange = (slug: string | undefined) => { setActiveCategory(slug); setPage(1); };
 
   return (
     <>
@@ -115,7 +100,7 @@ function SandaliPage(): ReactNode {
           >
             <nav className="mb-4 text-sm text-[var(--color-text-muted)]" aria-label="Breadcrumb">
               <Link to="/" className="hover:text-[var(--color-primary)]">Home</Link>
-              <span className="mx-2">/</span>
+              <ChevronRight className="mx-1 inline h-3.5 w-3.5" />
               <span className="text-[var(--color-text)]">Sandali Artigianali</span>
             </nav>
             <h1 className="font-display text-[var(--text-lg)] font-semibold tracking-tight md:text-[var(--text-xl)]">
@@ -170,7 +155,7 @@ function SandaliPage(): ReactNode {
               >
                 Tutti ({total})
               </button>
-              {subCategories.map((cat) => (
+              {ssrSubs.map((cat) => (
                 <button
                   key={cat.id}
                   type="button"
@@ -278,6 +263,8 @@ function SandaliPage(): ReactNode {
     </>
   );
 }
+
+// ─── SandaloProductCard (local component) ──────────────────────────
 
 function SandaloProductCard({ product }: { product: ProductListItem }) {
   return (

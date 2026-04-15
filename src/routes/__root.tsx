@@ -110,7 +110,8 @@ function RootComponent() {
         id="main-content"
         className={cn(
           "min-h-screen",
-          !isAdmin && !isAccount && "pt-[var(--navbar-height)] md:pt-[var(--navbar-height-md)] pb-20 md:pb-0",
+          !isAdmin && "pt-[var(--navbar-height)] md:pt-[var(--navbar-height-md)]",
+          !isAdmin && !isAccount && "pb-20 md:pb-0",
         )}
       >
         <ErrorBoundary

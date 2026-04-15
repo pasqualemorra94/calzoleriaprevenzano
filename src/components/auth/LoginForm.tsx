@@ -30,19 +30,20 @@ export function LoginForm() {
       setIsLoading(true);
 
       try {
-        const { error } = await authClient.signIn.email({
+        const result = await authClient.signIn.email({
           email: value.email,
           password: value.password,
         });
 
-        if (error) {
-          const message = error.message ?? "Errore durante il login. Riprova.";
+        if (result.error) {
+          const message = result.error.message ?? "Errore durante il login. Riprova.";
           setServerError(message);
           return;
         }
 
-        // Redirect after successful login
-        window.location.href = "/";
+        // Redirect admin to dashboard, regular users to home
+        const role = (result.data as { user?: { role?: string } } | undefined)?.user?.role;
+        window.location.href = role === "admin" ? "/admin" : "/";
       } catch {
         setServerError("Errore di connessione. Riprova.");
       } finally {

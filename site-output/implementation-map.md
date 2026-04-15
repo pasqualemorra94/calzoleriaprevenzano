@@ -1,6 +1,6 @@
 # Calzoleria Prevenzano — Implementation Map
 
-> Generated: 2026-04-02 | Version: 16 | Framework: TanStack Router + React + Vite
+> Generated: 2026-04-02 | Version: 25 | Framework: TanStack Router + React + Vite
 
 ## Architecture Overview
 
@@ -1255,3 +1255,66 @@ L'area account usa il navbar/footer del sito (non un layout separato come admin)
 - TypeScript: ✅ zero errors, zero `any`
 - Build: ✅ success (1.30s)
 - Implementation Map: aggiornata (v20 → v21)
+
+---
+
+## 🔧 Fix: Auth server-side redirect + Logout | 2026-04-15
+
+### Problema
+1. `/admin` senza autenticazione: il redirect alla login avveniva solo client-side (flash del contenuto admin) perché usava un `useEffect` con monkey-patching di `window.fetch`
+2. Logout dal frontend (area account): `authClient.signOut()` client-side non cancellava correttamente il cookie di sessione, lasciando la pagina account visibile
+
+### File creati
+
+| File | Tipo | Layer | Scopo |
+|------|------|-------|-------|
+| `src/routes/api/auth/session.ts` | API route | DATA | GET endpoint che ritorna la sessione utente corrente (usato da beforeLoad) |
+| `src/routes/api/auth/logout.ts` | API route | DATA | POST endpoint che chiama `auth.api.signOut` server-side per cancellare il cookie |
+
+### File modificati
+
+| File | Modifica | Giustificazione |
+|------|----------|-----------------|
+| `src/routes/admin.tsx` | Aggiunto `beforeLoad` con fetch a `/api/auth/session` + redirect server-side; rimosso `useEffect` monkey-patch di `window.fetch`; logout button usa `fetch("/api/auth/logout")` server-side | Redirect admin a livello server (SSR) invece di client-side |
+| `src/routes/account.tsx` | Aggiunto `beforeLoad` con fetch a `/api/auth/session` + redirect server-side; rimosso `useEffect` monkey-patch di `window.fetch`; logout handler usa `fetch("/api/auth/logout")` server-side | Auth guard server-side + logout affidabile |
+
+### Nuove route API
+
+| URL Pattern | File | Metodi | Auth | Scopo |
+|-------------|------|--------|------|-------|
+| `/api/auth/session` | `src/routes/api/auth/session.ts` | GET | none | Ritorna sessione utente (401 se non autenticato) |
+| `/api/auth/logout` | `src/routes/api/auth/logout.ts` | POST | none | Cancella sessione server-side |
+
+### Comportamento aggiornato
+
+- **Admin redirect**: Quando si naviga a `/admin/*` senza sessione admin, il `beforeLoad` nel layout admin fa una fetch a `/api/auth/session`. Su SSR (primo caricamento), il redirect avviene come HTTP redirect 307 — nessun flash di contenuto. Su client-side navigation, TanStack Router gestisce il redirect automaticamente.
+- **Account redirect**: Stesso pattern per `/account/*` — redirect a `/auth/login` se non autenticato.
+- **Logout**: Il logout button sia nell'admin che nell'account fa una `POST /api/auth/logout` che chiama `auth.api.signOut` dal server (con i cookie della request), assicurando che la sessione venga correttamente cancellata. Dopo il logout, redirect alla homepage o login.
+
+### Flusso utente
+1. Utente non autenticato naviga a `/admin` → SSR esegue `beforeLoad` → fetch `/api/auth/session` → 401 → redirect HTTP a `/auth/login` (nessun flash)
+2. Utente loggato come customer naviga a `/admin` → SSR esegue `beforeLoad` → fetch `/api/auth/session` → 200 ma role=user → redirect a `/auth/login`
+3. Utente fa logout dall'area account → POST `/api/auth/logout` → server cancella sessione → redirect a `/`
+4. Utente fa logout dall'admin → POST `/api/auth/logout` → server cancella sessione → redirect a `/auth/login`
+
+---
+
+## 🆕 Feature modificata: M2 SSR refactor — /sandali | 2026-04-15
+
+### File modificati
+
+| File | Modifica | Giustificazione |
+|------|----------|-----------------|
+| `src/routes/sandali.tsx` | beforeLoad con $getCategories + $getCatalogProducts, validateSearch con parametri opzionali, uso useSearch, rimossa resolveCategoryName inutilizzata | SSR per pagina sandali — prima usava useEffect+fetch |
+| `src/components/shared/MegaMenu.tsx` | Link a /sandali aggiornati con search={{ category: undefined, query: undefined, page: undefined }} | Compatibilità con validateSearch tipizzato della route /sandali |
+
+### Comportamento aggiornato
+
+- **Pagina /sandali**: Il beforeLoad carica categorie e prodotti via createServerFn ($getCategories, $getCatalogProducts). La prima renderizzazione è SSR completa. I filtri (ricerca, categoria, paginazione) continuano a funzionare client-side via RPC.
+- **validateSearch**: Aggiunto per tipizzare i search params (category, query, page) — tutti opzionali con type-safe parsing.
+- **MegaMenu**: I link a /sandali passano esplicitamente i search params undefined per compatibilità con validateSearch.
+
+### Flusso utente
+1. Utente naviga a /sandali → SSR carica categorie e prodotti sandali dal DB → HTML completo senza flash
+2. Utente naviga a /sandali?category=infradito → SSR filtra per sottocategoria infradito
+3. Utente cambia filtro nel form → client-side RPC aggiorna i prodotti senza reload pagina

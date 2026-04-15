@@ -389,7 +389,7 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
           {/* Dot separator */}
           <span className="h-1 w-1 rounded-full bg-[var(--color-accent)]/50" />
 
-          <Link to="/sandali" className={navLinkClass} onClick={handleItemClick}>
+          <Link to="/sandali" search={{ category: undefined, query: undefined, page: undefined }} className={navLinkClass} onClick={handleItemClick}>
             Sandali
           </Link>
 
@@ -569,6 +569,7 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
 
                 <Link
                   to="/sandali"
+                  search={{ category: undefined, query: undefined, page: undefined }}
                   onClick={handleItemClick}
                   className="block rounded-[var(--radius-md)] px-4 py-3 text-[15px] font-medium tracking-wide uppercase text-[var(--color-text)] transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-primary)]"
                 >
