@@ -1,10 +1,11 @@
 /**
  * POST /api/admin/ai/analyze-foot — Analyze foot image + recommend sandals
  *
- * Accepts JSON body: { image: string (base64, data URI or raw) }
- * Returns: { footProfile, suggestions, totalAnalyzed, cost }
+ * Accepts JSON body: { image: string (base64, data URI or raw), label?: string }
+ * Returns: { footProfile, suggestions, totalAnalyzed, cost, sessionId }
  *
  * Admin only — used on in-store tablet for AI Foot Advisor.
+ * Saves session to DB so the user can resume later without re-running analysis.
  * Logs AI cost (OpenAI tokens) and wall-clock timing.
  */
 
@@ -13,6 +14,7 @@ import { apiSuccess, apiError } from "~/lib/api-response";
 import { requireAdmin } from "~/lib/sdk-auth.server";
 import { analyzeFootImage } from "~/lib/ai.server";
 import { matchFootToProducts } from "~/lib/ai-advisor.server";
+import { createSession } from "~/lib/ai-sessions.server";
 import { createLogger } from "~/lib/logger.server";
 import { z } from "zod";
 
@@ -20,6 +22,7 @@ const log = createLogger("ai-analyze-foot");
 
 const analyzeFootSchema = z.object({
   image: z.string().min(100, "Immagine troppo piccola o non valida"),
+  label: z.string().max(100).optional(),
 });
 
 export const Route = createFileRoute("/api/admin/ai/analyze-foot")({
@@ -53,6 +56,7 @@ export const Route = createFileRoute("/api/admin/ai/analyze-foot")({
 
         // ── Extract base64 and MIME type ──
         const rawImage = parsed.data.image;
+        const label = parsed.data.label;
         let base64: string;
         let mimeType = "image/jpeg";
 
@@ -85,8 +89,18 @@ export const Route = createFileRoute("/api/admin/ai/analyze-foot")({
 
           const totalDurationMs = Date.now() - startTime;
 
+          // ── Save session to DB ──
+          const sessionId = await createSession({
+            footImage: rawImage, // Store full data URI
+            footProfile,
+            suggestions,
+            analysisCost: footProfile.costUsd,
+            label,
+          });
+
           // ── Cost log ──
           log.info("AI cost — foot analysis + matching", {
+            sessionId,
             openai: {
               model: footProfile.model,
               costUsd: footProfile.costUsd,
@@ -107,6 +121,7 @@ export const Route = createFileRoute("/api/admin/ai/analyze-foot")({
             footProfile,
             suggestions,
             totalAnalyzed: suggestions.length,
+            sessionId,
           });
         } catch (err) {
           const durationMs = Date.now() - startTime;

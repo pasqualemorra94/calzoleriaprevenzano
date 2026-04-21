@@ -526,3 +526,28 @@ model Media {
   @@index([createdAt])
   @@unique([filename])                               // prevent duplicate stored filenames
 }
+
+// ─── AI Session ────────────────────────────────────────────────────────
+// Persists AI foot analysis sessions so the admin doesn't need to
+// regenerate the foot photo + analysis for each try-on.
+// Only the try-on step (step 2) needs to be re-run.
+
+model AiSession {
+  id            String   @id @default(cuid())
+  label         String?                                 // optional label (e.g. "Cliente Maria")
+  footImage     String                                  // base64 data URI of the foot photo
+  footProfile   Json                                    // AIFootAnalysisResult from OpenAI
+  suggestions   Json?                                   // ProductMatch[] from matching
+  analysisCost  Float?                                  // USD cost of the OpenAI analysis
+
+  // Try-on results (can be multiple per session)
+  tryonImageUrl String?                                 // last generated try-on image
+  tryonProductId String?                                // product used for last try-on
+  tryonCreditsUsed Int?                                 // credits consumed by last try-on
+  tryonCostUsd   Float?                                 // estimated USD for last try-on
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([createdAt])
+}
