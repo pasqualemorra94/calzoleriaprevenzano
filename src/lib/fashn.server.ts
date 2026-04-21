@@ -6,8 +6,12 @@
  * Switch between them via FASHN_API_BASE env var.
  *
  * Endpoints:
- *  - tryOn(personImage, garmentImage) → composite image
- *  - productToModel(productImage) → model wearing product
+ *  - tryOn(personImage, garmentImage) → composite image + cost info
+ *  - getCreditsBalance() → current credit balance
+ *
+ * Cost tracking:
+ *  - Every operation logs credits_used (fal.ai) or credits (Fashn) to server logger
+ *  - TryOnResult includes creditsUsed when available
  */
 
 import { createLogger } from "~/lib/logger.server";
@@ -50,8 +54,12 @@ export interface TryOnResult {
   id: string;
   /** Generation status */
   status: "completed" | "failed" | "pending";
-  /** Cost in credits (if available) */
+  /** Credits consumed by this generation (if available from provider) */
   creditsUsed?: number;
+  /** Wall-clock time in ms from submit to completed result */
+  durationMs?: number;
+  /** Provider used: "fal" or "fashn" */
+  provider: "fal" | "fashn";
 }
 
 interface FashnErrorResponse {
@@ -59,6 +67,14 @@ interface FashnErrorResponse {
   message?: string;
   code?: string;
 }
+
+// ─── Pricing reference (approximate USD per resolution) ────────────────
+
+const PRICING_USD: Record<string, number> = {
+  "1k": 0.025,
+  "2k": 0.05,
+  "4k": 0.10,
+};
 
 // ─── Retry ─────────────────────────────────────────────────────────────
 
@@ -70,7 +86,7 @@ function sleep(ms: number): Promise<void> {
 
 /**
  * Generate a virtual try-on image.
- * Sends person image + garment image → returns composite image URL.
+ * Sends person image + garment image → returns composite image URL + cost.
  *
  * For Fashn.ai direct API: synchronous (returns image URL in response).
  * For fal.ai: may need polling (returns ID → poll for result).
@@ -80,14 +96,33 @@ function sleep(ms: number): Promise<void> {
 export async function generateTryOn(request: TryOnRequest): Promise<TryOnResult> {
   const { key, apiBase } = getConfig();
   const { personImage, garmentImage, category = "shoes", resolution = "1k" } = request;
+  const startTime = Date.now();
 
   const isFal = apiBase.includes("fal.run");
+  log.info("Try-on requested", { provider: isFal ? "fal.ai" : "fashn.ai", category, resolution });
+
+  let result: TryOnResult;
 
   if (isFal) {
-    return generateTryOnFal(key, apiBase, personImage, garmentImage, category, resolution);
+    result = await generateTryOnFal(key, apiBase, personImage, garmentImage, category, resolution);
+  } else {
+    result = await generateTryOnFashn(key, apiBase, personImage, garmentImage, category, resolution);
   }
 
-  return generateTryOnFashn(key, apiBase, personImage, garmentImage, category, resolution);
+  const durationMs = Date.now() - startTime;
+
+  // ── Cost summary log ──
+  const estimatedUsd = PRICING_USD[resolution] ?? PRICING_USD["1k"];
+  log.info("AI cost — try-on", {
+    provider: result.provider,
+    generationId: result.id,
+    creditsUsed: result.creditsUsed ?? "N/A",
+    resolution,
+    durationMs,
+    estimatedUsd,
+  });
+
+  return { ...result, durationMs };
 }
 
 /**
@@ -122,15 +157,22 @@ async function generateTryOnFashn(
     throw new Error(`Fashn API error (${response.status}): ${errorData.message ?? errorData.error}`);
   }
 
-  const data = await response.json() as { id: string; status: string; result?: { images?: Array<{ url: string }> } };
+  const data = await response.json() as {
+    id: string;
+    status: string;
+    credits?: number;
+    result?: { images?: Array<{ url: string }> };
+  };
 
   // Fashn may return immediately or require polling
   if (data.status === "completed" && data.result?.images?.[0]) {
-    log.info("Try-on generated (sync)", { id: data.id });
+    log.info("Try-on generated (sync)", { id: data.id, credits: data.credits });
     return {
       id: data.id,
       status: "completed",
       imageUrl: data.result.images[0].url,
+      creditsUsed: data.credits,
+      provider: "fashn",
     };
   }
 
@@ -161,14 +203,21 @@ async function pollFashnResult(
       continue;
     }
 
-    const data = await response.json() as { id: string; status: string; result?: { images?: Array<{ url: string }> } };
+    const data = await response.json() as {
+      id: string;
+      status: string;
+      credits?: number;
+      result?: { images?: Array<{ url: string }> };
+    };
 
     if (data.status === "completed" && data.result?.images?.[0]) {
-      log.info("Try-on generated (polled)", { id, attempts: attempt + 1 });
+      log.info("Try-on generated (polled)", { id, attempts: attempt + 1, credits: data.credits });
       return {
         id,
         status: "completed",
         imageUrl: data.result.images[0].url,
+        creditsUsed: data.credits,
+        provider: "fashn",
       };
     }
 
@@ -213,7 +262,11 @@ async function generateTryOnFal(
     throw new Error(`fal.ai submit error (${submitResponse.status}): ${errorText}`);
   }
 
-  const submitData = await submitResponse.json() as { request_id: string; status: string };
+  const submitData = await submitResponse.json() as {
+    request_id: string;
+    status: string;
+    credits_used?: number;
+  };
 
   // Poll for result
   const requestId = submitData.request_id;
@@ -231,14 +284,24 @@ async function generateTryOnFal(
       continue;
     }
 
-    const resultData = await resultResponse.json() as { status: string; images?: Array<{ url: string }> };
+    const resultData = await resultResponse.json() as {
+      status: string;
+      images?: Array<{ url: string }>;
+      credits_used?: number;
+    };
 
     if (resultData.status === "COMPLETED" && resultData.images?.[0]) {
-      log.info("Try-on generated via fal.ai", { requestId, attempts: attempt + 1 });
+      log.info("Try-on generated via fal.ai", {
+        requestId,
+        attempts: attempt + 1,
+        creditsUsed: resultData.credits_used,
+      });
       return {
         id: requestId,
         status: "completed",
         imageUrl: resultData.images[0].url,
+        creditsUsed: resultData.credits_used ?? submitData.credits_used,
+        provider: "fal",
       };
     }
 

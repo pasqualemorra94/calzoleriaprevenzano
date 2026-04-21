@@ -2,9 +2,10 @@
  * POST /api/admin/ai/analyze-foot — Analyze foot image + recommend sandals
  *
  * Accepts JSON body: { image: string (base64, data URI or raw) }
- * Returns: { footProfile, suggestions, cost }
+ * Returns: { footProfile, suggestions, totalAnalyzed, cost }
  *
  * Admin only — used on in-store tablet for AI Foot Advisor.
+ * Logs AI cost (OpenAI tokens) and wall-clock timing.
  */
 
 import { createFileRoute } from "@tanstack/react-router";
@@ -12,7 +13,10 @@ import { apiSuccess, apiError } from "~/lib/api-response";
 import { requireAdmin } from "~/lib/sdk-auth.server";
 import { analyzeFootImage } from "~/lib/ai.server";
 import { matchFootToProducts } from "~/lib/ai-advisor.server";
+import { createLogger } from "~/lib/logger.server";
 import { z } from "zod";
+
+const log = createLogger("ai-analyze-foot");
 
 const analyzeFootSchema = z.object({
   image: z.string().min(100, "Immagine troppo piccola o non valida"),
@@ -22,6 +26,8 @@ export const Route = createFileRoute("/api/admin/ai/analyze-foot")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const startTime = Date.now();
+
         // ── Auth check ──
         try {
           await requireAdmin(request);
@@ -68,10 +74,34 @@ export const Route = createFileRoute("/api/admin/ai/analyze-foot")({
 
         // ── Analyze foot ──
         try {
+          const aiStart = Date.now();
           const footProfile = await analyzeFootImage(base64, mimeType);
+          const aiDurationMs = Date.now() - aiStart;
 
           // ── Match against catalog ──
+          const matchStart = Date.now();
           const suggestions = await matchFootToProducts(footProfile);
+          const matchDurationMs = Date.now() - matchStart;
+
+          const totalDurationMs = Date.now() - startTime;
+
+          // ── Cost log ──
+          log.info("AI cost — foot analysis + matching", {
+            openai: {
+              model: footProfile.model,
+              costUsd: footProfile.costUsd,
+              tokens: { input: footProfile.inputTokens, output: footProfile.outputTokens },
+              durationMs: aiDurationMs,
+            },
+            matching: {
+              totalAnalyzed: suggestions.length,
+              durationMs: matchDurationMs,
+            },
+            total: {
+              durationMs: totalDurationMs,
+              costUsd: footProfile.costUsd,
+            },
+          });
 
           return apiSuccess({
             footProfile,
@@ -79,7 +109,9 @@ export const Route = createFileRoute("/api/admin/ai/analyze-foot")({
             totalAnalyzed: suggestions.length,
           });
         } catch (err) {
+          const durationMs = Date.now() - startTime;
           const message = err instanceof Error ? err.message : "Errore durante l'analisi del piede";
+          log.error("AI cost — foot analysis FAILED", { durationMs, error: message });
           return apiError("AI_ERROR", message, 500);
         }
       },
