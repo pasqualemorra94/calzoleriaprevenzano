@@ -1,5 +1,5 @@
 {
-  "version": 32,
+  "version": 33,
   "generatedAt": "2026-04-02T00:00:00.000Z",
   "projectSlug": "calzoleria-prevenzano",
   "framework": "tanstack",
@@ -679,12 +679,12 @@
   "anomalies": {
     "featureCreep": [],
     "featureGap": [
-      "Pagina /ricerca non implementata — rimossa dal Navbar",
-      "Pagina /wishlist non implementata — rimossa dal Navbar",
-      "Pagina /personalizzazione non implementata — CTA Hero redirect a /la-bottega",
+      "Pagina /ricerca non implementata \u2014 rimossa dal Navbar",
+      "Pagina /wishlist non implementata \u2014 rimossa dal Navbar",
+      "Pagina /personalizzazione non implementata \u2014 CTA Hero redirect a /la-bottega",
       "Admin product edit non integra ancora VariantBuilder nel form (variantConfig salvabile via API)",
       "Bottoni Heart/ShoppingBag nel catalogo non hanno handler funzionanti (solo visivi)",
-      "Carrello non mostra immagine prodotto — usa solo icona placeholder ShoppingBag"
+      "Carrello non mostra immagine prodotto \u2014 usa solo icona placeholder ShoppingBag"
     ],
     "notes": [
       "2026-04-03: MegaMenu sostituisce Navbar come navigazione desktop principale",
@@ -692,41 +692,43 @@
       "2026-04-03: VariantConfig JSON aggiunto a 108 prodotti (81 sandali + 27 pelletteria)",
       "2026-04-03: Catalogo supporta filtro gerarchico categorie (parent+children+grandchildren)",
       "2026-04-03: Catalogo riscritto con sidebar filtri a sinistra, griglia 3 colonne, albero categorie espandibile, drawer mobile",
-      "2026-04-03: Variant templates — rimosso layout duplicato (era min-h-screen dentro admin layout), aggiunto filtro ricerca, titolo ridotto",
-      "2026-04-03: Guest checkout — cart_session_id auto-generato dal server, checkout accessibile senza login, Address/Order userId nullable",
-      "2026-04-03: Media Library — modello Media + upload endpoint + griglia admin + MediaPicker per selezione immagini nei form",
-      "2026-04-03: VariantConfig validation nel carrello — selectedOptions su CartItem/OrderItem, prezzo con modifier, errori dettagliati",
-      "2026-04-03: Media Library Migration — 1355 immagini registrate nella Media Library (1143 prodotti + 209 swatches + 3 template SVG)",
-      "2026-04-03: Media Library Migration — 369 ProductImage linkate a Media records via mediaId FK",
-      "2026-04-03: Media Library Migration — HeroSection/LaBottegaSection/CategoriesSection accettano immagini dinamiche da Media Library (con fallback hardcoded)",
-      "2026-04-03: Media Library Migration — Seed aggiorna Category.image per 3 macro-categorie (Sandali, Pelletteria, Articoli calzature)",
-      "2026-04-03: API /api/site/media — endpoint pubblico per template media usati nelle pagine pubbliche",
-      "2026-04-03: Import immagini reference — 16 immagini scaricate da calzoleriaprevenzano.it e registrate in Media Library (hero, banners, personalizzazione, team, chi-siamo, guida-taglia)",
+      "2026-04-03: Variant templates \u2014 rimosso layout duplicato (era min-h-screen dentro admin layout), aggiunto filtro ricerca, titolo ridotto",
+      "2026-04-03: Guest checkout \u2014 cart_session_id auto-generato dal server, checkout accessibile senza login, Address/Order userId nullable",
+      "2026-04-03: Media Library \u2014 modello Media + upload endpoint + griglia admin + MediaPicker per selezione immagini nei form",
+      "2026-04-03: VariantConfig validation nel carrello \u2014 selectedOptions su CartItem/OrderItem, prezzo con modifier, errori dettagliati",
+      "2026-04-03: Media Library Migration \u2014 1355 immagini registrate nella Media Library (1143 prodotti + 209 swatches + 3 template SVG)",
+      "2026-04-03: Media Library Migration \u2014 369 ProductImage linkate a Media records via mediaId FK",
+      "2026-04-03: Media Library Migration \u2014 HeroSection/LaBottegaSection/CategoriesSection accettano immagini dinamiche da Media Library (con fallback hardcoded)",
+      "2026-04-03: Media Library Migration \u2014 Seed aggiorna Category.image per 3 macro-categorie (Sandali, Pelletteria, Articoli calzature)",
+      "2026-04-03: API /api/site/media \u2014 endpoint pubblico per template media usati nelle pagine pubbliche",
+      "2026-04-03: Import immagini reference \u2014 16 immagini scaricate da calzoleriaprevenzano.it e registrate in Media Library (hero, banners, personalizzazione, team, chi-siamo, guida-taglia)",
       "2026-04-03: HeroSection riscritto con slider a 2 slide con immagini reali, frecce navigazione e dots indicatori",
-      "2026-04-03: LaBottegaSection — immagine placeholder sostituita con foto reale personalizzazione",
-      "2026-04-03: PersonalizationSection — aggiunta immagine showcase e icone reali dal reference, layout migliorato",
-      "2026-04-03: Pagina /la-bottega — aggiunto team section con foto Nunzio/Francesca, testi migliorati con storia reale dal 1984",
-      "2026-04-03: Pagina /guida-taglia — aggiunta immagine tutorial, istruzioni dettagliate, layout 2 colonne, link WhatsApp",
-      "2026-04-03: selectedOptions — CartItem/OrderItem con JSON selectedOptions per prodotti variantConfig, validazione prezzo con modifier, risoluzione display (label+value+color)",
-      "2026-04-03: variantConfig seed integration — 81 config estratte in site-output/variant-configs.json, applyVariantConfigs() in seed.ts (niente più script manuale dopo reset DB)",
-      "2026-04-03: Product images — 79/81 sandali con immagini full-size (600x800+), 2 senza alternativa full-size (chiara, raffaella-maria)",
-      "2026-04-03: Fix mediaId association — ProductImage.mediaId ora correttamente salvato quando si seleziona dalla Media Library; VariantBuilder aggiunto pulsante MediaPicker per swatch imageUrl",
-      "2026-04-03: Refactoring — admin.media.tsx decomposed (580→276 LOC), MediaGridItems estratto in src/components/admin/media-library/",
-      "2026-04-03: Refactoring — VariantBuilder.tsx decomposed (563→208 LOC orchestrator), GroupEditor+presets estratti in src/components/admin/variant-builder/",
-      "2026-04-03: Refactoring — admin.prodotti.$id.tsx decomposed (1093→395 LOC), 5 componenti estratti in src/components/admin/product-edit/",
-      "2026-04-03: Refactoring — prodotti.$slug.tsx decomposed (866→322 LOC), ProductGallery+VariantSelector+RelatedProducts estratti in src/components/product/",
-      "2026-04-03: Refactoring — catalogo.tsx decomposed (680→250 LOC), CatalogSidebar+CatalogProductCard estratti in src/components/catalog/",
-      "2026-04-03: Refactoring — checkout.tsx+carrello.tsx decomposed, OrderSummary estratto in src/components/checkout/",
-      "2026-04-03: Refactoring — admin.server.ts SRP split (711→37 LOC re-export), 5 moduli estratti in src/lib/admin/ (types, dashboard, products, orders, categories)",
-        "2026-04-03: Refactoring — backward-compatible re-export shims: src/components/admin/VariantBuilder.tsx → variant-builder/, src/lib/admin.server.ts → admin/index.ts",
-      "2026-04-15: M1 SSR refactor — homepage, catalogo, pagina prodotto now use createServerFn ($getCategoryImages, $getCatalogProducts, $getCategories, $getProductBySlug, $getFeaturedProducts) in beforeLoad for server-side data loading; removed useEffect+fetch for initial data; categories loaded once SSR, products re-fetched client-side on filter change",
-      "2026-04-15: M4 SSR refactor — account dashboard pages (ordini, ordini/$orderId, wishlist, indirizzi, profilo) now use createServerFn ($getUserOrders, $getOrderDetail, $getWishlist, $getAddresses, $getUserProfile) in beforeLoad; removed useEffect+fetch for initial data loading; added account-functions.ts server module",
-      "2026-04-15: M5 SSR refactor — admin dashboard (stats), prodotti (list), ordini (list), media library now use createServerFn ($getDashboardStats, $getAdminProducts, $getAdminOrders, $getAdminMedia) in beforeLoad; added admin-functions.ts server module; admin edit/detail pages still use client-side fetch (complex forms)",
-      "2026-04-20: Fix admin products list thumbnail — replaced `where: { sortOrder: 0 }` with `orderBy: { sortOrder: \"asc\" }` in getAdminProducts query; almost all products had sortOrder starting from 2, not 0, so thumbnail was null for every product except 'Aquilone'",
-      "2026-04-20: Fix admin media page — removed folder filter bar, added Outlet pattern (like admin.prodotti) so child route /admin/media/$id renders detail page; before this fix, clicking Eye icon or image Link navigated but detail page never rendered because parent had no Outlet; decomposed into AdminMediaPage (orchestrator) + AdminMediaList (list component), removed unused activeFolder state",
-      "2026-04-20: Feature admin order detail thumbnail — added product image (first by sortOrder) to getAdminOrder query and AdminOrderDetail.items type; order detail table now shows 40×40 thumbnail per item with placeholder fallback",
-      "2026-04-20: Feature QuickSearch — global product search in header (MegaMenu row 1), fetches /api/products with debounce 300ms, AbortController cancellation, keyboard nav (arrows+enter+escape), dropdown with thumbnail+name+price, link to full catalog results",
-      "2026-04-22: Feature AI Foot Advisor — admin-only in-store tablet experience: capture foot photo → GPT-4.1-mini vision analysis → sandal suggestions with scoring → variant customization → virtual try-on via Fashn.ai/fal.ai; 3 server libs (ai.server.ts, fashn.server.ts, ai-advisor.server.ts), 2 API routes (analyze-foot, tryon), 6 components, Product.aiMetadata Json? field, deterministic seed (prisma/seed-ai-metadata.ts), ~$20/month cost (OpenAI + Fashn.ai)"
+      "2026-04-03: LaBottegaSection \u2014 immagine placeholder sostituita con foto reale personalizzazione",
+      "2026-04-03: PersonalizationSection \u2014 aggiunta immagine showcase e icone reali dal reference, layout migliorato",
+      "2026-04-03: Pagina /la-bottega \u2014 aggiunto team section con foto Nunzio/Francesca, testi migliorati con storia reale dal 1984",
+      "2026-04-03: Pagina /guida-taglia \u2014 aggiunta immagine tutorial, istruzioni dettagliate, layout 2 colonne, link WhatsApp",
+      "2026-04-03: selectedOptions \u2014 CartItem/OrderItem con JSON selectedOptions per prodotti variantConfig, validazione prezzo con modifier, risoluzione display (label+value+color)",
+      "2026-04-03: variantConfig seed integration \u2014 81 config estratte in site-output/variant-configs.json, applyVariantConfigs() in seed.ts (niente pi\u00f9 script manuale dopo reset DB)",
+      "2026-04-03: Product images \u2014 79/81 sandali con immagini full-size (600x800+), 2 senza alternativa full-size (chiara, raffaella-maria)",
+      "2026-04-03: Fix mediaId association \u2014 ProductImage.mediaId ora correttamente salvato quando si seleziona dalla Media Library; VariantBuilder aggiunto pulsante MediaPicker per swatch imageUrl",
+      "2026-04-03: Refactoring \u2014 admin.media.tsx decomposed (580\u2192276 LOC), MediaGridItems estratto in src/components/admin/media-library/",
+      "2026-04-03: Refactoring \u2014 VariantBuilder.tsx decomposed (563\u2192208 LOC orchestrator), GroupEditor+presets estratti in src/components/admin/variant-builder/",
+      "2026-04-03: Refactoring \u2014 admin.prodotti.$id.tsx decomposed (1093\u2192395 LOC), 5 componenti estratti in src/components/admin/product-edit/",
+      "2026-04-03: Refactoring \u2014 prodotti.$slug.tsx decomposed (866\u2192322 LOC), ProductGallery+VariantSelector+RelatedProducts estratti in src/components/product/",
+      "2026-04-03: Refactoring \u2014 catalogo.tsx decomposed (680\u2192250 LOC), CatalogSidebar+CatalogProductCard estratti in src/components/catalog/",
+      "2026-04-03: Refactoring \u2014 checkout.tsx+carrello.tsx decomposed, OrderSummary estratto in src/components/checkout/",
+      "2026-04-03: Refactoring \u2014 admin.server.ts SRP split (711\u219237 LOC re-export), 5 moduli estratti in src/lib/admin/ (types, dashboard, products, orders, categories)",
+      "2026-04-03: Refactoring \u2014 backward-compatible re-export shims: src/components/admin/VariantBuilder.tsx \u2192 variant-builder/, src/lib/admin.server.ts \u2192 admin/index.ts",
+      "2026-04-15: M1 SSR refactor \u2014 homepage, catalogo, pagina prodotto now use createServerFn ($getCategoryImages, $getCatalogProducts, $getCategories, $getProductBySlug, $getFeaturedProducts) in beforeLoad for server-side data loading; removed useEffect+fetch for initial data; categories loaded once SSR, products re-fetched client-side on filter change",
+      "2026-04-15: M4 SSR refactor \u2014 account dashboard pages (ordini, ordini/$orderId, wishlist, indirizzi, profilo) now use createServerFn ($getUserOrders, $getOrderDetail, $getWishlist, $getAddresses, $getUserProfile) in beforeLoad; removed useEffect+fetch for initial data loading; added account-functions.ts server module",
+      "2026-04-15: M5 SSR refactor \u2014 admin dashboard (stats), prodotti (list), ordini (list), media library now use createServerFn ($getDashboardStats, $getAdminProducts, $getAdminOrders, $getAdminMedia) in beforeLoad; added admin-functions.ts server module; admin edit/detail pages still use client-side fetch (complex forms)",
+      "2026-04-20: Fix admin products list thumbnail \u2014 replaced `where: { sortOrder: 0 }` with `orderBy: { sortOrder: \"asc\" }` in getAdminProducts query; almost all products had sortOrder starting from 2, not 0, so thumbnail was null for every product except 'Aquilone'",
+      "2026-04-20: Fix admin media page \u2014 removed folder filter bar, added Outlet pattern (like admin.prodotti) so child route /admin/media/$id renders detail page; before this fix, clicking Eye icon or image Link navigated but detail page never rendered because parent had no Outlet; decomposed into AdminMediaPage (orchestrator) + AdminMediaList (list component), removed unused activeFolder state",
+      "2026-04-20: Feature admin order detail thumbnail \u2014 added product image (first by sortOrder) to getAdminOrder query and AdminOrderDetail.items type; order detail table now shows 40\u00d740 thumbnail per item with placeholder fallback",
+      "2026-04-20: Feature QuickSearch \u2014 global product search in header (MegaMenu row 1), fetches /api/products with debounce 300ms, AbortController cancellation, keyboard nav (arrows+enter+escape), dropdown with thumbnail+name+price, link to full catalog results",
+      "2026-04-22: Feature AI Foot Advisor \u2014 admin-only in-store tablet experience: capture foot photo \u2192 GPT-4.1-mini vision analysis \u2192 sandal suggestions with scoring \u2192 variant customization \u2192 virtual try-on via Fashn.ai/fal.ai; 3 server libs (ai.server.ts, fashn.server.ts, ai-advisor.server.ts), 2 API routes (analyze-foot, tryon), 6 components, Product.aiMetadata Json? field, deterministic seed (prisma/seed-ai-metadata.ts), ~$20/month cost (OpenAI + Fashn.ai)",
+      "2026-04-22: Fix admin sidebar missing AI Advisor menu item \u2014 added Sparkles icon + /admin/ai-advisor link to NAV_ITEMS in admin.tsx",
+      "2026-04-22: Configured fal.ai integration \u2014 added FAL_KEY + FASHN_API_BASE (https://queue.fal.run/fashn-ai/hygelac) to .env; existing fashn.server.ts auto-routes try-on via fal.ai queue when FASHN_API_BASE contains fal.run"
     ]
   },
   "regressionNotes": {
@@ -743,12 +745,36 @@
       }
     ],
     "routeOrchestrators": {
-      "src/routes/admin.media.tsx": { "before": 580, "after": 276, "extractsFrom": "src/components/admin/media-library/" },
-      "src/routes/admin.prodotti.$id.tsx": { "before": 1093, "after": 395, "extractsFrom": "src/components/admin/product-edit/" },
-      "src/routes/prodotti.$slug.tsx": { "before": 866, "after": 322, "extractsFrom": "src/components/product/" },
-      "src/routes/catalogo.tsx": { "before": 680, "after": 250, "extractsFrom": "src/components/catalog/" },
-      "src/routes/checkout.tsx": { "before": 544, "after": 380, "extractsFrom": "src/components/checkout/" },
-      "src/routes/carrello.tsx": { "before": 312, "after": 280, "extractsFrom": "src/components/checkout/" }
+      "src/routes/admin.media.tsx": {
+        "before": 580,
+        "after": 276,
+        "extractsFrom": "src/components/admin/media-library/"
+      },
+      "src/routes/admin.prodotti.$id.tsx": {
+        "before": 1093,
+        "after": 395,
+        "extractsFrom": "src/components/admin/product-edit/"
+      },
+      "src/routes/prodotti.$slug.tsx": {
+        "before": 866,
+        "after": 322,
+        "extractsFrom": "src/components/product/"
+      },
+      "src/routes/catalogo.tsx": {
+        "before": 680,
+        "after": 250,
+        "extractsFrom": "src/components/catalog/"
+      },
+      "src/routes/checkout.tsx": {
+        "before": 544,
+        "after": 380,
+        "extractsFrom": "src/components/checkout/"
+      },
+      "src/routes/carrello.tsx": {
+        "before": 312,
+        "after": 280,
+        "extractsFrom": "src/components/checkout/"
+      }
     }
   }
 }

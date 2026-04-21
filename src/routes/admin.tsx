@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, useMatchRoute, redirect } from "@tanstack/react-router";
 import { useState, useEffect, type ReactNode } from "react";
-import { Menu, X, LayoutDashboard, Package, ShoppingCart, Layers, ExternalLink, ImageIcon, LogOut } from "lucide-react";
+import { Menu, X, LayoutDashboard, Package, ShoppingCart, Layers, ExternalLink, ImageIcon, LogOut, Sparkles } from "lucide-react";
 import { cn } from "~/lib/utils/cn";
 import { $signOut } from "~/lib/auth-functions";
 
@@ -25,6 +25,7 @@ const NAV_ITEMS = [
   { label: "Media", href: "/admin/media", icon: ImageIcon, matchPath: "/admin/media" as const },
   { label: "Variant templates", href: "/admin/variant-templates", icon: Layers, matchPath: "/admin/variant-templates" as const },
   { label: "Ordini", href: "/admin/ordini", icon: ShoppingCart, matchPath: "/admin/ordini" as const },
+  { label: "AI Advisor", href: "/admin/ai-advisor", icon: Sparkles, matchPath: "/admin/ai-advisor" as const },
 ] as const;
 
 function AdminLayout(): ReactNode {

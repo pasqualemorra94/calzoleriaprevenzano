@@ -1484,3 +1484,25 @@ Strumento AI per tablet in-store che analizza la foto del piede del cliente e ra
 
 ### i18n
 Nessuna nuova chiave i18n — interfaccia admin-only in italiano.
+
+---
+
+## 🆕 Feature aggiunta: Admin menu AI Advisor + fal.ai config | 2026-04-22
+
+### File modificati
+
+| File | Modifica | Giustificazione |
+|------|----------|-----------------|
+| `src/routes/admin.tsx` | Aggiunta voce "AI Advisor" (Sparkles icon) al NAV_ITEMS sidebar | La route `/admin/ai-advisor` esisteva ma non era raggiungibile dal menu admin |
+| `.env` | Aggiunto `FAL_KEY` + `FASHN_API_BASE=https://queue.fal.run/fashn-ai/hygelac` | Configura il try-on virtual per usare fal.ai come provider (stesso modello FASHN v1.6) |
+| `.env.example` | Aggiunte variabili `FAL_KEY`, `FASHN_API_KEY`, `FASHN_API_BASE` con documentazione | Reference per altri developer |
+
+### Configurazione fal.ai
+- Il `fashn.server.ts` esistente rileva automaticamente `FASHN_API_BASE` contenente "fal.run" e usa il protocollo fal.ai queue (submit → poll → result)
+- Per tornare a Fashn.ai diretto: cambiare `FASHN_API_BASE` in `https://api.fashn.ai/v1`
+- Il `FAL_KEY` è disponibile per eventuale uso futuro del `@fal-ai/client` SDK
+
+### Flusso utente
+1. Admin entra in `/admin`
+2. Sidebar mostra voce "AI Advisor" con icona Sparkles
+3. Click → naviga a `/admin/ai-advisor` (flusso esistente: foto piede → analisi → suggerimenti → try-on)
