@@ -1,5 +1,5 @@
 {
-  "version": 27,
+  "version": 32,
   "generatedAt": "2026-04-02T00:00:00.000Z",
   "projectSlug": "calzoleria-prevenzano",
   "framework": "tanstack",
@@ -184,6 +184,12 @@
       {
         "path": "/admin/ordini/$id",
         "file": "src/routes/admin.ordini.$id.tsx",
+        "auth": "admin",
+        "type": "admin"
+      },
+      {
+        "path": "/admin/ai-advisor",
+        "file": "src/routes/admin.ai-advisor.tsx",
         "auth": "admin",
         "type": "admin"
       }
@@ -429,6 +435,22 @@
           "DELETE"
         ],
         "auth": "required"
+      },
+      {
+        "path": "/api/admin/ai/analyze-foot",
+        "file": "src/routes/api/admin/ai/analyze-foot.ts",
+        "methods": [
+          "POST"
+        ],
+        "auth": "admin"
+      },
+      {
+        "path": "/api/admin/ai/tryon",
+        "file": "src/routes/api/admin/ai/tryon.ts",
+        "methods": [
+          "POST"
+        ],
+        "auth": "admin"
       }
     ]
   },
@@ -451,7 +473,8 @@
       "src/components/shared/MobileBottomNav.tsx",
       "src/components/shared/CookieBanner.tsx",
       "src/components/shared/CookiePreferencesPanel.tsx",
-      "src/components/shared/ErrorBoundary.tsx"
+      "src/components/shared/ErrorBoundary.tsx",
+      "src/components/shared/QuickSearch.tsx"
     ],
     "admin": [
       "src/components/admin/VariantBuilder.tsx",
@@ -468,6 +491,14 @@
       "src/components/admin/product-edit/VariantConfigSection.tsx",
       "src/components/admin/product-edit/ProductFields.tsx",
       "src/components/admin/product-edit/index.ts"
+    ],
+    "ai-advisor": [
+      "src/components/admin/ai-advisor/FootCamera.tsx",
+      "src/components/admin/ai-advisor/FootAnalysis.tsx",
+      "src/components/admin/ai-advisor/SandalSuggestions.tsx",
+      "src/components/admin/ai-advisor/SandalCatalog.tsx",
+      "src/components/admin/ai-advisor/VariantSelector.tsx",
+      "src/components/admin/ai-advisor/TryOnPreview.tsx"
     ],
     "auth": [
       "src/components/auth/LoginForm.tsx",
@@ -563,7 +594,10 @@
       "src/lib/cart-session.ts",
       "src/lib/cookieConsent.ts",
       "src/lib/security-headers.server.ts",
-      "src/lib/logger.server.ts"
+      "src/lib/logger.server.ts",
+      "src/lib/ai.server.ts",
+      "src/lib/fashn.server.ts",
+      "src/lib/ai-advisor.server.ts"
     ],
     "client": [
       "src/lib/auth-client.ts"
@@ -623,7 +657,8 @@
     "seo": true,
     "security": true,
     "admin": true,
-    "email": true
+    "email": true,
+    "aiAdvisor": true
   },
   "authConfig": {
     "provider": "better-auth",
@@ -686,7 +721,12 @@
         "2026-04-03: Refactoring — backward-compatible re-export shims: src/components/admin/VariantBuilder.tsx → variant-builder/, src/lib/admin.server.ts → admin/index.ts",
       "2026-04-15: M1 SSR refactor — homepage, catalogo, pagina prodotto now use createServerFn ($getCategoryImages, $getCatalogProducts, $getCategories, $getProductBySlug, $getFeaturedProducts) in beforeLoad for server-side data loading; removed useEffect+fetch for initial data; categories loaded once SSR, products re-fetched client-side on filter change",
       "2026-04-15: M4 SSR refactor — account dashboard pages (ordini, ordini/$orderId, wishlist, indirizzi, profilo) now use createServerFn ($getUserOrders, $getOrderDetail, $getWishlist, $getAddresses, $getUserProfile) in beforeLoad; removed useEffect+fetch for initial data loading; added account-functions.ts server module",
-      "2026-04-15: M5 SSR refactor — admin dashboard (stats), prodotti (list), ordini (list), media library now use createServerFn ($getDashboardStats, $getAdminProducts, $getAdminOrders, $getAdminMedia) in beforeLoad; added admin-functions.ts server module; admin edit/detail pages still use client-side fetch (complex forms)"
+      "2026-04-15: M5 SSR refactor — admin dashboard (stats), prodotti (list), ordini (list), media library now use createServerFn ($getDashboardStats, $getAdminProducts, $getAdminOrders, $getAdminMedia) in beforeLoad; added admin-functions.ts server module; admin edit/detail pages still use client-side fetch (complex forms)",
+      "2026-04-20: Fix admin products list thumbnail — replaced `where: { sortOrder: 0 }` with `orderBy: { sortOrder: \"asc\" }` in getAdminProducts query; almost all products had sortOrder starting from 2, not 0, so thumbnail was null for every product except 'Aquilone'",
+      "2026-04-20: Fix admin media page — removed folder filter bar, added Outlet pattern (like admin.prodotti) so child route /admin/media/$id renders detail page; before this fix, clicking Eye icon or image Link navigated but detail page never rendered because parent had no Outlet; decomposed into AdminMediaPage (orchestrator) + AdminMediaList (list component), removed unused activeFolder state",
+      "2026-04-20: Feature admin order detail thumbnail — added product image (first by sortOrder) to getAdminOrder query and AdminOrderDetail.items type; order detail table now shows 40×40 thumbnail per item with placeholder fallback",
+      "2026-04-20: Feature QuickSearch — global product search in header (MegaMenu row 1), fetches /api/products with debounce 300ms, AbortController cancellation, keyboard nav (arrows+enter+escape), dropdown with thumbnail+name+price, link to full catalog results",
+      "2026-04-22: Feature AI Foot Advisor — admin-only in-store tablet experience: capture foot photo → GPT-4.1-mini vision analysis → sandal suggestions with scoring → variant customization → virtual try-on via Fashn.ai/fal.ai; 3 server libs (ai.server.ts, fashn.server.ts, ai-advisor.server.ts), 2 API routes (analyze-foot, tryon), 6 components, Product.aiMetadata Json? field, deterministic seed (prisma/seed-ai-metadata.ts), ~$20/month cost (OpenAI + Fashn.ai)"
     ]
   },
   "regressionNotes": {

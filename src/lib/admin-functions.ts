@@ -17,6 +17,8 @@ import { listMedia, getMediaStats } from "./media.server";
 import type { DashboardStats, AdminProductListItem, AdminProductDetail, AdminOrderListItem, AdminOrderDetail } from "./admin/types";
 import type { PaginatedData } from "./types/api";
 import type { MediaListItem } from "./media.server";
+import { getAdvisorCatalog } from "./ai-advisor.server";
+import type { AdvisorProduct } from "./ai-advisor.server";
 
 // Re-export types
 export type { DashboardStats, AdminProductListItem, AdminProductDetail, AdminOrderListItem, AdminOrderDetail, MediaListItem };
@@ -119,3 +121,16 @@ export const $getAdminMedia = createServerFn({ method: "GET" })
     ]);
     return { ...result, stats };
   });
+
+// ─── AI Advisor ────────────────────────────────────────────────────
+
+export const $getAdvisorCatalog = createServerFn({ method: "GET" }).handler(async () => {
+  await requireAdmin();
+  const catalog = await getAdvisorCatalog();
+  // Serialize JSON fields to avoid Prisma JsonValue type issues with createServerFn
+  return catalog.map((p) => ({
+    ...p,
+    variantConfig: JSON.parse(JSON.stringify(p.variantConfig ?? {})),
+    aiMetadata: JSON.parse(JSON.stringify(p.aiMetadata ?? {})),
+  }));
+});

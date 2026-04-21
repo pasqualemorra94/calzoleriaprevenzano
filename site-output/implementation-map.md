@@ -1318,3 +1318,169 @@ L'area account usa il navbar/footer del sito (non un layout separato come admin)
 1. Utente naviga a /sandali → SSR carica categorie e prodotti sandali dal DB → HTML completo senza flash
 2. Utente naviga a /sandali?category=infradito → SSR filtra per sottocategoria infradito
 3. Utente cambia filtro nel form → client-side RPC aggiorna i prodotti senza reload pagina
+
+---
+
+## 🆕 Fix: Miniature prodotti admin list | 2026-04-20
+
+### File modificati
+
+| File | Modifica | Giustificazione |
+|------|----------|-----------------|
+| `src/lib/admin/admin-products.server.ts` | Sostituito `where: { sortOrder: 0 }` con `orderBy: { sortOrder: "asc" }` nella query immagini | La maggior parte dei prodotti ha `sortOrder` che parte da 2, non da 0. Il filtro `sortOrder === 0` restituiva array vuoto per quasi tutti i prodotti (solo "Aquilone" aveva sortOrder 0). Con `orderBy + take: 1` si prende sempre la prima immagine disponibile. |
+
+### Bug risolto
+
+- **Prima**: Solo il prodotto "Aquilone" mostrava la miniatura nella lista admin prodotti. Tutti gli altri prodotti (con sortOrder che parte da 2) mostravano il placeholder "—".
+- **Dopo**: Tutti i prodotti con almeno un'immagine mostrano la miniatura nella lista admin.
+
+### Flusso utente
+1. Admin naviga a /admin/prodotti → la query Prisma prende la prima immagine per sortOrder ascendente → ogni prodotto con immagini mostra la miniatura
+
+---
+
+## 🆕 Fix: Admin media page — Outlet + folder filter removal | 2026-04-20
+
+### File modificati
+
+| File | Modifica | Giustificazione |
+|------|----------|-----------------|
+| `src/routes/admin.media.tsx` | Aggiunto pattern Outlet (come admin.prodotti.tsx) con `useRouterState` per distinguere lista da detail; decomposto in `AdminMediaPage` (orchestratore con Outlet) + `AdminMediaList` (lista con state); rimosso folder filter bar; rimosso stato `activeFolder` inutilizzato | Bug: `/admin/media/$id` è child route di `/admin/media` in TanStack Router. Senza `<Outlet />` nel parent, la detail page non veniva mai renderizzata — cliccare sull'icona Eye o sull'immagine navigava ma la pagina restava la lista (sembrava "non fare nulla"). Inoltre rimosso il filtro cartelle come richiesto. |
+
+### Bug risolto
+
+- **Prima**: Cliccando sull'icona Eye o sull'immagine nella media library, la URL cambiava in `/admin/media/$id` ma la detail page non si vedeva — sembrava che i bottoni "non facessero nulla". Il parent route `admin.media.tsx` non aveva `<Outlet />`, quindi la child route non poteva renderizzare.
+- **Dopo**: La navigazione funziona correttamente — la lista mostra `<AdminMediaList />`, il dettaglio mostra la child route tramite `<Outlet />`.
+
+### Flusso utente
+1. Admin naviga a /admin/media → `AdminMediaPage` controlla pathname === "/admin/media" → renderizza `<AdminMediaList />`
+2. Admin clicca Eye icona su un media → naviga a /admin/media/$id → `AdminMediaPage` vede pathname !== "/admin/media" → renderizza `<Outlet />` → detail page appare
+
+---
+
+## 🆕 Feature: Thumbnail prodotto nel dettaglio ordine admin | 2026-04-20
+
+### File modificati
+
+| File | Modifica | Giustificazione |
+|------|----------|-----------------|
+| `src/lib/admin/admin-orders.server.ts` | Query `getAdminOrder` include `product.images` (prima per sortOrder, take 1); mapping item aggiunge `imageUrl` | Per mostrare la miniatura del prodotto nella tabella items dell'ordine |
+| `src/lib/admin/types.ts` | `AdminOrderDetail.items` aggiunto campo `imageUrl: string \| null` | Type alignment con la query aggiornata |
+| `src/routes/admin.ordini.$id.tsx` | Aggiunta colonna "Foto" nella tabella items; interfaccia locale `OrderDetail` aggiornata con `imageUrl`; rendering condizionale img/placeholder | L'admin può identificare visivamente i prodotti acquistati nell'ordine |
+
+### Flusso utente
+1. Admin apre dettaglio ordine → la tabella items mostra thumbnail 40×40 di ogni prodotto
+2. Se il prodotto ha almeno un'immagine → thumbnail con object-cover
+3. Se il prodotto non ha immagini → placeholder grigio con "—"
+
+---
+
+## 🆕 Feature: QuickSearch nel header | 2026-04-20
+
+### File creati
+
+| File | Tipo | Layer | Scopo |
+|------|------|-------|-------|
+| `src/components/shared/QuickSearch.tsx` | componente | UI | Ricerca prodotti veloce nell'header con dropdown risultati |
+
+### File modificati
+
+| File | Modifica | Giustificazione |
+|------|----------|-----------------|
+| `src/components/shared/MegaMenu.tsx` | Import QuickSearch, posizionata nel row 1 dell'header tra logo e contatti | Ricerca sempre visibile nell'header desktop |
+
+### Dettagli tecnici
+
+- **Approccio**: Nessun hook globale. Componente standalone con fetch diretto all'API esistente `/api/products?query=...&perPage=6`
+- **Debounce**: 300ms — non spara richieste ad ogni keystroke
+- **AbortController**: Annulla la richiesta precedente se l'utente continua a digitare
+- **Keyboard nav**: ArrowUp/ArrowDown per navigare, Enter per selezionare, Escape per chiudere
+- **Click outside**: Chiude il dropdown cliccando fuori
+- **Risultati**: Thumbnail 44×44, nome (truncated), prezzo, prezzo barrato se scontato
+- **Footer dropdown**: Link "Vedi tutti i risultati" → `/catalogo?query=...`
+- **Stile**: Input rounded-full compatibile con il design header, z-index overlay
+
+### Flusso utente
+1. Utente digita nel campo ricerca → dopo 300ms viene fetchata la lista prodotti
+2. Dropdown mostra max 6 risultati con foto, nome, prezzo
+3. Clic su risultato → naviga al dettaglio prodotto, chiude dropdown
+4. "Vedi tutti i risultati" → naviga al catalogo con la query impostata
+
+---
+
+## 🆕 Feature aggiunta: AI Foot Advisor | 2026-04-22
+
+### Descrizione
+Strumento AI per tablet in-store che analizza la foto del piede del cliente e raccomanda sandali personalizzati con prova virtuale. Accessibile solo dall'admin per uso in negozio.
+
+### Nuovi file creati (12)
+
+| File | Tipo | Layer | Scopo |
+|------|------|-------|-------|
+| `src/lib/ai.server.ts` | service | AI | Client OpenAI GPT-4.1-mini per analisi piede (vision API, structured output, retry, cost tracking) |
+| `src/lib/fashn.server.ts` | service | AI | Wrapper Fashn.ai/fal.ai per virtual try-on (polling, astrazione per cambio provider) |
+| `src/lib/ai-advisor.server.ts` | service | BIZ | Logica di business: matching prodotti, scoring, catalogo sandali |
+| `src/routes/api/admin/ai/analyze-foot.ts` | api | BIZ | POST /api/admin/ai/analyze-foot — analisi immagine piede |
+| `src/routes/api/admin/ai/tryon.ts` | api | BIZ | POST /api/admin/ai/tryon — generazione virtual try-on |
+| `src/routes/admin.ai-advisor.tsx` | page | UI | Pagina admin AI Foot Advisor (tablet in-store) |
+| `src/components/admin/ai-advisor/FootCamera.tsx` | component | UI | Capture foto + upload file |
+| `src/components/admin/ai-advisor/FootAnalysis.tsx` | component | UI | Visualizzazione risultati analisi |
+| `src/components/admin/ai-advisor/SandalSuggestions.tsx` | component | UI | Griglia sandali raccomandati con score |
+| `src/components/admin/ai-advisor/SandalCatalog.tsx` | component | UI | Browser catalogo completo |
+| `src/components/admin/ai-advisor/VariantSelector.tsx` | component | UI | Personalizzazione varianti (colore, tacco, pelle) |
+| `src/components/admin/ai-advisor/TryOnPreview.tsx` | component | UI | Visualizzatore risultato try-on |
+| `prisma/seed-ai-metadata.ts` | seed | DATA | Seed deterministico per aiMetadata (zero API calls, regole category-based) |
+
+### File modificati (4)
+
+| File | Modifica | Giustificazione |
+|------|----------|-----------------|
+| `prisma/schema.prisma` | Aggiunto `aiMetadata Json?` a Product | Metadati AI per matching foot-advisor |
+| `src/lib/admin-functions.ts` | Aggiunto `$getAdvisorCatalog` server function | Caricamento catalogo per l'advisor |
+| `package.json` | Aggiunto dipendenza `openai` | Client OpenAI GPT-4.1-mini |
+| `.env` | Aggiunto `OPENAI_API_KEY`, `FASHN_API_KEY` | API keys per servizi esterni |
+
+### Nuove route
+
+| URL Pattern | File | Metodi | Auth | Type | Scopo |
+|-------------|------|--------|------|------|-------|
+| `/admin/ai-advisor` | `admin.ai-advisor.tsx` | GET | admin | ADMIN | Pagina AI Foot Advisor |
+| `/api/admin/ai/analyze-foot` | `api/admin/ai/analyze-foot.ts` | POST | admin | API | Analisi immagine piede |
+| `/api/admin/ai/tryon` | `api/admin/ai/tryon.ts` | POST | admin | API | Generazione virtual try-on |
+
+### Nuovi componenti
+
+| Nome | File | Props | Usato in |
+|------|------|-------|----------|
+| FootCamera | `ai-advisor/FootCamera.tsx` | onCapture | admin.ai-advisor |
+| FootAnalysis | `ai-advisor/FootAnalysis.tsx` | analysis | admin.ai-advisor |
+| SandalSuggestions | `ai-advisor/SandalSuggestions.tsx` | suggestions, onSelect | admin.ai-advisor |
+| SandalCatalog | `ai-advisor/SandalCatalog.tsx` | products, onSelect | admin.ai-advisor |
+| VariantSelector | `ai-advisor/VariantSelector.tsx` | product, variants, onVariantChange | admin.ai-advisor |
+| TryOnPreview | `ai-advisor/TryOnPreview.tsx` | result, onClose | admin.ai-advisor |
+
+### Modifiche Schema DB
+
+| Modello | Azione | Campi |
+|---------|--------|-------|
+| Product | ALTER | Aggiunto `aiMetadata Json?` |
+
+### Flusso utente
+
+1. Admin apre `/admin/ai-advisor` su tablet in negozio
+2. FootCamera: scatta foto del piede del cliente o carica un file immagine
+3. POST `/api/admin/ai/analyze-foot` → GPT-4.1-mini vision analizza la forma del piede (arch, width, instep, toe shape)
+4. FootAnalysis: mostra il profilo del piede con metriche AI
+5. SandalSuggestions: griglia di sandali raccomandati con score di compatibilità
+6. Cliente seleziona un sandalo → VariantSelector per personalizzare colore, tacco, tipo pelle
+7. SandalCatalog: browser completo se il cliente vuole esplorare tutto il catalogo
+8. POST `/api/admin/ai/tryon` → Fashn.ai/fal.ai genera immagine virtual try-on
+9. TryOnPreview: mostra il risultato del try-on al cliente
+
+### Costi stimati
+- **OpenAI GPT-4.1-mini**: ~$10-15/mese (analisi vision)
+- **Fashn.ai/fal.ai**: ~$5-10/mese (generazione try-on)
+- **Totale stimato**: ~$20/mese
+
+### i18n
+Nessuna nuova chiave i18n — interfaccia admin-only in italiano.
