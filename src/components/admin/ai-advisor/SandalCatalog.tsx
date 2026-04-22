@@ -1,13 +1,13 @@
 /**
  * SandalCatalog — Full catalog browser for AI Advisor.
  *
- * Shows all sandals in a searchable/filterable grid.
- * Used when the user wants to browse beyond AI suggestions.
+ * Shows all sandals in a searchable grid with images.
+ * Always visible as an alternative to AI suggestions.
  */
 
 import { useState, useMemo } from "react";
 import type { AdvisorProduct } from "~/lib/ai-advisor.server";
-import { Search } from "lucide-react";
+import { Search, X, Check } from "lucide-react";
 
 interface SandalCatalogProps {
   products: AdvisorProduct[];
@@ -24,44 +24,61 @@ export function SandalCatalog({ products, onSelect, selectedId }: SandalCatalogP
     return products.filter(
       (p) =>
         p.name.toLowerCase().includes(q) ||
-        p.categoryName.toLowerCase().includes(q),
+        p.categoryName.toLowerCase().includes(q) ||
+        p.slug.toLowerCase().includes(q),
     );
   }, [products, search]);
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-900">
           📦 Catalogo Completo
         </h3>
         <span className="text-sm text-gray-400">
-          {filtered.length} sandali
+          {filtered.length}/{products.length} sandali
         </span>
       </div>
 
-      {/* Search */}
+      {/* Search — always visible */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Cerca sandalo per nome..."
-          className="w-full rounded-lg border border-gray-200 bg-white py-2.5 pl-10 pr-4 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"
+          placeholder="Cerca per nome o categoria..."
+          className="w-full rounded-lg border border-gray-200 bg-white py-2.5 pl-10 pr-9 text-sm text-gray-900 placeholder:text-gray-400 focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"
         />
+        {search && (
+          <button
+            type="button"
+            onClick={() => setSearch("")}
+            className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-0.5 text-gray-400 hover:text-gray-600"
+            aria-label="Cancella ricerca"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        )}
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-6">
-        {filtered.map((product) => (
-          <CatalogCard
-            key={product.id}
-            product={product}
-            selected={selectedId === product.id}
-            onSelect={() => onSelect(product)}
-          />
-        ))}
-      </div>
+      {filtered.length === 0 ? (
+        <p className="py-8 text-center text-sm text-gray-400">
+          Nessun sandalo trovato per "{search}"
+        </p>
+      ) : (
+        <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-6">
+          {filtered.map((product) => (
+            <CatalogCard
+              key={product.id}
+              product={product}
+              selected={selectedId === product.id}
+              onSelect={onSelect}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
@@ -73,33 +90,47 @@ function CatalogCard({
 }: {
   product: AdvisorProduct;
   selected: boolean;
-  onSelect: () => void;
+  onSelect: (product: AdvisorProduct) => void;
 }) {
   return (
     <button
       type="button"
-      onClick={onSelect}
-      className={`overflow-hidden rounded-lg border-2 p-1 text-left transition ${
+      onClick={(e) => {
+        e.stopPropagation();
+        onSelect(product);
+      }}
+      className={`group relative overflow-hidden rounded-xl border-2 p-1.5 text-left transition ${
         selected
-          ? "border-[var(--color-primary)] shadow-sm"
-          : "border-transparent bg-white hover:border-gray-200"
+          ? "border-[var(--color-primary)] shadow-lg ring-1 ring-[var(--color-primary)]/20"
+          : "border-gray-100 bg-white hover:border-gray-200 hover:shadow-md"
       }`}
     >
-      <div className="mb-1 aspect-square overflow-hidden rounded bg-gray-100">
+      {/* Selected indicator */}
+      {selected && (
+        <div className="absolute right-1.5 top-1.5 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-[var(--color-primary)] text-white shadow">
+          <Check className="h-3 w-3" />
+        </div>
+      )}
+
+      {/* Product image — portrait aspect */}
+      <div className="mb-1.5 aspect-[3/4] overflow-hidden rounded-lg bg-gray-100">
         {product.imageUrl ? (
           <img
             src={product.imageUrl}
             alt={product.name}
-            className="h-full w-full object-cover"
+            loading="lazy"
+            className="h-full w-full object-cover transition group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-xs text-gray-300">
+          <div className="flex h-full w-full items-center justify-center text-2xl text-gray-300">
             👠
           </div>
         )}
       </div>
-      <p className="text-xs font-medium text-gray-900 line-clamp-1">{product.name}</p>
-      <p className="text-xs font-semibold text-[var(--color-primary)]">
+
+      {/* Info */}
+      <p className="text-xs font-medium text-gray-900 line-clamp-2 leading-snug">{product.name}</p>
+      <p className="mt-0.5 text-xs font-bold text-[var(--color-primary)]">
         €{product.price.toFixed(0)}
       </p>
     </button>

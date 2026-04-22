@@ -59,9 +59,6 @@ function AIAdvisorPage() {
   const [tryonImage, setTryonImage] = useState<string | null>(null);
   const [tryonError, setTryonError] = useState<string | null>(null);
 
-  // Show full catalog?
-  const [showCatalog, setShowCatalog] = useState(false);
-
   // Show session history panel?
   const [showHistory, setShowHistory] = useState(false);
 
@@ -124,7 +121,6 @@ function AIAdvisorPage() {
       setTryonImage(null);
       setTryonError(null);
       setTryonLoading(false);
-      setShowCatalog(false);
 
       // If session has a try-on, restore that too and show it
       if (session.tryonImageUrl && session.tryonProductId) {
@@ -226,7 +222,6 @@ function AIAdvisorPage() {
     setTryonImage(null);
     setTryonError(null);
     setTryonLoading(false);
-    setShowCatalog(false);
     setCurrentSessionId(null);
   }, []);
 
@@ -332,25 +327,13 @@ function AIAdvisorPage() {
                 />
               )}
 
-              {/* Toggle full catalog */}
+              {/* Full catalog — always visible */}
               {step !== "tryon" && (
-                <div>
-                  {!showCatalog ? (
-                    <button
-                      type="button"
-                      onClick={() => setShowCatalog(true)}
-                      className="text-sm font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]"
-                    >
-                      Cerca nel catalogo completo →
-                    </button>
-                  ) : (
-                    <SandalCatalog
-                      products={catalog}
-                      onSelect={handleCatalogSelect}
-                      selectedId={selectedSandal?.id}
-                    />
-                  )}
-                </div>
+                <SandalCatalog
+                  products={catalog}
+                  onSelect={handleCatalogSelect}
+                  selectedId={selectedSandal?.id}
+                />
               )}
             </>
           )}
