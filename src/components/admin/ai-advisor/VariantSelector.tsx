@@ -168,7 +168,7 @@ function parseVariantConfig(config: unknown): VariantGroup[] {
       required: g.required === true,
       options: Array.isArray(g.options)
         ? g.options.map((o: Record<string, unknown>) => ({
-            id: String(o.id ?? ""),
+            id: String(o.id ?? o.value ?? ""),
             label: String(o.label ?? ""),
             value: String(o.value ?? ""),
             color: typeof o.color === "string" ? o.color : undefined,
