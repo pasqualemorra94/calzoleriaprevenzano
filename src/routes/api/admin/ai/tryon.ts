@@ -27,7 +27,8 @@ import { requireAdmin } from "~/lib/sdk-auth.server";
 import { generateTryOn } from "~/lib/fashn.server";
 import { getProductImageForTryOn, buildTryOnPrompt, resolveImageToBase64 } from "~/lib/ai-advisor.server";
 import type { SelectedVariant } from "~/lib/ai-advisor.server";
-import { updateSessionTryOn } from "~/lib/ai-sessions.server";
+import { appendTryOnToSession } from "~/lib/ai-sessions.server";
+import type { TryOnHistoryEntry } from "~/lib/ai-sessions.server";
 import { createLogger } from "~/lib/logger.server";
 import { z } from "zod";
 
@@ -169,18 +170,33 @@ export const Route = createFileRoute("/api/admin/ai/tryon")({
             ? Number((result.creditsUsed * USD_PER_CREDIT).toFixed(4))
             : null;
 
-          // ── Save to session if provided ──
+          // ── Save to session if provided (APPEND to history, don't overwrite) ──
+          let tryonHistory: TryOnHistoryEntry[] = [];
           if (sessionId) {
             try {
-              await updateSessionTryOn({
+              // Look up product name from catalog for the history entry
+              const { getAdvisorCatalog } = await import("~/lib/ai-advisor.server");
+              const catalog = await getAdvisorCatalog();
+              const productInfo = catalog.find((p) => p.slug === productSlug);
+
+              tryonHistory = await appendTryOnToSession({
                 id: sessionId,
                 imageUrl: result.imageUrl,
                 productId: productSlug,
+                productName: productInfo?.name ?? productSlug,
                 creditsUsed: result.creditsUsed ?? undefined,
                 costUsd: estimatedUsd ?? undefined,
+                selectedVariants: resolvedVariants.length > 0
+                  ? resolvedVariants.map((v) => ({
+                      groupLabel: v.groupLabel,
+                      optionLabel: v.optionLabel,
+                      optionColor: v.optionColor,
+                      optionImageUrl: v.optionImageUrl,
+                    }))
+                  : undefined,
               });
             } catch (err) {
-              log.warn("Failed to save try-on to session", {
+              log.warn("Failed to save try-on to session history", {
                 sessionId,
                 error: err instanceof Error ? err.message : "unknown",
               });
@@ -207,6 +223,7 @@ export const Route = createFileRoute("/api/admin/ai/tryon")({
             imageUrl: result.imageUrl,
             status: result.status,
             sessionId: sessionId ?? null,
+            tryonHistory: tryonHistory.length > 0 ? tryonHistory : undefined,
             cost: {
               creditsUsed: result.creditsUsed ?? null,
               durationMs: result.durationMs ?? null,

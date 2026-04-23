@@ -540,11 +540,14 @@ model AiSession {
   suggestions   Json?                                   // ProductMatch[] from matching
   analysisCost  Float?                                  // USD cost of the OpenAI analysis
 
-  // Try-on results (can be multiple per session)
+  // Latest try-on result (for backward compat with session resume)
   tryonImageUrl String?                                 // last generated try-on image
   tryonProductId String?                                // product used for last try-on
   tryonCreditsUsed Int?                                 // credits consumed by last try-on
   tryonCostUsd   Float?                                 // estimated USD for last try-on
+
+  // Full try-on history (append-only, preserves all generated images)
+  tryonHistory  Json?                                   // TryOnHistoryEntry[]
 
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt

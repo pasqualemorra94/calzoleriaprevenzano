@@ -6,8 +6,8 @@
  *
  * Flow:
  *  1. analyze-foot → creates AiSession (footImage + footProfile + suggestions)
- *  2. tryon → updates AiSession with try-on result
- *  3. Resume from history → load session, skip to step 2
+ *  2. tryon → appends to tryonHistory (keeps ALL generated images)
+ *  3. Resume from history → load session with full try-on gallery
  */
 
 import { prisma } from "~/lib/db.server";
@@ -18,6 +18,23 @@ const log = createLogger("ai-sessions");
 
 // ─── Types ─────────────────────────────────────────────────────────────
 
+/** Single try-on entry stored in the session's tryonHistory JSON array */
+export interface TryOnHistoryEntry {
+  id: string;
+  imageUrl: string;
+  productSlug: string;
+  productName: string;
+  creditsUsed?: number;
+  costUsd?: number;
+  selectedVariants?: Array<{
+    groupLabel: string;
+    optionLabel: string;
+    optionColor?: string;
+    optionImageUrl?: string;
+  }>;
+  createdAt: string;
+}
+
 export interface AiSessionSummary {
   id: string;
   label: string | null;
@@ -25,9 +42,9 @@ export interface AiSessionSummary {
   updatedAt: string;
   /** Thumbnail — first 50 chars of base64 to build a data URI preview */
   footImageThumb: string;
-  /** Has try-on result */
-  hasTryon: boolean;
-  /** Try-on product name (if available) */
+  /** Number of try-on results in this session */
+  tryonCount: number;
+  /** Last try-on product name (if available) */
   tryonProductName: string | null;
   analysisCost: number | null;
 }
@@ -43,6 +60,8 @@ export interface AiSessionDetail {
   tryonProductId: string | null;
   tryonCreditsUsed: number | null;
   tryonCostUsd: number | null;
+  /** Full try-on history — all generated images for this session */
+  tryonHistory: TryOnHistoryEntry[];
   createdAt: string;
   updatedAt: string;
 }
@@ -63,26 +82,30 @@ export async function listSessions(limit = 20): Promise<AiSessionSummary[]> {
       footImage: true,
       tryonImageUrl: true,
       tryonProductId: true,
+      tryonHistory: true,
       analysisCost: true,
       createdAt: true,
       updatedAt: true,
     },
   });
 
-  return sessions.map((s) => ({
-    id: s.id,
-    label: s.label,
-    createdAt: s.createdAt.toISOString(),
-    updatedAt: s.updatedAt.toISOString(),
-    footImageThumb: buildThumbnail(s.footImage),
-    hasTryon: s.tryonImageUrl !== null,
-    tryonProductName: s.tryonProductId ?? null,
-    analysisCost: s.analysisCost,
-  }));
+  return sessions.map((s) => {
+    const history = parseTryOnHistory(s.tryonHistory);
+    return {
+      id: s.id,
+      label: s.label,
+      createdAt: s.createdAt.toISOString(),
+      updatedAt: s.updatedAt.toISOString(),
+      footImageThumb: buildThumbnail(s.footImage),
+      tryonCount: history.length,
+      tryonProductName: s.tryonProductId ?? null,
+      analysisCost: s.analysisCost,
+    };
+  });
 }
 
 /**
- * Get a single session with full data (including full footImage base64).
+ * Get a single session with full data (including full footImage base64 and try-on history).
  */
 export async function getSession(id: string): Promise<AiSessionDetail | null> {
   const session = await prisma.aiSession.findUnique({ where: { id } });
@@ -99,6 +122,7 @@ export async function getSession(id: string): Promise<AiSessionDetail | null> {
     tryonProductId: session.tryonProductId,
     tryonCreditsUsed: session.tryonCreditsUsed,
     tryonCostUsd: session.tryonCostUsd,
+    tryonHistory: parseTryOnHistory(session.tryonHistory),
     createdAt: session.createdAt.toISOString(),
     updatedAt: session.updatedAt.toISOString(),
   };
@@ -129,15 +153,48 @@ export async function createSession(params: {
 }
 
 /**
- * Update session with try-on result.
+ * Append a try-on result to the session's history.
+ *
+ * IMPORTANT: This APPENDS to tryonHistory (preserving all previous try-ons).
+ * The single-result fields (tryonImageUrl, etc.) are also updated for backward compatibility.
  */
-export async function updateSessionTryOn(params: {
+export async function appendTryOnToSession(params: {
   id: string;
   imageUrl: string;
   productId: string;
+  productName: string;
   creditsUsed?: number;
   costUsd?: number;
-}): Promise<void> {
+  selectedVariants?: TryOnHistoryEntry["selectedVariants"];
+}): Promise<TryOnHistoryEntry[]> {
+  // Fetch current history
+  const session = await prisma.aiSession.findUnique({
+    where: { id: params.id },
+    select: { tryonHistory: true },
+  });
+
+  if (!session) {
+    throw new Error(`Session ${params.id} not found`);
+  }
+
+  const existingHistory = parseTryOnHistory(session.tryonHistory);
+
+  // Build new entry
+  const newEntry: TryOnHistoryEntry = {
+    id: crypto.randomUUID(),
+    imageUrl: params.imageUrl,
+    productSlug: params.productId,
+    productName: params.productName,
+    creditsUsed: params.creditsUsed,
+    costUsd: params.costUsd,
+    selectedVariants: params.selectedVariants,
+    createdAt: new Date().toISOString(),
+  };
+
+  // Append to history
+  const updatedHistory = [...existingHistory, newEntry];
+
+  // Update session — history + single-result fields (backward compat)
   await prisma.aiSession.update({
     where: { id: params.id },
     data: {
@@ -145,14 +202,19 @@ export async function updateSessionTryOn(params: {
       tryonProductId: params.productId,
       tryonCreditsUsed: params.creditsUsed ?? null,
       tryonCostUsd: params.costUsd ?? null,
+      tryonHistory: updatedHistory as unknown as Prisma.InputJsonValue,
     },
   });
 
-  log.info("AI session updated with try-on", {
+  log.info("AI session: try-on appended to history", {
     id: params.id,
     productId: params.productId,
+    productName: params.productName,
+    historySize: updatedHistory.length,
     creditsUsed: params.creditsUsed,
   });
+
+  return updatedHistory;
 }
 
 /**
@@ -196,7 +258,7 @@ export async function getTotalCost(): Promise<{ totalUsd: number; sessionCount: 
   };
 }
 
-// ─── Helpers ───────────────────────────────────────────────────────────
+// ─── Internal Helpers ──────────────────────────────────────────────────
 
 /**
  * Build a tiny thumbnail from a base64 data URI.
@@ -214,4 +276,24 @@ function buildThumbnail(footImage: string): string {
 
   // Return truncated data URI (browser will show partial image or broken icon)
   return `${match[1]}${match[2]}...`;
+}
+
+// ─── Module-level Helpers (function declarations for hoisting) ────────
+
+/** Type guard for TryOnHistoryEntry. */
+function isTryOnHistoryEntry(entry: unknown): entry is TryOnHistoryEntry {
+  if (!entry || typeof entry !== "object") return false;
+  const obj = entry as Record<string, unknown>;
+  return (
+    typeof obj.id === "string" &&
+    typeof obj.imageUrl === "string" &&
+    typeof obj.productSlug === "string" &&
+    typeof obj.createdAt === "string"
+  );
+}
+
+/** Safely parse tryonHistory from JSON. Returns empty array if null, invalid, or not an array. */
+function parseTryonHistory(raw: unknown): TryOnHistoryEntry[] {
+  if (!raw || !Array.isArray(raw)) return [];
+  return raw.filter(isTryOnHistoryEntry);
 }

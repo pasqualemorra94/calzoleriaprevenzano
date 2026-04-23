@@ -14,7 +14,7 @@ interface SessionSummary {
   label: string | null;
   createdAt: string;
   updatedAt: string;
-  hasTryon: boolean;
+  tryonCount: number;
   tryonProductName: string | null;
   analysisCost: number | null;
 }
@@ -127,9 +127,9 @@ export function SessionHistory({ onResume, onClose }: SessionHistoryProps) {
                 </p>
                 <div className="mt-0.5 flex items-center gap-2 text-[11px] text-gray-400">
                   <span>{formatDate(session.createdAt)}</span>
-                  {session.hasTryon && (
+                  {session.tryonCount > 0 && (
                     <span className="rounded-full bg-green-50 px-1.5 py-0.5 text-[10px] font-medium text-green-600">
-                      ✓ Try-on
+                      ✓ {session.tryonCount} {session.tryonCount === 1 ? "prova" : "prove"}
                     </span>
                   )}
                   {session.analysisCost != null && (

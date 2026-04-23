@@ -7,6 +7,7 @@
  *  3. User selects a sandal (from suggestions or full catalog)
  *  4. Optionally customize variants (color, leather, heel)
  *  5. Generate virtual try-on preview (with selected variants applied)
+ *  6. ALL generated try-ons are preserved in a scrollable gallery
  *
  * The AI analysis is used internally for matching but the detailed
  * foot profile (arch, width, shape) is NOT shown to the user.
@@ -14,11 +15,13 @@
  *
  * Sessions are saved to DB — the user can resume a previous session
  * and skip directly to step 3 (select sandal + try-on).
+ * Each session preserves ALL try-on history — generating a new try-on
+ * with a different sandal does NOT overwrite previous results.
  */
 
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useCallback } from "react";
-import { Loader2, Wand2, RotateCcw, History } from "lucide-react";
+import { Loader2, Wand2, RotateCcw, History, ChevronLeft, ImageIcon } from "lucide-react";
 import { FootCamera } from "~/components/admin/ai-advisor/FootCamera";
 import { FootAnalysis } from "~/components/admin/ai-advisor/FootAnalysis";
 import { SandalSuggestions } from "~/components/admin/ai-advisor/SandalSuggestions";
@@ -29,6 +32,7 @@ import { SessionHistory } from "~/components/admin/ai-advisor/SessionHistory";
 import { $getAdvisorCatalog } from "~/lib/admin-functions";
 import type { AIFootAnalysisResult } from "~/lib/ai.server";
 import type { ProductMatch, AdvisorProduct } from "~/lib/ai-advisor.server";
+import type { TryOnHistoryEntry } from "~/lib/ai-sessions.server";
 
 export const Route = createFileRoute("/admin/ai-advisor")({
   beforeLoad: async () => {
@@ -68,8 +72,13 @@ function AIAdvisorPage() {
 
   // Try-on state
   const [tryonLoading, setTryonLoading] = useState(false);
-  const [tryonImage, setTryonImage] = useState<string | null>(null);
   const [tryonError, setTryonError] = useState<string | null>(null);
+
+  // Try-on history (ALL generated images — preserved across sandal changes)
+  const [tryonHistory, setTryonHistory] = useState<TryOnHistoryEntry[]>([]);
+
+  // The currently viewed try-on image (latest by default, but can browse history)
+  const [activeTryonImage, setActiveTryonImage] = useState<string | null>(null);
 
   // Show session history panel?
   const [showHistory, setShowHistory] = useState(false);
@@ -130,20 +139,30 @@ function AIAdvisorPage() {
       setCurrentSessionId(sessionId);
       setSelectedSandal(null);
       setSelectedOptions({});
-      setTryonImage(null);
       setTryonError(null);
       setTryonLoading(false);
 
-      // If session has a try-on, restore that too and show it
-      if (session.tryonImageUrl && session.tryonProductId) {
-        const product = catalog.find((p) => p.slug === session.tryonProductId);
+      // Restore try-on history (ALL previous try-ons, not just the latest)
+      const history = Array.isArray(session.tryonHistory) ? session.tryonHistory as TryOnHistoryEntry[] : [];
+      setTryonHistory(history);
+
+      if (history.length > 0) {
+        // Show the most recent try-on as the active image
+        setActiveTryonImage(history[history.length - 1].imageUrl);
+      } else {
+        setActiveTryonImage(null);
+      }
+
+      // If session has try-ons, go directly to try-on step
+      // (user can still browse catalog from there)
+      if (history.length > 0) {
+        const latest = history[history.length - 1];
+        const product = catalog.find((p) => p.slug === latest.productSlug);
         if (product) {
           setSelectedSandal(product);
-          setTryonImage(session.tryonImageUrl);
         }
         setStep("tryon");
       } else {
-        // No try-on yet → go to results to select a sandal
         setStep("results");
       }
     } catch {
@@ -157,7 +176,6 @@ function AIAdvisorPage() {
     if (fullProduct) {
       setSelectedSandal(fullProduct);
       setSelectedOptions({});
-      setTryonImage(null);
       setTryonError(null);
       setStep("tryon");
     }
@@ -167,7 +185,6 @@ function AIAdvisorPage() {
   const handleCatalogSelect = useCallback((product: AdvisorProduct) => {
     setSelectedSandal(product);
     setSelectedOptions({});
-    setTryonImage(null);
     setTryonError(null);
     setStep("tryon");
   }, []);
@@ -197,7 +214,6 @@ function AIAdvisorPage() {
 
     setTryonLoading(true);
     setTryonError(null);
-    setTryonImage(null);
 
     try {
       const body: Record<string, unknown> = {
@@ -211,13 +227,16 @@ function AIAdvisorPage() {
       // Pass selected variants (with group label + imageUrl) for intelligent prompt
       const variantsArray = Object.values(selectedOptions);
       if (variantsArray.length > 0) {
-        body.selectedVariants = variantsArray.map((opt) => ({
-          groupId: Object.keys(selectedOptions).find((k) => selectedOptions[k]?.id === opt.id) ?? "",
-          groupLabel: opt.groupLabel,
-          optionId: opt.id,
-          optionLabel: opt.label,
-          optionImageUrl: opt.imageUrl,
-        }));
+        body.selectedVariants = variantsArray.map((opt) => {
+          const groupId = Object.keys(selectedOptions).find((k) => selectedOptions[k]?.id === opt.id) ?? "";
+          return {
+            groupId,
+            groupLabel: opt.groupLabel,
+            optionId: opt.id,
+            optionLabel: opt.label,
+            optionImageUrl: opt.imageUrl,
+          };
+        });
       }
 
       const res = await fetch("/api/admin/ai/tryon", {
@@ -233,7 +252,13 @@ function AIAdvisorPage() {
         return;
       }
 
-      setTryonImage(data.data.imageUrl);
+      const newImageUrl = data.data.imageUrl;
+      setActiveTryonImage(newImageUrl);
+
+      // Update try-on history (append, don't replace)
+      if (data.data.tryonHistory && Array.isArray(data.data.tryonHistory)) {
+        setTryonHistory(data.data.tryonHistory as TryOnHistoryEntry[]);
+      }
     } catch {
       setTryonError("Errore di connessione. Riprova.");
     } finally {
@@ -249,10 +274,11 @@ function AIAdvisorPage() {
     setSuggestions([]);
     setSelectedSandal(null);
     setSelectedOptions({});
-    setTryonImage(null);
+    setActiveTryonImage(null);
     setTryonError(null);
     setTryonLoading(false);
     setCurrentSessionId(null);
+    setTryonHistory([]);
   }, []);
 
   // ── Render ──
@@ -266,7 +292,6 @@ function AIAdvisorPage() {
           <h2 className="mt-1 text-2xl font-bold text-gray-900">Il Tuo Sandalo Perfetto</h2>
         </div>
         <div className="flex items-center gap-2">
-          {/* History button — only on capture step */}
           {step === "capture" && !showHistory && (
             <button
               type="button"
@@ -321,7 +346,9 @@ function AIAdvisorPage() {
               <>
                 <div className="h-0.5 w-4 bg-green-200" />
                 <div className="rounded-full bg-green-50 px-2.5 py-1 text-[10px] font-medium text-green-600">
-                  Sessione salvata
+                  {tryonHistory.length > 0
+                    ? `${tryonHistory.length} prove salvate`
+                    : "Sessione salvata"}
                 </div>
               </>
             )}
@@ -368,7 +395,7 @@ function AIAdvisorPage() {
             </>
           )}
 
-          {/* Step: Try-on — Selected sandal + variant selector + try-on preview */}
+          {/* Step: Try-on — Selected sandal + variant selector + history + try-on preview */}
           {step === "tryon" && selectedSandal && (
             <div className="space-y-6">
               {/* Selected sandal info */}
@@ -430,34 +457,82 @@ function AIAdvisorPage() {
                 )}
                 {tryonLoading
                   ? "Generazione in corso..."
-                  : tryonImage
-                    ? "Rigenera Prova Virtuale"
+                  : tryonHistory.length > 0
+                    ? "Genera Nuova Prova Virtuale"
                     : Object.keys(selectedOptions).length > 0
                       ? "Genera Prova Virtuale con Varianti"
                       : "Genera Prova Virtuale"}
               </button>
 
-              {/* Try-on preview */}
+              {/* Try-on preview (latest / active) */}
               <TryOnPreview
-                imageUrl={tryonImage}
+                imageUrl={activeTryonImage}
                 loading={tryonLoading}
                 error={tryonError}
                 productName={selectedSandal.name}
                 onRetry={handleTryOn}
               />
 
-              {/* Back to suggestions */}
-              <button
-                type="button"
-                onClick={() => {
-                  setStep("results");
-                  setTryonImage(null);
-                  setTryonError(null);
-                }}
-                className="text-sm font-medium text-gray-500 hover:text-gray-700"
-              >
-                ← Torna ai suggerimenti
-              </button>
+              {/* Try-on history gallery */}
+              {tryonHistory.length > 1 && (
+                <div className="space-y-3">
+                  <h4 className="text-sm font-semibold text-gray-700">
+                    📸 Prove precedenti ({tryonHistory.length - 1})
+                  </h4>
+                  <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-5">
+                    {[...tryonHistory].reverse().slice(1).map((entry) => (
+                      <button
+                        key={entry.id}
+                        type="button"
+                        onClick={() => setActiveTryonImage(entry.imageUrl)}
+                        className={`group relative overflow-hidden rounded-lg border-2 transition ${
+                          activeTryonImage === entry.imageUrl
+                            ? "border-[var(--color-primary)] ring-1 ring-[var(--color-primary)]/20"
+                            : "border-gray-100 hover:border-gray-300"
+                        }`}
+                      >
+                        <div className="aspect-[3/4] overflow-hidden">
+                          {entry.imageUrl ? (
+                            <img
+                              src={entry.imageUrl}
+                              alt={`Prova: ${entry.productName}`}
+                              loading="lazy"
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <div className="flex h-full w-full items-center justify-center bg-gray-50">
+                              <ImageIcon className="h-5 w-5 text-gray-300" />
+                            </div>
+                          )}
+                        </div>
+                        <div className="p-1.5">
+                          <p className="truncate text-[10px] font-medium text-gray-700">{entry.productName}</p>
+                          {entry.selectedVariants && entry.selectedVariants.length > 0 && (
+                            <p className="truncate text-[9px] text-gray-400">
+                              {entry.selectedVariants.map((v) => v.optionLabel).join(", ")}
+                            </p>
+                          )}
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Navigation */}
+              <div className="flex items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setStep("results");
+                    setTryonError(null);
+                  }}
+                  className="flex items-center gap-1 text-sm font-medium text-gray-500 transition hover:text-gray-700"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Torna ai suggerimenti
+                </button>
+              </div>
             </div>
           )}
         </>
