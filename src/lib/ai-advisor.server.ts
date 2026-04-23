@@ -348,35 +348,58 @@ export async function getProductImageForTryOn(slug: string): Promise<string | nu
 // ─── Prompt Builder ────────────────────────────────────────────────────
 
 /**
- * Detect the variant "category" from group label or id for smart prompt building.
- * Returns: "color" | "material" | "heel" | "size" | "generic"
+ * Classify a variant group into a semantic category for prompt building.
+ *
+ * The classification determines WHICH PART of the sandal the variant applies to:
+ *  - "color"       → strap / upper color only (NOT sole, NOT lining)
+ *  - "material"    → leather type for straps/upper (e.g. laminato, liscio)
+ *  - "heel"        → heel height/type
+ *  - "size"        → non-visual, skip entirely
+ *  - "generic"     → unknown, describe generically
+ *
+ * Key insight: Color variants in this catalog only change the STRAPS,
+ * never the sole or the inner lining. The prompt must be surgical.
  */
 function classifyVariantGroup(groupLabel: string, groupId: string): "color" | "material" | "heel" | "size" | "generic" {
   const lower = `${groupLabel} ${groupId}`.toLowerCase();
 
-  if (lower.includes("colore") || lower.includes("color")) return "color";
-  if (lower.includes("pelle") || lower.includes("materiale") || lower.includes("tipo")) return "material";
-  if (lower.includes("tacco") || lower.includes("heel") || lower.includes("height")) return "heel";
+  // Size is non-visual — always skip
   if (lower.includes("taglia") || lower.includes("size")) return "size";
 
+  // Heel type/height
+  if (lower.includes("tacco") || lower.includes("heel") || lower.includes("height")) return "heel";
+
+  // Material/leather type — affects strap finish
+  if (lower.includes("tipo di pelle") || lower.includes("materiale") || lower === "tipo") return "material";
+
+  // Color groups — apply to straps only
+  if (lower.includes("colore") || lower.includes("color")) return "color";
+
+  // Named leather groups that are actually conditional color selectors
+  // e.g. "Pelle Liscia" group contains color options like Arancione, Nero, etc.
+  if (lower.includes("pelle liscia") || lower.includes("pelle laminato") || lower.includes("pelle pitonata")) return "color";
+
+  // Generic fallback
   return "generic";
 }
 
 /**
- * Build an optimized prompt for Fashn Try-On Max.
+ * Build a prompt for Fashn tryon-max.
  *
- * Strategy: Fashn works best with short, direct instructions.
- * We focus on:
- *  1. Preserving the original foot exactly (no morphing, no added/removed toes)
- *  2. Preserving the sandal product shape and structure
- *  3. When variants are selected, intelligently applying them:
- *     - Color: "render in [color name] color"
- *     - Material: "use [material] leather with natural texture"
- *     - Heel: "maintain [height] heel"
- *  4. Natural, physically plausible placement on the foot
+ * Fashn best practices (from official docs):
+ *  - Use natural plain language, full sentences
+ *  - Keep it short: 1-3 sentences
+ *  - Don't say "realistic" or "photorealistic" — Fashn handles that
+ *  - Focus on HOW the product should be worn
+ *  - Most important info first
  *
- * Without variants → preserve original product appearance.
- * With variants → override color/material/heel as specified.
+ * Our strategy for sandals with variants:
+ *  1. Tell Fashn to WEAR the sandal (placement)
+ *  2. If variants selected, specify which PART changes:
+ *     - Color → "change ONLY the straps and upper to [color], keep sole and lining unchanged"
+ *     - Material → "use [material] leather for the straps"
+ *     - Heel → "[height] heel"
+ *  3. Never say "render the sandal in X color" — that changes everything
  *
  * @param productSlug - Product to try on
  * @param selectedVariants - Variant selections from the UI (optional)
@@ -390,88 +413,84 @@ export async function buildTryOnPrompt(
     select: { name: true, aiMetadata: true },
   });
 
-  // ── Base directives (always present) ──
-  const baseParts: string[] = [
-    "keep the exact original foot shape, skin tone and toe appearance without any alteration",
-    "place the sandal naturally on the foot with realistic contact",
-    "natural lighting and shadows",
-    "photorealistic output",
-  ];
+  const sentences: string[] = [];
 
-  // ── Style hint from product AI metadata ──
-  let styleHint = "";
-  if (product?.aiMetadata) {
-    const meta = product.aiMetadata as unknown as ProductAIMetadata | null;
-    if (meta?.version === 1) {
-      const hints: string[] = [];
-      if (meta.closureType && meta.closureType !== "N/A") hints.push(meta.closureType.toLowerCase());
-      if (meta.strapStyle && meta.strapStyle !== "N/A") hints.push(meta.strapStyle.toLowerCase());
-      if (hints.length > 0) {
-        styleHint = ` ${hints.join(", ")} sandals`;
-      }
-    }
-  }
+  // ── 1. Core instruction: wear the sandal on the foot ──
+  // Fashn understands "wear" naturally — this handles placement
+  sentences.push("Wear the sandal on the foot");
 
-  // ── Variant-specific prompt parts ──
-  const variantParts: string[] = [];
-
+  // ── 2. Variant customizations (surgical, part-aware) ──
   if (selectedVariants && selectedVariants.length > 0) {
+    const colorParts: string[] = [];
+    let materialPart: string | null = null;
+    let heelPart: string | null = null;
+
     for (const v of selectedVariants) {
       const category = classifyVariantGroup(v.groupLabel, v.groupId);
 
       switch (category) {
         case "color":
-          variantParts.push(`render the sandal in ${v.optionLabel} color`);
-          if (v.optionColor) {
-            variantParts.push(`exact hex color ${v.optionColor}`);
-          }
+          colorParts.push(v.optionLabel.toLowerCase());
           break;
 
         case "material":
-          variantParts.push(`use ${v.optionLabel} leather with its natural texture, grain and finish`);
+          // e.g. "laminato" → "laminated leather", "liscio" → "smooth leather"
+          const materialMap: Record<string, string> = {
+            "laminato": "laminated leather with a glossy finish",
+            "liscio": "smooth natural leather with a matte finish",
+            "pitonata": "python-embossed leather",
+          };
+          const materialKey = v.optionLabel.toLowerCase();
+          materialPart = materialMap[materialKey] ?? `${v.optionLabel} leather`;
           break;
 
         case "heel":
-          variantParts.push(`maintain the ${v.optionLabel} heel`);
+          heelPart = v.optionLabel.toLowerCase();
           break;
 
         case "size":
-          // Size doesn't affect visual rendering — skip
+          // Non-visual — skip
           break;
 
         default:
-          variantParts.push(`${v.groupLabel}: ${v.optionLabel}`);
           break;
       }
     }
+
+    // Build color sentence: surgical — ONLY straps, NOT sole/lining
+    if (colorParts.length > 0) {
+      const colorStr = colorParts.join(" ");
+      sentences.push(
+        `Change ONLY the straps and upper to ${colorStr} color. Keep the sole, lining and all other parts in their original colors.`,
+      );
+    }
+
+    // Build material sentence
+    if (materialPart) {
+      sentences.push(
+        `Use ${materialPart} for the straps and upper. Keep the sole and lining unchanged.`,
+      );
+    }
+
+    // Build heel sentence
+    if (heelPart) {
+      sentences.push(`${heelPart} heel`);
+    }
   }
 
-  // ── Compose final prompt ──
-  const parts: string[] = [];
-
-  if (variantParts.length > 0) {
-    // With variants: apply them, don't preserve original product appearance
-    parts.push(`apply the following customizations to the sandal: ${variantParts.join(", ")}`);
-    parts.push("preserve the sandal shape, straps structure and overall design");
-  } else {
-    // Without variants: preserve original product as-is
-    parts.push("preserve the exact product color, material texture and details");
-  }
-
-  parts.push(...baseParts);
-
-  if (styleHint) {
-    parts.push(`style:${styleHint}`);
-  }
-
-  const prompt = parts.join(", ");
+  const prompt = sentences.join(". ").replace(/\.\./g, ".").trim();
 
   log.info("Built try-on prompt", {
     productSlug,
     productName: product?.name,
     variantCount: selectedVariants?.length ?? 0,
     variantLabels: selectedVariants?.map((v) => `${v.groupLabel}=${v.optionLabel}`),
+    classifications: selectedVariants?.map((v) => ({
+      label: v.groupLabel,
+      classified: classifyVariantGroup(v.groupLabel, v.groupId),
+    })),
     prompt,
+    promptLength: prompt.length,
   });
 
   return prompt;
