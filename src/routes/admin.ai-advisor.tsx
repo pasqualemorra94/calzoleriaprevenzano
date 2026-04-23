@@ -292,7 +292,7 @@ function AIAdvisorPage() {
           <h2 className="mt-1 text-2xl font-bold text-gray-900">Il Tuo Sandalo Perfetto</h2>
         </div>
         <div className="flex items-center gap-2">
-          {step === "capture" && !showHistory && (
+          {!showHistory && (
             <button
               type="button"
               onClick={() => setShowHistory(true)}
@@ -315,12 +315,14 @@ function AIAdvisorPage() {
         </div>
       </div>
 
-      {/* Session history panel */}
-      {showHistory && step === "capture" ? (
-        <SessionHistory
-          onResume={handleResumeSession}
-          onClose={() => setShowHistory(false)}
-        />
+      {/* Session history panel — overlay, visible from any step */}
+      {showHistory ? (
+        <div className="rounded-xl bg-gray-50 p-5">
+          <SessionHistory
+            onResume={handleResumeSession}
+            onClose={() => setShowHistory(false)}
+          />
+        </div>
       ) : (
         <>
           {/* Step indicator */}

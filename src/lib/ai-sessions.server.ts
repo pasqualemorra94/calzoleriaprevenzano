@@ -91,13 +91,18 @@ export async function listSessions(limit = 20): Promise<AiSessionSummary[]> {
 
   return sessions.map((s) => {
     const history = parseTryOnHistory(s.tryonHistory);
+    // Backward compat: if no history array yet, count from legacy single-result field
+    const tryonCount = history.length > 0
+      ? history.length
+      : (s.tryonImageUrl ? 1 : 0);
+
     return {
       id: s.id,
       label: s.label,
       createdAt: s.createdAt.toISOString(),
       updatedAt: s.updatedAt.toISOString(),
       footImageThumb: buildThumbnail(s.footImage),
-      tryonCount: history.length,
+      tryonCount,
       tryonProductName: s.tryonProductId ?? null,
       analysisCost: s.analysisCost,
     };
