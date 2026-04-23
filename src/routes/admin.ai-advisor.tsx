@@ -21,7 +21,7 @@
 
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useCallback } from "react";
-import { Loader2, Wand2, RotateCcw, History, ChevronLeft, ImageIcon } from "lucide-react";
+import { Loader2, Wand2, RotateCcw, History, ChevronLeft, ChevronDown, ImageIcon, Search } from "lucide-react";
 import { FootCamera } from "~/components/admin/ai-advisor/FootCamera";
 import { FootAnalysis } from "~/components/admin/ai-advisor/FootAnalysis";
 import { SandalSuggestions } from "~/components/admin/ai-advisor/SandalSuggestions";
@@ -82,6 +82,12 @@ function AIAdvisorPage() {
 
   // Show session history panel?
   const [showHistory, setShowHistory] = useState(false);
+
+  // Show inline catalog to change sandal within try-on step?
+  const [showCatalog, setShowCatalog] = useState(false);
+
+  // Catalog search filter
+  const [catalogSearch, setCatalogSearch] = useState("");
 
   // ── Step 1: Capture foot photo ──
   const handleCapture = useCallback((base64Image: string) => {
@@ -521,20 +527,64 @@ function AIAdvisorPage() {
                 </div>
               )}
 
-              {/* Navigation */}
+              {/* Navigation + Change sandal */}
               <div className="flex items-center gap-4">
                 <button
                   type="button"
-                  onClick={() => {
-                    setStep("results");
-                    setTryonError(null);
-                  }}
-                  className="flex items-center gap-1 text-sm font-medium text-gray-500 transition hover:text-gray-700"
+                  onClick={() => setShowCatalog((v) => !v)}
+                  className="flex items-center gap-1.5 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 transition hover:bg-gray-50"
                 >
-                  <ChevronLeft className="h-4 w-4" />
-                  Torna ai suggerimenti
+                  <Search className="h-4 w-4" />
+                  Cambia sandalo
+                  <ChevronDown className={`h-3.5 w-3.5 transition ${showCatalog ? "rotate-180" : ""}`} />
                 </button>
               </div>
+
+              {/* Inline catalog — collapsible, to change sandal without leaving try-on */}
+              {showCatalog && (
+                <div className="space-y-4 rounded-xl border border-gray-100 bg-gray-50 p-4">
+                  {/* Search filter */}
+                  <input
+                    type="text"
+                    value={catalogSearch}
+                    onChange={(e) => setCatalogSearch(e.target.value)}
+                    placeholder="Cerca sandalo per nome..."
+                    className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm placeholder:text-gray-400 focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]/20"
+                  />
+
+                  {/* Quick suggestions (if available) */}
+                  {suggestions.length > 0 && (
+                    <div>
+                      <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400">Suggeriti per te</p>
+                      <SandalSuggestions
+                        suggestions={suggestions}
+                        onSelect={(product) => {
+                          handleSuggestionSelect(product);
+                          setShowCatalog(false);
+                          setCatalogSearch("");
+                        }}
+                        selectedId={selectedSandal?.id}
+                      />
+                    </div>
+                  )}
+
+                  {/* Full catalog */}
+                  <SandalCatalog
+                    products={catalog.filter((p) =>
+                      catalogSearch.length === 0 ||
+                      p.name.toLowerCase().includes(catalogSearch.toLowerCase()),
+                    )}
+                    onSelect={(product) => {
+                      setSelectedSandal(product);
+                      setSelectedOptions({});
+                      setTryonError(null);
+                      setShowCatalog(false);
+                      setCatalogSearch("");
+                    }}
+                    selectedId={selectedSandal?.id}
+                  />
+                </div>
+              )}
             </div>
           )}
         </>
