@@ -505,6 +505,140 @@ export async function buildTryOnPrompt(
 
 // ─── Image Resolution ──────────────────────────────────────────────────
 
+// Max dimensions for images sent to external APIs (Fashn recommends max 2000px for 1K)
+const MAX_IMAGE_DIMENSION = 1024;
+// JPEG quality for compression (85 = good balance of quality vs size)
+const JPEG_QUALITY = 85;
+
+/**
+ * Resize and compress an image (from data URI or buffer) using sharp.
+ *
+ * Reduces image to MAX_IMAGE_DIMENSION on the longest edge and compresses
+ * to JPEG at JPEG_QUALITY. This dramatically reduces:
+ *  - Base64 payload size (5-10x smaller)
+ *  - API token count (proportional to pixel count)
+ *  - Credits consumed per request
+ *
+ * @returns Resized image as JPEG data URI, or original if already small enough
+ */
+export async function resizeAndCompress(imageData: string | Buffer): Promise<string | Buffer> {
+  try {
+    const sharp = await import("sharp");
+
+    // Decode input
+    let inputBuffer: Buffer;
+    let isDataUri = false;
+    if (typeof imageData === "string") {
+      if (imageData.startsWith("http")) {
+        // URL — can't resize locally, return as-is
+        return imageData;
+      }
+      const decoded = decodeDataUri(imageData);
+      if (!decoded) return imageData;
+      inputBuffer = decoded;
+      isDataUri = true;
+    } else {
+      inputBuffer = imageData;
+    }
+
+    // Check current dimensions
+    const metadata = await sharp.default(inputBuffer).metadata();
+    const { width = 0, height = 0 } = metadata;
+
+    // Already small enough — skip resize (but still compress to JPEG)
+    const needsResize = width > MAX_IMAGE_DIMENSION || height > MAX_IMAGE_DIMENSION;
+
+    let pipeline = sharp.default(inputBuffer);
+    if (needsResize) {
+      pipeline = pipeline.resize(MAX_IMAGE_DIMENSION, MAX_IMAGE_DIMENSION, {
+        fit: "inside",
+        withoutEnlargement: true,
+      });
+    }
+
+    const outputBuffer = await pipeline
+      .jpeg({ quality: JPEG_QUALITY })
+      .toBuffer();
+
+    log.info("Image resized/compressed", {
+      originalSize: `${width}x${height}`,
+      originalKb: Math.round(inputBuffer.length / 1024),
+      outputKb: Math.round(outputBuffer.length / 1024),
+      savings: `${Math.round((1 - outputBuffer.length / inputBuffer.length) * 100)}%`,
+      resized: needsResize,
+    });
+
+    if (isDataUri) {
+      return `data:image/jpeg;base64,${outputBuffer.toString("base64")}`;
+    }
+    return outputBuffer;
+  } catch (err) {
+    log.warn("Failed to resize image, using original", {
+      error: err instanceof Error ? err.message : "unknown",
+    });
+    return imageData;
+  }
+}
+
+/**
+ * Upload an image to a temporary hosting service and return a public URL.
+ *
+ * Uses imgbb.com free API for temporary image hosting.
+ * Useful during local development when external APIs can't reach localhost.
+ *
+ * TODO: In production, use your own CDN (Cloudflare R2, S3, etc.)
+ * This is a development convenience — not meant for production traffic.
+ *
+ * @returns Public URL of the uploaded image, or the original data URI if upload fails
+ */
+export async function uploadToTempHost(dataUri: string): Promise<string> {
+  const IMGBB_API_KEY = process.env.IMGBB_API_KEY;
+  if (!IMGBB_API_KEY) {
+    log.debug("IMGBB_API_KEY not set, skipping temp upload");
+    return dataUri;
+  }
+
+  try {
+    // Extract base64 from data URI
+    const base64Match = dataUri.match(/^data:[^;]+;base64,(.+)$/);
+    if (!base64Match) {
+      log.warn("Cannot extract base64 from data URI for upload");
+      return dataUri;
+    }
+
+    const formData = new FormData();
+    formData.append("key", IMGBB_API_KEY);
+    formData.append("image", base64Match[1]);
+
+    const response = await fetch("https://api.imgbb.com/1/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      log.warn("imgbb upload failed", { status: response.status });
+      return dataUri;
+    }
+
+    const data = await response.json() as {
+      data: { url: string; display_url: string; delete_url: string };
+      success: boolean;
+    };
+
+    if (data.success && data.data?.url) {
+      log.info("Image uploaded to temp host", { url: data.data.url });
+      return data.data.url;
+    }
+
+    return dataUri;
+  } catch (err) {
+    log.warn("Failed to upload to temp host", {
+      error: err instanceof Error ? err.message : "unknown",
+    });
+    return dataUri;
+  }
+}
+
 /**
  * Composite the product image with variant swatch images into a single image.
  *

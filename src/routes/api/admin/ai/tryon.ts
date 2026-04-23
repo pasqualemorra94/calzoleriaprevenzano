@@ -25,7 +25,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { apiSuccess, apiError } from "~/lib/api-response";
 import { requireAdmin } from "~/lib/sdk-auth.server";
 import { generateTryOn } from "~/lib/fashn.server";
-import { getProductImageForTryOn, buildTryOnPrompt, resolveImageToBase64, compositeProductWithSwatches } from "~/lib/ai-advisor.server";
+import { getProductImageForTryOn, buildTryOnPrompt, resolveImageToBase64, compositeProductWithSwatches, resizeAndCompress, uploadToTempHost } from "~/lib/ai-advisor.server";
 import type { SelectedVariant } from "~/lib/ai-advisor.server";
 import { appendTryOnToSession } from "~/lib/ai-sessions.server";
 import type { TryOnHistoryEntry } from "~/lib/ai-sessions.server";
@@ -150,13 +150,36 @@ export const Route = createFileRoute("/api/admin/ai/tryon")({
           });
         }
 
+        // ── Resize & compress images to save credits ──
+        // External APIs charge by image tokens (proportional to pixel count).
+        // Reducing to 1024px max + JPEG 85% can save 5-10x in size and credits.
+        if (personImage.startsWith("data:")) {
+          const resized = await resizeAndCompress(personImage);
+          if (typeof resized === "string") personImage = resized;
+        }
+        if (garmentImage.startsWith("data:")) {
+          const resized = await resizeAndCompress(garmentImage);
+          if (typeof resized === "string") garmentImage = resized;
+        }
+
+        // ── Upload to temp host if IMGBB_API_KEY is set (localhost convenience) ──
+        // In production, images should be served from a CDN.
+        // For local dev, imgbb provides temporary public URLs so we don't
+        // need to send huge base64 payloads to the API.
+        if (personImage.startsWith("data:")) {
+          personImage = await uploadToTempHost(personImage);
+        }
+        if (garmentImage.startsWith("data:")) {
+          garmentImage = await uploadToTempHost(garmentImage);
+        }
+
         // ── Debug log image formats ──
-        log.info("Try-on images resolved", {
+        log.info("Try-on images prepared", {
           productSlug,
-          personImagePrefix: personImage.slice(0, 80),
+          personImageType: personImage.startsWith("data:") ? "base64" : personImage.startsWith("http") ? "url" : "unknown",
           personImageLength: personImage.length,
-          personImageType: personImage.startsWith("data:") ? "base64-data-uri" : personImage.startsWith("http") ? "url" : "unknown-format",
-          garmentImagePrefix: garmentImage.slice(0, 80),
+          garmentImageType: garmentImage.startsWith("data:") ? "base64" : garmentImage.startsWith("http") ? "url" : "unknown",
+          garmentImageLength: garmentImage.length,
           variantCount: resolvedVariants.length,
           variantLabels: resolvedVariants.map((v) => `${v.groupLabel}=${v.optionLabel}`),
         });
