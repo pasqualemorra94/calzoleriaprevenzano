@@ -111,6 +111,22 @@ export async function getSession(id: string): Promise<AiSessionDetail | null> {
   const session = await prisma.aiSession.findUnique({ where: { id } });
   if (!session) return null;
 
+  // Build try-on history: prefer new array field, fallback to legacy single-result
+  let tryonHistory = parseTryonHistory(session.tryonHistory);
+
+  // Backward compat: if no history array yet, reconstruct from legacy single-result fields
+  if (tryonHistory.length === 0 && session.tryonImageUrl) {
+    tryonHistory = [{
+      id: crypto.randomUUID(),
+      imageUrl: session.tryonImageUrl,
+      productSlug: session.tryonProductId ?? "",
+      productName: session.tryonProductId ?? "",
+      creditsUsed: session.tryonCreditsUsed ?? undefined,
+      costUsd: session.tryonCostUsd ?? undefined,
+      createdAt: session.updatedAt.toISOString(),
+    }];
+  }
+
   return {
     id: session.id,
     label: session.label,
@@ -122,7 +138,7 @@ export async function getSession(id: string): Promise<AiSessionDetail | null> {
     tryonProductId: session.tryonProductId,
     tryonCreditsUsed: session.tryonCreditsUsed,
     tryonCostUsd: session.tryonCostUsd,
-    tryonHistory: parseTryOnHistory(session.tryonHistory),
+    tryonHistory,
     createdAt: session.createdAt.toISOString(),
     updatedAt: session.updatedAt.toISOString(),
   };
