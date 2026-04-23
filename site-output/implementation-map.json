@@ -1,5 +1,5 @@
 {
-  "version": 33,
+  "version": 36,
   "generatedAt": "2026-04-02T00:00:00.000Z",
   "projectSlug": "calzoleria-prevenzano",
   "framework": "tanstack",
@@ -451,6 +451,24 @@
           "POST"
         ],
         "auth": "admin"
+      },
+      {
+        "path": "/api/admin/ai/sessions",
+        "file": "src/routes/api/admin/ai/sessions.ts",
+        "methods": [
+          "GET"
+        ],
+        "auth": "admin"
+      },
+      {
+        "path": "/api/admin/ai/sessions/$id",
+        "file": "src/routes/api/admin/ai/sessions.$id.ts",
+        "methods": [
+          "GET",
+          "PATCH",
+          "DELETE"
+        ],
+        "auth": "admin"
       }
     ]
   },
@@ -498,7 +516,8 @@
       "src/components/admin/ai-advisor/SandalSuggestions.tsx",
       "src/components/admin/ai-advisor/SandalCatalog.tsx",
       "src/components/admin/ai-advisor/VariantSelector.tsx",
-      "src/components/admin/ai-advisor/TryOnPreview.tsx"
+      "src/components/admin/ai-advisor/TryOnPreview.tsx",
+      "src/components/admin/ai-advisor/SessionHistory.tsx"
     ],
     "auth": [
       "src/components/auth/LoginForm.tsx",
@@ -557,7 +576,8 @@
       "Wishlist",
       "DiscountCode",
       "VariantTemplate",
-      "Media"
+      "Media",
+      "AiSession"
     ]
   },
   "lib": {
@@ -597,7 +617,8 @@
       "src/lib/logger.server.ts",
       "src/lib/ai.server.ts",
       "src/lib/fashn.server.ts",
-      "src/lib/ai-advisor.server.ts"
+      "src/lib/ai-advisor.server.ts",
+      "src/lib/ai-sessions.server.ts"
     ],
     "client": [
       "src/lib/auth-client.ts"
@@ -728,7 +749,10 @@
       "2026-04-20: Feature QuickSearch \u2014 global product search in header (MegaMenu row 1), fetches /api/products with debounce 300ms, AbortController cancellation, keyboard nav (arrows+enter+escape), dropdown with thumbnail+name+price, link to full catalog results",
       "2026-04-22: Feature AI Foot Advisor \u2014 admin-only in-store tablet experience: capture foot photo \u2192 GPT-4.1-mini vision analysis \u2192 sandal suggestions with scoring \u2192 variant customization \u2192 virtual try-on via Fashn.ai/fal.ai; 3 server libs (ai.server.ts, fashn.server.ts, ai-advisor.server.ts), 2 API routes (analyze-foot, tryon), 6 components, Product.aiMetadata Json? field, deterministic seed (prisma/seed-ai-metadata.ts), ~$20/month cost (OpenAI + Fashn.ai)",
       "2026-04-22: Fix admin sidebar missing AI Advisor menu item \u2014 added Sparkles icon + /admin/ai-advisor link to NAV_ITEMS in admin.tsx",
-      "2026-04-22: Configured fal.ai integration \u2014 added FAL_KEY + FASHN_API_BASE (https://queue.fal.run/fashn-ai/hygelac) to .env; existing fashn.server.ts auto-routes try-on via fal.ai queue when FASHN_API_BASE contains fal.run"
+      "2026-04-22: Configured fal.ai integration \u2014 added FAL_KEY + FASHN_API_BASE (https://queue.fal.run/fashn-ai/hygelac) to .env; existing fashn.server.ts auto-routes try-on via fal.ai queue when FASHN_API_BASE contains fal.run",
+      "2026-04-22: AI cost logging \u2014 fashn.server.ts now returns creditsUsed + durationMs + provider in TryOnResult; analyze-foot.ts and tryon.ts log full cost breakdown (model, tokens, credits, USD estimate, timing) via structured logger",
+      "2026-04-22: AI session persistence \u2014 AiSession model (footImage+footProfile+suggestions+tryOn); analyze-foot saves session, tryon updates it; SessionHistory UI with resume from history; skip step 1 on subsequent visits",
+      "2026-04-23: AI Advisor UX refactor \u2014 removed foot profile display from UI (only shows recommendations + best/avoid sandal types); fixed product images in suggestions (sortOrder query bug); added selectedVariants to try-on API with intelligent prompt builder (classifyVariantGroup auto-detects color/material/heel); VariantSelector callback now includes groupLabel + imageUrl; resolveImageToBase64 exported for future CDN migration"
     ]
   },
   "regressionNotes": {

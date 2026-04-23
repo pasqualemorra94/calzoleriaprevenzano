@@ -12,8 +12,8 @@
 
 interface VariantSelectorProps {
   variantConfig: unknown;
-  onOptionChange: (groupId: string, optionId: string, optionLabel: string, optionColor?: string) => void;
-  selectedOptions: Record<string, { id: string; label: string; color?: string }>;
+  onOptionChange: (groupId: string, groupLabel: string, optionId: string, optionLabel: string, optionImageUrl?: string) => void;
+  selectedOptions: Record<string, { id: string; label: string; groupLabel: string; imageUrl?: string }>;
 }
 
 interface VariantGroup {
@@ -68,7 +68,7 @@ export function VariantSelector({ variantConfig, onOptionChange, selectedOptions
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
-                      onOptionChange(group.id, option.id, option.label, option.imageUrl);
+                      onOptionChange(group.id, group.label, option.id, option.label, option.imageUrl);
                     }}
                     title={option.label}
                     aria-label={option.label}
@@ -115,7 +115,7 @@ export function VariantSelector({ variantConfig, onOptionChange, selectedOptions
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
-                      onOptionChange(group.id, option.id, option.label, option.imageUrl);
+                      onOptionChange(group.id, group.label, option.id, option.label, option.imageUrl);
                     }}
                     className={`flex items-center gap-2 rounded-lg border-2 px-3 py-2 text-sm transition ${
                       isSelected

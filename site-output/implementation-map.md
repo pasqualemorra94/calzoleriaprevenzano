@@ -1506,3 +1506,161 @@ Nessuna nuova chiave i18n — interfaccia admin-only in italiano.
 1. Admin entra in `/admin`
 2. Sidebar mostra voce "AI Advisor" con icona Sparkles
 3. Click → naviga a `/admin/ai-advisor` (flusso esistente: foto piede → analisi → suggerimenti → try-on)
+
+---
+
+## 🆕 Feature aggiunta: AI Cost Logging | 2026-04-22
+
+### File modificati
+
+| File | Modifica | Giustificazione |
+|------|----------|-----------------|
+| `src/lib/fashn.server.ts` | TryOnResult ora include `creditsUsed`, `durationMs`, `provider`; aggiunto log costi per ogni operazione; cattura `credits_used` da fal.ai queue response e `credits` da Fashn API | Permette tracciare i costi per singola operazione di try-on |
+| `src/routes/api/admin/ai/analyze-foot.ts` | Aggiunto log strutturato con cost breakdown (modello, tokens, costo USD, timing AI + matching) | Traccia il costo OpenAI per ogni analisi piede |
+| `src/routes/api/admin/ai/tryon.ts` | Aggiunto log strutturato con cost breakdown (provider, credits, durata) + risposta API ora include campo `cost` | Traccia il costo fal.ai/Fashn per ogni try-on + espone costo al client |
+
+### Log di costo generati
+
+**Foot Analysis** (`ai-analyze-foot`):
+```
+[ISO] INFO [ai-analyze-foot] AI cost — foot analysis + matching | {
+  "openai": { "model": "gpt-4.1-mini", "costUsd": 0.001234, "tokens": { "input": 1234, "output": 567 }, "durationMs": 3200 },
+  "matching": { "totalAnalyzed": 8, "durationMs": 45 },
+  "total": { "durationMs": 3250, "costUsd": 0.001234 }
+}
+```
+
+**Try-on** (`ai-tryon`):
+```
+[ISO] INFO [ai-tryon] AI cost — try-on complete | {
+  "provider": "fal", "generationId": "abc-123", "productSlug": "calzedonia-nera",
+  "creditsUsed": 5, "generationDurationMs": 8500, "totalDurationMs": 8600
+}
+```
+
+**Try-on** (da `fashn` module — log interno):
+```
+[ISO] INFO [fashn] AI cost — try-on | {
+  "provider": "fal", "generationId": "abc-123", "creditsUsed": 5,
+  "resolution": "1k", "durationMs": 8500, "estimatedUsd": 0.025
+}
+```
+
+---
+
+## 🆕 Feature aggiunta: AI Session Persistence | 2026-04-22
+
+### Problema risolto
+Ogni volta che l'admin usava l'AI Advisor doveva rifotografare il piede e ri-runnare l'analisi OpenAI ($0.001+ per chiamata). Ora i risultati vengono salvati nel DB e si può riprendere da una sessione precedente, saltando direttamente allo step di try-on.
+
+### File creati
+
+| File | Tipo | Layer | Scopo |
+|------|------|-------|-------|
+| `src/lib/ai-sessions.server.ts` | server lib | DATA | CRUD per AiSession (create, get, list, updateTryOn, updateLabel, delete, getTotalCost) |
+| `src/routes/api/admin/ai/sessions.ts` | API route | BIZ | GET /api/admin/ai/sessions — lista sessioni con costi totali |
+| `src/routes/api/admin/ai/sessions.$id.ts` | API route | BIZ | GET/PATCH/DELETE singola sessione |
+| `src/components/admin/ai-advisor/SessionHistory.tsx` | component | UI | Pannello storico sessioni con resume e delete |
+
+### File modificati
+
+| File | Modifica | Giustificazione |
+|------|----------|-----------------|
+| `prisma/schema.prisma` | Aggiunto modello AiSession | Persistenza sessioni (guarded — nuovo modello, non modifica esistenti) |
+| `src/routes/api/admin/ai/analyze-foot.ts` | Salva sessione dopo analisi (restituisce sessionId) | Evita di ri-runnare OpenAI se si riprende la sessione |
+| `src/routes/api/admin/ai/tryon.ts` | Accetta sessionId opzionale, salva try-on nella sessione | Permette tracciare try-on per sessione |
+| `src/routes/admin.ai-advisor.tsx` | Aggiunto SessionHistory panel, resume flow, stato currentSessionId | L'admin può riprendere sessioni precedenti senza rifare l'analisi |
+
+### Nuovo modello DB — AiSession
+
+| Campo | Tipo | Scopo |
+|-------|------|-------|
+| id | String (cuid) | PK |
+| label | String? | Label opzionale (es. "Cliente Maria") |
+| footImage | String | Base64 data URI della foto del piede |
+| footProfile | Json | AIFootAnalysisResult (arch, width, shape, ecc.) |
+| suggestions | Json? | ProductMatch[] (suggerimenti sandali) |
+| analysisCost | Float? | Costo USD dell'analisi OpenAI |
+| tryonImageUrl | String? | URL immagine try-on generata |
+| tryonProductId | String? | Slug prodotto usato per try-on |
+| tryonCreditsUsed | Int? | Credits consumati dal try-on |
+| tryonCostUsd | Float? | Costo USD stimato del try-on |
+
+### Nuove route API
+
+| Method | URL Pattern | Scopo |
+|--------|-------------|-------|
+| GET | /api/admin/ai/sessions | Lista sessioni con totalCost |
+| GET | /api/admin/ai/sessions/$id | Dettaglio completo sessione |
+| PATCH | /api/admin/ai/sessions/$id | Aggiorna label |
+| DELETE | /api/admin/ai/sessions/$id | Elimina sessione |
+
+### Flusso utente
+1. Admin scatta foto → AI analizza → **sessione salvata automaticamente nel DB**
+2. Admin seleziona sandalo → genera try-on → **risultato salvato nella sessione**
+3. Prossima volta: click "Storico" → seleziona sessione → **salta analisi, va direttamente ai suggerimenti**
+4. Se la sessione ha già un try-on, mostra direttamente il risultato
+
+### Costi salvati
+- Ogni sessione traccia `analysisCost` (OpenAI) e `tryonCostUsd` (fal.ai)
+- L'endpoint GET /sessions restituisce `totalCost` aggregato ({totalUsd, sessionCount})
+
+---
+
+## 🔧 Feature modificata: AI Advisor — Solo suggerimenti + Immagini prodotti + Varianti nel try-on | 2026-04-23
+
+### Modifiche richieste
+
+1. **Rimozione profilo piede dalla UI** — L'analisi AI del piede viene usata internamente per il matching, ma il profilo dettagliato (arco, larghezza, forma, collo, dita) NON viene più mostrato all'utente. Si vedono solo: raccomandazione testuale, tipologie di sandalo consigliate, tipologie da evitare.
+2. **Fix immagini prodotti suggeriti** — I prodotti suggeriti dall'AI non mostravano immagine perché la query usava `where: { sortOrder: 0 }` (la maggior parte dei prodotti ha sortOrder che parte da 2). Fix: `orderBy: { sortOrder: "asc" }`.
+3. **Varianti nel try-on** — Quando si genera la prova virtuale, le varianti selezionate (colore, tipo di pelle, tacco) vengono passate al server e usate per costruire un prompt "intelligente" che dice all'AI di applicare le varianti selezionate al sandalo.
+4. **Prompt intelligente** — Il prompt Fashn ora distingue tra "senza varianti" (preserva colore/materiale originale) e "con varianti" (applica colore/materiale/tacco selezionati).
+
+### File modificati
+
+| File | Modifica | Giustificazione |
+|------|----------|-----------------|
+| `src/components/admin/ai-advisor/FootAnalysis.tsx` | Riscritto: rimosso profilo piede (arch/width/shape/instep/toes), confidence badge, LABELS map. Mostra solo: raccomandazione, tipologie consigliate, tipologie da evitare. Icona Sparkles al posto di Brain | L'utente vuole solo suggerimenti sandali, non analisi piede |
+| `src/components/admin/ai-advisor/VariantSelector.tsx` | Callback `onOptionChange` ora include `groupLabel` come secondo parametro; tipo `selectedOptions` aggiornato con `groupLabel` e `imageUrl` | Serve per costruire il prompt intelligente e passare le immagini swatch al try-on |
+| `src/lib/ai-advisor.server.ts` | Fix `matchFootToProducts`: `where: { sortOrder: 0 }` → `orderBy: { sortOrder: "asc" }`. Aggiunto tipo `SelectedVariant`. `buildTryOnPrompt` ora accetta `selectedVariants` e classifica automaticamente i gruppi (colore/materiale/tacco/size). Export `resolveImageToBase64`. Aggiunto `classifyVariantGroup()` helper | Prodotti suggeriti ora mostrano immagine; prompt intelligente con varianti |
+| `src/routes/api/admin/ai/tryon.ts` | Schema accetta `selectedVariants` array. Risolve immagini swatch a base64 (TODO: usare URL pubbliche in futuro). Passa varianti a `buildTryOnPrompt`. Log delle varianti applicate nel cost log | Le varianti selezionate vengono applicate nel try-on |
+| `src/routes/admin.ai-advisor.tsx` | `selectedOptions` type con `groupLabel` e `imageUrl`. `handleOptionChange` con 5 parametri. `handleTryOn` passa `selectedVariants` al body. Step labels aggiornati ("Suggerimenti" invece di "Analisi"). Aggiunto summary varianti attive con swatch preview. Button text dinamico ("Genera Prova Virtuale con Varianti") | UX completa: l'utente vede le varianti selezionate e il try-on le applica |
+
+### Comportamento aggiornato
+
+**FootAnalysis (prima vs dopo):**
+- **Prima**: Mostrava griglia 5 metriche (Arco, Larghezza, Forma, Collo, Dita) + confidence badge + raccomandazione + best/avoid features
+- **Dopo**: Mostra solo raccomandazione testuale + "Tipologie di sandalo consigliate" + "Tipologie da evitare"
+
+**Immagini prodotti suggeriti:**
+- **Prima**: La maggior parte dei prodotti non mostrava immagine (query `sortOrder === 0` non trovava risultati)
+- **Dopo**: Tutti i prodotti con almeno un'immagine la mostrano (query `orderBy sortOrder asc, take 1`)
+
+**Prompt intelligente:**
+- **Senza varianti**: `preserve the exact product color, material texture and details, keep the exact original foot shape...`
+- **Con varianti (es. Nero + Vitello)**: `apply the following customizations to the sandal: render the sandal in Nero color, exact hex color #000000, use Vitello leather with its natural texture, grain and finish, preserve the sandal shape, straps structure and overall design, keep the exact original foot shape...`
+
+**Try-on con varianti:**
+- Il frontend passa `selectedVariants` array con `{ groupId, groupLabel, optionId, optionLabel, optionColor, optionImageUrl }`
+- Il server risolve le immagini swatch a base64 (perché Fashn API non può raggiungere localhost)
+- Il prompt viene costruito dinamicamente in base alle varianti selezionate
+
+### Flusso utente aggiornato
+
+1. Admin scatta foto del piede → "Analisi in corso..."
+2. AI analizza → mostra **solo** consigli (raccomandazione + tipologie consigliate/da evitare) + griglia sandali suggeriti (ora CON immagine)
+3. Cliente seleziona un sandalo → step "Prova"
+4. VariantSelector permette di scegliere colore/pelle/tacco → summary varianti attive visibile con swatch preview
+5. Button "Genera Prova Virtuale con Varianti" (oppure "Genera Prova Virtuale" se nessuna variante)
+6. POST try-on passa varianti → prompt intelligente applica le personalizzazioni → Fashn genera immagine con varianti
+
+### Note tecniche
+
+- **Base64 conversion (TODO)**: Le immagini swatch vengono convertite da percorso locale a base64 per il resolve. In futuro, quando le immagini saranno su CDN pubblico, questa conversione non sarà necessaria e si potrà passare l'URL diretto.
+- **Foot profile interno**: Il profilo dettagliato del piede (arch, width, shape, instep, toes) è ancora calcolato dall'AI e usato internamente dallo scoring algorithm per il matching prodotti. Viene solo nascosto dalla UI.
+- **classifyVariantGroup()**: Classifica automaticamente i gruppi varianti per costruire il prompt: "colore" → "render in X color", "pelle/materiale/tipo" → "use X leather with natural texture", "tacco" → "maintain X heel", "taglia/size" → skip (non visiva).
+
+### Verifiche
+- TypeScript: ✅ zero errors nei file modificati, zero `any`
+- Build: ✅ success (1.25s)
+- Implementation Map: aggiornata (v35 → v36)

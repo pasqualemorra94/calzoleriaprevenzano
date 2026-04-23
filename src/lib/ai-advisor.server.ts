@@ -31,6 +31,16 @@ export interface AnalysisResponse {
   totalAnalyzed: number;
 }
 
+/** Selected variant from the UI, passed to try-on for prompt building */
+export interface SelectedVariant {
+  groupId: string;
+  groupLabel: string;
+  optionId: string;
+  optionLabel: string;
+  optionColor?: string;
+  optionImageUrl?: string;
+}
+
 // ─── Scoring ───────────────────────────────────────────────────────────
 
 /**
@@ -58,7 +68,7 @@ export async function matchFootToProducts(
     },
     include: {
       images: {
-        where: { sortOrder: 0 },
+        orderBy: { sortOrder: "asc" },
         take: 1,
       },
     },
@@ -306,10 +316,16 @@ export async function getProductForTryOn(slug: string): Promise<AdvisorProduct |
 }
 
 /**
- * Get the best product image URL for try-on (highest quality).
- * Falls back to the first image if no full-size variant exists.
+ * Get the best product image for try-on (highest quality).
+ * Returns a public URL or a base64 data URI.
+ *
+ * Images in the DB are relative paths (e.g. /images/products/sandalo.jpg)
+ * stored under the public/ directory. Fashn API (external server) cannot
+ * reach localhost URLs, so we:
+ *  1. If the image is already a public URL (https://...) → return as-is
+ *  2. If it's a relative path → read the file from disk and return as base64 data URI
  */
-export async function getProductImageUrlForTryOn(slug: string): Promise<string | null> {
+export async function getProductImageForTryOn(slug: string): Promise<string | null> {
   const images = await prisma.productImage.findMany({
     where: { product: { slug, isActive: true } },
     orderBy: { sortOrder: "asc" },
@@ -318,7 +334,219 @@ export async function getProductImageUrlForTryOn(slug: string): Promise<string |
 
   if (images.length === 0) return null;
 
-  // Prefer images that look like full product shots (not swatches)
-  // Use the first image (sortOrder 0) which is typically the main product photo
-  return images[0].url;
+  const imagePath = images[0].url;
+
+  // Already a public URL — pass through
+  if (imagePath.startsWith("http")) {
+    return imagePath;
+  }
+
+  // Relative path → resolve to file on disk and convert to base64
+  return resolveImageToBase64(imagePath);
+}
+
+// ─── Prompt Builder ────────────────────────────────────────────────────
+
+/**
+ * Detect the variant "category" from group label or id for smart prompt building.
+ * Returns: "color" | "material" | "heel" | "size" | "generic"
+ */
+function classifyVariantGroup(groupLabel: string, groupId: string): "color" | "material" | "heel" | "size" | "generic" {
+  const lower = `${groupLabel} ${groupId}`.toLowerCase();
+
+  if (lower.includes("colore") || lower.includes("color")) return "color";
+  if (lower.includes("pelle") || lower.includes("materiale") || lower.includes("tipo")) return "material";
+  if (lower.includes("tacco") || lower.includes("heel") || lower.includes("height")) return "heel";
+  if (lower.includes("taglia") || lower.includes("size")) return "size";
+
+  return "generic";
+}
+
+/**
+ * Build an optimized prompt for Fashn Try-On Max.
+ *
+ * Strategy: Fashn works best with short, direct instructions.
+ * We focus on:
+ *  1. Preserving the original foot exactly (no morphing, no added/removed toes)
+ *  2. Preserving the sandal product shape and structure
+ *  3. When variants are selected, intelligently applying them:
+ *     - Color: "render in [color name] color"
+ *     - Material: "use [material] leather with natural texture"
+ *     - Heel: "maintain [height] heel"
+ *  4. Natural, physically plausible placement on the foot
+ *
+ * Without variants → preserve original product appearance.
+ * With variants → override color/material/heel as specified.
+ *
+ * @param productSlug - Product to try on
+ * @param selectedVariants - Variant selections from the UI (optional)
+ */
+export async function buildTryOnPrompt(
+  productSlug: string,
+  selectedVariants?: readonly SelectedVariant[],
+): Promise<string> {
+  const product = await prisma.product.findFirst({
+    where: { slug: productSlug, isActive: true },
+    select: { name: true, aiMetadata: true },
+  });
+
+  // ── Base directives (always present) ──
+  const baseParts: string[] = [
+    "keep the exact original foot shape, skin tone and toe appearance without any alteration",
+    "place the sandal naturally on the foot with realistic contact",
+    "natural lighting and shadows",
+    "photorealistic output",
+  ];
+
+  // ── Style hint from product AI metadata ──
+  let styleHint = "";
+  if (product?.aiMetadata) {
+    const meta = product.aiMetadata as unknown as ProductAIMetadata | null;
+    if (meta?.version === 1) {
+      const hints: string[] = [];
+      if (meta.closureType && meta.closureType !== "N/A") hints.push(meta.closureType.toLowerCase());
+      if (meta.strapStyle && meta.strapStyle !== "N/A") hints.push(meta.strapStyle.toLowerCase());
+      if (hints.length > 0) {
+        styleHint = ` ${hints.join(", ")} sandals`;
+      }
+    }
+  }
+
+  // ── Variant-specific prompt parts ──
+  const variantParts: string[] = [];
+
+  if (selectedVariants && selectedVariants.length > 0) {
+    for (const v of selectedVariants) {
+      const category = classifyVariantGroup(v.groupLabel, v.groupId);
+
+      switch (category) {
+        case "color":
+          variantParts.push(`render the sandal in ${v.optionLabel} color`);
+          if (v.optionColor) {
+            variantParts.push(`exact hex color ${v.optionColor}`);
+          }
+          break;
+
+        case "material":
+          variantParts.push(`use ${v.optionLabel} leather with its natural texture, grain and finish`);
+          break;
+
+        case "heel":
+          variantParts.push(`maintain the ${v.optionLabel} heel`);
+          break;
+
+        case "size":
+          // Size doesn't affect visual rendering — skip
+          break;
+
+        default:
+          variantParts.push(`${v.groupLabel}: ${v.optionLabel}`);
+          break;
+      }
+    }
+  }
+
+  // ── Compose final prompt ──
+  const parts: string[] = [];
+
+  if (variantParts.length > 0) {
+    // With variants: apply them, don't preserve original product appearance
+    parts.push(`apply the following customizations to the sandal: ${variantParts.join(", ")}`);
+    parts.push("preserve the sandal shape, straps structure and overall design");
+  } else {
+    // Without variants: preserve original product as-is
+    parts.push("preserve the exact product color, material texture and details");
+  }
+
+  parts.push(...baseParts);
+
+  if (styleHint) {
+    parts.push(`style:${styleHint}`);
+  }
+
+  const prompt = parts.join(", ");
+
+  log.info("Built try-on prompt", {
+    productSlug,
+    productName: product?.name,
+    variantCount: selectedVariants?.length ?? 0,
+    variantLabels: selectedVariants?.map((v) => `${v.groupLabel}=${v.optionLabel}`),
+    prompt,
+  });
+
+  return prompt;
+}
+
+// ─── Image Resolution ──────────────────────────────────────────────────
+
+/**
+ * Resolve an image path to a usable format for external APIs.
+ *
+ * - If public URL (https://...) → return as-is
+ * - If relative path (e.g. /images/swatches/nero.jpg) → read from disk, convert to base64 data URI
+ *
+ * TODO: In production, all images should be served from a public CDN/URL.
+ * The base64 conversion is a workaround for local development where external
+ * APIs cannot reach localhost relative paths.
+ */
+export async function resolveImageToBase64(imagePath: string): Promise<string | null> {
+  // Already a public URL — pass through (no conversion needed)
+  if (imagePath.startsWith("http")) {
+    return imagePath;
+  }
+
+  return resolveLocalImageToBase64(imagePath);
+}
+
+/**
+ * Read a local image file from disk and return as base64 data URI.
+ * Path is relative to the public/ directory.
+ */
+async function resolveLocalImageToBase64(relativePath: string): Promise<string | null> {
+  const nodePath = await import("node:path");
+  const nodeFs = await import("node:fs");
+
+  // Build absolute path to the file under public/
+  const publicDir = nodePath.join(process.cwd(), "public");
+  const absolutePath = nodePath.join(
+    publicDir,
+    relativePath.startsWith("/") ? relativePath.slice(1) : relativePath,
+  );
+
+  try {
+    if (!nodeFs.existsSync(absolutePath)) {
+      log.error("Image file not found on disk", { relativePath, absolutePath });
+      return null;
+    }
+
+    const buffer = nodeFs.readFileSync(absolutePath);
+
+    // Determine MIME type from extension
+    const ext = nodePath.extname(absolutePath).toLowerCase();
+    const mimeMap: Record<string, string> = {
+      ".jpg": "image/jpeg",
+      ".jpeg": "image/jpeg",
+      ".png": "image/png",
+      ".webp": "image/webp",
+      ".gif": "image/gif",
+    };
+    const mimeType = mimeMap[ext] ?? "image/jpeg";
+
+    const base64 = buffer.toString("base64");
+    log.info("Local image converted to base64", {
+      relativePath,
+      sizeKb: Math.round(buffer.length / 1024),
+      mimeType,
+      base64Length: base64.length,
+    });
+
+    return `data:${mimeType};base64,${base64}`;
+  } catch (err) {
+    log.error("Failed to read local image", {
+      relativePath,
+      absolutePath,
+      error: err instanceof Error ? err.message : "unknown",
+    });
+    return null;
+  }
 }

@@ -3,10 +3,14 @@
  *
  * Flow:
  *  1. Capture foot photo (camera or upload) — OR resume from history
- *  2. AI analyzes foot shape → shows profile + recommendations
+ *  2. AI analyzes foot → shows sandal suggestions + types to choose
  *  3. User selects a sandal (from suggestions or full catalog)
- *  4. Optionally customize variants (color, heel, leather)
- *  5. Generate virtual try-on preview
+ *  4. Optionally customize variants (color, leather, heel)
+ *  5. Generate virtual try-on preview (with selected variants applied)
+ *
+ * The AI analysis is used internally for matching but the detailed
+ * foot profile (arch, width, shape) is NOT shown to the user.
+ * Only recommendations and best/avoid features are displayed.
  *
  * Sessions are saved to DB — the user can resume a previous session
  * and skip directly to step 3 (select sandal + try-on).
@@ -40,6 +44,14 @@ interface AIAdvisorContext {
   catalog: AdvisorProduct[];
 }
 
+/** Selected variant option from the VariantSelector */
+interface SelectedOption {
+  id: string;
+  label: string;
+  groupLabel: string;
+  imageUrl?: string;
+}
+
 function AIAdvisorPage() {
   const { catalog } = Route.useRouteContext() as AIAdvisorContext;
 
@@ -52,7 +64,7 @@ function AIAdvisorPage() {
 
   // Selected sandal
   const [selectedSandal, setSelectedSandal] = useState<AdvisorProduct | null>(null);
-  const [selectedOptions, setSelectedOptions] = useState<Record<string, { id: string; label: string; color?: string }>>({});
+  const [selectedOptions, setSelectedOptions] = useState<Record<string, SelectedOption>>({});
 
   // Try-on state
   const [tryonLoading, setTryonLoading] = useState(false);
@@ -161,19 +173,25 @@ function AIAdvisorPage() {
   }, []);
 
   // ── Variant option change ──
-  const handleOptionChange = useCallback((groupId: string, optionId: string, optionLabel: string, optionColor?: string) => {
+  const handleOptionChange = useCallback((
+    groupId: string,
+    groupLabel: string,
+    optionId: string,
+    optionLabel: string,
+    optionImageUrl?: string,
+  ) => {
     setSelectedOptions((prev) => {
       const next = { ...prev };
       if (prev[groupId]?.id === optionId) {
         delete next[groupId];
       } else {
-        next[groupId] = { id: optionId, label: optionLabel, color: optionColor };
+        next[groupId] = { id: optionId, label: optionLabel, groupLabel, imageUrl: optionImageUrl };
       }
       return next;
     });
   }, []);
 
-  // ── Generate try-on ──
+  // ── Generate try-on (with selected variants) ──
   const handleTryOn = useCallback(async () => {
     if (!footImage || !selectedSandal) return;
 
@@ -182,12 +200,24 @@ function AIAdvisorPage() {
     setTryonImage(null);
 
     try {
-      const body: Record<string, string> = {
+      const body: Record<string, unknown> = {
         personImage: footImage,
         productSlug: selectedSandal.slug,
       };
       if (currentSessionId) {
         body.sessionId = currentSessionId;
+      }
+
+      // Pass selected variants (with group label + imageUrl) for intelligent prompt
+      const variantsArray = Object.values(selectedOptions);
+      if (variantsArray.length > 0) {
+        body.selectedVariants = variantsArray.map((opt) => ({
+          groupId: Object.keys(selectedOptions).find((k) => selectedOptions[k]?.id === opt.id) ?? "",
+          groupLabel: opt.groupLabel,
+          optionId: opt.id,
+          optionLabel: opt.label,
+          optionImageUrl: opt.imageUrl,
+        }));
       }
 
       const res = await fetch("/api/admin/ai/tryon", {
@@ -209,7 +239,7 @@ function AIAdvisorPage() {
     } finally {
       setTryonLoading(false);
     }
-  }, [footImage, selectedSandal, currentSessionId]);
+  }, [footImage, selectedSandal, currentSessionId, selectedOptions]);
 
   // ── Reset ──
   const handleReset = useCallback(() => {
@@ -282,7 +312,7 @@ function AIAdvisorPage() {
                     isDone ? "bg-[var(--color-primary)]/10 text-[var(--color-primary)]" :
                     "bg-gray-100 text-gray-400"
                   }`}>
-                    {isDone ? "✓" : i + 1}. {s === "capture" ? "Foto" : s === "results" ? "Analisi" : "Prova"}
+                    {isDone ? "✓" : i + 1}. {s === "capture" ? "Foto" : s === "results" ? "Suggerimenti" : "Prova"}
                   </div>
                 </div>
               );
@@ -305,20 +335,20 @@ function AIAdvisorPage() {
           {step === "analyzing" && (
             <div className="flex min-h-[300px] flex-col items-center justify-center rounded-xl bg-gray-50">
               <Loader2 className="h-10 w-10 animate-spin text-[var(--color-primary)]" />
-              <p className="mt-3 text-sm font-medium text-gray-600">Analisi del piede in corso...</p>
-              <p className="mt-1 text-xs text-gray-400">L'AI sta analizzando forma, arco e larghezza</p>
+              <p className="mt-3 text-sm font-medium text-gray-600">Analisi in corso...</p>
+              <p className="mt-1 text-xs text-gray-400">L'AI sta cercando i sandali più adatti per te</p>
             </div>
           )}
 
-          {/* Step: Results — Analysis + Suggestions + Catalog */}
+          {/* Step: Results — Recommendations + Suggestions + Catalog */}
           {(step === "results" || step === "tryon") && analysis && (
             <>
-              {/* Foot analysis card */}
+              {/* AI recommendations (NO foot profile — only suggestions) */}
               <div className="rounded-xl bg-white p-5 shadow-sm">
                 <FootAnalysis analysis={analysis} />
               </div>
 
-              {/* Suggestions */}
+              {/* Suggested sandals */}
               {suggestions.length > 0 && step !== "tryon" && (
                 <SandalSuggestions
                   suggestions={suggestions}
@@ -368,6 +398,24 @@ function AIAdvisorPage() {
                 </div>
               )}
 
+              {/* Active variants summary */}
+              {Object.keys(selectedOptions).length > 0 && (
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-xs font-medium text-gray-500">Varianti selezionate:</span>
+                  {Object.values(selectedOptions).map((opt) => (
+                    <span
+                      key={opt.id}
+                      className="inline-flex items-center gap-1.5 rounded-full bg-[var(--color-primary)]/10 px-3 py-1 text-xs font-medium text-[var(--color-primary)]"
+                    >
+                      {opt.imageUrl && (
+                        <img src={opt.imageUrl} alt="" className="h-4 w-4 rounded-full object-cover" />
+                      )}
+                      {opt.groupLabel}: {opt.label}
+                    </span>
+                  ))}
+                </div>
+              )}
+
               {/* Generate try-on button */}
               <button
                 type="button"
@@ -380,7 +428,13 @@ function AIAdvisorPage() {
                 ) : (
                   <Wand2 className="h-5 w-5" />
                 )}
-                {tryonLoading ? "Generazione in corso..." : tryonImage ? "Rigenera Prova Virtuale" : "Genera Prova Virtuale"}
+                {tryonLoading
+                  ? "Generazione in corso..."
+                  : tryonImage
+                    ? "Rigenera Prova Virtuale"
+                    : Object.keys(selectedOptions).length > 0
+                      ? "Genera Prova Virtuale con Varianti"
+                      : "Genera Prova Virtuale"}
               </button>
 
               {/* Try-on preview */}

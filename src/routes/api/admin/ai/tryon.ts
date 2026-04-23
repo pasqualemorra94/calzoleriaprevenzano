@@ -5,8 +5,14 @@
  *   personImage: string (base64, data URI or URL),
  *   productSlug: string,
  *   sessionId?: string (optional — saves result to session),
- *   imageUrl?: string (override product image)
+ *   imageUrl?: string (override product image),
+ *   selectedVariants?: Array<{ groupId, groupLabel, optionId, optionLabel, optionColor?, optionImageUrl? }>
  * }
+ *
+ * When selectedVariants are provided:
+ *  - Variant swatch images are resolved to base64 for reference
+ *  - An intelligent prompt is built that describes how to apply the selected
+ *    color/material/heel to the sandal
  *
  * Returns: { id, imageUrl, status, cost, sessionId }
  *
@@ -19,18 +25,29 @@ import { createFileRoute } from "@tanstack/react-router";
 import { apiSuccess, apiError } from "~/lib/api-response";
 import { requireAdmin } from "~/lib/sdk-auth.server";
 import { generateTryOn } from "~/lib/fashn.server";
-import { getProductImageUrlForTryOn } from "~/lib/ai-advisor.server";
+import { getProductImageForTryOn, buildTryOnPrompt, resolveImageToBase64 } from "~/lib/ai-advisor.server";
+import type { SelectedVariant } from "~/lib/ai-advisor.server";
 import { updateSessionTryOn } from "~/lib/ai-sessions.server";
 import { createLogger } from "~/lib/logger.server";
 import { z } from "zod";
 
 const log = createLogger("ai-tryon");
 
+const selectedVariantSchema = z.object({
+  groupId: z.string(),
+  groupLabel: z.string(),
+  optionId: z.string(),
+  optionLabel: z.string(),
+  optionColor: z.string().optional(),
+  optionImageUrl: z.string().optional(),
+});
+
 const tryOnSchema = z.object({
   personImage: z.string().min(50, "Immagine piede non valida"),
   productSlug: z.string().min(1, "Slug prodotto richiesto"),
   sessionId: z.string().min(1).optional(),
   imageUrl: z.string().url().optional(),
+  selectedVariants: z.array(selectedVariantSchema).optional(),
 });
 
 // Approximate USD per credits for fal.ai FASHN model
@@ -70,27 +87,81 @@ export const Route = createFileRoute("/api/admin/ai/tryon")({
           productSlug,
           sessionId,
           imageUrl: overrideImageUrl,
+          selectedVariants,
         } = parsed.data;
 
         // ── Resolve person image (base64 or URL) ──
-        const personImage = rawPersonImage.startsWith("http")
-          ? rawPersonImage
-          : rawPersonImage;
+        // Must be either a public URL (https://...) or a full data URI (data:image/...;base64,...)
+        const personImage = rawPersonImage;
 
         // ── Resolve garment image (product photo) ──
-        const garmentImage = overrideImageUrl ?? await getProductImageUrlForTryOn(productSlug);
+        // getProductImageForTryOn returns either a public URL or a base64 data URI
+        // (local images are converted to base64 so Fashn can use them even from localhost)
+        const garmentImage = overrideImageUrl ?? await getProductImageForTryOn(productSlug);
 
         if (!garmentImage) {
           return apiError("NOT_FOUND", "Nessuna immagine trovata per il prodotto selezionato", 404);
         }
 
+        // ── Resolve variant swatch images to base64 ──
+        // TODO: In production, variant images should be served from a public CDN.
+        // The base64 conversion is a workaround for local development.
+        const resolvedVariants: SelectedVariant[] = [];
+        if (selectedVariants && selectedVariants.length > 0) {
+          for (const v of selectedVariants) {
+            const resolved: SelectedVariant = { ...v };
+            if (v.optionImageUrl) {
+              const base64 = await resolveImageToBase64(v.optionImageUrl);
+              // Store resolved image on the variant for potential future use
+              // Currently Fashn API only accepts one garment image,
+              // so we use the metadata in the prompt instead
+              if (base64) {
+                log.info("Variant swatch resolved to base64", {
+                  group: v.groupLabel,
+                  option: v.optionLabel,
+                  originalUrl: v.optionImageUrl,
+                  resolvedType: base64.startsWith("data:") ? "base64" : "url",
+                });
+              }
+            }
+            resolvedVariants.push(resolved);
+          }
+        }
+
+        // ── Debug log image formats ──
+        log.info("Try-on images resolved", {
+          productSlug,
+          personImagePrefix: personImage.slice(0, 80),
+          personImageLength: personImage.length,
+          personImageType: personImage.startsWith("data:") ? "base64-data-uri" : personImage.startsWith("http") ? "url" : "unknown-format",
+          garmentImagePrefix: garmentImage.slice(0, 80),
+          variantCount: resolvedVariants.length,
+          variantLabels: resolvedVariants.map((v) => `${v.groupLabel}=${v.optionLabel}`),
+        });
+
+        // ── Validate person image format ──
+        if (!personImage.startsWith("data:image/") && !personImage.startsWith("http")) {
+          log.error("Invalid personImage format", {
+            prefix: personImage.slice(0, 100),
+            length: personImage.length,
+          });
+          return apiError("VALIDATION_ERROR", "Formato immagine piede non valido. Richiesto data:image/... o URL https://...", 422);
+        }
+
         // ── Generate try-on ──
         try {
+          // Build an intelligent prompt from product AI metadata + selected variants
+          const prompt = await buildTryOnPrompt(
+            productSlug,
+            resolvedVariants.length > 0 ? resolvedVariants : undefined,
+          );
+
           const result = await generateTryOn({
             personImage,
             garmentImage,
-            category: "shoes",
+            prompt,
             resolution: "1k",
+            generationMode: "balanced",
           });
 
           const totalDurationMs = Date.now() - startTime;
@@ -126,6 +197,9 @@ export const Route = createFileRoute("/api/admin/ai/tryon")({
             estimatedUsd: estimatedUsd ?? "N/A",
             generationDurationMs: result.durationMs ?? "N/A",
             totalDurationMs,
+            variantsApplied: resolvedVariants.length > 0
+              ? resolvedVariants.map((v) => `${v.groupLabel}=${v.optionLabel}`)
+              : "none",
           });
 
           return apiSuccess({
