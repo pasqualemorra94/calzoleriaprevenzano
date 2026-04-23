@@ -66,6 +66,41 @@ export interface AiSessionDetail {
   updatedAt: string;
 }
 
+// ─── Internal Helpers (defined before use to avoid hoisting issues) ────
+
+/** Type guard for TryOnHistoryEntry. */
+function isTryOnHistoryEntry(entry: unknown): entry is TryOnHistoryEntry {
+  if (!entry || typeof entry !== "object") return false;
+  const obj = entry as Record<string, unknown>;
+  return (
+    typeof obj.id === "string" &&
+    typeof obj.imageUrl === "string" &&
+    typeof obj.productSlug === "string" &&
+    typeof obj.createdAt === "string"
+  );
+}
+
+/** Safely parse tryonHistory from JSON. Returns empty array if null, invalid, or not an array. */
+function parseTryOnHistory(raw: unknown): TryOnHistoryEntry[] {
+  if (!raw || !Array.isArray(raw)) return [];
+  return raw.filter(isTryOnHistoryEntry);
+}
+
+/**
+ * Build a tiny thumbnail from a base64 data URI.
+ * Extracts the first 100 chars of the base64 payload to create a preview.
+ */
+function buildThumbnail(footImage: string): string {
+  if (!footImage.startsWith("data:")) {
+    return "";
+  }
+
+  const match = footImage.match(/^(data:image\/\w+;base64,)(.{1,100})/);
+  if (!match) return "";
+
+  return `${match[1]}${match[2]}...`;
+}
+
 // ─── Public API ────────────────────────────────────────────────────────
 
 /**

@@ -27,19 +27,36 @@ interface SessionHistoryProps {
 export function SessionHistory({ onResume, onClose }: SessionHistoryProps) {
   const [sessions, setSessions] = useState<SessionSummary[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [totalCost, setTotalCost] = useState<{ totalUsd: number; sessionCount: number } | null>(null);
 
   const loadSessions = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    console.log("[SessionHistory] loadSessions — fetching /api/admin/ai/sessions");
     try {
       const res = await fetch("/api/admin/ai/sessions");
+      console.log("[SessionHistory] response status:", res.status, res.ok);
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        setError(`Errore server: ${res.status} — ${text.slice(0, 200)}`);
+        console.error("[SessionHistory] fetch failed:", res.status, text);
+        return;
+      }
       const data = await res.json();
+      console.log("[SessionHistory] parsed data:", data.ok, "sessions:", data.data?.sessions?.length);
       if (data.ok) {
         setSessions(data.data.sessions);
         setTotalCost(data.data.totalCost);
+      } else {
+        setError(data.error?.message ?? "Errore nel caricamento");
+        console.error("[SessionHistory] API returned error:", data.error);
       }
-    } catch {
-      // Silently fail — history is optional
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Errore di connessione";
+      setError(msg);
+      console.error("[SessionHistory] fetch exception:", err);
     } finally {
       setLoading(false);
     }
@@ -102,10 +119,21 @@ export function SessionHistory({ onResume, onClose }: SessionHistoryProps) {
         </button>
       </div>
 
-      {sessions.length === 0 ? (
+      {sessions.length === 0 && !error ? (
         <p className="py-8 text-center text-sm text-gray-400">
           Nessuna sessione salvata. Analizza un piede per iniziare.
         </p>
+      ) : error ? (
+        <div className="py-8 text-center">
+          <p className="text-sm text-red-500">{error}</p>
+          <button
+            type="button"
+            onClick={loadSessions}
+            className="mt-2 text-xs font-medium text-[var(--color-primary)] underline"
+          >
+            Riprova
+          </button>
+        </div>
       ) : (
         <div className="space-y-2">
           {sessions.map((session) => (
