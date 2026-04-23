@@ -87,7 +87,12 @@ export async function getAdminOrder(orderId: string): Promise<AdminOrderDetail |
       user: { select: { id: true, name: true, email: true } },
       items: {
         include: {
-          product: { select: { sku: true } },
+          product: {
+            select: {
+              sku: true,
+              images: { orderBy: { sortOrder: "asc" }, select: { url: true }, take: 1 },
+            },
+          },
           variant: { select: { sku: true } },
         },
       },
@@ -118,7 +123,7 @@ export async function getAdminOrder(orderId: string): Promise<AdminOrderDetail |
       id: string; name: string; variantName: string | null;
       price: unknown; quantity: number; selectedOptions: unknown;
       variant: { sku: string | null } | null;
-      product: { sku: string | null };
+      product: { sku: string | null; images: Array<{ url: string }> };
     }) => ({
       id: item.id,
       name: item.name,
@@ -126,6 +131,7 @@ export async function getAdminOrder(orderId: string): Promise<AdminOrderDetail |
       price: Number(item.price),
       quantity: item.quantity,
       sku: item.variant?.sku ?? item.product.sku,
+      imageUrl: item.product.images[0]?.url ?? null,
       selectedOptions: item.selectedOptions as Array<{ label: string; value: string; color?: string }> | null,
     })),
     payments: order.payments.map((p: {

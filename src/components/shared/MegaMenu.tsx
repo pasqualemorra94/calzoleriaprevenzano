@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import { ChevronDown } from "lucide-react";
 import { cn } from "~/lib/utils/cn";
+import { QuickSearch } from "~/components/shared/QuickSearch";
 
 interface GrandchildCategory {
   id: string;
@@ -34,7 +35,7 @@ interface TopCategory {
 
 function MegaMenuPanel({ categories }: { categories: TopCategory[] }) {
   return (
-    <div className="absolute left-1/2 top-full z-[var(--z-overlay)] mt-1 w-[95vw] max-w-[1100px] -translate-x-1/2 animate-[fadeIn_150ms_ease-out]">
+    <div className="absolute left-0 top-full z-[var(--z-overlay)] mt-1 w-[min(90vw,800px)] animate-[fadeIn_150ms_ease-out]">
       <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--color-border-light)] bg-[var(--color-surface)] shadow-[var(--shadow-xl)]">
         <div className="grid grid-cols-3 gap-0 p-6">
           {categories.map((cat) => (
@@ -355,6 +356,13 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
           className="mx-auto flex max-w-[var(--page-max-width)] items-center justify-center px-[var(--page-padding-x)]"
           style={{ height: "3rem" }}
         >
+          {/* Home */}
+          <Link to="/" className={navLinkClass} onClick={handleItemClick}>
+            Home
+          </Link>
+
+          <span className="h-1 w-1 rounded-full bg-[var(--color-accent)]/50" />
+
           {/* Shop mega menu */}
           <div
             className="relative"
@@ -386,7 +394,6 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
             )}
           </div>
 
-          {/* Dot separator */}
           <span className="h-1 w-1 rounded-full bg-[var(--color-accent)]/50" />
 
           <Link to="/sandali" search={{ category: undefined, query: undefined, page: undefined }} className={navLinkClass} onClick={handleItemClick}>
@@ -416,6 +423,11 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
           <Link to="/account" className={navLinkClass} onClick={handleItemClick}>
             Il mio account
           </Link>
+
+          {/* Search — right-aligned in nav row */}
+          <div className="ml-3 border-l border-[var(--color-border)] pl-3">
+            <QuickSearch variant="nav" />
+          </div>
         </nav>
 
         {/* 🧬 DNA: Stitch divider */}
@@ -423,18 +435,20 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
       </div>
 
       {/* ── MOBILE ──────────────────────────────────────── */}
-      <div className="flex items-center justify-between px-4 md:hidden" style={{ height: "var(--navbar-height)" }}>
+      <div className="flex items-center gap-3 px-4 md:hidden" style={{ height: "var(--navbar-height)" }}>
         <Link to="/" aria-label="Calzoleria Prevenzano" onClick={handleItemClick}>
           <img
             src="/images/logo.png"
             alt="Calzoleria Prevenzano"
-            className="h-10 w-auto"
+            className="h-8 w-auto shrink-0"
             width={160}
             height={97}
           />
         </Link>
 
-        <div className="flex items-center gap-3">
+        <QuickSearch variant="mobile" />
+
+        <div className="flex shrink-0 items-center gap-2">
           <Link
             to="/carrello"
             aria-label={`Carrello${cartCount > 0 ? ` — ${cartCount} articoli` : ""}`}
@@ -501,6 +515,16 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
               </div>
 
               <nav className="flex-1 overflow-y-auto px-4 py-6">
+                <Link
+                  to="/"
+                  onClick={handleItemClick}
+                  className="block rounded-[var(--radius-md)] px-4 py-3 text-[15px] font-medium tracking-wide uppercase text-[var(--color-text)] transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-primary)]"
+                >
+                  Home
+                </Link>
+
+                <div className="h-px bg-[var(--color-border-light)]" />
+
                 {/* Shop — expandable */}
                 <div className="mb-2">
                   {categories.length > 0 ? (

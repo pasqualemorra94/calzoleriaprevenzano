@@ -158,6 +158,7 @@ export interface AdminOrderDetail {
     price: number;
     quantity: number;
     sku: string | null;
+    imageUrl: string | null;
     selectedOptions?: Array<{ label: string; value: string; color?: string }> | null;
   }>;
   payments: Array<{

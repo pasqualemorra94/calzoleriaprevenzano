@@ -1,5 +1,5 @@
 {
-  "version": 36,
+  "version": 37,
   "generatedAt": "2026-04-02T00:00:00.000Z",
   "projectSlug": "calzoleria-prevenzano",
   "framework": "tanstack",
@@ -752,7 +752,8 @@
       "2026-04-22: Configured fal.ai integration \u2014 added FAL_KEY + FASHN_API_BASE (https://queue.fal.run/fashn-ai/hygelac) to .env; existing fashn.server.ts auto-routes try-on via fal.ai queue when FASHN_API_BASE contains fal.run",
       "2026-04-22: AI cost logging \u2014 fashn.server.ts now returns creditsUsed + durationMs + provider in TryOnResult; analyze-foot.ts and tryon.ts log full cost breakdown (model, tokens, credits, USD estimate, timing) via structured logger",
       "2026-04-22: AI session persistence \u2014 AiSession model (footImage+footProfile+suggestions+tryOn); analyze-foot saves session, tryon updates it; SessionHistory UI with resume from history; skip step 1 on subsequent visits",
-      "2026-04-23: AI Advisor UX refactor \u2014 removed foot profile display from UI (only shows recommendations + best/avoid sandal types); fixed product images in suggestions (sortOrder query bug); added selectedVariants to try-on API with intelligent prompt builder (classifyVariantGroup auto-detects color/material/heel); VariantSelector callback now includes groupLabel + imageUrl; resolveImageToBase64 exported for future CDN migration"
+      "2026-04-23: AI Advisor UX refactor \u2014 removed foot profile display from UI (only shows recommendations + best/avoid sandal types); fixed product images in suggestions (sortOrder query bug); added selectedVariants to try-on API with intelligent prompt builder (classifyVariantGroup auto-detects color/material/heel); VariantSelector callback now includes groupLabel + imageUrl; resolveImageToBase64 exported for future CDN migration",
+      "2026-04-23: AI Advisor try-on history \u2014 added tryonHistory Json? to AiSession for multiple try-ons per session; appendTryOnToSession preserves ALL generated images; admin.ai-advisor shows gallery of previous try-ons; SessionHistory shows tryon count per session; foot photo preserved across sandal changes; migration 20260423135014"
     ]
   },
   "regressionNotes": {

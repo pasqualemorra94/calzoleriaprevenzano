@@ -393,20 +393,19 @@ function classifyVariantGroup(groupLabel: string, groupId: string): "color" | "m
  *  - Focus on HOW the product should be worn
  *  - Most important info first
  *
- * Our strategy for sandals with variants:
- *  1. Tell Fashn to WEAR the sandal (placement)
- *  2. If variants selected, specify which PART changes:
- *     - Color → "change ONLY the straps and upper to [color], keep sole and lining unchanged"
- *     - Material → "use [material] leather for the straps"
- *     - Heel → "[height] heel"
- *  3. Never say "render the sandal in X color" — that changes everything
+ * When variant swatches are composited into the product image:
+ *  - The swatches appear to the RIGHT of the sandal photo
+ *  - The prompt tells Fashn to use the color from those swatches
+ *  - The instruction is surgical: ONLY straps/upper, NOT sole/lining
  *
  * @param productSlug - Product to try on
  * @param selectedVariants - Variant selections from the UI (optional)
+ * @param hasSwatchImages - Whether swatch images are composited into the garment image
  */
 export async function buildTryOnPrompt(
   productSlug: string,
   selectedVariants?: readonly SelectedVariant[],
+  hasSwatchImages = false,
 ): Promise<string> {
   const product = await prisma.product.findFirst({
     where: { slug: productSlug, isActive: true },
@@ -460,9 +459,17 @@ export async function buildTryOnPrompt(
     // Build color sentence: surgical — ONLY straps, NOT sole/lining
     if (colorParts.length > 0) {
       const colorStr = colorParts.join(" ");
-      sentences.push(
-        `Change ONLY the straps and upper to ${colorStr} color. Keep the sole, lining and all other parts in their original colors.`,
-      );
+      if (hasSwatchImages) {
+        // Swatches are composited into the image — tell Fashn to use them
+        sentences.push(
+          `Change ONLY the straps and upper to match the color swatch${colorParts.length > 1 ? "es" : ""} on the right side of the image. Keep the sole, lining and all other parts in their original colors.`,
+        );
+      } else {
+        // No swatch image — describe color by name
+        sentences.push(
+          `Change ONLY the straps and upper to ${colorStr} color. Keep the sole, lining and all other parts in their original colors.`,
+        );
+      }
     }
 
     // Build material sentence
@@ -497,6 +504,162 @@ export async function buildTryOnPrompt(
 }
 
 // ─── Image Resolution ──────────────────────────────────────────────────
+
+/**
+ * Composite the product image with variant swatch images into a single image.
+ *
+ * Fashn API only accepts ONE product_image, so when the user selects
+ * color/material variants, we composite the sandal photo with the swatch
+ * patches side-by-side. The prompt then tells Fashn to use the color
+ * from the swatch patches.
+ *
+ * Layout: [sandal image (main)] [small gap] [swatch1] [swatch2] ...
+ * The swatches are resized to ~200px height and placed to the right.
+ *
+ * @returns base64 data URI of the composite JPEG image, or the original product image if no swatches
+ */
+export async function compositeProductWithSwatches(
+  productImageBase64: string,
+  swatchImages: Array<{ label: string; base64: string }>,
+): Promise<string> {
+  if (swatchImages.length === 0) {
+    return productImageBase64;
+  }
+
+  try {
+    const sharp = await import("sharp");
+
+    // Decode product image
+    const productBuffer = decodeDataUri(productImageBase64);
+    if (!productBuffer) {
+      log.warn("Could not decode product image for compositing, using original");
+      return productImageBase64;
+    }
+
+    const productMeta = await sharp.default(productBuffer).metadata();
+    const productHeight = productMeta.height ?? 600;
+    const productWidth = productMeta.width ?? 400;
+
+    // Swatch size: proportional to product, max 200px tall
+    const swatchHeight = Math.min(200, Math.round(productHeight * 0.3));
+    const gap = 20; // px gap between product and swatches
+
+    // Decode and resize all swatches
+    const swatchBuffers: Buffer[] = [];
+    let totalSwatchWidth = 0;
+    for (const swatch of swatchImages) {
+      const buf = decodeDataUri(swatch.base64);
+      if (!buf) continue;
+      const resized = await sharp.default(buf)
+        .resize({ height: swatchHeight, withoutEnlargement: true })
+        .jpeg({ quality: 95 })
+        .toBuffer();
+      const meta = await sharp.default(resized).metadata();
+      swatchBuffers.push(resized);
+      totalSwatchWidth += meta.width ?? 150;
+    }
+
+    if (swatchBuffers.length === 0) {
+      return productImageBase64;
+    }
+
+    // Calculate composite dimensions
+    const compositeWidth = productWidth + gap + totalSwatchWidth + (swatchBuffers.length - 1) * 10;
+    const compositeHeight = Math.max(productHeight, swatchHeight);
+
+    // Build composite: white background, product left, swatches right
+    const composite = await sharp.default({
+      create: {
+        width: compositeWidth,
+        height: compositeHeight,
+        channels: 3,
+        background: { r: 255, g: 255, b: 255 },
+      },
+    })
+      .jpeg({ quality: 95 })
+      .composite([
+        {
+          input: productBuffer,
+          left: 0,
+          top: Math.round((compositeHeight - productHeight) / 2),
+        },
+        // Add each swatch
+        ...swatchBuffers.reduce<Array<{ input: Buffer; left: number; top: number }>>((acc, buf, i) => {
+          const prevWidth = i === 0
+            ? productWidth + gap
+            : acc[i - 1].left + (acc[i - 1].input as unknown as { length: number }).length; // rough estimate
+          // Calculate x position by summing previous swatch widths
+          const sharpObj = sharp.default(buf);
+          acc.push({
+            input: buf,
+            left: 0, // will be recalculated below
+            top: Math.round((compositeHeight - swatchHeight) / 2),
+          });
+          return acc;
+        }, []),
+      ])
+      .toBuffer();
+
+    // We need to calculate x positions properly — rebuild with correct positions
+    let xOffset = productWidth + gap;
+    const composites: Array<{ input: Buffer; left: number; top: number }> = [
+      {
+        input: productBuffer,
+        left: 0,
+        top: Math.round((compositeHeight - productHeight) / 2),
+      },
+    ];
+
+    for (const buf of swatchBuffers) {
+      const meta = await sharp.default(buf).metadata();
+      const swatchW = meta.width ?? 150;
+      composites.push({
+        input: buf,
+        left: xOffset,
+        top: Math.round((compositeHeight - swatchHeight) / 2),
+      });
+      xOffset += swatchW + 10; // 10px gap between swatches
+    }
+
+    const finalComposite = await sharp.default({
+      create: {
+        width: xOffset - 10, // remove last gap
+        height: compositeHeight,
+        channels: 3,
+        background: { r: 255, g: 255, b: 255 },
+      },
+    })
+      .jpeg({ quality: 95 })
+      .composite(composites)
+      .toBuffer();
+
+    const base64 = finalComposite.toString("base64");
+    log.info("Composite image created", {
+      productSize: `${productWidth}x${productHeight}`,
+      swatchCount: swatchBuffers.length,
+      compositeSize: `${xOffset - 10}x${compositeHeight}`,
+      sizeKb: Math.round(finalComposite.length / 1024),
+    });
+
+    return `data:image/jpeg;base64,${base64}`;
+  } catch (err) {
+    log.error("Failed to create composite image, using original product image", {
+      swatchCount: swatchImages.length,
+      error: err instanceof Error ? err.message : "unknown",
+    });
+    return productImageBase64;
+  }
+}
+
+/**
+ * Decode a data URI (data:image/...;base64,...) to a Buffer.
+ * Returns null if not a valid data URI.
+ */
+function decodeDataUri(dataUri: string): Buffer | null {
+  const match = dataUri.match(/^data:[^/]+\/[^;]+;base64,(.+)$/);
+  if (!match) return null;
+  return Buffer.from(match[1], "base64");
+}
 
 /**
  * Resolve an image path to a usable format for external APIs.

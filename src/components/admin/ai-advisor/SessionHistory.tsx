@@ -34,29 +34,22 @@ export function SessionHistory({ onResume, onClose }: SessionHistoryProps) {
   const loadSessions = useCallback(async () => {
     setLoading(true);
     setError(null);
-    console.log("[SessionHistory] loadSessions — fetching /api/admin/ai/sessions");
     try {
       const res = await fetch("/api/admin/ai/sessions");
-      console.log("[SessionHistory] response status:", res.status, res.ok);
       if (!res.ok) {
         const text = await res.text().catch(() => "");
-        setError(`Errore server: ${res.status} — ${text.slice(0, 200)}`);
-        console.error("[SessionHistory] fetch failed:", res.status, text);
+        setError(`Errore server: ${res.status}`);
         return;
       }
       const data = await res.json();
-      console.log("[SessionHistory] parsed data:", data.ok, "sessions:", data.data?.sessions?.length);
       if (data.ok) {
         setSessions(data.data.sessions);
         setTotalCost(data.data.totalCost);
       } else {
         setError(data.error?.message ?? "Errore nel caricamento");
-        console.error("[SessionHistory] API returned error:", data.error);
       }
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Errore di connessione";
-      setError(msg);
-      console.error("[SessionHistory] fetch exception:", err);
+      setError(err instanceof Error ? err.message : "Errore di connessione");
     } finally {
       setLoading(false);
     }

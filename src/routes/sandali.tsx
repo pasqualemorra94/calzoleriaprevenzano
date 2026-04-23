@@ -269,16 +269,26 @@ function SandaliPage(): ReactNode {
 function SandaloProductCard({ product }: { product: ProductListItem }) {
   return (
     <m.article
-      className="group"
+      className="group relative"
       whileHover={{ y: -4 }}
       transition={{ duration: 0.25, ease: "easeOut" }}
     >
-      <div className="relative aspect-[3/4] overflow-hidden rounded-[var(--radius-lg)] bg-[var(--color-muted)]">
+      {/* Clickable overlay — entire card is clickable */}
+      <Link
+        to="/prodotti/$slug"
+        params={{ slug: product.slug }}
+        className="absolute inset-0 z-10 rounded-[var(--radius-lg)]"
+        aria-label={`Vedi ${product.name}`}
+      >
+        <span className="sr-only">Vedi {product.name}</span>
+      </Link>
+
+      <div className="relative aspect-[3/4] overflow-hidden rounded-[var(--radius-lg)] bg-[var(--color-muted)] transition-shadow duration-300 group-hover:shadow-[0_8px_30px_rgba(139,94,60,0.12)]">
         {product.image ? (
           <img
             src={product.image.url}
             alt={product.image.alt ?? product.name}
-            className="h-full w-full object-cover transition-transform duration-[var(--transition-slow)] group-hover:scale-[1.05]"
+            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
             loading="lazy"
             width={400}
             height={533}
@@ -295,22 +305,30 @@ function SandaloProductCard({ product }: { product: ProductListItem }) {
           </span>
         )}
 
-        <div className="pointer-events-none absolute inset-0 rounded-[var(--radius-lg)] border border-[var(--color-accent)]/0 transition-colors duration-[var(--transition-base)] group-hover:border-[var(--color-accent)]/30" />
+        {/* Slide-up "Vedi dettaglio" button */}
+        <div className="absolute inset-x-0 bottom-0 flex justify-center p-4 translate-y-full opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+          <span className="pointer-events-none inline-flex h-11 items-center gap-2 rounded-[var(--radius-md)] bg-[var(--color-primary)] px-5 text-xs font-semibold tracking-wide text-white shadow-[0_4px_20px_rgba(139,94,60,0.3)]">
+            <ShoppingBag className="h-4 w-4" />
+            Vedi dettaglio
+          </span>
+        </div>
+
+        {/* Subtle tint overlay */}
+        <div className="absolute inset-0 bg-[var(--color-primary)]/0 transition-colors duration-300 group-hover:bg-[var(--color-primary)]/[0.03]" />
+        <div className="pointer-events-none absolute inset-0 rounded-[var(--radius-lg)] border border-[var(--color-accent)]/0 transition-all duration-300 group-hover:border-[var(--color-accent)]/25" />
       </div>
 
-      <div className="mt-4">
+      <div className="mt-5">
         {product.category && (
-          <span className="text-xs font-medium tracking-wider text-[var(--color-text-muted)]">
+          <span className="text-[11px] font-medium tracking-[0.15em] text-[var(--color-text-muted)]">
             {product.category.name}
           </span>
         )}
-        <h3 className="mt-1 text-sm font-medium leading-snug text-[var(--color-text)]">
-          <Link to="/prodotti/$slug" params={{ slug: product.slug }} className="hover:text-[var(--color-primary)]">
-            {product.name}
-          </Link>
+        <h3 className="mt-1.5 text-sm font-medium leading-snug text-[var(--color-text)] transition-colors duration-200 group-hover:text-[var(--color-primary)]">
+          {product.name}
         </h3>
         <div className="mt-2 flex items-center gap-2">
-          <p className="text-sm font-medium text-[var(--color-primary)]">
+          <p className="text-sm font-semibold text-[var(--color-primary)]">
             €{product.price.toFixed(2)}
           </p>
           {product.compareAtPrice && (

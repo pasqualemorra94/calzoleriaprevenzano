@@ -25,7 +25,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { apiSuccess, apiError } from "~/lib/api-response";
 import { requireAdmin } from "~/lib/sdk-auth.server";
 import { generateTryOn } from "~/lib/fashn.server";
-import { getProductImageForTryOn, buildTryOnPrompt, resolveImageToBase64 } from "~/lib/ai-advisor.server";
+import { getProductImageForTryOn, buildTryOnPrompt, resolveImageToBase64, compositeProductWithSwatches } from "~/lib/ai-advisor.server";
 import type { SelectedVariant } from "~/lib/ai-advisor.server";
 import { appendTryOnToSession } from "~/lib/ai-sessions.server";
 import type { TryOnHistoryEntry } from "~/lib/ai-sessions.server";
@@ -96,37 +96,58 @@ export const Route = createFileRoute("/api/admin/ai/tryon")({
         const personImage = rawPersonImage;
 
         // ── Resolve garment image (product photo) ──
-        // getProductImageForTryOn returns either a public URL or a base64 data URI
-        // (local images are converted to base64 so Fashn can use them even from localhost)
-        const garmentImage = overrideImageUrl ?? await getProductImageForTryOn(productSlug);
+        let garmentImage = overrideImageUrl ?? await getProductImageForTryOn(productSlug);
 
         if (!garmentImage) {
           return apiError("NOT_FOUND", "Nessuna immagine trovata per il prodotto selezionato", 404);
         }
 
-        // ── Resolve variant swatch images to base64 ──
+        // ── Resolve variant swatch images and composite them into the garment image ──
+        // Fashn API only accepts ONE product_image. When the user selects color/material
+        // variants, we composite the sandal photo with the swatch patches side by side.
+        // The prompt then tells Fashn to use the color from the visible swatches.
+        //
         // TODO: In production, variant images should be served from a public CDN.
         // The base64 conversion is a workaround for local development.
         const resolvedVariants: SelectedVariant[] = [];
+        const swatchImagesForComposite: Array<{ label: string; base64: string }> = [];
+
         if (selectedVariants && selectedVariants.length > 0) {
           for (const v of selectedVariants) {
             const resolved: SelectedVariant = { ...v };
             if (v.optionImageUrl) {
               const base64 = await resolveImageToBase64(v.optionImageUrl);
-              // Store resolved image on the variant for potential future use
-              // Currently Fashn API only accepts one garment image,
-              // so we use the metadata in the prompt instead
               if (base64) {
-                log.info("Variant swatch resolved to base64", {
+                log.info("Variant swatch resolved", {
                   group: v.groupLabel,
                   option: v.optionLabel,
-                  originalUrl: v.optionImageUrl,
                   resolvedType: base64.startsWith("data:") ? "base64" : "url",
                 });
+
+                // Only composite visual swatches (color/material groups), not heel/size
+                const lower = `${v.groupLabel} ${v.groupId}`.toLowerCase();
+                const isVisual = !lower.includes("taglia") && !lower.includes("size")
+                  && !lower.includes("tacco") && !lower.includes("heel");
+                if (isVisual && base64.startsWith("data:")) {
+                  swatchImagesForComposite.push({ label: `${v.groupLabel}: ${v.optionLabel}`, base64 });
+                }
+
+                resolved.optionImageUrl = base64;
               }
             }
             resolvedVariants.push(resolved);
           }
+        }
+
+        // Composite product image + swatches into a single image for Fashn
+        let hasSwatchImages = false;
+        if (swatchImagesForComposite.length > 0 && garmentImage.startsWith("data:")) {
+          garmentImage = await compositeProductWithSwatches(garmentImage, swatchImagesForComposite);
+          hasSwatchImages = true;
+          log.info("Garment image composited with swatches", {
+            swatchCount: swatchImagesForComposite.length,
+            swatchLabels: swatchImagesForComposite.map((s) => s.label),
+          });
         }
 
         // ── Debug log image formats ──
@@ -155,6 +176,7 @@ export const Route = createFileRoute("/api/admin/ai/tryon")({
           const prompt = await buildTryOnPrompt(
             productSlug,
             resolvedVariants.length > 0 ? resolvedVariants : undefined,
+            hasSwatchImages,
           );
 
           const result = await generateTryOn({

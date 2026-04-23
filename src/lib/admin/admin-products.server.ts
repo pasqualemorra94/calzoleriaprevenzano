@@ -65,7 +65,7 @@ export async function getAdminProducts(
         isActive: true,
         deletedAt: true,
         category: { select: { id: true, name: true } },
-        images: { where: { sortOrder: 0 }, select: { id: true, url: true }, take: 1 },
+        images: { orderBy: { sortOrder: "asc" }, select: { id: true, url: true }, take: 1 },
         createdAt: true,
       },
     }),

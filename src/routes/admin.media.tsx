@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Outlet, useRouterState } from "@tanstack/react-router";
 import { useState, useRef, useCallback, type ReactNode } from "react";
 import {
   Upload, Search, Grid3X3, List,
@@ -37,16 +37,27 @@ export const Route = createFileRoute("/admin/media")({
   component: AdminMediaPage,
 });
 
-// ─── Component ──────────────────────────────────────────────────────
+// ─── Page orchestrator (Outlet pattern for child route /admin/media/$id) ──
 
 function AdminMediaPage(): ReactNode {
   const { initialData } = Route.useRouteContext();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  if (pathname !== "/admin/media") {
+    return <Outlet />;
+  }
+
+  return <AdminMediaList initialData={initialData as MediaListResponse} />;
+}
+
+// ─── Media list component ──────────────────────────────────────────
+
+function AdminMediaList({ initialData }: { initialData: MediaListResponse }): ReactNode {
   const [data, setData] = useState<MediaListResponse>(initialData);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeFolder, setActiveFolder] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -55,12 +66,12 @@ function AdminMediaPage(): ReactNode {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dragCounterRef = useRef(0);
 
-  const fetchMedia = useCallback(async (p: number, q: string, folder: string | null) => {
+  const fetchMedia = useCallback(async (p: number, q: string) => {
     setLoading(true);
     setError(null);
     try {
       const result = await $getAdminMedia({
-        data: { page: p, perPage: 40, query: q || undefined, folder: folder || undefined, type: "image" },
+        data: { page: p, perPage: 40, query: q || undefined, type: "image" },
       });
       setData(result);
     } catch (err) {
@@ -80,14 +91,13 @@ function AdminMediaPage(): ReactNode {
       for (const file of Array.from(files)) {
         formData.append("files", file);
       }
-      if (activeFolder) formData.set("folder", activeFolder);
 
       const res = await fetch("/api/upload", { method: "POST", body: formData });
       const json = await res.json();
       if (!json.ok) throw new Error(json.error?.message ?? "Errore durante l'upload");
 
       setPage(1);
-      await fetchMedia(1, searchQuery, activeFolder);
+      await fetchMedia(1, searchQuery);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Errore durante l'upload");
     } finally {
@@ -131,7 +141,7 @@ function AdminMediaPage(): ReactNode {
       const res = await fetch(`/api/admin/media/${id}`, { method: "DELETE" });
       const json = await res.json();
       if (!json.ok && res.status !== 204) throw new Error(json.error?.message ?? "Errore");
-      await fetchMedia(page, searchQuery, activeFolder);
+      await fetchMedia(page, searchQuery);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Errore durante l'eliminazione");
     }
@@ -172,7 +182,7 @@ function AdminMediaPage(): ReactNode {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setPage(1);
-    fetchMedia(1, searchQuery, activeFolder);
+    fetchMedia(1, searchQuery);
   };
 
   // ── Render ──
@@ -219,7 +229,7 @@ function AdminMediaPage(): ReactNode {
         </div>
       )}
 
-      {/* Toolbar: search + filters + view toggle */}
+      {/* Toolbar: search + view toggle */}
       <div className="flex flex-wrap items-center gap-3">
         <form onSubmit={handleSearch} className="relative flex-1 min-w-[200px]">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
@@ -230,39 +240,6 @@ function AdminMediaPage(): ReactNode {
             placeholder="Cerca per nome..."
           />
         </form>
-
-        {/* Folder filter */}
-        {data && data.stats.folders.length > 0 && (
-          <div className="flex items-center gap-1.5">
-            <button
-              type="button"
-              onClick={() => { setActiveFolder(null); setPage(1); }}
-              className={cn(
-                "rounded-md px-3 py-2 text-xs font-medium transition-colors",
-                !activeFolder
-                  ? "bg-[var(--color-primary)] text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200",
-              )}
-            >
-              Tutti
-            </button>
-            {data.stats.folders.map((f) => (
-              <button
-                key={f.name}
-                type="button"
-                onClick={() => { setActiveFolder(f.name === "Senza cartella" ? "" : f.name); setPage(1); }}
-                className={cn(
-                  "rounded-md px-3 py-2 text-xs font-medium transition-colors",
-                  activeFolder === (f.name === "Senza cartella" ? "" : f.name)
-                    ? "bg-[var(--color-primary)] text-white"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200",
-                )}
-              >
-                {f.name} ({f.count})
-              </button>
-            ))}
-          </div>
-        )}
 
         {/* View toggle */}
         <div className="flex items-center rounded-md border border-gray-200">
