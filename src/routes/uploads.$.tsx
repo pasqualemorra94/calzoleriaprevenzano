@@ -16,7 +16,7 @@ const MIME_TYPES: Record<string, string> = {
   ".avif": "image/avif",
 };
 
-export const Route = createFileRoute("/uploads/$path")({
+export const Route = createFileRoute("/uploads/$")({
   server: {
     handlers: {
       GET: async ({ request }) => {
