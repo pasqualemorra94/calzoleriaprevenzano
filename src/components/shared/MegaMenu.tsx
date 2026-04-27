@@ -33,9 +33,21 @@ interface TopCategory {
   children: ChildCategory[];
 }
 
-function MegaMenuPanel({ categories }: { categories: TopCategory[] }) {
+function MegaMenuPanel({ categories, onClose }: { categories: TopCategory[]; onClose: () => void }) {
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (panelRef.current && !panelRef.current.contains(e.target as Node)) {
+        onClose();
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [onClose]);
+
   return (
-    <div className="absolute left-0 top-full z-[var(--z-overlay)] mt-1 w-[min(90vw,800px)] animate-[fadeIn_150ms_ease-out]">
+    <div ref={panelRef} className="absolute left-0 top-full z-[var(--z-overlay)] mt-1 w-[min(90vw,800px)] animate-[fadeIn_150ms_ease-out]">
       <div className="overflow-hidden rounded-[var(--radius-xl)] border border-[var(--color-border-light)] bg-[var(--color-surface)] shadow-[var(--shadow-xl)]">
         <div className="grid grid-cols-3 gap-0 p-6">
           {categories.map((cat) => (
@@ -363,15 +375,16 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
 
           <span className="h-1 w-1 rounded-full bg-[var(--color-accent)]/50" />
 
-          {/* Shop mega menu */}
-          <div
-            className="relative"
-            onMouseEnter={() => handleEnter("shop")}
-            onMouseLeave={handleLeave}
-          >
-            <button
-              type="button"
-              className={cn(
+           {/* Shop mega menu */}
+           <div
+             className="relative"
+             onMouseEnter={() => handleEnter("shop")}
+             onMouseLeave={handleLeave}
+           >
+             <button
+               type="button"
+               onClick={() => setOpenMenu(openMenu === "shop" ? null : "shop")}
+               className={cn(
                 "flex items-center gap-1 px-5 py-2 text-[13px] font-medium tracking-[0.06em] uppercase transition-colors duration-[var(--transition-fast)]",
                 openMenu === "shop"
                   ? "text-[var(--color-primary)]"
@@ -390,7 +403,7 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
             </button>
 
             {openMenu === "shop" && categories.length > 0 && (
-              <MegaMenuPanel categories={categories} />
+              <MegaMenuPanel categories={categories} onClose={() => setOpenMenu(null)} />
             )}
           </div>
 
