@@ -1,7 +1,7 @@
 FROM node:22-alpine AS builder
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm install --legacy-peer-deps
 COPY . .
 RUN npx prisma generate
 RUN npx vite build
@@ -17,7 +17,7 @@ COPY --from=builder /app/package.json ./package.json
 
 RUN mkdir -p /data/uploads && ln -sf /data/uploads .output/public/uploads
 
-RUN npm install prisma@6.7.0
+RUN npm install --legacy-peer-deps prisma@6.7.0 zod@^4.3.6 @opentelemetry/api
 
 EXPOSE 3000
 CMD ["sh", "-c", "npx prisma migrate deploy && node .output/server/index.mjs"]
