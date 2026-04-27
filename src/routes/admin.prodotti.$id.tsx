@@ -238,8 +238,7 @@ function AdminProductEditPage(): ReactNode {
     return Object.keys(errors).length === 0;
   };
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSave = async () => {
     if (!validateForm()) { toast.error("Compila tutti i campi obbligatori"); return; }
 
     setSaving(true);
@@ -309,7 +308,7 @@ function AdminProductEditPage(): ReactNode {
 
   return (
     <div className="space-y-6">
-      <form onSubmit={handleSave} className="space-y-6">
+      <div className="space-y-6">
         {/* ── Save / Cancel — sticky top ── */}
         <div className="sticky top-0 z-10 flex items-center justify-between gap-4 rounded-lg border border-gray-200 bg-white/90 px-4 py-3 shadow-sm backdrop-blur-sm">
           <span className="text-sm font-medium text-gray-700">
@@ -319,7 +318,7 @@ function AdminProductEditPage(): ReactNode {
             <Link to="/admin/prodotti" className="inline-flex h-9 items-center rounded-md border border-gray-300 px-4 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50">
               Annulla
             </Link>
-            <button type="submit" disabled={saving} className="inline-flex h-9 items-center gap-2 rounded-md bg-[var(--color-primary)] px-5 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-dark)] disabled:cursor-not-allowed disabled:opacity-60">
+            <button type="button" onClick={handleSave} disabled={saving} className="inline-flex h-9 items-center gap-2 rounded-md bg-[var(--color-primary)] px-5 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-dark)] disabled:cursor-not-allowed disabled:opacity-60">
               {saving && <Loader2 className="h-4 w-4 animate-spin" />}
               <Save className="h-4 w-4" />
               Salva
@@ -374,7 +373,7 @@ function AdminProductEditPage(): ReactNode {
           multiple={true}
           maxSelections={20}
         />
-      </form>
+      </div>
     </div>
   );
 }
