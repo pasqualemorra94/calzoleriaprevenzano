@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { readFile, existsSync, statSync } from "node:fs";
+import { readFile } from "node:fs/promises";
+import { existsSync, statSync } from "node:fs";
 import { join, extname } from "node:path";
 
 const UPLOAD_BASE = process.env.UPLOAD_DIR || join(process.cwd(), "public", "uploads");
