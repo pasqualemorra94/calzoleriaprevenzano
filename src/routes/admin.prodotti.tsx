@@ -76,8 +76,10 @@ function AdminProductsList(): ReactNode {
   const handleDelete = async (id: string, name: string) => {
     try {
       const res = await fetch(`/api/admin/products/${id}`, { method: "DELETE" });
-      const json = await res.json();
-      if (!res.ok && json.error) throw new Error(json.error.message);
+      if (!res.ok) {
+        const json = await res.json().catch(() => null);
+        throw new Error(json?.error?.message ?? "Errore durante l'eliminazione");
+      }
       toast.success(`Prodotto "${name}" eliminato`);
       fetchProducts();
     } catch (err) {
