@@ -20,7 +20,7 @@ export function VariantConfigSection({
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Layers className="h-5 w-5 text-[var(--color-primary)]" />
-          {parsedVariantConfig && (
+          {parsedVariantConfig?.groups && (
             <span className="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
               {parsedVariantConfig.groups.length} gruppi
             </span>
