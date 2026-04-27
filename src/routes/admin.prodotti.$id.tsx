@@ -350,14 +350,16 @@ function AdminProductEditPage(): ReactNode {
           />
         </div>
 
-        {/* ── Variants — always at the bottom, full width ── */}
-        <VariantSection
-          callbacks={{
-            form, updateField, updateVariant, addVariant, removeVariant,
-            updateImage, removeImage, moveImage, addImagesFromMedia,
-            expandedGroups, toggleGroup, touched, fieldErrors,
-          }}
-        />
+        {/* ── Variant rows — hidden when variantConfig is active (options managed by builder) ── */}
+        {!parsedVariantConfig?.groups?.length && (
+          <VariantSection
+            callbacks={{
+              form, updateField, updateVariant, addVariant, removeVariant,
+              updateImage, removeImage, moveImage, addImagesFromMedia,
+              expandedGroups, toggleGroup, touched, fieldErrors,
+            }}
+          />
+        )}
         <VariantConfigSection
           parsedVariantConfig={parsedVariantConfig}
           templates={templates}
