@@ -278,7 +278,6 @@ function AdminProductEditPage(): ReactNode {
       const json = await res.json();
       if (!json.ok) throw new Error(json.error?.message ?? "Errore durante il salvataggio");
       toast.success("Prodotto salvato con successo");
-      setTimeout(() => navigate({ to: "/admin/prodotti" }), 1200);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Errore durante il salvataggio");
     } finally {
