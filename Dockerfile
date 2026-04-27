@@ -11,12 +11,13 @@ WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=builder /app/.output ./.output
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/package.json ./package.json
 
 RUN mkdir -p /data/uploads && ln -sf /data/uploads .output/public/uploads
+
+RUN npm install prisma@6.7.0
 
 EXPOSE 3000
 CMD ["sh", "-c", "npx prisma migrate deploy && node .output/server/index.mjs"]
