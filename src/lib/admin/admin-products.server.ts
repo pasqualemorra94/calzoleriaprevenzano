@@ -268,6 +268,6 @@ export async function adminDeleteProduct(id: string, adminUserId: string) {
 export async function adminRestoreProduct(id: string) {
   return prisma.product.update({
     where: { id },
-    data: { deletedAt: null, deletedBy: null },
+    data: { deletedAt: null, deletedBy: null, isActive: true },
   });
 }
