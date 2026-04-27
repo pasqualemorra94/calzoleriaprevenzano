@@ -47,15 +47,15 @@ export const createProductSchema = z.object({
   description: z.string().min(1, "La descrizione è obbligatoria"),
   shortDescription: z.string().max(500).optional(),
   price: z.number().positive("Il prezzo deve essere positivo"),
-  compareAtPrice: z.number().positive().optional(),
-  sku: z.string().optional(),
+  compareAtPrice: z.number().positive().nullable().optional(),
+  sku: z.string().nullable().optional(),
   isActive: z.boolean().default(true),
   isFeatured: z.boolean().default(false),
   stock: z.number().int().min(0).default(0),
-  weight: z.number().min(0).optional(),
-  materials: z.string().optional(),
-  variantConfig: z.record(z.string(), z.unknown()).optional(),
-  categoryId: z.string().optional(),
+  weight: z.number().min(0).nullable().optional(),
+  materials: z.string().nullable().optional(),
+  variantConfig: z.record(z.string(), z.unknown()).nullable().optional(),
+  categoryId: z.string().nullable().optional(),
   variants: z.array(productVariantSchema).optional(),
   images: z.array(productImageSchema).optional(),
 });
@@ -71,6 +71,7 @@ export const updateProductSchema = createProductSchema
     materials: z.string().nullable().optional(),
     sku: z.string().nullable().optional(),
     categoryId: z.string().nullable().optional(),
+    variantConfig: z.record(z.string(), z.unknown()).nullable().optional(),
   });
 
 export type UpdateProductInput = z.infer<typeof updateProductSchema>;
