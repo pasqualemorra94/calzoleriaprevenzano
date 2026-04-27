@@ -34,7 +34,7 @@ const STEPS: PersonalizationStep[] = [
     title: "Scegli il modello",
     description:
       "Infradito, cavigliera, fascia, treccia, schiava: trova la forma che si adatta al tuo stile tra le nostre collezioni.",
-    iconSrc: "/uploads/2026/04/icon-sandalo.png",
+    iconSrc: "/images/icon-sandalo.png",
     iconAlt: "Sandali artigianali personalizzabili",
   },
   {
@@ -42,7 +42,7 @@ const STEPS: PersonalizationStep[] = [
     title: "Scegli la pelle",
     description:
       "Vitello, camoscio, cuoio toscano certificato: ogni materiale ha la sua texture, il suo profumo, la sua storia.",
-    iconSrc: "/uploads/2026/04/icon-pelle.png",
+    iconSrc: "/images/icon-pelle.png",
     iconAlt: "Scegli il tipo e colore di pelle",
   },
   {
@@ -50,7 +50,7 @@ const STEPS: PersonalizationStep[] = [
     title: "Personalizza i dettagli",
     description:
       "Colore, altezza del tacco, tipo di cucitura e il gioiello Swarovski che rende il sandalo unico e tuo.",
-    iconSrc: "/uploads/2026/04/icon-gioiello.png",
+    iconSrc: "/images/icon-gioiello.png",
     iconAlt: "Scegli il gioiello",
   },
 ];
@@ -130,7 +130,7 @@ export function PersonalizationSection() {
           >
             <div className="overflow-hidden rounded-[var(--radius-lg)]">
               <img
-                src="/uploads/2026/04/personalizzazione-sandalo.jpg"
+                src="/images/personalizzazione-sandalo.jpg"
                 alt="Sandalo personalizzabile — scegli pelle, tacco e gioiello Swarovski"
                 className="w-full object-cover"
                 loading="lazy"

@@ -19,7 +19,7 @@ interface HeroSlide {
 
 const SLIDES: HeroSlide[] = [
   {
-    image: "/uploads/2026/04/slide-gioiello-2024.jpeg",
+    image: "/images/slide-gioiello-2024.jpeg",
     alt: "Collezione Gioiello 2024 — sandali artigianali con cristalli Swarovski",
     tag: "Nuova Collezione",
     headline: ["Collezione", "Gioiello"],
@@ -31,7 +31,7 @@ const SLIDES: HeroSlide[] = [
     secondaryCtaHref: "/la-bottega",
   },
   {
-    image: "/uploads/2026/04/slide-classica.jpg",
+    image: "/images/slide-classica.jpg",
     alt: "Collezione Classica — sandali artigianali in pelle pregiata napoletana",
     tag: "Artigianato Napoletano",
     headline: ["Sandali", "Classici"],

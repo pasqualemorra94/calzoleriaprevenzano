@@ -189,7 +189,7 @@ function MeasurementImage(): ReactNode {
     >
       <div className="overflow-hidden rounded-[var(--radius-lg)]">
         <img
-          src="/uploads/2026/04/tutorial-misurazione-piede.png"
+          src="/images/tutorial-misurazione-piede.png"
           alt="Tutorial: come misurare il piede per trovare la taglia giusta dei sandali"
           className="w-full object-cover"
           loading="lazy"

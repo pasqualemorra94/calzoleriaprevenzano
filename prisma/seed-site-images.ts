@@ -19,7 +19,7 @@ const __dirname = dirname(__filename);
 const prisma = new PrismaClient();
 
 interface SiteImage {
-  filename: string;        // stored filename in public/uploads/2026/04/
+  filename: string;        // stored filename in public/images/
   originalName: string;    // descriptive original name
   mimeType: string;
   alt: string;
@@ -222,7 +222,7 @@ async function main() {
         height: img.height,
         alt: img.alt,
         folder: img.folder,
-        url: `/uploads/2026/04/${img.filename}`,
+        url: `/images/${img.filename}`,
       },
     });
 

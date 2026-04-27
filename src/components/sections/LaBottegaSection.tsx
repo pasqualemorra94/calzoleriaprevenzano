@@ -15,7 +15,7 @@ const BOTTEGA_COPY = {
   ctaHref: "/la-bottega",
 } as const;
 
-const BOTTEGA_IMAGE = "/uploads/2026/04/personalizzazione-sandalo.jpg";
+const BOTTEGA_IMAGE = "/images/personalizzazione-sandalo.jpg";
 
 interface LaBottegaSectionProps {
   imageUrl?: string;

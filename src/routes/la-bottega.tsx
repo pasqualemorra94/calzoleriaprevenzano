@@ -41,7 +41,7 @@ const TEAM_MEMBERS: TeamMember[] = [
     role: "Sandal Maker & Modellista",
     description:
       "Seconda generazione dell'arte calzolaia. Formatosi presso l'Accademia della Moda di Napoli, unisce la tradizione paterna alle nuove tecniche di lavorazione. Ha aperto la sede storica in centro nel 2018.",
-    image: "/uploads/2026/04/nunzio-team.jpg",
+    image: "/images/nunzio-team.jpg",
     imageAlt: "Nunzio Prevenzano — sandal maker e modellista di calzature",
   },
   {
@@ -49,7 +49,7 @@ const TEAM_MEMBERS: TeamMember[] = [
     role: "Restauro & Pulizia",
     description:
       "La terza generazione della famiglia. Si è distinta per la sua bravura nel restauro di scarpe e borse, portando competenza e passione nell'arte della cura e del recupero della pelletteria.",
-    image: "/uploads/2026/04/francesca-team.jpg",
+    image: "/images/francesca-team.jpg",
     imageAlt: "Francesca Prevenzano — restauro e pulizia scarpe e borse",
   },
 ];
@@ -183,7 +183,7 @@ function BottegaInfoBlock(): ReactNode {
     <section ref={ref} className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
       <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
         <m.img
-          src="/uploads/2026/04/nunzio-ritratto.jpg"
+          src="/images/nunzio-ritratto.jpg"
           alt="Nunzio Prevenzano al lavoro nella bottega di Via Chiaia, Napoli"
           className="aspect-[4/3] w-full rounded-[var(--radius-lg)] object-cover"
           loading="lazy"
