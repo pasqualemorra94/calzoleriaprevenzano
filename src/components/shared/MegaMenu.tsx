@@ -157,12 +157,122 @@ function CartIcon() {
 
 // ─── Main Component ─────────────────────────────────────────
 
+/** Mobile "Shop" sub-page with independent scroll and back navigation. */
+function MobileShopPanel({
+  categories,
+  onBack,
+  onItemClick,
+}: {
+  categories: TopCategory[];
+  onBack: () => void;
+  onItemClick: () => void;
+}) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <div
+      className="fixed inset-0 z-[var(--z-modal)] flex flex-col bg-[var(--color-background)]"
+      style={{ animation: "mobileSubSlideRight 250ms ease-out" }}
+    >
+      {/* Sub-page header */}
+      <div className="flex h-14 shrink-0 items-center gap-3 border-b border-[var(--color-border-light)] px-4">
+        <button
+          type="button"
+          onClick={onBack}
+          aria-label="Torna al menu"
+          className="flex h-10 w-10 items-center justify-center rounded-md text-[var(--color-text)] transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-primary)]"
+        >
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+        </button>
+        <h2 className="font-display text-lg font-semibold text-[var(--color-text)]">Shop</h2>
+      </div>
+
+      {/* Scrollable categories */}
+      <div ref={scrollRef} className="flex-1 overflow-y-auto overscroll-contain">
+        <div className="px-4 py-5">
+          {categories.map((cat) => (
+            <div key={cat.id} className="mb-6">
+              <Link
+                to="/catalogo"
+                search={{ category: cat.slug }}
+                onClick={onItemClick}
+                className="mb-2 flex items-baseline justify-between font-display text-base font-semibold text-[var(--color-text)]"
+              >
+                <span>{cat.name}</span>
+                <span className="text-[11px] font-body font-normal text-[var(--color-text-muted)]">
+                  {cat.productCount} prodotti
+                </span>
+              </Link>
+
+              <hr className="mb-2 h-[1px] w-8 border-0 bg-[var(--stitch-color)]/40" />
+
+              <ul className="space-y-0.5">
+                {cat.children.map((child) => (
+                  <li key={child.id}>
+                    <Link
+                      to="/catalogo"
+                      search={{ category: child.slug }}
+                      onClick={onItemClick}
+                      className="flex items-center justify-between rounded-[var(--radius-sm)] px-3 py-2.5 text-[15px] text-[var(--color-text-secondary)] transition-colors active:bg-[var(--color-muted)]"
+                    >
+                      <span>{child.name}</span>
+                      <span className="text-[11px] text-[var(--color-text-muted)] tabular-nums">
+                        {child.productCount}
+                      </span>
+                    </Link>
+
+                    {child.children.length > 0 && (
+                      <ul className="ml-4 space-y-0.5 border-l border-[var(--color-border-light)] pl-3">
+                        {child.children.map((gc) => (
+                          <li key={gc.id}>
+                            <Link
+                              to="/catalogo"
+                              search={{ category: gc.slug }}
+                              onClick={onItemClick}
+                              className="flex items-center justify-between rounded-[var(--radius-sm)] px-3 py-2 text-[13px] text-[var(--color-text-muted)] transition-colors active:bg-[var(--color-muted)]"
+                            >
+                              <span>{gc.name}</span>
+                              <span className="text-[11px] tabular-nums">{gc.productCount}</span>
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Sticky "Vedi tutto" CTA */}
+        <div className="sticky bottom-0 border-t border-[var(--color-border-light)] bg-[var(--color-background)] px-4 py-4">
+          <Link
+            to="/catalogo"
+            onClick={onItemClick}
+            className="flex items-center justify-center gap-2 rounded-[var(--radius-md)] bg-[var(--color-primary)] px-4 py-3 text-sm font-medium text-white transition-colors active:bg-[var(--color-primary-dark)]"
+          >
+            Vedi tutto il catalogo
+            <ChevronDown className="h-3.5 w-3.5 -rotate-90" />
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Main Component ─────────────────────────────────────────
+
 export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
   const [openMenu, setOpenMenu] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileShopOpen, setMobileShopOpen] = useState(false);
   const [categories, setCategories] = useState<TopCategory[]>([]);
   const [scrolled, setScrolled] = useState(false);
   const [cartTotal, setCartTotal] = useState<number | null>(null);
+  const [mobileClosing, setMobileClosing] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -221,17 +331,35 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
   }, []);
 
   useEffect(() => {
-    if (mobileMenuOpen) {
+    if (mobileMenuOpen || mobileShopOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
     }
     return () => { document.body.style.overflow = ""; };
-  }, [mobileMenuOpen]);
+  }, [mobileMenuOpen, mobileShopOpen]);
 
   const handleItemClick = useCallback(() => {
     setOpenMenu(null);
+    setMobileShopOpen(false);
+    setMobileClosing(false);
     setMobileMenuOpen(false);
+  }, []);
+
+  const closeMobileMenu = useCallback(() => {
+    setMobileClosing(true);
+    setTimeout(() => {
+      setMobileMenuOpen(false);
+      setMobileClosing(false);
+    }, 200);
+  }, []);
+
+  const openMobileShop = useCallback(() => {
+    setMobileShopOpen(true);
+  }, []);
+
+  const closeMobileShop = useCallback(() => {
+    setMobileShopOpen(false);
   }, []);
 
   const navLinkClass =
@@ -480,198 +608,177 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
         </div>
       </div>
 
-          {/* ── MOBILE DRAWER ────────────────────────────────── */}
+      {/* ── MOBILE FULL-SCREEN MENU ────────────────────── */}
       {mobileMenuOpen && (
-        <>
-          <div
-            className="fixed inset-0 z-[9998] bg-black/50 backdrop-blur-sm md:hidden"
-            onClick={() => setMobileMenuOpen(false)}
-            aria-hidden="true"
-          />
-          <div
-            className="fixed inset-y-0 right-0 z-[9999] w-[85vw] max-w-sm bg-[var(--color-surface)] shadow-2xl md:hidden"
-          >
-            <div className="flex h-full flex-col">
-              <div className="flex items-center justify-between border-b border-[var(--color-border-light)] px-6 py-4">
-                <Link to="/" onClick={handleItemClick}>
-                  <img
-                    src="/images/logo.png"
-                    alt="Calzoleria Prevenzano"
-                    className="h-8 w-auto"
-                    width={160}
-                    height={97}
-                  />
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex h-9 w-9 items-center justify-center rounded-md text-[var(--color-text)] transition-colors hover:text-[var(--color-primary)]"
-                  aria-label="Chiudi menu"
-                >
-                  <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
+        <div
+          className="fixed inset-0 z-[var(--z-modal)] md:hidden"
+          style={{
+            animation: mobileClosing
+              ? "mobileMenuFadeOut 200ms ease-in forwards"
+              : "mobileMenuSlideUp 300ms ease-out",
+          }}
+        >
+          <div className="flex h-full flex-col bg-[var(--color-background)]">
+            {/* Header — logo + close */}
+            <div className="flex h-14 shrink-0 items-center justify-between border-b border-[var(--color-border-light)] px-4">
+              <Link to="/" onClick={handleItemClick}>
+                <img
+                  src="/images/logo.png"
+                  alt="Calzoleria Prevenzano"
+                  className="h-7 w-auto"
+                  width={132}
+                  height={80}
+                />
+              </Link>
+              <button
+                type="button"
+                onClick={closeMobileMenu}
+                className="flex h-10 w-10 items-center justify-center rounded-md text-[var(--color-text)] transition-colors hover:text-[var(--color-primary)]"
+                aria-label="Chiudi menu"
+              >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
 
-              <nav className="flex-1 overflow-y-auto px-4 py-6">
-                <Link
-                  to="/"
-                  onClick={handleItemClick}
-                  className="block rounded-[var(--radius-md)] px-4 py-3 text-[15px] font-medium tracking-wide uppercase text-[var(--color-text)] transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-primary)]"
-                >
-                  Home
-                </Link>
-
-                <div className="h-px bg-[var(--color-border-light)]" />
-
-                {/* Shop — expandable */}
-                <div className="mb-2">
-                  {categories.length > 0 ? (
-                    <>
-                      <button
-                        type="button"
-                        onClick={() => setOpenMenu(openMenu === "mobile-shop" ? null : "mobile-shop")}
-                        className={cn(
-                          "flex w-full items-center justify-between rounded-[var(--radius-md)] px-4 py-3 text-[15px] font-medium tracking-wide uppercase transition-colors",
-                          openMenu === "mobile-shop"
-                            ? "bg-[var(--color-muted)] text-[var(--color-primary)]"
-                            : "text-[var(--color-text)] hover:bg-[var(--color-muted)]",
-                        )}
-                      >
-                        Shop
-                        <ChevronDown className={cn("h-4 w-4 transition-transform", openMenu === "mobile-shop" && "rotate-180")} />
-                      </button>
-                      {openMenu === "mobile-shop" && (
-                        <div className="mt-1 ml-2 space-y-1 border-l-2 border-[var(--color-accent)]/30 pl-4">
-                          {categories.map((cat) => (
-                            <div key={cat.id} className="py-1">
-                              <Link
-                                to="/catalogo"
-                                search={{ category: cat.slug }}
-                                onClick={handleItemClick}
-                                className="block text-sm font-medium text-[var(--color-text)] hover:text-[var(--color-primary)]"
-                              >
-                                {cat.name}
-                                <span className="ml-1 text-[11px] text-[var(--color-text-muted)]">({cat.productCount})</span>
-                              </Link>
-                              {cat.children.map((child) => (
-                                <Link
-                                  key={child.id}
-                                  to="/catalogo"
-                                  search={{ category: child.slug }}
-                                  onClick={handleItemClick}
-                                  className="block py-0.5 pl-3 text-[13px] text-[var(--color-text-secondary)] hover:text-[var(--color-primary)]"
-                                >
-                                  {child.name}
-                                </Link>
-                              ))}
-                            </div>
-                          ))}
-                          <Link
-                            to="/catalogo"
-                            onClick={handleItemClick}
-                            className="mt-2 block text-sm font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]"
-                          >
-                            Vedi tutto il catalogo →
-                          </Link>
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <Link
-                      to="/catalogo"
-                      onClick={handleItemClick}
-                      className="block rounded-[var(--radius-md)] px-4 py-3 text-[15px] font-medium tracking-wide uppercase text-[var(--color-text)] transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-primary)]"
-                    >
-                      Shop
-                    </Link>
-                  )}
-                </div>
-
-                <div className="h-px bg-[var(--color-border-light)]" />
-
-                <Link
-                  to="/sandali"
-                  search={{ category: undefined, query: undefined, page: undefined }}
-                  onClick={handleItemClick}
-                  className="block rounded-[var(--radius-md)] px-4 py-3 text-[15px] font-medium tracking-wide uppercase text-[var(--color-text)] transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-primary)]"
-                >
-                  Sandali
-                </Link>
-
-                <div className="h-px bg-[var(--color-border-light)]" />
-
-                <Link
-                  to="/catalogo"
-                  onClick={handleItemClick}
-                  className="block rounded-[var(--radius-md)] px-4 py-3 text-[15px] font-medium tracking-wide uppercase text-[var(--color-text)] transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-primary)]"
-                >
-                  Catalogo
-                </Link>
-
-                <div className="h-px bg-[var(--color-border-light)]" />
-
-                <Link
-                  to="/la-bottega"
-                  onClick={handleItemClick}
-                  className="block rounded-[var(--radius-md)] px-4 py-3 text-[15px] font-medium tracking-wide uppercase text-[var(--color-text)] transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-primary)]"
-                >
-                  La Bottega
-                </Link>
-
-                <div className="h-px bg-[var(--color-border-light)]" />
-
-                <Link
-                  to="/contatti"
-                  onClick={handleItemClick}
-                  className="block rounded-[var(--radius-md)] px-4 py-3 text-[15px] font-medium tracking-wide uppercase text-[var(--color-text)] transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-primary)]"
-                >
-                  Contatti
-                </Link>
-              </nav>
-
-              <div className="border-t border-[var(--color-border-light)] px-6 py-5">
-                <div className="flex items-center gap-4 text-[var(--color-text-muted)]">
-                  <a
-                    href="https://www.instagram.com/calzoleriaprevenzano"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Instagram"
-                    className="flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-primary)]"
+            {/* Scrollable nav links */}
+            <nav className="flex-1 overflow-y-auto overscroll-contain">
+              <ul className="divide-y divide-[var(--color-border-light)]">
+                <li>
+                  <Link
+                    to="/"
+                    onClick={handleItemClick}
+                    className="flex items-center justify-between px-5 py-4 text-[17px] font-medium tracking-wide text-[var(--color-text)] transition-colors active:bg-[var(--color-muted)]/50"
                   >
-                    <InstagramIcon />
-                  </a>
-                  <a
-                    href="https://www.facebook.com/calzoleriaprevenzano"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Facebook"
-                    className="flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-primary)]"
+                    Home
+                  </Link>
+                </li>
+
+                {/* Shop — navigable sub-page */}
+                <li>
+                  <button
+                    type="button"
+                    onClick={openMobileShop}
+                    className="flex w-full items-center justify-between px-5 py-4 text-[17px] font-medium tracking-wide text-[var(--color-text)] transition-colors active:bg-[var(--color-muted)]/50"
                   >
-                    <FacebookIcon />
-                  </a>
-                  <a
-                    href="https://wa.me/390817645183"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="WhatsApp"
-                    className="flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-primary)]"
+                    Shop
+                    <svg className="h-4 w-4 text-[var(--color-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                    </svg>
+                  </button>
+                </li>
+
+                <li>
+                  <Link
+                    to="/sandali"
+                    search={{ category: undefined, query: undefined, page: undefined }}
+                    onClick={handleItemClick}
+                    className="flex items-center justify-between px-5 py-4 text-[17px] font-medium tracking-wide text-[var(--color-text)] transition-colors active:bg-[var(--color-muted)]/50"
                   >
-                    <WhatsAppIcon />
-                  </a>
-                </div>
+                    Sandali
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    to="/catalogo"
+                    onClick={handleItemClick}
+                    className="flex items-center justify-between px-5 py-4 text-[17px] font-medium tracking-wide text-[var(--color-text)] transition-colors active:bg-[var(--color-muted)]/50"
+                  >
+                    Catalogo
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    to="/la-bottega"
+                    onClick={handleItemClick}
+                    className="flex items-center justify-between px-5 py-4 text-[17px] font-medium tracking-wide text-[var(--color-text)] transition-colors active:bg-[var(--color-muted)]/50"
+                  >
+                    La Bottega
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    to="/contatti"
+                    onClick={handleItemClick}
+                    className="flex items-center justify-between px-5 py-4 text-[17px] font-medium tracking-wide text-[var(--color-text)] transition-colors active:bg-[var(--color-muted)]/50"
+                  >
+                    Contatti
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    to="/account"
+                    onClick={handleItemClick}
+                    className="flex items-center justify-between px-5 py-4 text-[17px] font-medium tracking-wide text-[var(--color-text)] transition-colors active:bg-[var(--color-muted)]/50"
+                  >
+                    Il mio account
+                    <svg className="h-4 w-4 text-[var(--color-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                    </svg>
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+
+            {/* Footer — social + contacts */}
+            <div className="shrink-0 border-t border-[var(--color-border-light)] px-5 py-5">
+              <div className="mb-3 flex items-center gap-3 text-[var(--color-text-muted)]">
                 <a
-                  href="tel:+390817645183"
-                  className="mt-3 flex items-center gap-1.5 text-[12px] text-[var(--color-text-muted)] hover:text-[var(--color-primary)]"
+                  href="https://www.instagram.com/calzoleriaprevenzano"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                  className="flex h-10 w-10 items-center justify-center rounded-full transition-colors active:bg-[var(--color-muted)]"
                 >
-                  <PhoneIcon />
-                  <span>081 764 5183</span>
+                  <InstagramIcon />
+                </a>
+                <a
+                  href="https://www.facebook.com/calzoleriaprevenzano"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook"
+                  className="flex h-10 w-10 items-center justify-center rounded-full transition-colors active:bg-[var(--color-muted)]"
+                >
+                  <FacebookIcon />
+                </a>
+                <a
+                  href="https://wa.me/390817645183"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="WhatsApp"
+                  className="flex h-10 w-10 items-center justify-center rounded-full transition-colors active:bg-[var(--color-muted)]"
+                >
+                  <WhatsAppIcon />
                 </a>
               </div>
+              <a
+                href="tel:+390817645183"
+                className="flex items-center gap-1.5 text-[13px] text-[var(--color-text-muted)]"
+              >
+                <PhoneIcon />
+                <span>081 764 5183</span>
+              </a>
+              <p className="mt-1 flex items-center gap-1.5 text-[13px] text-[var(--color-text-muted)]">
+                <MapPinIcon />
+                <span>Via Chiaia, 104 · Napoli</span>
+              </p>
             </div>
           </div>
-        </>
+        </div>
+      )}
+
+      {/* ── MOBILE SHOP SUB-PAGE ─────────────────────── */}
+      {mobileMenuOpen && mobileShopOpen && categories.length > 0 && (
+        <MobileShopPanel
+          categories={categories}
+          onBack={closeMobileShop}
+          onItemClick={handleItemClick}
+        />
       )}
     </header>
   );
