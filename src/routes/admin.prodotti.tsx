@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 import { useState, useCallback, useEffect, type ReactNode } from "react";
-import { Plus, Search, Loader2, Pencil, Trash2 } from "lucide-react";
+import { Plus, Search, Loader2, Pencil, Trash2, RotateCcw } from "lucide-react";
 import { toast } from "sonner";
 import { ConfirmDialog } from "~/components/admin/ConfirmDialog";
 import { $getAdminProducts } from "~/lib/admin-functions";
@@ -72,6 +72,20 @@ function AdminProductsList(): ReactNode {
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
+
+  const handleRestore = async (id: string, name: string) => {
+    try {
+      const res = await fetch(`/api/admin/products/${id}`, { method: "POST" });
+      if (!res.ok) {
+        const json = await res.json().catch(() => null);
+        throw new Error(json?.error?.message ?? "Errore durante il ripristino");
+      }
+      toast.success(`Prodotto "${name}" ripristinato`);
+      fetchProducts();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Errore durante il ripristino");
+    }
+  };
 
   const handleDelete = async (id: string, name: string) => {
     try {
@@ -184,21 +198,33 @@ function AdminProductsList(): ReactNode {
                     <td className="whitespace-nowrap px-4 py-3">{statusBadge(product)}</td>
                     <td className="whitespace-nowrap px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
-                        <Link
-                          to="/admin/prodotti/$id"
-                          params={{ id: product.id }}
-                          className="inline-flex h-8 items-center gap-1 rounded-md border border-gray-300 px-2.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-50"
-                        >
-                          <Pencil className="h-3.5 w-3.5" />
-                          Modifica
-                        </Link>
-                        <button
-                          onClick={() => setDeleteTarget({ id: product.id, name: product.name })}
-                          className="inline-flex h-8 items-center gap-1 rounded-md border border-red-300 px-2.5 text-xs font-medium text-red-700 transition-colors hover:bg-red-50"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                          Elimina
-                        </button>
+                        {product.deletedAt ? (
+                          <button
+                            onClick={() => handleRestore(product.id, product.name)}
+                            className="inline-flex h-8 items-center gap-1 rounded-md border border-green-300 px-2.5 text-xs font-medium text-green-700 transition-colors hover:bg-green-50"
+                          >
+                            <RotateCcw className="h-3.5 w-3.5" />
+                            Ripristina
+                          </button>
+                        ) : (
+                          <>
+                            <Link
+                              to="/admin/prodotti/$id"
+                              params={{ id: product.id }}
+                              className="inline-flex h-8 items-center gap-1 rounded-md border border-gray-300 px-2.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-50"
+                            >
+                              <Pencil className="h-3.5 w-3.5" />
+                              Modifica
+                            </Link>
+                            <button
+                              onClick={() => setDeleteTarget({ id: product.id, name: product.name })}
+                              className="inline-flex h-8 items-center gap-1 rounded-md border border-red-300 px-2.5 text-xs font-medium text-red-700 transition-colors hover:bg-red-50"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                              Elimina
+                            </button>
+                          </>
+                        )}
                       </div>
                     </td>
                   </tr>

@@ -12,6 +12,7 @@ import {
   getAdminProduct,
   adminUpdateProduct,
   adminDeleteProduct,
+  adminRestoreProduct,
 } from "~/lib/admin.server";
 import { updateProductSchema } from "~/lib/validators/products";
 
@@ -59,6 +60,17 @@ export const Route = createFileRoute("/api/admin/products/$id")({
 
         await adminDeleteProduct(params.id, adminId);
         return apiNoContent();
+      },
+
+      POST: async ({ request, params }) => {
+        try {
+          await requireAdmin(request);
+        } catch {
+          return apiError("FORBIDDEN", "Accesso negato", 403);
+        }
+
+        await adminRestoreProduct(params.id);
+        return apiSuccess({ restored: true });
       },
     },
   },
