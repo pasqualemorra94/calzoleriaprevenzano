@@ -480,16 +480,16 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
         </div>
       </div>
 
-      {/* ── MOBILE DRAWER ────────────────────────────────── */}
+          {/* ── MOBILE DRAWER ────────────────────────────────── */}
       {mobileMenuOpen && (
         <>
           <div
-            className="fixed inset-0 z-[var(--z-overlay)] bg-black/50 backdrop-blur-sm md:hidden"
+            className="fixed inset-0 z-[9998] bg-black/50 backdrop-blur-sm md:hidden"
             onClick={() => setMobileMenuOpen(false)}
             aria-hidden="true"
           />
           <div
-            className="fixed inset-y-0 right-0 z-[calc(var(--z-overlay)+1)] w-[85vw] max-w-sm bg-[var(--color-surface)] shadow-2xl md:hidden"
+            className="fixed inset-y-0 right-0 z-[9999] w-[85vw] max-w-sm bg-[var(--color-surface)] shadow-2xl md:hidden"
           >
             <div className="flex h-full flex-col">
               <div className="flex items-center justify-between border-b border-[var(--color-border-light)] px-6 py-4">
