@@ -66,7 +66,7 @@ export const Route = createFileRoute("/api/admin/media/$id")({
 
         try {
           await deleteMedia(params.id);
-          return apiNoContent();
+          return apiSuccess({ deleted: true });
         } catch (err) {
           const message = err instanceof Error ? err.message : "Errore durante l'eliminazione";
           return apiError("DELETE_ERROR", message, 400);

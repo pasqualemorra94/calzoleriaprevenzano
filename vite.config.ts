@@ -5,6 +5,8 @@ import tailwindcss from "@tailwindcss/vite";
 import { nitro } from "nitro/vite";
 import path from "node:path";
 
+const uploadDir = process.env.UPLOAD_DIR || path.resolve(__dirname, "public", "uploads");
+
 export default defineConfig({
   server: {
     port: 3000,
@@ -24,6 +26,14 @@ export default defineConfig({
       srcDirectory: "src",
     }),
     viteReact(),
-    nitro(),
+    nitro({
+      publicAssets: [
+        {
+          dir: uploadDir,
+          baseURL: "/uploads",
+          maxAge: 60 * 60 * 24 * 365,
+        },
+      ],
+    }),
   ],
 });
