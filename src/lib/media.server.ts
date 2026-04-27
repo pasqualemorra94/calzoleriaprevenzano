@@ -17,6 +17,8 @@ import { UPLOAD_CONSTRAINTS,
   getExtensionFromMime,
 } from "~/lib/validators/media";
 
+const UPLOAD_BASE = process.env.UPLOAD_DIR || join(process.cwd(), "public", "uploads");
+
 // ─── Types ──────────────────────────────────────────────────────────
 
 export interface MediaListItem {
@@ -78,7 +80,7 @@ export async function uploadMedia(file: File, adminUserId: string, folder = ""):
   const filename = `${timestamp}-${randomHex}.${ext}`;
 
   // Ensure directory exists
-  const uploadsDir = join(process.cwd(), "public", "uploads", datePath);
+  const uploadsDir = join(UPLOAD_BASE, datePath);
   if (!existsSync(uploadsDir)) {
     await mkdir(uploadsDir, { recursive: true });
   }
@@ -130,7 +132,7 @@ export async function deleteMedia(id: string): Promise<void> {
   }
 
   // Delete file from disk
-  const filePath = join(process.cwd(), "public", media.url);
+  const filePath = join(UPLOAD_BASE, media.url.replace(/^\/uploads\/?/, ""));
   try {
     await unlink(filePath);
   } catch {

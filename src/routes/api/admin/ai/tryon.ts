@@ -6,26 +6,31 @@
  *   productSlug: string,
  *   sessionId?: string (optional — saves result to session),
  *   imageUrl?: string (override product image),
- *   selectedVariants?: Array<{ groupId, groupLabel, optionId, optionLabel, optionColor?, optionImageUrl? }>
+ *   selectedVariants?: Array<{ groupId, groupLabel, optionId, optionLabel, optionColor?, optionImageUrl? }>,
+ *   provider?: "fashn" | "gpt-image-2" (default: "fashn")
  * }
  *
- * When selectedVariants are provided:
- *  - Variant swatch images are resolved to base64 for reference
- *  - An intelligent prompt is built that describes how to apply the selected
- *    color/material/heel to the sandal
+ * Providers:
+ *  - "fashn" (default): Fashn.ai tryon-max — dedicated virtual try-on, best quality, ~$0.15/gen
+ *  - "gpt-image-2": OpenAI GPT Image 2 edit on fal.ai — multi-image editing, ~$0.05/gen
  *
- * Returns: { id, imageUrl, status, cost, sessionId }
+ * Image pipeline:
+ *  1. Resolve local paths → base64 data URI
+ *  2. Composite product + swatch images (if variants selected)
+ *  3. Resize & compress to 768px max / JPEG 75%
+ *  4. Send to selected provider API
+ *
+ * Returns: { id, imageUrl, status, cost, sessionId, provider }
  *
  * Admin only — used on in-store tablet for AI Foot Advisor.
- * If sessionId is provided, saves the try-on result to the session.
- * Logs AI cost (credits + estimated USD) and wall-clock timing.
  */
 
 import { createFileRoute } from "@tanstack/react-router";
 import { apiSuccess, apiError } from "~/lib/api-response";
 import { requireAdmin } from "~/lib/sdk-auth.server";
 import { generateTryOn } from "~/lib/fashn.server";
-import { getProductImageForTryOn, buildTryOnPrompt, resolveImageToBase64, compositeProductWithSwatches, resizeAndCompress, uploadToTempHost } from "~/lib/ai-advisor.server";
+import { generateTryOnGPT2 } from "~/lib/fal-tryon.server";
+import { getProductImageForTryOn, buildTryOnPrompt, resolveImageToBase64, compositeProductWithSwatches, resizeAndCompress } from "~/lib/ai-advisor.server";
 import type { SelectedVariant } from "~/lib/ai-advisor.server";
 import { appendTryOnToSession } from "~/lib/ai-sessions.server";
 import type { TryOnHistoryEntry } from "~/lib/ai-sessions.server";
@@ -49,10 +54,14 @@ const tryOnSchema = z.object({
   sessionId: z.string().min(1).optional(),
   imageUrl: z.string().url().optional(),
   selectedVariants: z.array(selectedVariantSchema).optional(),
+  provider: z.enum(["fashn", "gpt-image-2"]).optional(),
 });
 
-// Approximate USD per credits for fal.ai FASHN model
-const USD_PER_CREDIT = 0.005;
+// Cost per request by provider
+const COST_PER_REQUEST: Record<string, number> = {
+  fashn: 0.15, // 2 credits × $0.075
+  "gpt-image-2": 0.05, // approximate fal.ai GPT Image 2 cost
+};
 
 export const Route = createFileRoute("/api/admin/ai/tryon")({
   server: {
@@ -89,11 +98,12 @@ export const Route = createFileRoute("/api/admin/ai/tryon")({
           sessionId,
           imageUrl: overrideImageUrl,
           selectedVariants,
+          provider = "fashn",
         } = parsed.data;
 
         // ── Resolve person image (base64 or URL) ──
         // Must be either a public URL (https://...) or a full data URI (data:image/...;base64,...)
-        const personImage = rawPersonImage;
+        let personImage = rawPersonImage;
 
         // ── Resolve garment image (product photo) ──
         let garmentImage = overrideImageUrl ?? await getProductImageForTryOn(productSlug);
@@ -106,9 +116,6 @@ export const Route = createFileRoute("/api/admin/ai/tryon")({
         // Fashn API only accepts ONE product_image. When the user selects color/material
         // variants, we composite the sandal photo with the swatch patches side by side.
         // The prompt then tells Fashn to use the color from the visible swatches.
-        //
-        // TODO: In production, variant images should be served from a public CDN.
-        // The base64 conversion is a workaround for local development.
         const resolvedVariants: SelectedVariant[] = [];
         const swatchImagesForComposite: Array<{ label: string; base64: string }> = [];
 
@@ -150,9 +157,9 @@ export const Route = createFileRoute("/api/admin/ai/tryon")({
           });
         }
 
-        // ── Resize & compress images to save credits ──
+        // ── Resize & compress images before sending to Fashn ──
         // External APIs charge by image tokens (proportional to pixel count).
-        // Reducing to 1024px max + JPEG 85% can save 5-10x in size and credits.
+        // Reducing to 768px max + JPEG 75% cuts payload to ~50-100KB vs 500KB-2MB.
         if (personImage.startsWith("data:")) {
           const resized = await resizeAndCompress(personImage);
           if (typeof resized === "string") personImage = resized;
@@ -162,24 +169,24 @@ export const Route = createFileRoute("/api/admin/ai/tryon")({
           if (typeof resized === "string") garmentImage = resized;
         }
 
-        // ── Upload to temp host if IMGBB_API_KEY is set (localhost convenience) ──
-        // In production, images should be served from a CDN.
-        // For local dev, imgbb provides temporary public URLs so we don't
-        // need to send huge base64 payloads to the API.
-        if (personImage.startsWith("data:")) {
-          personImage = await uploadToTempHost(personImage);
-        }
-        if (garmentImage.startsWith("data:")) {
-          garmentImage = await uploadToTempHost(garmentImage);
-        }
-
         // ── Debug log image formats ──
+        const personImageSizeKb = Math.round(
+          (personImage.startsWith("data:")
+            ? Buffer.from(personImage.split(",")[1] ?? "", "base64").length
+            : personImage.length) / 1024,
+        );
+        const garmentImageSizeKb = Math.round(
+          (garmentImage.startsWith("data:")
+            ? Buffer.from(garmentImage.split(",")[1] ?? "", "base64").length
+            : garmentImage.length) / 1024,
+        );
+
         log.info("Try-on images prepared", {
           productSlug,
           personImageType: personImage.startsWith("data:") ? "base64" : personImage.startsWith("http") ? "url" : "unknown",
-          personImageLength: personImage.length,
+          personImageSizeKb,
           garmentImageType: garmentImage.startsWith("data:") ? "base64" : garmentImage.startsWith("http") ? "url" : "unknown",
-          garmentImageLength: garmentImage.length,
+          garmentImageSizeKb,
           variantCount: resolvedVariants.length,
           variantLabels: resolvedVariants.map((v) => `${v.groupLabel}=${v.optionLabel}`),
         });
@@ -202,18 +209,19 @@ export const Route = createFileRoute("/api/admin/ai/tryon")({
             hasSwatchImages,
           );
 
-          const result = await generateTryOn({
-            personImage,
-            garmentImage,
-            prompt,
-            resolution: "1k",
-            generationMode: "balanced",
-          });
+          // Route to the selected provider
+          const result = provider === "gpt-image-2"
+            ? await generateTryOnGPT2({ personImage, garmentImage, prompt, hasSwatchImages })
+            : await generateTryOn({
+                  personImage,
+                  garmentImage,
+                  prompt,
+                  resolution: "1k",
+                  generationMode: "balanced",
+                });
 
           const totalDurationMs = Date.now() - startTime;
-          const estimatedUsd = result.creditsUsed
-            ? Number((result.creditsUsed * USD_PER_CREDIT).toFixed(4))
-            : null;
+          const estimatedUsd = COST_PER_REQUEST[provider] ?? 0;
 
           // ── Save to session if provided (APPEND to history, don't overwrite) ──
           let tryonHistory: TryOnHistoryEntry[] = [];
@@ -255,7 +263,7 @@ export const Route = createFileRoute("/api/admin/ai/tryon")({
             productSlug,
             sessionId: sessionId ?? "none",
             creditsUsed: result.creditsUsed ?? "N/A",
-            estimatedUsd: estimatedUsd ?? "N/A",
+            estimatedUsd: Number(estimatedUsd.toFixed(4)),
             generationDurationMs: result.durationMs ?? "N/A",
             totalDurationMs,
             variantsApplied: resolvedVariants.length > 0
@@ -272,7 +280,7 @@ export const Route = createFileRoute("/api/admin/ai/tryon")({
             cost: {
               creditsUsed: result.creditsUsed ?? null,
               durationMs: result.durationMs ?? null,
-              estimatedUsd,
+              estimatedUsd: Number(estimatedUsd.toFixed(4)),
               provider: result.provider,
             },
           });

@@ -21,7 +21,7 @@
 
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useCallback } from "react";
-import { Loader2, Wand2, RotateCcw, History, ChevronLeft, ChevronDown, ImageIcon, Search } from "lucide-react";
+import { Loader2, Wand2, RotateCcw, History, ChevronDown, ImageIcon, Search } from "lucide-react";
 import { FootCamera } from "~/components/admin/ai-advisor/FootCamera";
 import { FootAnalysis } from "~/components/admin/ai-advisor/FootAnalysis";
 import { SandalSuggestions } from "~/components/admin/ai-advisor/SandalSuggestions";
@@ -73,6 +73,9 @@ function AIAdvisorPage() {
   // Try-on state
   const [tryonLoading, setTryonLoading] = useState(false);
   const [tryonError, setTryonError] = useState<string | null>(null);
+
+  // Try-on provider: "fashn" (best quality) or "gpt-image-2" (good, 2 images, cheaper)
+  const [tryonProvider, setTryonProvider] = useState<"fashn" | "gpt-image-2">("fashn");
 
   // Try-on history (ALL generated images — preserved across sandal changes)
   const [tryonHistory, setTryonHistory] = useState<TryOnHistoryEntry[]>([]);
@@ -225,6 +228,7 @@ function AIAdvisorPage() {
       const body: Record<string, unknown> = {
         personImage: footImage,
         productSlug: selectedSandal.slug,
+        provider: tryonProvider,
       };
       if (currentSessionId) {
         body.sessionId = currentSessionId;
@@ -270,7 +274,7 @@ function AIAdvisorPage() {
     } finally {
       setTryonLoading(false);
     }
-  }, [footImage, selectedSandal, currentSessionId, selectedOptions]);
+  }, [footImage, selectedSandal, currentSessionId, selectedOptions, tryonProvider]);
 
   // ── Reset ──
   const handleReset = useCallback(() => {
@@ -452,6 +456,38 @@ function AIAdvisorPage() {
               )}
 
               {/* Generate try-on button */}
+              {/* Provider toggle: Fashn / GPT Image 2 */}
+              <div className="flex items-center gap-3 rounded-lg border border-gray-200 bg-gray-50 p-3">
+                <span className="text-xs font-medium text-gray-500">Motore AI:</span>
+                <div className="flex gap-1 rounded-lg bg-white p-1 shadow-sm">
+                  <button
+                    type="button"
+                    onClick={() => setTryonProvider("fashn")}
+                    className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
+                      tryonProvider === "fashn"
+                        ? "bg-[var(--color-primary)] text-white shadow-sm"
+                        : "text-gray-600 hover:text-gray-900"
+                    }`}
+                  >
+                    Fashn ($0.15)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setTryonProvider("gpt-image-2")}
+                    className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
+                      tryonProvider === "gpt-image-2"
+                        ? "bg-violet-600 text-white shadow-sm"
+                        : "text-gray-600 hover:text-gray-900"
+                    }`}
+                  >
+                    GPT Image 2 ($0.05)
+                  </button>
+                </div>
+                <span className="text-xs text-gray-400">
+                  {tryonProvider === "fashn" ? "Qualità migliore" : "Buona · 2 immagini · fal.ai"}
+                </span>
+              </div>
+
               <button
                 type="button"
                 onClick={handleTryOn}

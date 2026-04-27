@@ -506,9 +506,10 @@ export async function buildTryOnPrompt(
 // ─── Image Resolution ──────────────────────────────────────────────────
 
 // Max dimensions for images sent to external APIs (Fashn recommends max 2000px for 1K)
-const MAX_IMAGE_DIMENSION = 1024;
-// JPEG quality for compression (85 = good balance of quality vs size)
-const JPEG_QUALITY = 85;
+// 768px gives excellent quality for try-on while keeping base64 payloads small (~50-100KB)
+const MAX_IMAGE_DIMENSION = 768;
+// JPEG quality for compression (75 = good quality, ~50-70% smaller than 95)
+const JPEG_QUALITY = 75;
 
 /**
  * Resize and compress an image (from data URI or buffer) using sharp.
@@ -581,65 +582,6 @@ export async function resizeAndCompress(imageData: string | Buffer): Promise<str
 }
 
 /**
- * Upload an image to a temporary hosting service and return a public URL.
- *
- * Uses imgbb.com free API for temporary image hosting.
- * Useful during local development when external APIs can't reach localhost.
- *
- * TODO: In production, use your own CDN (Cloudflare R2, S3, etc.)
- * This is a development convenience — not meant for production traffic.
- *
- * @returns Public URL of the uploaded image, or the original data URI if upload fails
- */
-export async function uploadToTempHost(dataUri: string): Promise<string> {
-  const IMGBB_API_KEY = process.env.IMGBB_API_KEY;
-  if (!IMGBB_API_KEY) {
-    log.debug("IMGBB_API_KEY not set, skipping temp upload");
-    return dataUri;
-  }
-
-  try {
-    // Extract base64 from data URI
-    const base64Match = dataUri.match(/^data:[^;]+;base64,(.+)$/);
-    if (!base64Match) {
-      log.warn("Cannot extract base64 from data URI for upload");
-      return dataUri;
-    }
-
-    const formData = new FormData();
-    formData.append("key", IMGBB_API_KEY);
-    formData.append("image", base64Match[1]);
-
-    const response = await fetch("https://api.imgbb.com/1/upload", {
-      method: "POST",
-      body: formData,
-    });
-
-    if (!response.ok) {
-      log.warn("imgbb upload failed", { status: response.status });
-      return dataUri;
-    }
-
-    const data = await response.json() as {
-      data: { url: string; display_url: string; delete_url: string };
-      success: boolean;
-    };
-
-    if (data.success && data.data?.url) {
-      log.info("Image uploaded to temp host", { url: data.data.url });
-      return data.data.url;
-    }
-
-    return dataUri;
-  } catch (err) {
-    log.warn("Failed to upload to temp host", {
-      error: err instanceof Error ? err.message : "unknown",
-    });
-    return dataUri;
-  }
-}
-
-/**
  * Composite the product image with variant swatch images into a single image.
  *
  * Fashn API only accepts ONE product_image, so when the user selects
@@ -697,45 +639,9 @@ export async function compositeProductWithSwatches(
       return productImageBase64;
     }
 
-    // Calculate composite dimensions
-    const compositeWidth = productWidth + gap + totalSwatchWidth + (swatchBuffers.length - 1) * 10;
-    const compositeHeight = Math.max(productHeight, swatchHeight);
-
-    // Build composite: white background, product left, swatches right
-    const composite = await sharp.default({
-      create: {
-        width: compositeWidth,
-        height: compositeHeight,
-        channels: 3,
-        background: { r: 255, g: 255, b: 255 },
-      },
-    })
-      .jpeg({ quality: 95 })
-      .composite([
-        {
-          input: productBuffer,
-          left: 0,
-          top: Math.round((compositeHeight - productHeight) / 2),
-        },
-        // Add each swatch
-        ...swatchBuffers.reduce<Array<{ input: Buffer; left: number; top: number }>>((acc, buf, i) => {
-          const prevWidth = i === 0
-            ? productWidth + gap
-            : acc[i - 1].left + (acc[i - 1].input as unknown as { length: number }).length; // rough estimate
-          // Calculate x position by summing previous swatch widths
-          const sharpObj = sharp.default(buf);
-          acc.push({
-            input: buf,
-            left: 0, // will be recalculated below
-            top: Math.round((compositeHeight - swatchHeight) / 2),
-          });
-          return acc;
-        }, []),
-      ])
-      .toBuffer();
-
-    // We need to calculate x positions properly — rebuild with correct positions
+    // Build composite with correct x positions: white background, product left, swatches right
     let xOffset = productWidth + gap;
+    const compositeHeight = Math.max(productHeight, swatchHeight);
     const composites: Array<{ input: Buffer; left: number; top: number }> = [
       {
         input: productBuffer,

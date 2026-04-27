@@ -21,6 +21,7 @@
     "db:reset": "prisma migrate reset"
   },
   "dependencies": {
+    "@fal-ai/client": "^1.9.6",
     "@hono/node-server": "^1.19.12",
     "@prisma/client": "^6.19.3",
     "@tanstack/react-form": "1.28.6",

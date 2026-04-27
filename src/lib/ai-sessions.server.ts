@@ -66,7 +66,7 @@ export interface AiSessionDetail {
   updatedAt: string;
 }
 
-// ─── Internal Helpers (defined before use to avoid hoisting issues) ────
+// ─── Internal Helpers ─────────────────────────────────────────────────
 
 /** Type guard for TryOnHistoryEntry. */
 function isTryOnHistoryEntry(entry: unknown): entry is TryOnHistoryEntry {
@@ -152,11 +152,11 @@ export async function getSession(id: string): Promise<AiSessionDetail | null> {
   if (!session) return null;
 
   // Build try-on history: prefer new array field, fallback to legacy single-result
-  let tryonHistory = parseTryonHistory(session.tryonHistory);
+  let history = parseTryOnHistory(session.tryonHistory);
 
   // Backward compat: if no history array yet, reconstruct from legacy single-result fields
-  if (tryonHistory.length === 0 && session.tryonImageUrl) {
-    tryonHistory = [{
+  if (history.length === 0 && session.tryonImageUrl) {
+    history = [{
       id: crypto.randomUUID(),
       imageUrl: session.tryonImageUrl,
       productSlug: session.tryonProductId ?? "",
@@ -178,7 +178,7 @@ export async function getSession(id: string): Promise<AiSessionDetail | null> {
     tryonProductId: session.tryonProductId,
     tryonCreditsUsed: session.tryonCreditsUsed,
     tryonCostUsd: session.tryonCostUsd,
-    tryonHistory,
+    tryonHistory: history,
     createdAt: session.createdAt.toISOString(),
     updatedAt: session.updatedAt.toISOString(),
   };
@@ -312,44 +312,4 @@ export async function getTotalCost(): Promise<{ totalUsd: number; sessionCount: 
     totalUsd: Number((analysisTotal + tryonTotal).toFixed(4)),
     sessionCount: result._count,
   };
-}
-
-// ─── Internal Helpers ──────────────────────────────────────────────────
-
-/**
- * Build a tiny thumbnail from a base64 data URI.
- * Extracts the first 100 chars of the base64 payload to create a preview.
- */
-function buildThumbnail(footImage: string): string {
-  if (!footImage.startsWith("data:")) {
-    // Raw base64 — return empty (no preview)
-    return "";
-  }
-
-  // Extract MIME and first chunk
-  const match = footImage.match(/^(data:image\/\w+;base64,)(.{1,100})/);
-  if (!match) return "";
-
-  // Return truncated data URI (browser will show partial image or broken icon)
-  return `${match[1]}${match[2]}...`;
-}
-
-// ─── Module-level Helpers (function declarations for hoisting) ────────
-
-/** Type guard for TryOnHistoryEntry. */
-function isTryOnHistoryEntry(entry: unknown): entry is TryOnHistoryEntry {
-  if (!entry || typeof entry !== "object") return false;
-  const obj = entry as Record<string, unknown>;
-  return (
-    typeof obj.id === "string" &&
-    typeof obj.imageUrl === "string" &&
-    typeof obj.productSlug === "string" &&
-    typeof obj.createdAt === "string"
-  );
-}
-
-/** Safely parse tryonHistory from JSON. Returns empty array if null, invalid, or not an array. */
-function parseTryonHistory(raw: unknown): TryOnHistoryEntry[] {
-  if (!raw || !Array.isArray(raw)) return [];
-  return raw.filter(isTryOnHistoryEntry);
 }

@@ -59,8 +59,8 @@ export interface TryOnResult {
   creditsUsed?: number;
   /** Wall-clock time in ms from submit to completed result */
   durationMs?: number;
-  /** Provider used: "fashn" */
-  provider: "fashn";
+  /** Provider used: "fashn" or "gpt-image-2" */
+  provider: "fashn" | "gpt-image-2";
 }
 
 /** Shape of the initial /v1/run response */
@@ -96,8 +96,8 @@ const CREDITS_PER_OUTPUT: Record<string, Record<string, number>> = {
   quality: { "1k": 3, "2k": 4, "4k": 5 },
 };
 
-// Approximate USD per credit (varies by plan, this is a rough estimate)
-const USD_PER_CREDIT = 0.005;
+// Approximate USD per credit — based on current Fashn.ai pricing (~$7.50 / 100 credits)
+const USD_PER_CREDIT = 0.075;
 
 // ─── Retry ─────────────────────────────────────────────────────────────
 

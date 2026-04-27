@@ -37,7 +37,6 @@ export function SessionHistory({ onResume, onClose }: SessionHistoryProps) {
     try {
       const res = await fetch("/api/admin/ai/sessions");
       if (!res.ok) {
-        const text = await res.text().catch(() => "");
         setError(`Errore server: ${res.status}`);
         return;
       }
