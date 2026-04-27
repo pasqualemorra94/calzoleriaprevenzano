@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { useEffect, useState, useCallback } from "react";
-import { Loader2, Save, ArrowLeft } from "lucide-react";
+import { Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "~/lib/utils/cn";
 import { MediaPicker } from "~/components/admin/MediaPicker";
@@ -258,8 +258,10 @@ function AdminProductEditPage(): ReactNode {
 
       const body = {
         name: form.name, slug: form.slug, description: form.description, shortDescription: form.shortDescription,
-        price: parseFloat(form.price), compareAtPrice: form.compareAtPrice ? parseFloat(form.compareAtPrice) : null,
-        sku: form.sku || null, stock: parseInt(form.stock, 10), weight: form.weight ? parseFloat(form.weight) : null,
+        price: Math.round(parseFloat(form.price) * 100) / 100,
+        compareAtPrice: form.compareAtPrice ? Math.round(parseFloat(form.compareAtPrice) * 100) / 100 : null,
+        sku: form.sku || null, stock: parseInt(form.stock, 10),
+        weight: form.weight ? Math.round(parseFloat(form.weight) * 100) / 100 : null,
         materials: form.materials || null, categoryId: form.categoryId || null,
         isActive: form.isActive, isFeatured: form.isFeatured,
         variants: variantsPayload, images: imagesPayload,
@@ -308,36 +310,30 @@ function AdminProductEditPage(): ReactNode {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-4">
-        <Link to="/admin/prodotti" className="inline-flex h-9 items-center gap-1.5 rounded-md border border-gray-300 px-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50">
-          <ArrowLeft className="h-4 w-4" />
-          Indietro
-        </Link>
-        <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
-          {isNew ? "Nuovo prodotto" : "Modifica prodotto"}
-        </span>
-      </div>
-
       <form onSubmit={handleSave} className="space-y-6">
+        {/* ── Save / Cancel — sticky top ── */}
+        <div className="sticky top-0 z-10 flex items-center justify-between gap-4 rounded-lg border border-gray-200 bg-white/90 px-4 py-3 shadow-sm backdrop-blur-sm">
+          <span className="text-sm font-medium text-gray-700">
+            {isNew ? "Nuovo prodotto" : form.name || "Modifica prodotto"}
+          </span>
+          <div className="flex items-center gap-3">
+            <Link to="/admin/prodotti" className="inline-flex h-9 items-center rounded-md border border-gray-300 px-4 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50">
+              Annulla
+            </Link>
+            <button type="submit" disabled={saving} className="inline-flex h-9 items-center gap-2 rounded-md bg-[var(--color-primary)] px-5 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-dark)] disabled:cursor-not-allowed disabled:opacity-60">
+              {saving && <Loader2 className="h-4 w-4 animate-spin" />}
+              <Save className="h-4 w-4" />
+              Salva
+            </button>
+          </div>
+        </div>
+
+        {/* ── Main content: single column on mobile, 2-col on desktop ── */}
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           <div className="space-y-6 lg:col-span-2">
             <ProductBasicInfo
               form={form} touched={touched} fieldErrors={fieldErrors}
               inputClass={inputClass} labelClass={labelClass} updateField={updateField}
-            />
-            <VariantSection
-              callbacks={{
-                form, updateField, updateVariant, addVariant, removeVariant,
-                updateImage, removeImage, moveImage, addImagesFromMedia,
-                expandedGroups, toggleGroup, touched, fieldErrors,
-              }}
-            />
-            <VariantConfigSection
-              parsedVariantConfig={parsedVariantConfig}
-              templates={templates}
-              onUpdateVariantConfig={(json) => updateField("variantConfig", json)}
-              onApplyTemplate={handleApplyTemplate}
-              onClearConfig={() => updateField("variantConfig", null)}
             />
             <ImageGalleryManager
               onAddImage={addImage}
@@ -356,16 +352,21 @@ function AdminProductEditPage(): ReactNode {
           />
         </div>
 
-        <div className="flex items-center gap-3">
-          <button type="submit" disabled={saving} className="inline-flex h-10 items-center gap-2 rounded-md bg-[var(--color-primary)] px-6 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-dark)] disabled:cursor-not-allowed disabled:opacity-60">
-            {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-            <Save className="h-4 w-4" />
-            Salva
-          </button>
-          <Link to="/admin/prodotti" className="inline-flex h-10 items-center rounded-md border border-gray-300 px-6 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50">
-            Annulla
-          </Link>
-        </div>
+        {/* ── Variants — always at the bottom, full width ── */}
+        <VariantSection
+          callbacks={{
+            form, updateField, updateVariant, addVariant, removeVariant,
+            updateImage, removeImage, moveImage, addImagesFromMedia,
+            expandedGroups, toggleGroup, touched, fieldErrors,
+          }}
+        />
+        <VariantConfigSection
+          parsedVariantConfig={parsedVariantConfig}
+          templates={templates}
+          onUpdateVariantConfig={(json) => updateField("variantConfig", json)}
+          onApplyTemplate={handleApplyTemplate}
+          onClearConfig={() => updateField("variantConfig", null)}
+        />
 
         <MediaPicker
           open={mediaPickerOpen}
