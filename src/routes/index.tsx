@@ -22,8 +22,8 @@ function HomePage(): ReactNode {
   return (
     <>
       <HeroSection />
-      <MobileQuickShop />
       <CategoriesSection />
+      <MobileQuickShop />
       <PersonalizationSection />
       <FeaturedProductsSection />
       <LaBottegaSection />
