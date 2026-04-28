@@ -40,6 +40,14 @@ export function CatalogProductCard({ product }: { product: ProductListItem }): R
           <span className="absolute left-3 top-3 rounded-[var(--radius-sm)] bg-[var(--color-accent)] px-2 py-0.5 text-[10px] font-semibold tracking-wider text-[var(--color-accent-foreground)]">Sconto</span>
         )}
 
+        {/* Hover reveal — "Vedi dettaglio" pill */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex translate-y-full justify-center p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+          <span className="inline-flex h-11 items-center gap-2 rounded-[var(--radius-md)] bg-[var(--color-primary)] px-5 text-xs font-semibold tracking-wide text-white shadow-[0_4px_20px_rgba(139,94,60,0.3)]">
+            <ShoppingBag className="h-4 w-4" />
+            Vedi dettaglio
+          </span>
+        </div>
+
         <div className="absolute inset-0 bg-[var(--color-primary)]/0 transition-colors duration-300 group-hover:bg-[var(--color-primary)]/[0.03]" />
 
         <div className="pointer-events-none absolute inset-0 rounded-[var(--radius-lg)] border border-[var(--color-accent)]/0 transition-colors duration-[var(--transition-base)] group-hover:border-[var(--color-accent)]/30" />
