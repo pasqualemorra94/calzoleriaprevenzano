@@ -288,11 +288,33 @@ export function HeroSection() {
             exit={{ opacity: 0, transition: { duration: 0.4 } }}
             className="absolute inset-0"
           >
+            {/* Photo */}
             <div
               className="h-full w-full bg-cover bg-center"
               style={{ backgroundImage: `url('${slide.image}')` }}
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
+
+            {/* Asymmetric scrim — photo breathes on top, text-safe at bottom */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/25 to-black/70" />
+
+            {/* Side vignette for editorial focus */}
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(ellipse 100% 70% at 50% 55%, transparent 50%, rgba(0,0,0,0.35) 100%)",
+              }}
+            />
+
+            {/* Film grain — anti-AI editorial texture */}
+            <div
+              className="absolute inset-0 opacity-[0.18] mix-blend-overlay"
+              style={{
+                backgroundImage:
+                  "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>\")",
+                backgroundSize: "200px 200px",
+              }}
+            />
           </m.div>
         </AnimatePresence>
       </div>
