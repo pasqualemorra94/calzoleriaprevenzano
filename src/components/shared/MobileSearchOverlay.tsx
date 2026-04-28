@@ -202,7 +202,7 @@ export function MobileSearchOverlay(): ReactNode {
 
               {/* Editorial input */}
               <div className="relative mt-5">
-                <Search className="pointer-events-none absolute left-0 top-1/2 h-6 w-6 -translate-y-1/2 text-[var(--color-accent)]" />
+                <Search className="pointer-events-none absolute left-0 top-1/2 h-5 w-5 -translate-y-1/2 text-[var(--color-accent)]" />
                 <input
                   ref={inputRef}
                   type="search"
@@ -215,7 +215,7 @@ export function MobileSearchOverlay(): ReactNode {
                   onChange={(e) => handleChange(e.target.value)}
                   placeholder="Cosa stai cercando?"
                   aria-label="Ricerca prodotti"
-                  className="w-full border-0 border-b-2 border-[var(--color-border)] bg-transparent pb-3 pl-10 pr-10 font-display text-2xl italic text-[var(--color-text)] placeholder:text-[var(--color-text-muted)]/70 transition-colors focus:border-[var(--color-accent)] focus:outline-none"
+                  className="w-full border-0 border-b-2 border-[var(--color-border)] bg-transparent pb-3 pl-9 pr-10 font-display text-lg italic text-[var(--color-text)] placeholder:text-[var(--color-text-muted)]/70 transition-colors focus:border-[var(--color-accent)] focus:outline-none"
                 />
                 {query && (
                   <button

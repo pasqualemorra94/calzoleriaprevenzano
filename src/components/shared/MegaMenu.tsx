@@ -641,21 +641,25 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
           }}
         >
           <div className="flex h-full flex-col bg-[var(--color-background)]">
-            {/* Header — logo + close */}
-            <div className="flex shrink-0 items-center justify-between border-b border-[var(--color-border-light)] px-4" style={{ height: "var(--navbar-height)" }}>
-              <Link to="/" onClick={handleItemClick}>
+            {/* Header — logo centered, close on right (mirrors the public header) */}
+            <div
+              className="grid shrink-0 grid-cols-[1fr_auto_1fr] items-center gap-3 border-b border-[var(--color-border-light)] px-4"
+              style={{ height: "var(--navbar-height)" }}
+            >
+              <span aria-hidden="true" />
+              <Link to="/" onClick={handleItemClick} className="flex items-center justify-center">
                 <img
                   src="/images/logo.png"
                   alt="Calzoleria Prevenzano"
-                  className="h-11 w-auto"
-                  width={180}
-                  height={109}
+                  className="h-14 w-auto"
+                  width={232}
+                  height={140}
                 />
               </Link>
               <button
                 type="button"
                 onClick={closeMobileMenu}
-                className="flex h-10 w-10 items-center justify-center rounded-md text-[var(--color-text)] transition-colors hover:text-[var(--color-primary)]"
+                className="flex h-10 w-10 items-center justify-center justify-self-end rounded-md text-[var(--color-text)] transition-colors hover:text-[var(--color-primary)]"
                 aria-label="Chiudi menu"
               >
                 <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
