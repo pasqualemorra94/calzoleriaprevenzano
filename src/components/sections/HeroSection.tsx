@@ -11,7 +11,7 @@ const EASE_OUT: Easing = [0.22, 1, 0.36, 1];
 export function HeroSection() {
   return (
     <section
-      className="relative overflow-hidden md:min-h-[calc(100svh-var(--navbar-height-md))]"
+      className="relative hidden overflow-hidden md:block md:min-h-[calc(100svh-var(--navbar-height-md))]"
       style={{
         background:
           "radial-gradient(at 15% 30%, #FBF6EC 0%, #F4EAD6 55%, #ECE0C5 100%)",
