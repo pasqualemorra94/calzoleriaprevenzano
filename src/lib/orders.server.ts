@@ -197,16 +197,17 @@ export async function createOrder(
     }
   }
 
-  // Calculate totals
+  // Calculate totals — prices are VAT-inclusive (Italian e-commerce convention).
+  // Tax is *contained* in the total (extracted for invoice/legal), never added on top.
   const subtotal = cartItems.reduce(
     (sum: number, item: CartItemFull) => sum + Number(item.price) * item.quantity,
     0,
   );
   const shippingCost = subtotal >= 99 ? 0 : 7.9;
-  const taxRate = 0.22;
-  const taxableAmount = subtotal - discountAmount;
-  const taxAmount = Math.round(taxableAmount * taxRate * 100) / 100;
-  const total = Math.round((taxableAmount + shippingCost + taxAmount) * 100) / 100;
+  const netAfterDiscount = subtotal - discountAmount;
+  const total = Math.round((netAfterDiscount + shippingCost) * 100) / 100;
+  // VAT contained in the total at 22% — for invoicing only, NOT added to total
+  const taxAmount = Math.round((total * 22 / 122) * 100) / 100;
 
   // Generate order number
   const orderCount = await prisma.order.count();
