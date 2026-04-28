@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed quick/260428-m6j (IVA fix + payment label + parametric E2E)
-last_updated: "2026-04-28T14:37:47Z"
-last_activity: 2026-04-28 — Completed quick task 260428-m6j: IVA fix + payment label fix + parametric E2E spec
+stopped_at: Completed quick/260428-nd8 (race fix orderNumber + try/catch checkout)
+last_updated: "2026-04-28T15:25:00Z"
+last_activity: 2026-04-28 — Completed quick task 260428-nd8: race fix on Order.orderNumber (P2002 retry) + try/catch + structured 500 on /api/checkout — artemide hard-fail resolved, flaky count down 16→7, zero unhandled 500s
 progress:
   percent: 0
 ---
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-04-02)
 Phase: 1 of 10 (Foundation & Data Model)
 Plan: 0 of ? in current phase
 Status: Ready to plan
-Last activity: 2026-04-28 — Completed quick task 260428-m6j: IVA fix + payment label fix + parametric E2E spec (115/119 slugs pass, 4 follow-ups identified)
+Last activity: 2026-04-28 — Completed quick task 260428-nd8: race fix on Order.orderNumber (P2002 retry loop) + try/catch + structured 500 on /api/checkout. Artemide passes retry=0; parametric run shows 0 unhandled 500s (was ≥17), flaky 16→7, effective pass 116/119. 3 residual hard-fails are cart-helper / data-quality bugs, not the orderNumber race.
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -74,9 +74,10 @@ None yet.
 |---|-------------|------|--------|-----------|
 | 260428-la3 | Setup Playwright E2E + smoke test for one product purchase on live Railway site | 2026-04-28 | 3527675 | [260428-la3-setup-playwright-e2e-smoke-test-for-one-](./quick/260428-la3-setup-playwright-e2e-smoke-test-for-one-/) |
 | 260428-m6j | Fix IVA double-tax + admin "succeeded" badge + parametric E2E spec (115/119 slugs pass) | 2026-04-28 | 8eb2882 | [260428-m6j-fix-iva-bug-payment-status-label-general](./quick/260428-m6j-fix-iva-bug-payment-status-label-general/) |
+| 260428-nd8 | Race fix on Order.orderNumber (P2002 retry) + try/catch + structured 500 on /api/checkout — artemide hard-fail + flaky retries 16→7 resolved, 0 unhandled 500s in parametric run | 2026-04-28 | d219674,2a6d082 | [260428-nd8-investigate-and-fix-why-purchasing-artem](./quick/260428-nd8-investigate-and-fix-why-purchasing-artem/) |
 
 ## Session Continuity
 
-Last session: 2026-04-28T14:37:47Z
-Stopped at: Completed quick/260428-m6j (IVA fix + payment label + parametric E2E)
+Last session: 2026-04-28T15:25:00Z
+Stopped at: Completed quick/260428-nd8 (race fix orderNumber + try/catch checkout)
 Resume file: None
