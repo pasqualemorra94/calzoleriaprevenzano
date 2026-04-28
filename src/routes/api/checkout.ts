@@ -14,6 +14,9 @@ import { checkoutGuestSchema, checkoutSchema } from "~/lib/validators/products";
 import { sendEmail } from "~/lib/email.server";
 import { orderConfirmationTemplate } from "~/lib/email-templates.server";
 import { getSessionId } from "~/lib/cart-session";
+import { createLogger } from "~/lib/logger.server";
+
+const log = createLogger("checkout");
 
 export const Route = createFileRoute("/api/checkout")({
   server: {
@@ -38,13 +41,27 @@ export const Route = createFileRoute("/api/checkout")({
           const ipAddress = request.headers.get("x-forwarded-for") ?? null;
           const userAgent = request.headers.get("user-agent") ?? null;
 
-          const result = await createOrder(
-            null,
-            sessionId,
-            parsed.data,
-            ipAddress,
-            userAgent,
-          );
+          let result: Awaited<ReturnType<typeof createOrder>>;
+          try {
+            result = await createOrder(
+              null,
+              sessionId,
+              parsed.data,
+              ipAddress,
+              userAgent,
+            );
+          } catch (err) {
+            log.error("createOrder threw (guest branch)", {
+              sessionId,
+              email: parsed.data.email,
+              errorMessage: err instanceof Error ? err.message : String(err),
+            });
+            return apiError(
+              "INTERNAL_ERROR",
+              "Errore durante la creazione dell'ordine. Riprova tra qualche secondo.",
+              500,
+            );
+          }
 
           if (!result.ok) {
             return apiError("BAD_REQUEST", result.error, 400);
@@ -103,7 +120,20 @@ export const Route = createFileRoute("/api/checkout")({
         const ipAddress = request.headers.get("x-forwarded-for") ?? null;
         const userAgent = request.headers.get("user-agent") ?? null;
 
-        const result = await createOrder(user.id, null, parsed.data, ipAddress, userAgent);
+        let result: Awaited<ReturnType<typeof createOrder>>;
+        try {
+          result = await createOrder(user.id, null, parsed.data, ipAddress, userAgent);
+        } catch (err) {
+          log.error("createOrder threw (auth branch)", {
+            userId: user.id,
+            errorMessage: err instanceof Error ? err.message : String(err),
+          });
+          return apiError(
+            "INTERNAL_ERROR",
+            "Errore durante la creazione dell'ordine. Riprova tra qualche secondo.",
+            500,
+          );
+        }
         if (!result.ok) {
           return apiError("BAD_REQUEST", result.error, 400);
         }
