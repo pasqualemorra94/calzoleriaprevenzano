@@ -53,21 +53,21 @@ export function MobileQuickShop(): ReactNode {
       aria-label="Sandali in evidenza"
     >
       {/* Header */}
-      <div className="mb-5 flex items-end justify-between px-[var(--page-padding-x)]">
+      <div className="mb-4 flex items-end justify-between px-[var(--page-padding-x)]">
         <div>
-          <span className="font-display text-[10px] tracking-[0.28em] uppercase text-[var(--color-text-muted)]">
+          <span className="font-display text-[9px] tracking-[0.28em] uppercase text-[var(--color-text-muted)]">
             Catalogo
           </span>
-          <h2 className="mt-1 font-display text-[1.6rem] font-semibold leading-tight tracking-tight text-[var(--color-foreground)]">
+          <h2 className="mt-1 font-display text-[1.2rem] font-semibold leading-tight tracking-tight text-[var(--color-foreground)]">
             Sandali <span className="italic font-medium text-[var(--color-primary)]">in evidenza</span>
           </h2>
         </div>
         <Link
           to="/catalogo"
-          className="shrink-0 inline-flex items-center gap-1 text-[12px] font-medium text-[var(--color-primary)] transition-colors active:text-[var(--color-primary-dark)]"
+          className="shrink-0 inline-flex items-center gap-1 text-[11px] font-medium text-[var(--color-primary)] transition-colors active:text-[var(--color-primary-dark)]"
         >
           Vedi tutto
-          <ArrowRight className="h-3.5 w-3.5" />
+          <ArrowRight className="h-3 w-3" />
         </Link>
       </div>
 
@@ -132,21 +132,21 @@ export function MobileQuickShop(): ReactNode {
                     )}
                   </div>
 
-                  <div className="mt-3 px-0.5">
+                  <div className="mt-2.5 px-0.5">
                     {product.category && (
-                      <span className="text-[10px] font-medium tracking-[0.18em] uppercase text-[var(--color-text-muted)]">
+                      <span className="text-[9px] font-medium tracking-[0.2em] uppercase text-[var(--color-text-muted)]">
                         {product.category.name}
                       </span>
                     )}
-                    <h3 className="mt-1 truncate text-[14px] font-medium leading-snug text-[var(--color-foreground)]">
+                    <h3 className="mt-1 truncate text-[13px] font-medium leading-snug text-[var(--color-foreground)]">
                       {product.name}
                     </h3>
-                    <div className="mt-1 flex items-center gap-1.5">
-                      <p className="text-[14px] font-semibold text-[var(--color-primary)]">
+                    <div className="mt-0.5 flex items-center gap-1.5">
+                      <p className="text-[13px] font-semibold text-[var(--color-primary)]">
                         €{product.price.toFixed(2)}
                       </p>
                       {product.compareAtPrice && (
-                        <p className="text-[12px] text-[var(--color-text-muted)] line-through">
+                        <p className="text-[11px] text-[var(--color-text-muted)] line-through">
                           €{product.compareAtPrice.toFixed(2)}
                         </p>
                       )}
@@ -171,10 +171,10 @@ export function MobileQuickShop(): ReactNode {
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-surface)] text-[var(--color-primary)]">
               <ArrowRight className="h-5 w-5" />
             </span>
-            <span className="font-display text-[14px] italic text-[var(--color-foreground)]">
+            <span className="font-display text-[13px] italic text-[var(--color-foreground)]">
               Esplora il catalogo
             </span>
-            <span className="text-[11px] tracking-[0.18em] uppercase text-[var(--color-text-muted)]">
+            <span className="text-[10px] tracking-[0.2em] uppercase text-[var(--color-text-muted)]">
               Tutti i sandali
             </span>
           </Link>

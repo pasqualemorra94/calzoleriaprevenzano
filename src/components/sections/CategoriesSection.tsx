@@ -62,20 +62,20 @@ function CategoryCard({ category }: { category: Category }) {
       </div>
 
       {/* Text panel — readable on solid surface */}
-      <div className={`flex flex-1 flex-col ${isFeatured ? "p-8 md:p-10" : "p-6 md:p-7"}`}>
-        <span className="mb-3 inline-block w-fit rounded-[var(--radius-sm)] border border-[var(--color-accent)]/30 bg-[var(--color-accent)]/10 px-3 py-1 text-[10px] font-semibold tracking-[0.15em] text-[var(--color-accent)]">
+      <div className={`flex flex-1 flex-col ${isFeatured ? "p-5 md:p-10" : "p-4 md:p-7"}`}>
+        <span className="mb-2 inline-block w-fit rounded-[var(--radius-sm)] border border-[var(--color-accent)]/30 bg-[var(--color-accent)]/10 px-2.5 py-0.5 text-[9px] font-semibold tracking-[0.18em] uppercase text-[var(--color-accent)] md:mb-3 md:px-3 md:py-1 md:text-[10px] md:tracking-[0.15em]">
           Collezione
         </span>
-        <h3 className={`font-display font-semibold tracking-tight text-[var(--color-foreground)] ${isFeatured ? "text-[var(--text-xl)] md:text-[var(--text-2xl)]" : "text-lg md:text-[var(--text-xl)]"}`}>
+        <h3 className={`font-display font-semibold tracking-tight text-[var(--color-foreground)] ${isFeatured ? "text-[1.15rem] md:text-[var(--text-2xl)]" : "text-[1rem] md:text-[var(--text-xl)]"}`}>
           {category.title}
         </h3>
-        <p className="mt-3 max-w-md text-sm leading-relaxed text-[var(--color-text-secondary)] md:text-base">
+        <p className="mt-2 max-w-md text-[12px] leading-relaxed text-[var(--color-text-secondary)] md:mt-3 md:text-base">
           {category.description}
         </p>
 
-        <div className="mt-auto flex items-center gap-2 pt-5 text-sm font-medium text-[var(--color-accent)]">
+        <div className="mt-auto flex items-center gap-1.5 pt-3 text-[12px] font-medium text-[var(--color-accent)] md:gap-2 md:pt-5 md:text-sm">
           <span>{category.cta}</span>
-          <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" />
+          <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1.5 md:h-4 md:w-4" />
         </div>
       </div>
     </m.a>
@@ -87,18 +87,18 @@ export function CategoriesSection() {
     <ScrollAnimatedSection className="bg-[var(--color-background)] py-[var(--section-padding-y-lg)]">
       <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
         {/* 🧬 Section header — Napoli-themed with stitch + Vesuvio silhouette motif */}
-        <div className="mb-14 text-center md:mb-20">
-          <div className="inline-flex items-center gap-4 mb-6">
-            <span className="h-px w-12 bg-[var(--color-accent)]/50" />
-            <span className="text-xs font-medium tracking-[0.25em] text-[var(--color-accent)]">
+        <div className="mb-10 text-center md:mb-20">
+          <div className="mb-4 inline-flex items-center gap-3 md:mb-6 md:gap-4">
+            <span className="h-px w-8 bg-[var(--color-accent)]/50 md:w-12" />
+            <span className="text-[10px] font-medium tracking-[0.25em] uppercase text-[var(--color-accent)] md:text-xs md:normal-case">
               Le nostre collezioni
             </span>
-            <span className="h-px w-12 bg-[var(--color-accent)]/50" />
+            <span className="h-px w-8 bg-[var(--color-accent)]/50 md:w-12" />
           </div>
-          <h2 className="font-display text-[var(--text-lg)] font-semibold tracking-tight md:text-[var(--text-xl)]">
+          <h2 className="font-display text-[1.3rem] font-semibold tracking-tight md:text-[var(--text-xl)]">
             Artigianato che racconta
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
+          <p className="mx-auto mt-3 max-w-xl text-[13px] leading-[1.65] text-[var(--color-text-secondary)] md:mt-4 md:text-[var(--text-base)] md:leading-[var(--leading-relaxed)]">
             Tre anime del nostro lavoro — dal sandalo al complemento, ogni pezzo
             nasce dalle mani della famiglia Prevenzano, in bottega a Napoli dal 1984.
           </p>
