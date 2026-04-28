@@ -38,7 +38,7 @@ const SLIDES: HeroSlide[] = [
     subtitle:
       "Personalizza ogni dettaglio — tipo di pelle, colore, tacco e gioiello. Creati a mano nel nostro laboratorio di Napoli.",
     primaryCta: "Scopri i Sandali",
-    primaryCtaHref: "/sandali",
+    primaryCtaHref: "/catalogo?category=sandali",
     secondaryCta: "Come funziona",
     secondaryCtaHref: "/la-bottega#personalizzazione",
   },

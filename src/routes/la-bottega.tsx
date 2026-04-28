@@ -22,7 +22,7 @@ const ABOUT_COPY = {
     "Calzoleria Prevenzano esporta il suo marchio in tutto il mondo, contraddistinguendosi per l'accuratezza nei dettagli. Tutti i materiali utilizzati provengono dal territorio nazionale: pellami pregiati per la tomaia, cuoio toscano certificato per le suole, cristalli Swarovski e pietre preziose per impreziosire ogni creazione. Il tutto certificato.",
   ],
   cta: "Scopri le nostre collezioni",
-  ctaHref: "/sandali",
+  ctaHref: "/catalogo?category=sandali",
 } as const;
 
 // ─── Team Members ───────────────────────────────────────────────────
