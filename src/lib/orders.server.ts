@@ -4,6 +4,7 @@
  * Business logic for order creation, listing, and detail retrieval.
  */
 
+import { Prisma } from "@prisma/client";
 import { prisma } from "~/lib/db.server";
 import type { CheckoutInput, CheckoutGuestInput } from "~/lib/validators/products";
 import type { PaginatedData } from "~/lib/types/api";
@@ -209,44 +210,82 @@ export async function createOrder(
   // VAT contained in the total at 22% — for invoicing only, NOT added to total
   const taxAmount = Math.round((total * 22 / 122) * 100) / 100;
 
-  // Generate order number
-  const orderCount = await prisma.order.count();
-  const orderNumber = `CP-${new Date().getFullYear()}-${String(orderCount + 1).padStart(4, "0")}`;
-
-  // Create order with items
+  // Generate order number with retry on P2002 collisions.
+  // The count()+create() pair is not atomic; under parallel checkouts the
+  // same count can be read by multiple workers, causing P2002 on the
+  // @unique orderNumber field. We retry up to 5 times, incrementing the
+  // candidate number on each attempt. (Race-fix per quick/260428-nd8.)
   const isGuest = !userId && "email" in input;
-  const order = await prisma.order.create({
-    data: {
-      orderNumber,
-      userId,
-      status: "pending",
-      subtotal,
-      shippingCost,
-      taxAmount,
-      total,
-      discountAmount,
-      shippingMethod: input.shippingMethod,
-      notes: input.notes,
-      ipAddress,
-      userAgent,
-      ...(isGuest ? { guestEmail: input.email } : {}),
-      items: {
-        create: cartItems.map((item: CartItemFull) => ({
-          productId: item.productId,
-          variantId: item.variantId,
-          addressId,
-          name: item.product.name,
-          variantName: item.variant?.name,
-          price: Number(item.price),
-          quantity: item.quantity,
-          ...(item.selectedOptions ? { selectedOptions: JSON.parse(JSON.stringify(item.selectedOptions)) } : {}),
-        })),
-      },
-    },
-    include: {
-      items: { include: { product: { select: { name: true } } } },
-    },
-  });
+  const MAX_ORDER_NUMBER_ATTEMPTS = 5;
+  type OrderWithItems = Prisma.OrderGetPayload<{
+    include: { items: { include: { product: { select: { name: true } } } } };
+  }>;
+  let order: OrderWithItems | null = null;
+  let lastError: unknown = null;
+
+  for (let attempt = 0; attempt < MAX_ORDER_NUMBER_ATTEMPTS; attempt++) {
+    const orderCount = await prisma.order.count();
+    const orderNumber = `CP-${new Date().getFullYear()}-${String(orderCount + 1 + attempt).padStart(4, "0")}`;
+
+    try {
+      order = await prisma.order.create({
+        data: {
+          orderNumber,
+          userId,
+          status: "pending",
+          subtotal,
+          shippingCost,
+          taxAmount,
+          total,
+          discountAmount,
+          shippingMethod: input.shippingMethod,
+          notes: input.notes,
+          ipAddress,
+          userAgent,
+          ...(isGuest ? { guestEmail: input.email } : {}),
+          items: {
+            create: cartItems.map((item: CartItemFull) => ({
+              productId: item.productId,
+              variantId: item.variantId,
+              addressId,
+              name: item.product.name,
+              variantName: item.variant?.name,
+              price: Number(item.price),
+              quantity: item.quantity,
+              ...(item.selectedOptions ? { selectedOptions: JSON.parse(JSON.stringify(item.selectedOptions)) } : {}),
+            })),
+          },
+        },
+        include: {
+          items: { include: { product: { select: { name: true } } } },
+        },
+      });
+      break; // success
+    } catch (err) {
+      lastError = err;
+      if (
+        err instanceof Prisma.PrismaClientKnownRequestError &&
+        err.code === "P2002"
+      ) {
+        // Check that the violated unique field is orderNumber, not something else.
+        const target = err.meta?.target;
+        const targetStr = Array.isArray(target) ? target.join(",") : String(target ?? "");
+        if (targetStr.includes("orderNumber")) {
+          continue; // retry with next number
+        }
+      }
+      throw err; // any other error: rethrow immediately
+    }
+  }
+
+  if (!order) {
+    // lastError is captured server-side context only; the route's try/catch
+    // (Task 2) will log it. We surface a fresh user-safe message here.
+    void lastError;
+    throw new Error(
+      `Impossibile generare numero ordine univoco dopo ${MAX_ORDER_NUMBER_ATTEMPTS} tentativi`,
+    );
+  }
 
   // Deduct stock
   for (const item of cartItems) {
