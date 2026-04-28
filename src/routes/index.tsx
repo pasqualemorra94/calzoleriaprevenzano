@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import {
   HeroSection,
+  MobileQuickShop,
   CategoriesSection,
   PersonalizationSection,
   FeaturedProductsSection,
@@ -21,6 +22,7 @@ function HomePage(): ReactNode {
   return (
     <>
       <HeroSection />
+      <MobileQuickShop />
       <CategoriesSection />
       <PersonalizationSection />
       <FeaturedProductsSection />

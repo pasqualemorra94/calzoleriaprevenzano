@@ -11,9 +11,8 @@ const EASE_OUT: Easing = [0.22, 1, 0.36, 1];
 export function HeroSection() {
   return (
     <section
-      className="relative overflow-hidden"
+      className="relative overflow-hidden md:min-h-[calc(100svh-var(--navbar-height-md))]"
       style={{
-        minHeight: "calc(100svh - var(--navbar-height))",
         background:
           "radial-gradient(at 15% 30%, #FBF6EC 0%, #F4EAD6 55%, #ECE0C5 100%)",
       }}
@@ -41,7 +40,7 @@ export function HeroSection() {
         }}
       />
 
-      <div className="relative mx-auto grid max-w-[var(--page-max-width)] grid-cols-1 items-center gap-12 px-[var(--page-padding-x)] pb-12 pt-10 md:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)] md:gap-12 md:pb-20 md:pt-16 lg:gap-20 lg:py-20">
+      <div className="relative mx-auto grid max-w-[var(--page-max-width)] grid-cols-1 items-center gap-7 px-[var(--page-padding-x)] pb-7 pt-7 md:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)] md:gap-12 md:pb-20 md:pt-16 lg:gap-20 lg:py-20">
         {/* ══════════════════════════════════════════════════════
             COLUMN 1 — Editorial copy (Apple-style staggered fade)
             ══════════════════════════════════════════════════════ */}
@@ -80,7 +79,7 @@ export function HeroSection() {
           {/* Massive headline — Apple-style, staggered per word */}
           <h1
             className="font-display font-semibold leading-[0.95] tracking-[-0.025em] text-[var(--color-foreground)]"
-            style={{ fontSize: "clamp(2.8rem, 0.5rem + 5.4vw, 6.5rem)" }}
+            style={{ fontSize: "clamp(2.2rem, 0.4rem + 5vw, 6.5rem)" }}
           >
             <m.span
               initial={{ opacity: 0, y: 26 }}
@@ -154,7 +153,7 @@ export function HeroSection() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.55 }}
             transition={{ duration: 0.8, delay: 1.15 }}
-            className="mt-10 flex items-center gap-2 md:mt-14"
+            className="mt-6 hidden items-center gap-2 md:mt-14 md:flex"
             aria-hidden="true"
           >
             <div className="flex gap-[3px]">
@@ -191,7 +190,7 @@ export function HeroSection() {
             initial={{ opacity: 0, y: 50, scale: 0.94 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 1.15, ease: EASE_OUT, delay: 0.5 }}
-            className="relative w-full max-w-[440px] md:max-w-[480px] lg:max-w-[560px]"
+            className="relative w-full max-w-[280px] sm:max-w-[340px] md:max-w-[480px] lg:max-w-[560px]"
           >
             {/* Subtle gold border ring */}
             <div
