@@ -1,6 +1,5 @@
 import { m, AnimatePresence } from "motion/react";
-import { ArrowRight } from "lucide-react";
-import { ScrollCounter } from "~/components/ui/ScrollCounter";
+import { ArrowRight, ArrowLeft, ArrowUpRight } from "lucide-react";
 import { useState, useCallback, useEffect } from "react";
 
 // ─── Data ────────────────────────────────────────────────────
@@ -36,7 +35,7 @@ const SLIDES: HeroSlide[] = [
     tag: "Artigianato Napoletano",
     headline: ["Sandali", "Classici"],
     subtitle:
-      "Personalizza ogni dettaglio — tipo di pelle, colore, tacco e gioiello. Creati a mano nel nostro laboratorio di Napoli.",
+      "Personalizza ogni dettaglio — tipo di pelle, colore, tacco e gioiello. Creati a mano nella bottega di famiglia, a Napoli.",
     primaryCta: "Scopri i Sandali",
     primaryCtaHref: "/catalogo?category=sandali",
     secondaryCta: "Come funziona",
@@ -44,35 +43,48 @@ const SLIDES: HeroSlide[] = [
   },
 ];
 
-const SLIDE_INTERVAL_MS = 7000;
+const SLIDE_INTERVAL_MS = 8000;
 
-// ─── Content variants ────────────────────────────────────────
-
-const contentVariants = {
-  hidden: { opacity: 0, y: 18 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as number[] },
-  },
-  exit: {
-    opacity: 0,
-    y: -12,
-    transition: { duration: 0.35, ease: "easeIn" as const },
-  },
-};
+// ─── Variants ────────────────────────────────────────────────
 
 const imageVariants = {
-  enter: { opacity: 0, scale: 1.04 },
+  enter: { opacity: 0, scale: 1.06 },
   visible: {
     opacity: 1,
     scale: 1,
-    transition: { duration: 1.0, ease: [0.22, 1, 0.36, 1] as number[] },
+    transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
   },
   exit: {
     opacity: 0,
     scale: 1.02,
-    transition: { duration: 0.5, ease: "easeIn" as const },
+    transition: { duration: 0.7, ease: "easeIn" as const },
+  },
+};
+
+const contentVariants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.7,
+      ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+      staggerChildren: 0.08,
+    },
+  },
+  exit: {
+    opacity: 0,
+    y: -12,
+    transition: { duration: 0.4, ease: "easeIn" as const },
+  },
+};
+
+const lineVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
   },
 };
 
@@ -82,11 +94,15 @@ export function HeroSection() {
   const [current, setCurrent] = useState(0);
 
   const goTo = useCallback((index: number) => {
-    setCurrent(index);
+    setCurrent(((index % SLIDES.length) + SLIDES.length) % SLIDES.length);
   }, []);
 
   const goNext = useCallback(() => {
     setCurrent((prev) => (prev + 1) % SLIDES.length);
+  }, []);
+
+  const goPrev = useCallback(() => {
+    setCurrent((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
   }, []);
 
   useEffect(() => {
@@ -95,228 +111,217 @@ export function HeroSection() {
   }, [goNext]);
 
   const slide = SLIDES[current];
+  const total = SLIDES.length;
 
   return (
-    <section className="relative flex overflow-hidden" style={{ minHeight: "calc(100svh - var(--navbar-height-md))" }}>
+    <section
+      className="relative overflow-hidden bg-[var(--color-foreground)] min-h-[calc(100svh-var(--navbar-height))] md:min-h-[calc(100svh-var(--navbar-height-md))]"
+      aria-roledescription="carousel"
+      aria-label="Collezioni Calzoleria Prevenzano"
+    >
 
-      {/* ══ LEFT — Editorial Content Panel ══════════════════════ */}
-      <div className="relative z-10 flex w-full flex-col justify-between px-8 py-12 md:bg-[var(--color-muted)] md:w-[37%] md:px-12 lg:px-14 xl:px-16">
+      {/* ══ Background — full-bleed cinematic image ═════════════ */}
+      <AnimatePresence mode="wait">
+        <m.div
+          key={`img-${current}`}
+          variants={imageVariants}
+          initial="enter"
+          animate="visible"
+          exit="exit"
+          className="absolute inset-0"
+        >
+          <div
+            className="h-full w-full bg-cover bg-center"
+            style={{ backgroundImage: `url('${slide.image}')` }}
+            role="img"
+            aria-label={slide.alt}
+          />
+        </m.div>
+      </AnimatePresence>
 
-        {/* Top brand stamp */}
-        <div className="flex items-center gap-3">
-          <div className="h-[1px] w-8 bg-[var(--color-accent)]" />
-          <span className="text-[10px] font-medium tracking-[0.25em] text-white/80 md:text-[var(--color-text-muted)] uppercase">
-            Napoli · Dal 1984
-          </span>
-        </div>
+      {/* Cinematic scrim — protects bottom-left content + title */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-black/85 via-black/35 to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
-        {/* Center — main editorial content */}
-        <div className="flex-1 flex flex-col justify-center py-10">
-          <AnimatePresence mode="wait">
-            <m.div
-              key={current}
-              variants={contentVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-            >
-              {/* Collection tag */}
-              <div className="mb-6 inline-flex items-center gap-2">
-                <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                  <path d="M8 1L9.5 6.5L15 8L9.5 9.5L8 15L6.5 9.5L1 8L6.5 6.5L8 1Z" fill="#C9A961" />
-                </svg>
-                <span className="text-xs font-semibold tracking-[0.18em] text-[var(--color-accent)] uppercase">
-                  {slide.tag}
-                </span>
-              </div>
+      {/* Right edge soft vignette (desktop only) */}
+      <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-2/5 bg-gradient-to-l from-black/35 via-black/10 to-transparent md:block" />
 
-              {/* Large editorial headline */}
-              <h1 className="font-display font-bold leading-none tracking-[-0.02em] text-white md:text-[var(--color-text)]" style={{ fontSize: "clamp(3rem, 2rem + 5vw, 5.5rem)" }}>
-                {slide.headline.map((line, i) => (
-                  <span key={i} className={i === 1 ? "block italic text-[var(--color-accent)] md:text-[var(--color-primary)]" : "block"}>
-                    {line}
-                  </span>
-                ))}
-              </h1>
+      {/* Film grain — printed feel */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.14] mix-blend-overlay"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>\")",
+          backgroundSize: "240px 240px",
+        }}
+      />
 
-              {/* Gold stitch under headline */}
-              <div className="my-7 flex items-center gap-4">
-                <div className="h-[2px] w-12 bg-[var(--color-accent)]" />
-                <div className="h-[2px] w-3 bg-[var(--color-accent)]/30" />
-              </div>
-
-              {/* Description */}
-              <p className="max-w-sm leading-[1.75] text-white/80 md:text-[var(--color-text-secondary)]" style={{ fontSize: "clamp(0.9rem, 0.85rem + 0.25vw, 1rem)" }}>
-                {slide.subtitle}
-              </p>
-
-              {/* CTAs */}
-              <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:gap-4">
-                <a
-                  href={slide.primaryCtaHref}
-                  className="group inline-flex items-center justify-center gap-2 rounded-[var(--radius-lg)] bg-[var(--color-primary)] px-7 py-3.5 text-sm font-semibold tracking-wide text-white transition-all duration-300 hover:bg-[var(--color-primary-dark)] hover:shadow-[0_8px_30px_rgba(139,94,60,0.25)]"
-                >
-                  {slide.primaryCta}
-                  <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                </a>
-                <a
-                  href={slide.secondaryCtaHref}
-                  className="inline-flex items-center justify-center rounded-[var(--radius-lg)] border border-white/30 px-7 py-3.5 text-sm font-medium tracking-wide text-white transition-all duration-300 hover:border-[var(--color-primary)] md:border-[var(--color-border)] md:text-[var(--color-text-secondary)]"
-                >
-                  {slide.secondaryCta}
-                </a>
-              </div>
-            </m.div>
-          </AnimatePresence>
-        </div>
-
-        {/* Bottom — stats + slide indicators */}
-        <div className="flex items-end justify-between">
-          {/* Brand stats */}
-          <div className="flex items-center gap-8">
-            <div>
-              <ScrollCounter
-                target={1984}
-                suffix=""
-                className="font-display text-2xl font-bold text-white md:text-[var(--color-text)]"
-              />
-              <p className="mt-0.5 text-[10px] tracking-[0.18em] text-white/70 md:text-[var(--color-text-muted)] uppercase">
-                Fondazione
-              </p>
-            </div>
-            <div className="h-8 w-[1px] bg-white/20 md:bg-[var(--color-border)]" />
-            <div>
-              <ScrollCounter
-                target={118}
-                suffix="+"
-                className="font-display text-2xl font-bold text-[var(--color-accent)] md:text-[var(--color-primary)]"
-              />
-              <p className="mt-0.5 text-[10px] tracking-[0.18em] text-white/70 md:text-[var(--color-text-muted)] uppercase">
-                Modelli unici
-              </p>
-            </div>
+      {/* ══ TOP — Editorial meta ribbon ═════════════════════════ */}
+      <div className="absolute inset-x-0 top-0 z-10 px-6 pt-7 md:px-12 md:pt-10 lg:px-16">
+        <div className="flex items-center justify-between text-white/85">
+          <div className="flex items-center gap-3">
+            <span className="h-[1px] w-8 bg-[var(--color-accent)] md:w-12" />
+            <span className="font-display text-[10px] tracking-[0.32em] uppercase">
+              Edizione
+            </span>
+            <span className="font-display text-[11px] italic text-[var(--color-accent)]">
+              N. 0{current + 1} / 0{total}
+            </span>
           </div>
-
-          {/* Slide dots */}
-          <div className="flex items-center gap-2" role="tablist" aria-label="Selezione collezione">
-            {SLIDES.map((_, index) => (
-              <button
-                key={index}
-                type="button"
-                role="tab"
-                aria-selected={index === current}
-                aria-label={`Collezione ${index + 1}`}
-                onClick={() => goTo(index)}
-                className={`h-1.5 rounded-full transition-all duration-500 ${
-                  index === current
-                    ? "w-8 bg-[var(--color-accent)]"
-                    : "w-1.5 bg-[var(--color-border)] hover:bg-[var(--color-accent)]/50"
-                }`}
-              />
-            ))}
+          <div className="hidden items-center gap-3 md:flex">
+            <span className="font-display text-[10px] tracking-[0.32em] uppercase">
+              Napoli · Dal 1984
+            </span>
+            <span className="h-[1px] w-12 bg-[var(--color-accent)]" />
           </div>
         </div>
       </div>
 
-      {/* ══ RIGHT — Image Panel ══════════════════════════════════ */}
-      <div className="hidden md:block md:w-[63%] relative overflow-hidden bg-[var(--color-muted)]">
+      {/* ══ MAIN — Bottom-left magazine cover content ═══════════ */}
+      <div className="absolute inset-x-0 bottom-0 z-10 px-6 pb-12 md:px-12 md:pb-16 lg:px-16 lg:pb-20">
         <AnimatePresence mode="wait">
           <m.div
-            key={current}
-            variants={imageVariants}
-            initial="enter"
+            key={`content-${current}`}
+            variants={contentVariants}
+            initial="hidden"
             animate="visible"
             exit="exit"
-            className="absolute inset-0"
+            className="max-w-[820px]"
           >
-            <div
-              className="h-full w-full bg-cover bg-center bg-no-repeat"
-              style={{ backgroundImage: `url('${slide.image}')` }}
-              role="img"
-              aria-label={slide.alt}
+            {/* Collection tag */}
+            <m.div variants={lineVariants} className="mb-5 inline-flex items-center gap-2.5">
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M8 1L9.5 6.5L15 8L9.5 9.5L8 15L6.5 9.5L1 8L6.5 6.5L8 1Z" fill="#C9A961" />
+              </svg>
+              <span className="text-[11px] font-semibold tracking-[0.22em] uppercase text-[var(--color-accent)]">
+                {slide.tag}
+              </span>
+              <span className="h-[1px] w-12 bg-[var(--color-accent)]/50" />
+            </m.div>
+
+            {/* Massive cover headline */}
+            <m.h1
+              variants={lineVariants}
+              className="font-display font-semibold leading-[0.94] tracking-[-0.025em] text-white"
+              style={{ fontSize: "clamp(3.4rem, 1.5rem + 9.5vw, 9.5rem)" }}
+            >
+              <span className="block">{slide.headline[0]}</span>
+              <span className="block italic font-medium text-[var(--color-accent)]">
+                {slide.headline[1]}
+              </span>
+            </m.h1>
+
+            {/* Stitch underline ornament */}
+            <m.div variants={lineVariants} className="mt-7 flex items-center gap-2">
+              <span className="h-[2px] w-14 bg-[var(--color-accent)]" />
+              <span className="h-[2px] w-2 bg-[var(--color-accent)]/60" />
+              <span className="h-[2px] w-1 bg-[var(--color-accent)]/30" />
+            </m.div>
+
+            {/* Subtitle */}
+            <m.p
+              variants={lineVariants}
+              className="mt-6 max-w-[34rem] text-[15px] leading-[1.65] text-white/85 md:text-[17px] md:leading-[1.7]"
+            >
+              {slide.subtitle}
+            </m.p>
+
+            {/* CTAs */}
+            <m.div
+              variants={lineVariants}
+              className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-5"
+            >
+              <a
+                href={slide.primaryCtaHref}
+                className="group inline-flex items-center justify-center gap-2.5 rounded-full bg-[var(--color-accent)] px-7 py-3.5 text-sm font-semibold tracking-wide text-[var(--color-foreground)] transition-all duration-300 hover:bg-[var(--color-accent-light)] hover:shadow-[0_12px_32px_rgba(201,169,97,0.35)]"
+              >
+                {slide.primaryCta}
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </a>
+              <a
+                href={slide.secondaryCtaHref}
+                className="group inline-flex items-center gap-2 text-sm font-medium tracking-wide text-white transition-colors hover:text-[var(--color-accent)]"
+              >
+                <span className="border-b border-white/40 pb-0.5 transition-colors group-hover:border-[var(--color-accent)]">
+                  {slide.secondaryCta}
+                </span>
+                <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              </a>
+            </m.div>
+          </m.div>
+        </AnimatePresence>
+      </div>
+
+      {/* ══ Bottom-right — Editorial pagination ═════════════════ */}
+      <div className="absolute bottom-12 right-6 z-10 hidden items-end gap-4 md:bottom-16 md:right-12 md:flex lg:right-16">
+        <button
+          type="button"
+          onClick={goPrev}
+          aria-label="Slide precedente"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 text-white transition-all duration-300 hover:border-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-[var(--color-foreground)]"
+        >
+          <ArrowLeft className="h-4 w-4" />
+        </button>
+
+        <div className="flex items-baseline gap-2 font-display tabular-nums">
+          <span className="text-4xl font-semibold leading-none text-white">
+            0{current + 1}
+          </span>
+          <span className="text-lg leading-none text-white/40">/</span>
+          <span className="text-base leading-none text-white/60">0{total}</span>
+        </div>
+
+        <button
+          type="button"
+          onClick={goNext}
+          aria-label="Slide successiva"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 text-white transition-all duration-300 hover:border-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-[var(--color-foreground)]"
+        >
+          <ArrowRight className="h-4 w-4" />
+        </button>
+      </div>
+
+      {/* ══ Mobile pagination ════════════════════════════════════ */}
+      <div className="absolute bottom-5 right-6 z-10 flex items-center gap-3 md:hidden">
+        <div className="flex items-baseline gap-1 font-display tabular-nums text-white">
+          <span className="text-xl font-semibold leading-none">0{current + 1}</span>
+          <span className="text-xs leading-none text-white/50">/</span>
+          <span className="text-xs leading-none text-white/70">0{total}</span>
+        </div>
+        <div className="flex items-center gap-2" role="tablist" aria-label="Selezione collezione">
+          {SLIDES.map((_, index) => (
+            <button
+              key={index}
+              type="button"
+              role="tab"
+              aria-selected={index === current}
+              aria-label={`Vai alla slide ${index + 1}`}
+              onClick={() => goTo(index)}
+              className={`h-[3px] rounded-full transition-all duration-500 ${
+                index === current
+                  ? "w-8 bg-[var(--color-accent)]"
+                  : "w-3 bg-white/40"
+              }`}
             />
-          </m.div>
-        </AnimatePresence>
-
-        {/* Subtle left edge gradient for blending with content panel */}
-        <div className="pointer-events-none absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-[var(--color-background)]/20 to-transparent" />
-
-        {/* Collection label floating badge */}
-        <AnimatePresence mode="wait">
-          <m.div
-            key={`badge-${current}`}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0, transition: { delay: 0.5, duration: 0.5 } }}
-            exit={{ opacity: 0, y: -8, transition: { duration: 0.3 } }}
-            className="absolute right-6 top-6 rounded-[var(--radius-lg)] border border-white/20 bg-black/25 px-4 py-2.5 backdrop-blur-sm"
-          >
-            <p className="text-[10px] tracking-[0.2em] text-white/70 uppercase">Collezione</p>
-            <p className="mt-0.5 font-display text-sm font-semibold italic text-white">
-              {slide.headline.join(" ")}
-            </p>
-          </m.div>
-        </AnimatePresence>
-
-        {/* Bottom overlay for scroll hint */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/20 to-transparent" />
-
-        {/* Artigianato stamp — bottom right */}
-        <div className="absolute bottom-6 left-6 flex items-center gap-2 opacity-60">
-          <div className="flex gap-[3px]">
-            {[...Array(5)].map((_, i) => (
-              <span
-                key={i}
-                className="h-[2px] w-[5px] rounded-full bg-white"
-                style={{ marginTop: i % 2 === 0 ? "0" : "3px" }}
-              />
-            ))}
-          </div>
-          <span className="text-[9px] tracking-[0.22em] text-white uppercase">Fatto a mano</span>
+          ))}
         </div>
       </div>
 
-      {/* ══ Mobile — Image as full-width background strip ════════ */}
-      <div
-        className="absolute inset-0 -z-10 md:hidden"
-        aria-hidden="true"
-      >
-        <AnimatePresence mode="wait">
-          <m.div
-            key={`mobile-${current}`}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1, transition: { duration: 0.8 } }}
-            exit={{ opacity: 0, transition: { duration: 0.4 } }}
-            className="absolute inset-0"
-          >
-            {/* Photo */}
-            <div
-              className="h-full w-full bg-cover bg-center"
-              style={{ backgroundImage: `url('${slide.image}')` }}
+      {/* ══ Bottom-left — Hand-stamped maker mark ═══════════════ */}
+      <div className="absolute bottom-5 left-6 z-10 hidden items-center gap-2 opacity-70 md:left-12 md:flex lg:left-16">
+        <div className="flex gap-[3px]" aria-hidden="true">
+          {[...Array(5)].map((_, i) => (
+            <span
+              key={i}
+              className="h-[2px] w-[5px] rounded-full bg-white"
+              style={{ marginTop: i % 2 === 0 ? "0" : "3px" }}
             />
-
-            {/* Asymmetric scrim — photo breathes on top, text-safe at bottom */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/25 to-black/70" />
-
-            {/* Side vignette for editorial focus */}
-            <div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "radial-gradient(ellipse 100% 70% at 50% 55%, transparent 50%, rgba(0,0,0,0.35) 100%)",
-              }}
-            />
-
-            {/* Film grain — anti-AI editorial texture */}
-            <div
-              className="absolute inset-0 opacity-[0.18] mix-blend-overlay"
-              style={{
-                backgroundImage:
-                  "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.6 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>\")",
-                backgroundSize: "200px 200px",
-              }}
-            />
-          </m.div>
-        </AnimatePresence>
+          ))}
+        </div>
+        <span className="text-[9px] tracking-[0.32em] uppercase text-white">
+          Fatto a mano
+        </span>
       </div>
     </section>
   );
