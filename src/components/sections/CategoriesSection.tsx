@@ -19,7 +19,7 @@ const CATEGORIES: Category[] = [
       "La collezione completa — dal classico infradito al modello gioiello. Ogni sandalo è personalizzabile nei materiali e nei dettagli.",
     cta: "Esplora i sandali",
     href: "/catalogo?category=sandali",
-    image: "/images/products/schiava-4-4.png",
+    image: "/images/sandali.png",
     featured: true,
   },
   {
@@ -28,7 +28,7 @@ const CATEGORIES: Category[] = [
       "Portafogli, cinture e borselli in pelle italiana — piccoli oggetti che raccontano la stessa artigianalità dei nostri sandali.",
     cta: "Vedi la pelletteria",
     href: "/catalogo?category=pelletteria",
-    image: "/images/products/borsello-cuoio-3.png",
+    image: "/images/pelletteria.jpg",
   },
   {
     title: "Accessori per Calzature",
@@ -36,7 +36,7 @@ const CATEGORIES: Category[] = [
       "Solette, calzature per la cura delle scarpe e accessori tecnici per chi bada al dettaglio.",
     cta: "Scopri gli accessori",
     href: "/catalogo?category=articoli-calzature",
-    image: "/images/products/soletta-pelle-pregiata-prestige-2.jpg",
+    image: "/images/accessori-calzature.jpg",
   },
 ];
 
