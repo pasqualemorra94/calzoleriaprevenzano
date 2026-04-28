@@ -188,26 +188,73 @@ export function FeaturedProductsSection() {
             transition={{ duration: 0.3 }}
           >
             {loading ? (
-              <div className="grid grid-cols-2 gap-5 md:grid-cols-3 md:gap-7 lg:grid-cols-4 lg:gap-8">
-                {Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="animate-pulse">
-                    <div className="aspect-[3/4] rounded-[var(--radius-lg)] bg-[var(--color-muted)]" />
-                    <div className="mt-4 space-y-2">
-                      <div className="h-3 w-16 rounded bg-[var(--color-muted)]" />
-                      <div className="h-4 w-full rounded bg-[var(--color-muted)]" />
-                      <div className="h-4 w-20 rounded bg-[var(--color-muted)]" />
+              <>
+                {/* Desktop skeleton */}
+                <div className="hidden grid-cols-3 gap-7 md:grid lg:grid-cols-4 lg:gap-8">
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <div key={i} className="animate-pulse">
+                      <div className="aspect-[3/4] rounded-[var(--radius-lg)] bg-[var(--color-muted)]" />
+                      <div className="mt-4 space-y-2">
+                        <div className="h-3 w-16 rounded bg-[var(--color-muted)]" />
+                        <div className="h-4 w-full rounded bg-[var(--color-muted)]" />
+                        <div className="h-4 w-20 rounded bg-[var(--color-muted)]" />
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+                {/* Mobile skeleton */}
+                <div className="-mx-[var(--page-padding-x)] flex gap-3 overflow-hidden px-[var(--page-padding-x)] md:hidden">
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="shrink-0 animate-pulse"
+                      style={{ width: "62vw", maxWidth: "240px" }}
+                    >
+                      <div className="aspect-[3/4] rounded-[var(--radius-lg)] bg-[var(--color-muted)]" />
+                      <div className="mt-3 h-3 w-2/3 rounded bg-[var(--color-muted)]" />
+                      <div className="mt-2 h-4 w-1/2 rounded bg-[var(--color-muted)]" />
+                    </div>
+                  ))}
+                </div>
+              </>
             ) : products.length > 0 ? (
-              <StaggeredGrid className="grid grid-cols-2 gap-5 md:grid-cols-3 md:gap-7 lg:grid-cols-4 lg:gap-8">
-                {products.map((product) => (
-                  <StaggeredItem key={product.id}>
-                    <ProductCard product={product} />
-                  </StaggeredItem>
-                ))}
-              </StaggeredGrid>
+              <>
+                {/* Desktop: classic staggered grid */}
+                <StaggeredGrid className="hidden grid-cols-3 gap-7 md:grid lg:grid-cols-4 lg:gap-8">
+                  {products.map((product) => (
+                    <StaggeredItem key={product.id}>
+                      <ProductCard product={product} />
+                    </StaggeredItem>
+                  ))}
+                </StaggeredGrid>
+
+                {/* Mobile: horizontal scroll-snap rail */}
+                <div
+                  className="-mx-[var(--page-padding-x)] flex gap-3 overflow-x-auto overscroll-x-contain pb-3 scroll-smooth md:hidden"
+                  style={{
+                    scrollSnapType: "x mandatory",
+                    paddingLeft: "var(--page-padding-x)",
+                    paddingRight: "var(--page-padding-x)",
+                    scrollbarWidth: "none",
+                    WebkitOverflowScrolling: "touch",
+                  }}
+                >
+                  <style>{`section .featured-rail::-webkit-scrollbar { display: none; }`}</style>
+                  {products.map((product) => (
+                    <div
+                      key={product.id}
+                      className="shrink-0"
+                      style={{
+                        width: "62vw",
+                        maxWidth: "240px",
+                        scrollSnapAlign: "start",
+                      }}
+                    >
+                      <ProductCard product={product} />
+                    </div>
+                  ))}
+                </div>
+              </>
             ) : (
               <div className="py-16 text-center">
                 <p className="text-[var(--color-text-muted)]">
