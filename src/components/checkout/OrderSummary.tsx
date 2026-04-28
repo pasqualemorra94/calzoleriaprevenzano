@@ -72,7 +72,7 @@ export function OrderSummary({
 
       <div className="space-y-2">
         <div className="flex justify-between text-sm">
-          <span className="text-[var(--color-text-secondary)]">Subtotale</span>
+          <span className="text-[var(--color-text-secondary)]">Subtotale (IVA inclusa)</span>
           <span className="font-medium">€{subtotal.toFixed(2)}</span>
         </div>
         <div className="flex justify-between text-sm">
@@ -93,6 +93,10 @@ export function OrderSummary({
         <div className="flex justify-between">
           <span className="text-base font-semibold">Totale</span>
           <span className="text-base font-bold text-[var(--color-primary)]">€{total.toFixed(2)}</span>
+        </div>
+        <div className="flex justify-between text-xs text-[var(--color-text-muted)]">
+          <span>di cui IVA (22%)</span>
+          <span>€{(Math.round((total * 22 / 122) * 100) / 100).toFixed(2)}</span>
         </div>
       </div>
 
