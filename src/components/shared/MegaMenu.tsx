@@ -590,13 +590,13 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
 
       {/* ── MOBILE ──────────────────────────────────────── */}
       <div className="flex items-center gap-3 px-4 md:hidden" style={{ height: "var(--navbar-height)" }}>
-        <Link to="/" aria-label="Calzoleria Prevenzano" onClick={handleItemClick}>
+        <Link to="/" aria-label="Calzoleria Prevenzano" onClick={handleItemClick} className="shrink-0">
           <img
             src="/images/logo.png"
             alt="Calzoleria Prevenzano"
-            className="h-8 w-auto shrink-0"
-            width={160}
-            height={97}
+            className="h-12 w-auto"
+            width={200}
+            height={121}
           />
         </Link>
 
@@ -646,14 +646,14 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
         >
           <div className="flex h-full flex-col bg-[var(--color-background)]">
             {/* Header — logo + close */}
-            <div className="flex h-14 shrink-0 items-center justify-between border-b border-[var(--color-border-light)] px-4">
+            <div className="flex shrink-0 items-center justify-between border-b border-[var(--color-border-light)] px-4" style={{ height: "var(--navbar-height)" }}>
               <Link to="/" onClick={handleItemClick}>
                 <img
                   src="/images/logo.png"
                   alt="Calzoleria Prevenzano"
-                  className="h-7 w-auto"
-                  width={132}
-                  height={80}
+                  className="h-11 w-auto"
+                  width={180}
+                  height={109}
                 />
               </Link>
               <button
