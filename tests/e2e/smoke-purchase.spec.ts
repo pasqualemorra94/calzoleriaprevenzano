@@ -32,9 +32,18 @@ test("smoke: buy one Isabella sandalo end-to-end on live Railway", async ({ page
   await expectAddToCartEnabled(page);
 
   // ── 3. Add to cart ──────────────────────────────────────────────────
-  await page.getByRole("button", { name: /Aggiungi al carrello/i }).click();
-  // Button text briefly becomes "Aggiunto!" — confirm we got past the click
-  await expect(page.getByRole("button", { name: /Aggiunto|Aggiungi al carrello/i })).toBeVisible();
+  // Wait for the POST /api/cart response so we know the server-side cart was actually
+  // updated before navigating. Without this, we can race the redirect to /carrello
+  // and find an empty cart.
+  await Promise.all([
+    page.waitForResponse(
+      (res) => res.url().includes("/api/cart") && res.request().method() === "POST" && res.ok(),
+      { timeout: 15_000 },
+    ),
+    page.getByRole("button", { name: /Aggiungi al carrello/i }).click(),
+  ]);
+  // Button text briefly becomes "Aggiunto!" — confirm the success state rendered
+  await expect(page.getByRole("button", { name: /Aggiunto/i })).toBeVisible({ timeout: 5_000 });
 
   // ── 4. Go to cart ───────────────────────────────────────────────────
   await page.goto("/carrello");
@@ -71,25 +80,21 @@ test("smoke: buy one Isabella sandalo end-to-end on live Railway", async ({ page
   // Locale is forced to en-US in playwright.config.ts so labels are stable.
   // Stripe's hosted page exposes inputs by name="..."; use those as primary
   // selectors (label fallback if the name attribute changes).
-  const cardNumber = page.locator('input[name="cardNumber"]').or(page.getByLabel("Card number"));
-  await cardNumber.fill(CARD.number);
+  // Use input[name=...] selectors directly: Stripe Hosted Checkout has stable name
+  // attributes, while aria-label fallbacks collide with adjacent SVG icons that
+  // share the same accessible name (e.g. CVC icon).
+  await page.locator('input[name="cardNumber"]').fill(CARD.number);
+  await page.locator('input[name="cardExpiry"]').fill(CARD.exp);
+  await page.locator('input[name="cardCvc"]').fill(CARD.cvc);
 
-  const cardExpiry = page.locator('input[name="cardExpiry"]').or(page.getByLabel(/Expiration|MM \/ YY/));
-  await cardExpiry.fill(CARD.exp);
-
-  const cardCvc = page.locator('input[name="cardCvc"]').or(page.getByLabel("CVC"));
-  await cardCvc.fill(CARD.cvc);
-
-  const billingName = page.locator('input[name="billingName"]').or(page.getByLabel(/Cardholder name|Name on card/));
-  if (await billingName.first().isVisible().catch(() => false)) {
-    await billingName.first().fill(CARD.name);
+  const billingName = page.locator('input[name="billingName"]');
+  if (await billingName.isVisible().catch(() => false)) {
+    await billingName.fill(CARD.name);
   }
 
-  const billingPostalCode = page
-    .locator('input[name="billingPostalCode"]')
-    .or(page.getByLabel(/ZIP|Postal code/));
-  if (await billingPostalCode.first().isVisible().catch(() => false)) {
-    await billingPostalCode.first().fill(CARD.zip);
+  const billingPostalCode = page.locator('input[name="billingPostalCode"]');
+  if (await billingPostalCode.isVisible().catch(() => false)) {
+    await billingPostalCode.fill(CARD.zip);
   }
 
   // ── 9. Pay → wait for redirect back to /ordine-confermato ───────────
@@ -111,9 +116,12 @@ test("smoke: buy one Isabella sandalo end-to-end on live Railway", async ({ page
   await expect(heading).toBeVisible({ timeout: 30_000 });
 
   const headingText = (await heading.textContent()) ?? "";
+  // Log final state to stdout so the human verifier can find the order in admin.
+  console.log(`[smoke] heading="${headingText.trim()}"`);
   if (/Ordine confermato/i.test(headingText)) {
     await expect(page.getByText(/Numero ordine:/i)).toBeVisible();
     const orderLine = await page.getByText(/Numero ordine:/i).innerText();
+    console.log(`[smoke] ${orderLine.trim()}`);
     expect(orderLine).toMatch(/Numero ordine:\s*[A-Z0-9-]{4,}/);
 
     const totalText = await page.getByText(/Totale/i).first().innerText();
