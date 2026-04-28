@@ -110,13 +110,13 @@ function LaBottegaPage(): ReactNode {
         <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
           <div className="mb-14 text-center md:mb-16">
             <span className="mb-3 inline-block text-xs font-medium tracking-[var(--tracking-widest)] text-[var(--color-accent)]">
-              Il nostro team
+              La famiglia in bottega
             </span>
             <h2 className="font-display text-[var(--text-lg)] font-semibold tracking-tight md:text-[var(--text-xl)]">
               Le mani dietro ogni sandalo
             </h2>
             <p className="mx-auto mt-4 max-w-lg text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
-              Due generazioni di artigiani che portano avanti la tradizione calzolaia napoletana con passione e competenza.
+              Due generazioni a tramandarsi, di padre in figlio, l&apos;arte calzolaia napoletana — la stessa bottega, le stesse mani, dal 1984.
             </p>
           </div>
 

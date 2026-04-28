@@ -45,68 +45,44 @@ function CategoryCard({ category }: { category: Category }) {
   return (
     <m.a
       href={category.href}
-      className={`group relative block overflow-hidden rounded-[var(--radius-xl)] ${isFeatured ? "" : "rounded-[var(--radius-lg)]"}`}
-      whileHover={{ y: -6 }}
+      className="group flex h-full flex-col overflow-hidden rounded-[var(--radius-xl)] border border-[var(--color-border)] bg-[var(--color-surface)] transition-shadow duration-300 hover:shadow-[var(--shadow-lg)]"
+      whileHover={{ y: -4 }}
       transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
     >
       {/* Image */}
-      <div className={`overflow-hidden bg-[var(--color-muted)] ${isFeatured ? "aspect-[21/9] md:aspect-[21/9]" : "aspect-[4/3]"}`}>
+      <div className={`overflow-hidden bg-[var(--color-muted)] ${isFeatured ? "aspect-[21/9]" : "aspect-[4/3]"}`}>
         <img
           src={category.image}
           alt={category.title}
-          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
           loading="lazy"
           width={isFeatured ? 1200 : 800}
           height={isFeatured ? 514 : 600}
         />
       </div>
 
-      {/* Overlay with better gradient */}
-      <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/60 via-black/20 to-transparent p-6 md:p-8">
-        {/* Label */}
-        <span className="mb-2 inline-block w-fit rounded-[var(--radius-sm)] bg-[var(--color-accent)]/90 px-3 py-1 text-[10px] font-semibold tracking-[0.15em] text-[var(--color-accent-foreground)]">
+      {/* Text panel — readable on solid surface */}
+      <div className={`flex flex-1 flex-col ${isFeatured ? "p-8 md:p-10" : "p-6 md:p-7"}`}>
+        <span className="mb-3 inline-block w-fit rounded-[var(--radius-sm)] border border-[var(--color-accent)]/30 bg-[var(--color-accent)]/10 px-3 py-1 text-[10px] font-semibold tracking-[0.15em] text-[var(--color-accent)]">
           Collezione
         </span>
-        <h3 className={`font-display font-semibold text-white ${isFeatured ? "text-[var(--text-xl)] md:text-[var(--text-2xl)]" : "text-lg md:text-[var(--text-xl)]"}`}>
+        <h3 className={`font-display font-semibold tracking-tight text-[var(--color-foreground)] ${isFeatured ? "text-[var(--text-xl)] md:text-[var(--text-2xl)]" : "text-lg md:text-[var(--text-xl)]"}`}>
           {category.title}
         </h3>
-        <p className="mt-2 line-clamp-2 max-w-md text-sm leading-relaxed text-white/75 md:text-base">
+        <p className="mt-3 max-w-md text-sm leading-relaxed text-[var(--color-text-secondary)] md:text-base">
           {category.description}
         </p>
 
-        {/* CTA */}
-        <div className="mt-4 flex items-center gap-2 text-sm font-medium text-[var(--color-accent)]">
+        <div className="mt-auto flex items-center gap-2 pt-5 text-sm font-medium text-[var(--color-accent)]">
           <span>{category.cta}</span>
           <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1.5" />
         </div>
       </div>
-
-      {/* Hover border frame */}
-      <div className="pointer-events-none absolute inset-0 rounded-[var(--radius-xl)] border border-white/0 transition-all duration-300 group-hover:border-[var(--color-accent)]/30" />
     </m.a>
   );
 }
 
-interface Category {
-  title: string;
-  description: string;
-  cta: string;
-  href: string;
-  image: string;
-  featured?: boolean;
-}
-
-interface CategoriesSectionProps {
-  categoryImages?: Record<string, string>;
-}
-
-export function CategoriesSection({ categoryImages }: CategoriesSectionProps) {
-  // Merge DB-sourced images with hardcoded fallbacks
-  const categoriesWithImages: Category[] = CATEGORIES.map((cat) => ({
-    ...cat,
-    image: categoryImages?.[cat.title] ?? cat.image,
-  }));
-
+export function CategoriesSection() {
   return (
     <ScrollAnimatedSection className="bg-[var(--color-background)] py-[var(--section-padding-y-lg)]">
       <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
@@ -123,8 +99,8 @@ export function CategoriesSection({ categoryImages }: CategoriesSectionProps) {
             Artigianato che racconta
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
-            Tre anime del nostro lavoro — dal sandalo al complemento, ogni pezzo nasce
-            dalle mani esperte dei nostri artigiani napoletani.
+            Tre anime del nostro lavoro — dal sandalo al complemento, ogni pezzo
+            nasce dalle mani della famiglia Prevenzano, in bottega a Napoli dal 1984.
           </p>
           {/* 🧬 DNA: Decorative stitch pattern */}
           <div className="mt-8 flex items-center justify-center gap-1">
@@ -145,9 +121,9 @@ export function CategoriesSection({ categoryImages }: CategoriesSectionProps) {
         {/* Bento Grid: featured card full-width + 2 cards side by side */}
         <StaggeredGrid className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:gap-8">
           <StaggeredItem className="md:col-span-2">
-            <CategoryCard category={categoriesWithImages[0]} />
+            <CategoryCard category={CATEGORIES[0]} />
           </StaggeredItem>
-          {categoriesWithImages.slice(1).map((category) => (
+          {CATEGORIES.slice(1).map((category) => (
             <StaggeredItem key={category.title}>
               <CategoryCard category={category} />
             </StaggeredItem>
