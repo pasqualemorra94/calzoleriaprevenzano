@@ -445,22 +445,21 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
 
         {/* ── Logo bar: hero brand mark, perfectly centered ── */}
         <div
-          className="relative mx-auto flex max-w-[var(--page-max-width)] items-center px-[var(--page-padding-x)]"
+          className="mx-auto grid max-w-[var(--page-max-width)] grid-cols-[1fr_auto_1fr] items-center px-[var(--page-padding-x)]"
           style={{ height: "6.25rem" }}
         >
-          {/* Stitch ornament left */}
-          <div aria-hidden="true" className="hidden lg:flex flex-1 items-center justify-end pr-10">
-            <div className="flex items-center gap-2 opacity-50">
-              <span className="h-[1px] w-16 bg-[var(--stitch-color)]" />
-              <span className="h-[1px] w-2 bg-[var(--stitch-color)]" />
-              <span className="h-[1px] w-1 bg-[var(--stitch-color)]" />
-            </div>
+          {/* Left — symmetric stitch ornament */}
+          <div aria-hidden="true" className="hidden items-center justify-end gap-2 opacity-50 lg:flex">
+            <span className="h-[1px] w-1 bg-[var(--stitch-color)]" />
+            <span className="h-[1px] w-2 bg-[var(--stitch-color)]" />
+            <span className="h-[1px] w-20 bg-[var(--stitch-color)]" />
           </div>
+          <span className="lg:hidden" />
 
-          {/* Center — Logo */}
+          {/* Center — Logo (truly centered in grid) */}
           <Link
             to="/"
-            className="mx-auto flex items-center justify-center"
+            className="flex items-center justify-center px-8"
             aria-label="Calzoleria Prevenzano — Torna alla homepage"
             onClick={handleItemClick}
           >
@@ -473,43 +472,26 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
             />
           </Link>
 
-          {/* Stitch ornament right + cart anchor */}
-          <div className="absolute right-[var(--page-padding-x)] top-1/2 flex -translate-y-1/2 items-center gap-5">
-            <div aria-hidden="true" className="hidden lg:flex items-center gap-2 opacity-50">
-              <span className="h-[1px] w-1 bg-[var(--stitch-color)]" />
-              <span className="h-[1px] w-2 bg-[var(--stitch-color)]" />
-              <span className="h-[1px] w-16 bg-[var(--stitch-color)]" />
-            </div>
-
-            {/* Cart */}
-            <Link
-              to="/carrello"
-              aria-label={`Carrello${cartCount > 0 ? ` — ${cartCount} articoli` : ""}`}
-              className="relative flex h-9 items-center gap-1.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1 text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-primary)]"
-            >
-              <div className="relative flex h-5 w-5 items-center justify-center">
-                <CartIcon />
-                {cartCount > 0 && (
-                  <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--color-primary)] text-[9px] font-semibold text-white">
-                    {cartCount > 9 ? "9+" : cartCount}
-                  </span>
-                )}
-              </div>
-              {cartTotal !== null ? (
-                <span className="text-[11px] font-semibold tabular-nums">€{cartTotal.toFixed(2)}</span>
-              ) : (
-                <span className="text-[11px] tracking-[0.06em] uppercase">Carrello</span>
-              )}
-            </Link>
+          {/* Right — symmetric stitch ornament */}
+          <div aria-hidden="true" className="hidden items-center justify-start gap-2 opacity-50 lg:flex">
+            <span className="h-[1px] w-20 bg-[var(--stitch-color)]" />
+            <span className="h-[1px] w-2 bg-[var(--stitch-color)]" />
+            <span className="h-[1px] w-1 bg-[var(--stitch-color)]" />
           </div>
+          <span className="lg:hidden" />
         </div>
 
         {/* ── Row 2: Navigation menu ── */}
         <nav
           ref={menuRef}
-          className="mx-auto flex max-w-[var(--page-max-width)] items-center justify-center px-[var(--page-padding-x)]"
+          className="mx-auto grid max-w-[var(--page-max-width)] grid-cols-[1fr_auto_1fr] items-center px-[var(--page-padding-x)]"
           style={{ height: "3rem" }}
         >
+          {/* Left spacer (mirrors right cluster width visually) */}
+          <span aria-hidden="true" />
+
+          {/* Center — main links */}
+          <div className="flex items-center justify-center">
           {/* Home */}
           <Link to="/" className={navLinkClass} onClick={handleItemClick}>
             Home
@@ -577,10 +559,29 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
           <Link to={isLoggedIn ? "/account" : "/auth/login"} className={navLinkClass} onClick={handleItemClick}>
             {isLoggedIn ? "Il mio account" : "Accedi"}
           </Link>
+          </div>
 
-          {/* Search — right-aligned in nav row */}
-          <div className="ml-3 border-l border-[var(--color-border)] pl-3">
+          {/* Right — search + cart cluster */}
+          <div className="flex items-center justify-end gap-3">
             <QuickSearch variant="nav" />
+            <span className="h-4 w-[1px] bg-[var(--color-border)]" />
+            <Link
+              to="/carrello"
+              aria-label={`Carrello${cartCount > 0 ? ` — ${cartCount} articoli` : ""}`}
+              className="relative flex items-center gap-1.5 text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-primary)]"
+            >
+              <div className="relative flex h-5 w-5 items-center justify-center">
+                <CartIcon />
+                {cartCount > 0 && (
+                  <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--color-primary)] text-[9px] font-semibold text-white">
+                    {cartCount > 9 ? "9+" : cartCount}
+                  </span>
+                )}
+              </div>
+              {cartTotal !== null && (
+                <span className="text-[11px] font-semibold tabular-nums">€{cartTotal.toFixed(2)}</span>
+              )}
+            </Link>
           </div>
         </nav>
 
