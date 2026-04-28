@@ -369,6 +369,7 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
     "px-5 py-2 text-[13px] font-medium tracking-[0.06em] text-[var(--color-text-secondary)] uppercase transition-colors duration-[var(--transition-fast)] hover:text-[var(--color-primary)] whitespace-nowrap";
 
   return (
+    <>
     <header
       className={cn(
         "fixed top-0 left-0 right-0 z-[var(--z-navbar)] transition-all duration-300",
@@ -633,6 +634,7 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
           </div>
         </Link>
       </div>
+    </header>
 
       {/* ── MOBILE FULL-SCREEN MENU ────────────────────── */}
       {mobileMenuOpen && (
@@ -743,48 +745,56 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
               </ul>
             </nav>
 
-            {/* Footer — social + contacts */}
-            <div className="shrink-0 border-t border-[var(--color-border-light)] px-5 py-5">
-              <div className="mb-3 flex items-center gap-3 text-[var(--color-text-muted)]">
-                <a
-                  href="https://www.instagram.com/calzoleriaprevenzano"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Instagram"
-                  className="flex h-10 w-10 items-center justify-center rounded-full transition-colors active:bg-[var(--color-muted)]"
-                >
-                  <InstagramIcon />
-                </a>
-                <a
-                  href="https://www.facebook.com/calzoleriaprevenzano"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Facebook"
-                  className="flex h-10 w-10 items-center justify-center rounded-full transition-colors active:bg-[var(--color-muted)]"
-                >
-                  <FacebookIcon />
-                </a>
-                <a
-                  href="https://wa.me/390817645183"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="WhatsApp"
-                  className="flex h-10 w-10 items-center justify-center rounded-full transition-colors active:bg-[var(--color-muted)]"
-                >
-                  <WhatsAppIcon />
-                </a>
+            {/* Footer — social + contacts (compact) */}
+            <div className="shrink-0 border-t border-[var(--color-border-light)] bg-[var(--color-muted)]/30 px-5 py-4">
+              <div className="mb-3 flex items-center justify-between">
+                <div className="flex items-center gap-1 text-[var(--color-text-muted)]">
+                  <a
+                    href="https://www.instagram.com/calzoleriaprevenzano"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Instagram"
+                    className="flex h-9 w-9 items-center justify-center rounded-full transition-colors active:bg-[var(--color-muted)] active:text-[var(--color-primary)]"
+                  >
+                    <InstagramIcon />
+                  </a>
+                  <a
+                    href="https://www.facebook.com/calzoleriaprevenzano"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Facebook"
+                    className="flex h-9 w-9 items-center justify-center rounded-full transition-colors active:bg-[var(--color-muted)] active:text-[var(--color-primary)]"
+                  >
+                    <FacebookIcon />
+                  </a>
+                  <a
+                    href="https://wa.me/390817645183"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="WhatsApp"
+                    className="flex h-9 w-9 items-center justify-center rounded-full transition-colors active:bg-[var(--color-muted)] active:text-[var(--color-primary)]"
+                  >
+                    <WhatsAppIcon />
+                  </a>
+                </div>
+                <span className="font-display text-[10px] italic tracking-[0.18em] text-[var(--color-text-muted)] uppercase">
+                  Dal 1984
+                </span>
               </div>
               <a
                 href="tel:+390817645183"
-                className="flex items-center gap-1.5 text-[13px] text-[var(--color-text-muted)]"
+                className="flex items-center gap-2 text-[13px] text-[var(--color-text-secondary)] transition-colors active:text-[var(--color-primary)]"
               >
                 <PhoneIcon />
-                <span>081 764 5183</span>
+                <span className="tabular-nums">081 764 5183</span>
               </a>
-              <p className="mt-1 flex items-center gap-1.5 text-[13px] text-[var(--color-text-muted)]">
+              <a
+                href="/contatti"
+                className="mt-1 flex items-center gap-2 text-[13px] text-[var(--color-text-secondary)] transition-colors active:text-[var(--color-primary)]"
+              >
                 <MapPinIcon />
                 <span>Via Chiaia, 104 · Napoli</span>
-              </p>
+              </a>
             </div>
           </div>
         </div>
@@ -798,6 +808,6 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
           onItemClick={handleItemClick}
         />
       )}
-    </header>
+    </>
   );
 }
