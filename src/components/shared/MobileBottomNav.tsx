@@ -1,16 +1,16 @@
 "use client";
 
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, ShoppingBag, Search, User, Store } from "lucide-react";
+import { Home, ShoppingBag, Search, User } from "lucide-react";
 import { cn } from "~/lib/utils/cn";
 import type { ReactNode } from "react";
 
 type LinkItem = {
   kind: "link";
   label: string;
-  to: "/" | "/catalogo" | "/carrello" | "/account";
+  to: "/" | "/carrello" | "/account";
   icon: typeof Home;
-  matchPath: "/" | "/catalogo" | "/carrello" | "/account";
+  matchPath: "/" | "/carrello" | "/account";
   exact?: boolean;
 };
 
@@ -25,7 +25,6 @@ type NavItem = LinkItem | ActionItem;
 
 const NAV_ITEMS: NavItem[] = [
   { kind: "link", label: "Home", to: "/", icon: Home, matchPath: "/", exact: true },
-  { kind: "link", label: "Catalogo", to: "/catalogo", icon: Store, matchPath: "/catalogo" },
   { kind: "action", label: "Cerca", icon: Search, action: "open-search" },
   { kind: "link", label: "Carrello", to: "/carrello", icon: ShoppingBag, matchPath: "/carrello" },
   { kind: "link", label: "Account", to: "/account", icon: User, matchPath: "/account" },

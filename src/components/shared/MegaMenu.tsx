@@ -533,12 +533,6 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
 
           <span className="h-1 w-1 rounded-full bg-[var(--color-accent)]/50" />
 
-          <Link to="/sandali" search={{ category: undefined, query: undefined, page: undefined }} className={navLinkClass} onClick={handleItemClick}>
-            Sandali
-          </Link>
-
-          <span className="h-1 w-1 rounded-full bg-[var(--color-accent)]/50" />
-
           <Link to="/la-bottega" className={navLinkClass} onClick={handleItemClick}>
             La Bottega
           </Link>
@@ -695,17 +689,6 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                     </svg>
                   </button>
-                </li>
-
-                <li>
-                  <Link
-                    to="/sandali"
-                    search={{ category: undefined, query: undefined, page: undefined }}
-                    onClick={handleItemClick}
-                    className="flex items-center justify-between px-5 py-4 text-[17px] font-medium tracking-wide text-[var(--color-text)] transition-colors active:bg-[var(--color-muted)]/50"
-                  >
-                    Sandali
-                  </Link>
                 </li>
 
                 <li>
