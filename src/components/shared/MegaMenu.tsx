@@ -380,102 +380,125 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
       {/* ── DESKTOP ─────────────────────────────────────── */}
       <div className="hidden md:block">
 
-        {/* ── Row 1: Social left · Logo · Contacts right ── */}
-        <div
-          className="mx-auto grid max-w-[var(--page-max-width)] grid-cols-[1fr_auto_1fr] items-center border-b border-[var(--color-border-light)]/50 px-[var(--page-padding-x)]"
-          style={{ height: "5.5rem" }}
-        >
-          {/* Left — social icons */}
-          <div className="flex items-center gap-1">
-            <a
-              href="https://www.instagram.com/calzoleriaprevenzano"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Instagram"
-              className="flex h-8 w-8 items-center justify-center rounded-full text-[var(--color-text-muted)] transition-colors duration-[var(--transition-fast)] hover:bg-[var(--color-muted)] hover:text-[var(--color-primary)]"
-            >
-              <InstagramIcon />
-            </a>
-            <a
-              href="https://www.facebook.com/calzoleriaprevenzano"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Facebook"
-              className="flex h-8 w-8 items-center justify-center rounded-full text-[var(--color-text-muted)] transition-colors duration-[var(--transition-fast)] hover:bg-[var(--color-muted)] hover:text-[var(--color-primary)]"
-            >
-              <FacebookIcon />
-            </a>
-            <a
-              href="https://wa.me/390817645183"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="WhatsApp"
-              className="flex h-8 w-8 items-center justify-center rounded-full text-[var(--color-text-muted)] transition-colors duration-[var(--transition-fast)] hover:bg-[var(--color-muted)] hover:text-[var(--color-primary)]"
-            >
-              <WhatsAppIcon />
-            </a>
+        {/* ── Microbar: thin info strip ── */}
+        <div className="border-b border-[var(--color-border-light)]/60 bg-[var(--color-muted)]/40">
+          <div
+            className="mx-auto flex max-w-[var(--page-max-width)] items-center justify-between px-[var(--page-padding-x)]"
+            style={{ height: "2.25rem" }}
+          >
+            {/* Left — socials */}
+            <div className="flex items-center gap-0.5">
+              <a
+                href="https://www.instagram.com/calzoleriaprevenzano"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="flex h-7 w-7 items-center justify-center rounded-full text-[var(--color-text-muted)] transition-colors duration-[var(--transition-fast)] hover:text-[var(--color-primary)]"
+              >
+                <InstagramIcon />
+              </a>
+              <a
+                href="https://www.facebook.com/calzoleriaprevenzano"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="flex h-7 w-7 items-center justify-center rounded-full text-[var(--color-text-muted)] transition-colors duration-[var(--transition-fast)] hover:text-[var(--color-primary)]"
+              >
+                <FacebookIcon />
+              </a>
+              <a
+                href="https://wa.me/390817645183"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="WhatsApp"
+                className="flex h-7 w-7 items-center justify-center rounded-full text-[var(--color-text-muted)] transition-colors duration-[var(--transition-fast)] hover:text-[var(--color-primary)]"
+              >
+                <WhatsAppIcon />
+              </a>
+            </div>
 
-            <div className="mx-3 h-5 w-[1px] bg-[var(--color-border)]" />
-
-            <span className="font-display text-[11px] italic text-[var(--color-text-muted)]">
+            {/* Center — tagline */}
+            <span className="font-display text-[11px] italic tracking-[0.04em] text-[var(--color-text-muted)]">
               Artigianato napoletano dal 1984
             </span>
+
+            {/* Right — micro contacts */}
+            <div className="flex items-center gap-4">
+              <a
+                href="tel:+390817645183"
+                className="flex items-center gap-1.5 text-[11px] tracking-[0.04em] text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-primary)]"
+              >
+                <PhoneIcon />
+                <span>081 764 5183</span>
+              </a>
+              <div className="h-3 w-[1px] bg-[var(--color-border)]" />
+              <a
+                href="/contatti"
+                className="flex items-center gap-1.5 text-[11px] tracking-[0.04em] text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-primary)]"
+              >
+                <MapPinIcon />
+                <span>Via Chiaia, 104 · Napoli</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* ── Logo bar: hero brand mark, perfectly centered ── */}
+        <div
+          className="relative mx-auto flex max-w-[var(--page-max-width)] items-center px-[var(--page-padding-x)]"
+          style={{ height: "6.25rem" }}
+        >
+          {/* Stitch ornament left */}
+          <div aria-hidden="true" className="hidden lg:flex flex-1 items-center justify-end pr-10">
+            <div className="flex items-center gap-2 opacity-50">
+              <span className="h-[1px] w-16 bg-[var(--stitch-color)]" />
+              <span className="h-[1px] w-2 bg-[var(--stitch-color)]" />
+              <span className="h-[1px] w-1 bg-[var(--stitch-color)]" />
+            </div>
           </div>
 
           {/* Center — Logo */}
           <Link
             to="/"
-            className="flex items-center justify-center px-10 py-3"
+            className="mx-auto flex items-center justify-center"
             aria-label="Calzoleria Prevenzano — Torna alla homepage"
             onClick={handleItemClick}
           >
             <img
               src="/images/logo.png"
               alt="Calzoleria Prevenzano"
-              className="h-[4.2rem] w-auto transition-opacity duration-200 hover:opacity-80"
-              width={320}
-              height={195}
+              className="h-[5.25rem] w-auto transition-opacity duration-200 hover:opacity-90 lg:h-[5.75rem]"
+              width={400}
+              height={242}
             />
           </Link>
 
-          {/* Right — contacts */}
-          <div className="flex items-center justify-end gap-5">
-            <a
-              href="tel:+390817645183"
-              className="flex items-center gap-1.5 text-[11px] tracking-[0.04em] text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-primary)]"
-            >
-              <PhoneIcon />
-              <span>081 764 5183</span>
-            </a>
-
-            <div className="h-4 w-[1px] bg-[var(--color-border)]" />
-
-            <a
-              href="/contatti"
-              className="flex items-center gap-1.5 text-[11px] tracking-[0.04em] text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-primary)]"
-            >
-              <MapPinIcon />
-              <span>Via Chiaia, 104 · Napoli</span>
-            </a>
-
-            <div className="h-4 w-[1px] bg-[var(--color-border)]" />
+          {/* Stitch ornament right + cart anchor */}
+          <div className="absolute right-[var(--page-padding-x)] top-1/2 flex -translate-y-1/2 items-center gap-5">
+            <div aria-hidden="true" className="hidden lg:flex items-center gap-2 opacity-50">
+              <span className="h-[1px] w-1 bg-[var(--stitch-color)]" />
+              <span className="h-[1px] w-2 bg-[var(--stitch-color)]" />
+              <span className="h-[1px] w-16 bg-[var(--stitch-color)]" />
+            </div>
 
             {/* Cart */}
             <Link
               to="/carrello"
               aria-label={`Carrello${cartCount > 0 ? ` — ${cartCount} articoli` : ""}`}
-              className="relative flex h-8 items-center gap-1.5 rounded-full px-2 py-1 text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-primary)]"
+              className="relative flex h-9 items-center gap-1.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-1 text-[var(--color-text-secondary)] transition-colors hover:border-[var(--color-accent)] hover:text-[var(--color-primary)]"
             >
-              <div className="relative flex h-6 w-6 items-center justify-center">
+              <div className="relative flex h-5 w-5 items-center justify-center">
                 <CartIcon />
                 {cartCount > 0 && (
-                  <span className="absolute -right-1 -top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[var(--color-primary)] text-[9px] font-semibold text-white">
+                  <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--color-primary)] text-[9px] font-semibold text-white">
                     {cartCount > 9 ? "9+" : cartCount}
                   </span>
                 )}
               </div>
-              {cartTotal !== null && (
+              {cartTotal !== null ? (
                 <span className="text-[11px] font-semibold tabular-nums">€{cartTotal.toFixed(2)}</span>
+              ) : (
+                <span className="text-[11px] tracking-[0.06em] uppercase">Carrello</span>
               )}
             </Link>
           </div>
