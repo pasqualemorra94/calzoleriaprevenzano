@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed quick/260428-la3 (Playwright E2E smoke for Isabella, 22.5s pass on Railway)
-last_updated: "2026-04-28T13:35:06.334Z"
-last_activity: 2026-04-02 — Roadmap created
+stopped_at: Completed quick/260428-m6j (IVA fix + payment label + parametric E2E)
+last_updated: "2026-04-28T14:37:47Z"
+last_activity: 2026-04-28 — Completed quick task 260428-m6j: IVA fix + payment label fix + parametric E2E spec
 progress:
   percent: 0
 ---
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-04-02)
 Phase: 1 of 10 (Foundation & Data Model)
 Plan: 0 of ? in current phase
 Status: Ready to plan
-Last activity: 2026-04-28 — Completed quick task 260428-la3: Setup Playwright E2E + smoke test for one product purchase on live Railway site
+Last activity: 2026-04-28 — Completed quick task 260428-m6j: IVA fix + payment label fix + parametric E2E spec (115/119 slugs pass, 4 follow-ups identified)
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -73,9 +73,10 @@ None yet.
 | # | Description | Date | Commit | Directory |
 |---|-------------|------|--------|-----------|
 | 260428-la3 | Setup Playwright E2E + smoke test for one product purchase on live Railway site | 2026-04-28 | 3527675 | [260428-la3-setup-playwright-e2e-smoke-test-for-one-](./quick/260428-la3-setup-playwright-e2e-smoke-test-for-one-/) |
+| 260428-m6j | Fix IVA double-tax + admin "succeeded" badge + parametric E2E spec (115/119 slugs pass) | 2026-04-28 | 8eb2882 | [260428-m6j-fix-iva-bug-payment-status-label-general](./quick/260428-m6j-fix-iva-bug-payment-status-label-general/) |
 
 ## Session Continuity
 
-Last session: 2026-04-28T13:35:06.325Z
-Stopped at: Completed quick/260428-la3 (Playwright E2E smoke for Isabella, 22.5s pass on Railway)
+Last session: 2026-04-28T14:37:47Z
+Stopped at: Completed quick/260428-m6j (IVA fix + payment label + parametric E2E)
 Resume file: None
