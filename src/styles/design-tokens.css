@@ -6,7 +6,7 @@
 :root {
   /* ── Typography ─────────────────────────────────────────── */
   --font-display: "Cormorant Garamond", Georgia, "Times New Roman", serif;
-  --font-body: "DM Sans", system-ui, -apple-system, sans-serif;
+  --font-body: "Inria Sans", system-ui, -apple-system, sans-serif;
 
   /* ── Colors ────────────────────────────────────────────── */
   /* Primary — Cuoio caldo napoletano */
@@ -32,8 +32,8 @@
   --color-text-secondary: #5A5A5A;
   --color-text-muted: #8A8A8A;
 
-  /* Muted — Sabbia calda */
-  --color-muted: #E8E0D6;
+  /* Muted — Sabbia calda (lino/cuoio naturale) */
+  --color-muted: #EFE5D2;
   --color-muted-foreground: #5A5A5A;
 
   /* Surface — Bianco puro */
