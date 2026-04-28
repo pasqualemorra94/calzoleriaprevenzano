@@ -1,4 +1,4 @@
-import { test, expect, request as pwRequest } from "@playwright/test";
+import { test, expect, request as pwRequest, type Page, type Response } from "@playwright/test";
 import { selectFirstAvailableInEachGroup, expectAddToCartEnabled } from "./helpers/variants";
 
 const BASE_URL = "https://calzoleria-prevenzano-production.up.railway.app";
@@ -67,6 +67,39 @@ const CARD = {
   zip: "00100",
 } as const;
 
+/**
+ * Click "Aggiungi al carrello" e attendi la POST /api/cart con retry.
+ * Assorbe la flake client-side osservata sotto workers=4 dove il click
+ * atterra ma il fetch non viene dispatchato (cfr. RESEARCH 260428-p14).
+ *
+ * - Predicate URL+method only: eventuali 4xx emergono come
+ *   "POST /api/cart returned <status>: <body>" invece di un timeout opaco.
+ * - Subscribe a waitForResponse PRIMA del click (invariante ordering).
+ * - Fino a maxAttempts=3 tentativi con 250ms di backoff.
+ */
+async function clickAddToCartAndWaitPost(page: Page, maxAttempts = 3): Promise<Response> {
+  for (let i = 0; i < maxAttempts; i++) {
+    try {
+      const [res] = await Promise.all([
+        page.waitForResponse(
+          (r) => r.url().includes("/api/cart") && r.request().method() === "POST",
+          { timeout: 5_000 },
+        ),
+        page.getByRole("button", { name: /Aggiungi al carrello/i }).click(),
+      ]);
+      if (!res.ok()) {
+        const body = await res.text();
+        throw new Error(`POST /api/cart returned ${res.status()}: ${body}`);
+      }
+      return res;
+    } catch (err) {
+      if (i === maxAttempts - 1) throw err;
+      await page.waitForTimeout(250);
+    }
+  }
+  throw new Error("unreachable");
+}
+
 test.describe("compra tutti i prodotti (parametric)", () => {
   if (SLUGS.length === 0) {
     test("discovery returned zero slugs — bail", () => {
@@ -88,13 +121,7 @@ test.describe("compra tutti i prodotti (parametric)", () => {
       await selectFirstAvailableInEachGroup(page);
       await expectAddToCartEnabled(page);
 
-      await Promise.all([
-        page.waitForResponse(
-          (res) => res.url().includes("/api/cart") && res.request().method() === "POST" && res.ok(),
-          { timeout: 15_000 },
-        ),
-        page.getByRole("button", { name: /Aggiungi al carrello/i }).click(),
-      ]);
+      await clickAddToCartAndWaitPost(page);
 
       await page.goto("/carrello");
       await page.getByRole("link", { name: /Procedi al checkout/i }).click();
