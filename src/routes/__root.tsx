@@ -10,6 +10,7 @@ import type { ReactNode } from "react";
 import { APP_CONFIG } from "~/lib/constants/app";
 import { MotionProvider } from "~/providers/MotionProvider";
 import { MegaMenu } from "~/components/shared/MegaMenu";
+import { MobileSearchOverlay } from "~/components/shared/MobileSearchOverlay";
 import { Footer } from "~/components/shared/Footer";
 import { MobileBottomNav } from "~/components/shared/MobileBottomNav";
 import { ErrorBoundary } from "~/components/shared/ErrorBoundary";
@@ -149,6 +150,7 @@ function RootComponent() {
       </main>
       {!isAdmin && <Footer />}
       {!isAdmin && !isAccount && <MobileBottomNav />}
+      {!isAdmin && <MobileSearchOverlay />}
       <Toaster position="bottom-right" richColors closeButton />
     </MotionProvider>
   );

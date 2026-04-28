@@ -590,49 +590,54 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
       </div>
 
       {/* ── MOBILE ──────────────────────────────────────── */}
-      <div className="flex items-center gap-3 px-4 md:hidden" style={{ height: "var(--navbar-height)" }}>
-        <Link to="/" aria-label="Calzoleria Prevenzano" onClick={handleItemClick} className="shrink-0">
+      <div
+        className="grid grid-cols-[auto_1fr_auto] items-center gap-3 px-4 md:hidden"
+        style={{ height: "var(--navbar-height)" }}
+      >
+        {/* Hamburger — left */}
+        <button
+          type="button"
+          onClick={() => setMobileMenuOpen(true)}
+          className="flex h-10 w-10 items-center justify-center rounded-md text-[var(--color-text)] transition-colors active:text-[var(--color-primary)]"
+          aria-label="Apri menu"
+          aria-expanded={mobileMenuOpen}
+        >
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+          </svg>
+        </button>
+
+        {/* Logo — center, large and centered */}
+        <Link
+          to="/"
+          aria-label="Calzoleria Prevenzano"
+          onClick={handleItemClick}
+          className="flex items-center justify-center"
+        >
           <img
             src="/images/logo.png"
             alt="Calzoleria Prevenzano"
-            className="h-12 w-auto"
-            width={200}
-            height={121}
+            className="h-14 w-auto"
+            width={232}
+            height={140}
           />
         </Link>
 
-        <QuickSearch variant="mobile" />
-
-        <div className="flex shrink-0 items-center gap-2">
-          <Link
-            to="/carrello"
-            aria-label={`Carrello${cartCount > 0 ? ` — ${cartCount} articoli` : ""}`}
-            className="relative flex items-center gap-1 text-[var(--color-text-secondary)]"
-          >
-            <div className="relative">
-              <CartIcon />
-              {cartCount > 0 && (
-                <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--color-primary)] text-[10px] font-semibold text-white">
-                  {cartCount > 9 ? "9+" : cartCount}
-                </span>
-              )}
-            </div>
-            {cartTotal !== null && (
-              <span className="text-[11px] font-semibold tabular-nums">€{cartTotal.toFixed(2)}</span>
+        {/* Cart — right */}
+        <Link
+          to="/carrello"
+          aria-label={`Carrello${cartCount > 0 ? ` — ${cartCount} articoli` : ""}`}
+          className="relative flex h-10 w-10 items-center justify-center text-[var(--color-text-secondary)] transition-colors active:text-[var(--color-primary)]"
+        >
+          <div className="relative">
+            <CartIcon />
+            {cartCount > 0 && (
+              <span className="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-[var(--color-primary)] text-[10px] font-semibold text-white">
+                {cartCount > 9 ? "9+" : cartCount}
+              </span>
             )}
-          </Link>
-          <button
-            type="button"
-            onClick={() => setMobileMenuOpen(true)}
-            className="flex h-9 w-9 items-center justify-center rounded-md text-[var(--color-text)] transition-colors hover:text-[var(--color-primary)]"
-            aria-label="Apri menu"
-            aria-expanded={mobileMenuOpen}
-          >
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-            </svg>
-          </button>
-        </div>
+          </div>
+        </Link>
       </div>
 
       {/* ── MOBILE FULL-SCREEN MENU ────────────────────── */}

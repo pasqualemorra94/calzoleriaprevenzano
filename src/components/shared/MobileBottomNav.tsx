@@ -5,12 +5,30 @@ import { Home, ShoppingBag, Search, User, Store } from "lucide-react";
 import { cn } from "~/lib/utils/cn";
 import type { ReactNode } from "react";
 
-const NAV_ITEMS = [
-  { label: "Home", to: "/", icon: Home, matchPath: "/" as const, exact: true },
-  { label: "Catalogo", to: "/catalogo", icon: Store, matchPath: "/catalogo" as const },
-  { label: "Cerca", to: "/catalogo", icon: Search, matchPath: "/sandali" as const, exact: true },
-  { label: "Carrello", to: "/carrello", icon: ShoppingBag, matchPath: "/carrello" as const },
-  { label: "Account", to: "/account", icon: User, matchPath: "/account" as const },
+type LinkItem = {
+  kind: "link";
+  label: string;
+  to: "/" | "/catalogo" | "/carrello" | "/account";
+  icon: typeof Home;
+  matchPath: "/" | "/catalogo" | "/carrello" | "/account";
+  exact?: boolean;
+};
+
+type ActionItem = {
+  kind: "action";
+  label: string;
+  icon: typeof Search;
+  action: "open-search";
+};
+
+type NavItem = LinkItem | ActionItem;
+
+const NAV_ITEMS: NavItem[] = [
+  { kind: "link", label: "Home", to: "/", icon: Home, matchPath: "/", exact: true },
+  { kind: "link", label: "Catalogo", to: "/catalogo", icon: Store, matchPath: "/catalogo" },
+  { kind: "action", label: "Cerca", icon: Search, action: "open-search" },
+  { kind: "link", label: "Carrello", to: "/carrello", icon: ShoppingBag, matchPath: "/carrello" },
+  { kind: "link", label: "Account", to: "/account", icon: User, matchPath: "/account" },
 ];
 
 /**
@@ -23,6 +41,10 @@ export function MobileBottomNav({ cartCount = 0 }: { cartCount?: number }): Reac
   const isAdmin = pathname.startsWith("/admin");
 
   if (isAdmin) return null;
+
+  const openSearch = () => {
+    window.dispatchEvent(new CustomEvent("open-mobile-search"));
+  };
 
   return (
     <nav
@@ -42,14 +64,29 @@ export function MobileBottomNav({ cartCount = 0 }: { cartCount?: number }): Reac
       <div className="flex w-full items-stretch">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
+
+          if (item.kind === "action") {
+            return (
+              <button
+                key={item.label}
+                type="button"
+                onClick={openSearch}
+                className="flex flex-1 flex-col items-center gap-0.5 py-2 pt-3 text-center text-[var(--color-text-muted)] transition-colors duration-200 active:text-[var(--color-primary)]"
+                aria-label="Apri ricerca"
+              >
+                <Icon className="h-5 w-5" strokeWidth={1.5} />
+                <span className="text-[10px] font-medium leading-tight">
+                  {item.label}
+                </span>
+              </button>
+            );
+          }
+
           const isActive = item.exact
             ? pathname === item.matchPath
             : pathname.startsWith(item.matchPath);
-
-          // Special case: Catalogo and Cerca both match /catalogo — differentiate via icon
-          const isCatalogoActive = item.matchPath === "/catalogo" && pathname === "/catalogo";
           const isCartActive = item.matchPath === "/carrello";
-          const isActiveFinal = isCatalogoActive || (isCartActive ? pathname === "/carrello" : isActive);
+          const isActiveFinal = isCartActive ? pathname === "/carrello" : isActive;
 
           return (
             <Link
