@@ -5,6 +5,7 @@ import { Link } from "@tanstack/react-router";
 import { ChevronDown } from "lucide-react";
 import { cn } from "~/lib/utils/cn";
 import { QuickSearch } from "~/components/shared/QuickSearch";
+import { authClient } from "~/lib/auth-client";
 
 interface GrandchildCategory {
   id: string;
@@ -275,6 +276,8 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
   const [mobileClosing, setMobileClosing] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const { data: sessionData } = authClient.useSession();
+  const isLoggedIn = !!sessionData?.user;
 
   useEffect(() => {
     async function load() {
@@ -548,8 +551,8 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
 
           <span className="h-1 w-1 rounded-full bg-[var(--color-accent)]/50" />
 
-          <Link to="/account" className={navLinkClass} onClick={handleItemClick}>
-            Il mio account
+          <Link to={isLoggedIn ? "/account" : "/auth/login"} className={navLinkClass} onClick={handleItemClick}>
+            {isLoggedIn ? "Il mio account" : "Accedi"}
           </Link>
 
           {/* Search — right-aligned in nav row */}
@@ -712,13 +715,15 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
 
                 <li>
                   <Link
-                    to="/account"
+                    to={isLoggedIn ? "/account" : "/auth/login"}
                     onClick={handleItemClick}
                     className="flex items-center justify-between px-5 py-4 text-[17px] font-medium tracking-wide text-[var(--color-text)] transition-colors active:bg-[var(--color-muted)]/50"
                   >
-                    Il mio account
+                    {isLoggedIn ? "Il mio account" : "Accedi"}
                     <svg className="h-4 w-4 text-[var(--color-text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d={isLoggedIn
+                        ? "M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+                        : "M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"} />
                     </svg>
                   </Link>
                 </li>
