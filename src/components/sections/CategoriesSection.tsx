@@ -19,7 +19,7 @@ const CATEGORIES: Category[] = [
       "La collezione completa — dal classico infradito al modello gioiello. Ogni sandalo è personalizzabile nei materiali e nei dettagli.",
     cta: "Esplora i sandali",
     href: "/catalogo?category=sandali",
-    image: "/images/sandali.png",
+    image: "/images/sandali.jpg",
     featured: true,
   },
   {
