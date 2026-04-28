@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed quick/260428-o8a (helper varianti Playwright — gruppi button/Tacco/Taglia)
-last_updated: "2026-04-28T15:52:00Z"
-last_activity: 2026-04-28 — Completed quick task 260428-o8a: fix Playwright helper `selectFirstAvailableInEachGroup` per gestire gruppi plain-button (Tacco/Taglia) oltre agli swatch. Sblocca 9 sandali (jasmine, vipera, laura, ludovica, strass-1016, schiava-4, discoteca, nicole, giorgia) con targeted 9/9 PASS @ retries=0. Full parametric: 108 passed + 8 flaky = 116/119 effective. 3 hard-fail residui (provv, denise, maria) hanno root cause data-quality, fuori scope.
+stopped_at: Completed quick/260428-p14 (retry-click helper E2E per flake denise/maria — 118/119 PASS, 0 flaky)
+last_updated: "2026-04-28T16:35:00Z"
+last_activity: 2026-04-28 — Completed quick task 260428-p14: retry-click helper inline (`clickAddToCartAndWaitPost`, 3 tentativi/250ms backoff) + drop `res.ok()` dal predicato `waitForResponse` in `tests/e2e/all-products-purchase.spec.ts`. Targeted denise+maria+raffaella-maria 3/3 PASS deterministico @ workers=1 retries=0. Full parametric: **118/119 PASS first-pass, 0 flaky** (era 108 + 8 flaky = 116/119 in o8a). Solo `provv` hard-fail residuo (root cause data-quality, button "Aggiungi al carrello" mai abilitato — fuori scope, raccomandato next-quick per `isActive=false` in DB o `test.skip`). Solo test, zero modifiche app/DB/seed/webhook.
 progress:
   percent: 0
 ---
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-04-02)
 Phase: 1 of 10 (Foundation & Data Model)
 Plan: 0 of ? in current phase
 Status: Ready to plan
-Last activity: 2026-04-28 — Completed quick task 260428-o8a: fix Playwright helper `selectFirstAvailableInEachGroup` per gestire gruppi plain-button (Tacco/Taglia) oltre agli swatch. Sblocca 9 sandali (jasmine, vipera, laura, ludovica, strass-1016, schiava-4, discoteca, nicole, giorgia) con targeted 9/9 PASS @ retries=0. Full parametric: 116/119 effective (108 passed + 8 flaky). 3 hard-fail residui (provv, denise, maria) hanno root cause data-quality, fuori scope.
+Last activity: 2026-04-28 — Completed quick task 260428-p14: retry-click helper inline (`clickAddToCartAndWaitPost`, 3 tentativi/250ms backoff) + drop `res.ok()` dal predicato `waitForResponse` in `tests/e2e/all-products-purchase.spec.ts`. Targeted denise+maria+raffaella-maria 3/3 PASS deterministico @ workers=1 retries=0. Full parametric: **118/119 PASS first-pass, 0 flaky** (era 108 + 8 flaky = 116/119 in o8a). Solo `provv` hard-fail residuo (root cause data-quality, button "Aggiungi al carrello" mai abilitato — fuori scope, raccomandato next-quick per `isActive=false` in DB o `test.skip`). Solo test, zero modifiche app/DB/seed/webhook.
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -76,9 +76,10 @@ None yet.
 | 260428-m6j | Fix IVA double-tax + admin "succeeded" badge + parametric E2E spec (115/119 slugs pass) | 2026-04-28 | 8eb2882 | [260428-m6j-fix-iva-bug-payment-status-label-general](./quick/260428-m6j-fix-iva-bug-payment-status-label-general/) |
 | 260428-nd8 | Race fix on Order.orderNumber (P2002 retry) + try/catch + structured 500 on /api/checkout — artemide hard-fail + flaky retries 16→7 resolved, 0 unhandled 500s in parametric run | 2026-04-28 | d219674,2a6d082 | [260428-nd8-investigate-and-fix-why-purchasing-artem](./quick/260428-nd8-investigate-and-fix-why-purchasing-artem/) |
 | 260428-o8a | Fix Playwright variant helper to handle plain-button groups (Tacco/Taglia) — recovers 9 cart-helper sandali (jasmine, vipera, laura, ludovica, strass-1016, schiava-4, discoteca, nicole, giorgia) at retries=0; targeted 9/9 PASS, full parametric 116/119 effective | 2026-04-28 | 480333e | [260428-o8a-investigate-cart-failure-pattern-affecti](./quick/260428-o8a-investigate-cart-failure-pattern-affecti/) |
+| 260428-p14 | Fix flake denise/maria con retry-click helper inline + drop res.ok() dal predicato waitForResponse — full parametric 118/119 PASS first-pass (0 flaky, era 108+8 flaky in o8a). Solo provv resta hard-fail (data-quality, fuori scope) | 2026-04-28 | 66470c2 | [260428-p14-diagnose-denise-and-maria-cart-post-time](./quick/260428-p14-diagnose-denise-and-maria-cart-post-time/) |
 
 ## Session Continuity
 
-Last session: 2026-04-28T15:52:00Z
-Stopped at: Completed quick/260428-o8a (helper varianti Playwright — gruppi button/Tacco/Taglia)
+Last session: 2026-04-28T16:35:00Z
+Stopped at: Completed quick/260428-p14 (retry-click helper E2E per flake denise/maria — 118/119 PASS, 0 flaky)
 Resume file: None
