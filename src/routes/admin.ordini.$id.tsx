@@ -72,7 +72,8 @@ const ALL_STATUSES = [
 
 const PAYMENT_STATUS_LABELS: Record<string, string> = {
   pending: "In attesa",
-  completed: "Completato",
+  succeeded: "Riuscito",     // Stripe canonical (current webhook writer)
+  completed: "Completato",   // legacy alias — keep for old rows
   failed: "Fallito",
   refunded: "Rimborsato",
 };
@@ -280,7 +281,7 @@ function AdminOrderDetailPage(): ReactNode {
                       <p className="text-xs text-gray-500">{p.method}</p>
                     </div>
                     <div className="text-right">
-                      <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${p.status === "completed" ? "bg-green-100 text-green-800" : p.status === "failed" ? "bg-red-100 text-red-800" : "bg-yellow-100 text-yellow-800"}`}>
+                      <span className={`inline-flex rounded-full px-2 py-0.5 text-xs font-medium ${(p.status === "succeeded" || p.status === "completed") ? "bg-green-100 text-green-800" : p.status === "failed" ? "bg-red-100 text-red-800" : "bg-yellow-100 text-yellow-800"}`}>
                         {PAYMENT_STATUS_LABELS[p.status] ?? p.status}
                       </span>
                       <p className="mt-1 text-xs text-gray-400">{fmtDate(p.createdAt)}</p>
