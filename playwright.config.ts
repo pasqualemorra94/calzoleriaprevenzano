@@ -21,7 +21,16 @@ export default defineConfig({
   },
   projects: [
     {
-      name: "chromium",
+      name: "smoke",
+      testMatch: /smoke-purchase\.spec\.ts/,
+      use: { ...devices["Desktop Chrome"] },
+    },
+    {
+      name: "all-products",
+      testMatch: /all-products-purchase\.spec\.ts/,
+      // Project-level overrides for workers/retries/timeout/fullyParallel are
+      // applied via CLI flags in the `test:e2e:all` script (Playwright 1.49.1
+      // does not support these as Project-level config keys).
       use: { ...devices["Desktop Chrome"] },
     },
   ],
