@@ -4,6 +4,7 @@
  * Product CRUD operations for admin panel.
  */
 
+import { Prisma } from "@prisma/client";
 import { prisma } from "~/lib/db.server";
 import type { PaginatedData } from "~/lib/types/api";
 import type { ListAdminProductsInput } from "~/lib/validators/admin";
@@ -270,4 +271,102 @@ export async function adminRestoreProduct(id: string) {
     where: { id },
     data: { deletedAt: null, deletedBy: null, isActive: true },
   });
+}
+
+// ─── Duplicate ──────────────────────────────────────────────────────────
+
+export async function adminDuplicateProduct(
+  id: string,
+): Promise<{ id: string; slug: string }> {
+  const src = await prisma.product.findUnique({
+    where: { id },
+    include: {
+      images: { orderBy: { sortOrder: "asc" } },
+      variants: { orderBy: { sortOrder: "asc" } },
+    },
+  });
+  if (!src) throw new Error("Prodotto non trovato");
+
+  const baseSlug = `${src.slug}-copia`;
+  const baseSku = src.sku ? `${src.sku}-COPIA` : null;
+
+  const existing = await prisma.product.findMany({
+    where: { slug: { startsWith: baseSlug } },
+    select: { slug: true, sku: true },
+  });
+  const slugs = new Set(existing.map((p: { slug: string; sku: string | null }) => p.slug));
+  const skus = new Set(
+    existing
+      .map((p: { slug: string; sku: string | null }) => p.sku)
+      .filter((s: string | null): s is string => s !== null),
+  );
+
+  let suffix = "";
+  let found = false;
+  for (let n = 1; n <= 50; n++) {
+    suffix = n === 1 ? "" : `-${n}`;
+    const trySlug = `${baseSlug}${suffix}`;
+    const trySku = baseSku ? `${baseSku}${suffix}` : null;
+    if (!slugs.has(trySlug) && (!trySku || !skus.has(trySku))) {
+      found = true;
+      break;
+    }
+  }
+  if (!found) throw new Error("SLUG_COLLISION_LIMIT");
+
+  const newSlug = `${baseSlug}${suffix}`;
+  const newSku = baseSku ? `${baseSku}${suffix}` : null;
+
+  const created = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    return tx.product.create({
+      data: {
+        name: `${src.name} (copia)`,
+        slug: newSlug,
+        description: src.description,
+        shortDescription: src.shortDescription,
+        price: src.price,
+        compareAtPrice: src.compareAtPrice,
+        sku: newSku,
+        isActive: false,
+        isFeatured: false,
+        stock: src.stock,
+        weight: src.weight,
+        materials: src.materials,
+        variantConfig: src.variantConfig ?? Prisma.JsonNull,
+        aiMetadata: src.aiMetadata ?? Prisma.JsonNull,
+        categoryId: src.categoryId,
+        images: {
+          create: src.images.map((i: {
+            url: string; alt: string | null; sortOrder: number;
+            width: number | null; height: number | null; mediaId: string | null;
+          }) => ({
+            url: i.url,
+            alt: i.alt,
+            sortOrder: i.sortOrder,
+            width: i.width,
+            height: i.height,
+            mediaId: i.mediaId,
+          })),
+        },
+        variants: {
+          create: src.variants.map((v: {
+            name: string; color: string | null; size: string | null;
+            price: Prisma.Decimal | null; stock: number; isActive: boolean; sortOrder: number;
+          }) => ({
+            name: v.name,
+            color: v.color,
+            size: v.size,
+            price: v.price,
+            stock: v.stock,
+            sku: null,
+            isActive: v.isActive,
+            sortOrder: v.sortOrder,
+          })),
+        },
+      },
+      select: { id: true, slug: true },
+    });
+  });
+
+  return { id: created.id, slug: created.slug };
 }

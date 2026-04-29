@@ -13,6 +13,7 @@ export {
   adminUpdateProduct,
   adminDeleteProduct,
   adminRestoreProduct,
+  adminDuplicateProduct,
 } from "./admin/admin-products.server";
 export {
   getAdminOrders,
