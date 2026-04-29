@@ -1,6 +1,6 @@
-import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useState, useCallback, useEffect, type ReactNode } from "react";
-import { Plus, Search, Loader2, Pencil, Trash2, RotateCcw } from "lucide-react";
+import { Plus, Search, Loader2, Pencil, Trash2, RotateCcw, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { ConfirmDialog } from "~/components/admin/ConfirmDialog";
 import { $getAdminProducts } from "~/lib/admin-functions";
@@ -41,6 +41,7 @@ const SORT_OPTIONS = [
 
 function AdminProductsList(): ReactNode {
   const { initialProducts } = Route.useRouteContext();
+  const navigate = useNavigate();
 
   const [products, setProducts] = useState<AdminProductListItem[]>(initialProducts.items);
   const [totalPages, setTotalPages] = useState(initialProducts.totalPages);
@@ -52,6 +53,8 @@ function AdminProductsList(): ReactNode {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; name: string } | null>(null);
+  const [duplicateTarget, setDuplicateTarget] = useState<{ id: string; name: string } | null>(null);
+  const [duplicating, setDuplicating] = useState(false);
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
@@ -98,6 +101,30 @@ function AdminProductsList(): ReactNode {
       fetchProducts();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Errore durante l'eliminazione");
+    }
+  };
+
+  const handleDuplicate = async (id: string) => {
+    setDuplicating(true);
+    try {
+      const res = await fetch(`/api/admin/products/${id}/duplicate`, { method: "POST" });
+      const json = await res.json();
+      if (!res.ok || !json.ok) {
+        throw new Error(json?.error?.message ?? "Errore durante la duplicazione");
+      }
+      const created = json.data as { id: string; slug: string };
+      toast.success("Prodotto duplicato", {
+        action: {
+          label: "Apri",
+          onClick: () => navigate({ to: "/admin/prodotti/$id", params: { id: created.id } }),
+        },
+      });
+      setDuplicateTarget(null);
+      await fetchProducts();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Errore durante la duplicazione");
+    } finally {
+      setDuplicating(false);
     }
   };
 
@@ -217,6 +244,14 @@ function AdminProductsList(): ReactNode {
                               Modifica
                             </Link>
                             <button
+                              onClick={() => setDuplicateTarget({ id: product.id, name: product.name })}
+                              disabled={duplicating}
+                              className="inline-flex h-8 items-center gap-1 rounded-md border border-gray-300 px-2.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+                            >
+                              <Copy className="h-3.5 w-3.5" />
+                              Duplica
+                            </button>
+                            <button
                               onClick={() => setDeleteTarget({ id: product.id, name: product.name })}
                               className="inline-flex h-8 items-center gap-1 rounded-md border border-red-300 px-2.5 text-xs font-medium text-red-700 transition-colors hover:bg-red-50"
                             >
@@ -267,6 +302,23 @@ function AdminProductsList(): ReactNode {
           if (deleteTarget) handleDelete(deleteTarget.id, deleteTarget.name);
         }}
         onCancel={() => setDeleteTarget(null)}
+      />
+
+      <ConfirmDialog
+        open={duplicateTarget !== null}
+        title="Duplicare prodotto"
+        message={
+          duplicateTarget
+            ? `Verrà creata una copia inattiva di "${duplicateTarget.name}" con suffisso "(copia)". Potrai poi modificarla.`
+            : ""
+        }
+        confirmLabel="Duplica"
+        cancelLabel="Annulla"
+        variant="default"
+        onConfirm={() => {
+          if (duplicateTarget) handleDuplicate(duplicateTarget.id);
+        }}
+        onCancel={() => setDuplicateTarget(null)}
       />
     </div>
   );
