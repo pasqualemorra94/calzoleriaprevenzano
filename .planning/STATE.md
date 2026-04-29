@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed quick/260429-dwz (IVA admin order detail — da riga additiva a "di cui" sotto il totale, mirror OrderSummary.tsx pattern)
-last_updated: "2026-04-29T08:10:00Z"
-last_activity: 2026-04-29 — Completed quick task 260429-dwz: rimossa riga IVA additiva nel breakdown admin order detail (`src/routes/admin.ordini.$id.tsx`), aggiunta riga informativa muted "di cui IVA (22%)" sotto il Totale a specchio del pattern in `OrderSummary.tsx`. Cambio puramente visivo: zero modifiche a backend/API/computation (`order.taxAmount` invariato post-fix `260428-m6j`). 4+/4- LOC, 1 file. Commit `58322c2` pushato su origin, Railway redeploy verificato HTTP 200. `pnpm typecheck` zero nuove regressioni (errori pre-esistenti in `prodotti.$slug.tsx` e `api/products.ts` rimangono fuori scope).
+stopped_at: Completed quick/260429-e6n (cleanup-e2e-orders CLI script per cancellare ordini di test su DB Railway via marker email guest hard-coded, dry-run di default + --execute con countdown 5s)
+last_updated: "2026-04-29T10:30:00Z"
+last_activity: 2026-04-29 — Completed quick task 260429-e6n: creato `scripts/cleanup-e2e-orders.ts` (267 LOC) e `pnpm db:cleanup-e2e` script. Tool CLI locale per pulire dal DB Railway gli ordini E2E identificati via marker hard-coded `e2e+%@test.calzoleriaprevenzano.it` (LIKE su Order.guestEmail). Default dry-run con preview (count, totale, oldest/newest, sample 10); `--execute` opt-in con countdown 5s; `DATABASE_URL` obbligatorio (exit 1 altrimenti). Cascade FK su Order verificato in schema (OrderItem + Payment auto-deleted; Address invariato). Commit `c12f8d4` pushato su origin. Nessun redeploy Railway necessario — gira locale.
 progress:
   percent: 0
 ---
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-04-02)
 Phase: 1 of 10 (Foundation & Data Model)
 Plan: 0 of ? in current phase
 Status: Ready to plan
-Last activity: 2026-04-29 — Completed quick task 260429-dwz: rimossa riga IVA additiva nel breakdown admin order detail (`src/routes/admin.ordini.$id.tsx`), aggiunta riga informativa muted "di cui IVA (22%)" sotto il Totale a specchio del pattern in `OrderSummary.tsx`. Cambio puramente visivo: zero modifiche a backend/API/computation (`order.taxAmount` invariato post-fix `260428-m6j`). 4+/4- LOC, 1 file. Commit `58322c2` pushato su origin, Railway redeploy verificato HTTP 200. `pnpm typecheck` zero nuove regressioni (errori pre-esistenti in `prodotti.$slug.tsx` e `api/products.ts` rimangono fuori scope).
+Last activity: 2026-04-29 — Completed quick task 260429-e6n: creato `scripts/cleanup-e2e-orders.ts` (267 LOC) e `pnpm db:cleanup-e2e` script. Tool CLI locale per pulire dal DB Railway gli ordini E2E identificati via marker hard-coded `e2e+%@test.calzoleriaprevenzano.it` (LIKE su Order.guestEmail). Default dry-run con preview (count, totale, oldest/newest, sample 10); `--execute` opt-in con countdown 5s; `DATABASE_URL` obbligatorio (exit 1 altrimenti). Cascade FK su Order verificato in schema (OrderItem + Payment auto-deleted; Address invariato). Commit `c12f8d4` pushato su origin. Nessun redeploy Railway necessario — gira locale.
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -78,9 +78,10 @@ None yet.
 | 260428-o8a | Fix Playwright variant helper to handle plain-button groups (Tacco/Taglia) — recovers 9 cart-helper sandali (jasmine, vipera, laura, ludovica, strass-1016, schiava-4, discoteca, nicole, giorgia) at retries=0; targeted 9/9 PASS, full parametric 116/119 effective | 2026-04-28 | 480333e | [260428-o8a-investigate-cart-failure-pattern-affecti](./quick/260428-o8a-investigate-cart-failure-pattern-affecti/) |
 | 260428-p14 | Fix flake denise/maria con retry-click helper inline + drop res.ok() dal predicato waitForResponse — full parametric 118/119 PASS first-pass (0 flaky, era 108+8 flaky in o8a). Solo provv resta hard-fail (data-quality, fuori scope) | 2026-04-28 | 66470c2 | [260428-p14-diagnose-denise-and-maria-cart-post-time](./quick/260428-p14-diagnose-denise-and-maria-cart-post-time/) |
 | 260429-dwz | IVA admin order detail — rimossa riga additiva, aggiunta riga informativa muted "di cui IVA (22%)" sotto il Totale a specchio del pattern in OrderSummary.tsx (fix double-display visivo, zero impatto su computation). 4+/4- LOC, 1 file. Railway redeploy verificato HTTP 200 | 2026-04-29 | 58322c2 | [260429-dwz-move-iva-from-additive-list-to-informati](./quick/260429-dwz-move-iva-from-additive-list-to-informati/) |
+| 260429-e6n | Cleanup script E2E orders — `scripts/cleanup-e2e-orders.ts` (267 LOC) + `pnpm db:cleanup-e2e`. CLI locale per cancellare dal DB Railway gli ordini di test via marker email guest hard-coded `e2e+%@test.calzoleriaprevenzano.it`. Default dry-run + preview, `--execute` opt-in con countdown 5s, `DATABASE_URL` obbligatorio. Cascade FK Order→OrderItem/Payment confermato in schema (Address NON toccato). Nessun redeploy richiesto. | 2026-04-29 | c12f8d4 | [260429-e6n-cleanup-script-for-e2e-test-orders-marke](./quick/260429-e6n-cleanup-script-for-e2e-test-orders-marke/) |
 
 ## Session Continuity
 
-Last session: 2026-04-29T08:10:00Z
-Stopped at: Completed quick/260429-dwz (IVA admin order detail — da riga additiva a "di cui" sotto il totale, mirror OrderSummary.tsx pattern)
+Last session: 2026-04-29T10:30:00Z
+Stopped at: Completed quick/260429-e6n (cleanup-e2e-orders CLI script per cancellare ordini di test su DB Railway via marker email guest hard-coded, dry-run di default + --execute con countdown 5s)
 Resume file: None
