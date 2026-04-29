@@ -1,9 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { useEffect, useState, useCallback } from "react";
-import { Loader2, Save } from "lucide-react";
+import { Loader2, Save, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "~/lib/utils/cn";
+import { ConfirmDialog } from "~/components/admin/ConfirmDialog";
 import { MediaPicker } from "~/components/admin/MediaPicker";
 import type { SelectedMedia } from "~/components/admin/MediaPicker";
 import type { VariantConfig } from "~/lib/types/variant-config";
@@ -38,6 +39,8 @@ function AdminProductEditPage(): ReactNode {
   const [templates, setTemplates] = useState<Array<{ id: string; name: string }>>([]);
   const [categoryTemplateApplied, setCategoryTemplateApplied] = useState(false);
   const [mediaPickerOpen, setMediaPickerOpen] = useState(false);
+  const [duplicateConfirmOpen, setDuplicateConfirmOpen] = useState(false);
+  const [duplicating, setDuplicating] = useState(false);
 
   // ── Fetchers ──
 
@@ -284,6 +287,30 @@ function AdminProductEditPage(): ReactNode {
     }
   };
 
+  const handleDuplicate = async () => {
+    if (isNew) return;
+    setDuplicating(true);
+    try {
+      const res = await fetch(`/api/admin/products/${id}/duplicate`, { method: "POST" });
+      const json = await res.json();
+      if (!res.ok || !json.ok) {
+        throw new Error(json?.error?.message ?? "Errore durante la duplicazione");
+      }
+      const created = json.data as { id: string; slug: string };
+      toast.success("Prodotto duplicato", {
+        action: {
+          label: "Apri duplicato",
+          onClick: () => navigate({ to: "/admin/prodotti/$id", params: { id: created.id } }),
+        },
+      });
+      setDuplicateConfirmOpen(false);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Errore durante la duplicazione");
+    } finally {
+      setDuplicating(false);
+    }
+  };
+
   // ── Helpers ──
 
   const inputClass = (field: keyof FieldErrors) =>
@@ -318,6 +345,17 @@ function AdminProductEditPage(): ReactNode {
             <Link to="/admin/prodotti" className="inline-flex h-9 items-center rounded-md border border-gray-300 px-4 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50">
               Annulla
             </Link>
+            {!isNew && (
+              <button
+                type="button"
+                onClick={() => setDuplicateConfirmOpen(true)}
+                disabled={duplicating}
+                className="inline-flex h-9 items-center gap-2 rounded-md border border-gray-300 px-4 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                <Copy className="h-4 w-4" />
+                Duplica prodotto
+              </button>
+            )}
             <button type="button" onClick={handleSave} disabled={saving} className="inline-flex h-9 items-center gap-2 rounded-md bg-[var(--color-primary)] px-5 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-dark)] disabled:cursor-not-allowed disabled:opacity-60">
               {saving && <Loader2 className="h-4 w-4 animate-spin" />}
               <Save className="h-4 w-4" />
@@ -374,6 +412,17 @@ function AdminProductEditPage(): ReactNode {
           onSelect={addImagesFromMedia}
           multiple={true}
           maxSelections={20}
+        />
+
+        <ConfirmDialog
+          open={duplicateConfirmOpen}
+          title="Duplicare prodotto"
+          message="Verrà creata una copia inattiva di questo prodotto con suffisso (copia). Vuoi continuare?"
+          confirmLabel="Duplica"
+          cancelLabel="Annulla"
+          variant="default"
+          onConfirm={handleDuplicate}
+          onCancel={() => setDuplicateConfirmOpen(false)}
         />
       </div>
     </div>
