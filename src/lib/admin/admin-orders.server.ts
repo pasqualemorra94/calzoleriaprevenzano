@@ -14,10 +14,13 @@ import type { AdminOrderListItem, AdminOrderDetail } from "./types";
 export async function getAdminOrders(
   input: ListAdminOrdersInput,
 ): Promise<PaginatedData<AdminOrderListItem>> {
-  const { page, perPage, status, query, sort } = input;
+  const { page, perPage, status, query, sort, view, emailContains, createdFrom, createdTo } = input;
   const skip = (page - 1) * perPage;
 
-  const conditions: Array<Record<string, unknown>> = [{ deletedAt: null }];
+  const conditions: Array<Record<string, unknown>> = [];
+
+  // View: active (deletedAt null) | trash (deletedAt non null)
+  conditions.push(view === "trash" ? { deletedAt: { not: null } } : { deletedAt: null });
 
   if (status) {
     conditions.push({ status });
@@ -32,6 +35,24 @@ export async function getAdminOrders(
         { guestEmail: { contains: query, mode: "insensitive" } },
       ],
     });
+  }
+
+  // Filtro email: match su user.email (loggato) + guestEmail (ospite)
+  if (emailContains) {
+    conditions.push({
+      OR: [
+        { guestEmail: { contains: emailContains, mode: "insensitive" } },
+        { user: { email: { contains: emailContains, mode: "insensitive" } } },
+      ],
+    });
+  }
+
+  // Range createdAt (Date già coerce dal validator)
+  if (createdFrom || createdTo) {
+    const range: Record<string, Date> = {};
+    if (createdFrom) range.gte = createdFrom;
+    if (createdTo) range.lte = createdTo;
+    conditions.push({ createdAt: range });
   }
 
   const where = conditions.length > 0 ? { AND: conditions } : {};
@@ -178,4 +199,43 @@ export async function adminUpdateOrderStatus(
   }).catch(() => {});
 
   return order;
+}
+
+// ─── Bulk soft-delete / restore / hard-delete ──────────────────────────
+
+/**
+ * Soft-delete bulk: setta deletedAt + deletedBy. Guarda solo gli ordini
+ * attualmente attivi (deletedAt null) per idempotenza.
+ */
+export async function softDeleteOrders(
+  ids: string[],
+  deletedBy?: string,
+): Promise<{ count: number }> {
+  const result = await prisma.order.updateMany({
+    where: { id: { in: ids }, deletedAt: null },
+    data: { deletedAt: new Date(), deletedBy: deletedBy ?? null },
+  });
+  return { count: result.count };
+}
+
+/**
+ * Restore bulk: pulisce deletedAt/deletedBy. Guarda solo ordini gia' nel cestino.
+ */
+export async function restoreOrders(ids: string[]): Promise<{ count: number }> {
+  const result = await prisma.order.updateMany({
+    where: { id: { in: ids }, deletedAt: { not: null } },
+    data: { deletedAt: null, deletedBy: null },
+  });
+  return { count: result.count };
+}
+
+/**
+ * Hard-delete bulk: elimina fisicamente. OrderItem e Payment hanno onDelete: Cascade
+ * (schema righe 412, 435). Safety net: opera solo su ordini gia' nel cestino.
+ */
+export async function hardDeleteOrders(ids: string[]): Promise<{ count: number }> {
+  const result = await prisma.order.deleteMany({
+    where: { id: { in: ids }, deletedAt: { not: null } },
+  });
+  return { count: result.count };
 }

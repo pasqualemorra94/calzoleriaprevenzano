@@ -19,6 +19,9 @@ export {
   getAdminOrders,
   getAdminOrder,
   adminUpdateOrderStatus,
+  softDeleteOrders,
+  restoreOrders,
+  hardDeleteOrders,
 } from "./admin/admin-orders.server";
 export {
   getAdminCategories,

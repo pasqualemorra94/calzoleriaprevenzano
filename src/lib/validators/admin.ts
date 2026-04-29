@@ -26,9 +26,25 @@ export const listAdminOrdersSchema = z.object({
   status: z.string().optional(),
   query: z.string().optional(),
   sort: z.enum(["newest", "order_number"]).default("newest"),
+  // Vista: lista attiva (deletedAt null) o cestino (deletedAt non null)
+  view: z.enum(["active", "trash"]).default("active").optional(),
+  // Filtro substring case-insensitive su user.email + guestEmail
+  emailContains: z.string().optional(),
+  // Range data createdAt (coerce da stringhe ISO/yyyy-mm-dd a Date)
+  createdFrom: z.coerce.date().optional(),
+  createdTo: z.coerce.date().optional(),
 });
 
 export type ListAdminOrdersInput = z.infer<typeof listAdminOrdersSchema>;
+
+// ─── Bulk Order action ──────────────────────────────────────────────────
+
+export const bulkOrderActionSchema = z.object({
+  action: z.enum(["soft-delete", "restore", "hard-delete"]),
+  ids: z.array(z.string().cuid()).min(1).max(500),
+});
+
+export type BulkOrderActionInput = z.infer<typeof bulkOrderActionSchema>;
 
 // ─── Update order status ────────────────────────────────────────────────
 
