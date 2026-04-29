@@ -37,10 +37,12 @@ function parseOptionGroups(variants: ProductVariant[]): OptionGroup[] {
 // ── Route ──
 
 export const Route = createFileRoute("/prodotti/$slug")({
-  beforeLoad: async ({ params }) => {
+  beforeLoad: async ({
+    params,
+  }): Promise<{ product: ProductDetail | null; relatedProducts: ProductListItem[] }> => {
     const [product, relatedProducts] = await Promise.all([
-      $getProductBySlug({ data: { slug: params.slug } }),
-      $getFeaturedProducts({ data: { limit: 4 } }),
+      $getProductBySlug({ data: { slug: params.slug } }) as Promise<ProductDetail | null>,
+      $getFeaturedProducts({ data: { limit: 4 } }) as Promise<ProductListItem[]>,
     ]);
     return { product, relatedProducts };
   },
