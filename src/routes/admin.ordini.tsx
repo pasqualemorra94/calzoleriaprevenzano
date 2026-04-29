@@ -1,12 +1,14 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
-import { useState, useCallback, type ReactNode } from "react";
-import { Search, Loader2, Eye } from "lucide-react";
+import { useState, useCallback, useEffect, type ReactNode } from "react";
+import { Search, Loader2, Eye, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import { $getAdminOrders } from "~/lib/admin-functions";
 import type { AdminOrderListItem } from "~/lib/admin-functions";
+import { TypeConfirmDialog } from "~/components/admin/TypeConfirmDialog";
 
 export const Route = createFileRoute("/admin/ordini")({
   beforeLoad: async () => {
-    const data = await $getAdminOrders({ data: { page: 1, perPage: 20, status: "", query: "", sort: "newest" } });
+    const data = await $getAdminOrders({ data: { page: 1, perPage: 20, status: "", query: "", sort: "newest", view: "active" } });
     return { initialOrders: data };
   },
   component: AdminOrdersPage,
@@ -71,11 +73,45 @@ function AdminOrdersList(): ReactNode {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchOrders = useCallback(async (p: number, q: string, s: string, sortBy: string) => {
+  // ─── Bulk selection + filtri email/data + cestino ──────────────────
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [emailContains, setEmailContains] = useState("");
+  const [debouncedEmail, setDebouncedEmail] = useState("");
+  const [createdFrom, setCreatedFrom] = useState("");
+  const [createdTo, setCreatedTo] = useState("");
+  const [bulkLoading, setBulkLoading] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [trashCount, setTrashCount] = useState<number | null>(null);
+
+  // Debounce email 300ms (no nuova dipendenza)
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedEmail(emailContains), 300);
+    return () => clearTimeout(t);
+  }, [emailContains]);
+
+  const fetchOrders = useCallback(async (
+    p: number,
+    q: string,
+    s: string,
+    sortBy: string,
+    email: string,
+    from: string,
+    to: string,
+  ) => {
     setLoading(true);
     setError(null);
     try {
-      const data = await $getAdminOrders({ data: { page: p, perPage: 20, status: s, query: q, sort: sortBy } });
+      const data = await $getAdminOrders({ data: {
+        page: p,
+        perPage: 20,
+        status: s,
+        query: q,
+        sort: sortBy,
+        view: "active",
+        emailContains: email || undefined,
+        createdFrom: from || undefined,
+        createdTo: to || undefined,
+      } });
       setOrders(data.items);
       setTotalPages(data.totalPages);
       setTotal(data.total);
@@ -86,9 +122,88 @@ function AdminOrdersList(): ReactNode {
     }
   }, []);
 
+  // Refetch quando cambia un qualunque filtro/page/sort (eccetto primo render)
+  // Salta il primo render perché initialOrders è già caricato dal beforeLoad
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    if (!hasMounted) {
+      setHasMounted(true);
+      return;
+    }
+    fetchOrders(page, query, status, sort, debouncedEmail, createdFrom, createdTo);
+    // hasMounted è gestito sopra
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page, query, status, sort, debouncedEmail, createdFrom, createdTo]);
+
+  // PITFALL CRITICO (RESEARCH §10): reset selection su page/view/filter/sort change
+  useEffect(() => {
+    setSelected(new Set());
+  }, [page, query, status, debouncedEmail, createdFrom, createdTo, sort]);
+
+  // Trash count badge (one-shot + refresh dopo bulk)
+  const refreshTrashCount = useCallback(async () => {
+    try {
+      const r = await $getAdminOrders({ data: { page: 1, perPage: 1, view: "trash" } });
+      setTrashCount(r.total);
+    } catch {
+      setTrashCount(null);
+    }
+  }, []);
+
+  useEffect(() => {
+    refreshTrashCount();
+  }, [refreshTrashCount]);
+
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
-    fetchOrders(newPage, query, status, sort);
+  };
+
+  // Toggle select-all-visible (header checkbox)
+  const allVisibleSelected = orders.length > 0 && orders.every((o) => selected.has(o.id));
+  const toggleAllVisible = (checked: boolean) => {
+    if (checked) {
+      const next = new Set(selected);
+      orders.forEach((o) => next.add(o.id));
+      setSelected(next);
+    } else {
+      const next = new Set(selected);
+      orders.forEach((o) => next.delete(o.id));
+      setSelected(next);
+    }
+  };
+
+  // Toggle riga
+  const toggleRow = (id: string, checked: boolean) => {
+    const next = new Set(selected);
+    if (checked) next.add(id);
+    else next.delete(id);
+    setSelected(next);
+  };
+
+  // Cestina bulk: POST /api/admin/orders/bulk { action: "soft-delete", ids }
+  const handleBulkSoftDelete = async () => {
+    setBulkLoading(true);
+    try {
+      const ids = Array.from(selected);
+      const res = await fetch("/api/admin/orders/bulk", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "soft-delete", ids }),
+      });
+      if (!res.ok) throw new Error("Bulk fallito");
+      const json = (await res.json()) as { data?: { count: number } };
+      const count = json.data?.count ?? ids.length;
+      toast.success(`${count} ordini cestinati`);
+      setSelected(new Set());
+      setConfirmOpen(false);
+      // Refetch lista + trash count
+      await fetchOrders(page, query, status, sort, debouncedEmail, createdFrom, createdTo);
+      await refreshTrashCount();
+    } catch {
+      toast.error("Impossibile cestinare gli ordini");
+    } finally {
+      setBulkLoading(false);
+    }
   };
 
   const inputClass = "h-9 rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 focus:border-[var(--color-primary)] focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]";
@@ -96,15 +211,24 @@ function AdminOrdersList(): ReactNode {
 
   return (
     <div className="space-y-6">
-      <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
-        Gestione ordini
-        <span className="ml-1.5 inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-500">
-          {total}
+      <div className="flex items-center justify-between">
+        <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
+          Gestione ordini
+          <span className="ml-1.5 inline-flex items-center rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium text-gray-500">
+            {total}
+          </span>
         </span>
-      </span>
+        <Link
+          to="/admin/ordini/cestino"
+          className="inline-flex h-8 items-center gap-1.5 rounded-md border border-gray-300 px-3 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-50"
+        >
+          <Trash2 className="h-3.5 w-3.5" />
+          Cestino{trashCount !== null && trashCount > 0 ? ` (${trashCount})` : ""}
+        </Link>
+      </div>
 
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <div className="relative flex-1">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+        <div className="relative flex-1 min-w-[200px]">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
@@ -114,6 +238,27 @@ function AdminOrdersList(): ReactNode {
             className={`${inputClass} w-full pl-9`}
           />
         </div>
+        <input
+          type="email"
+          placeholder="Filtra per email..."
+          value={emailContains}
+          onChange={(e) => { setEmailContains(e.target.value); setPage(1); }}
+          className={`${inputClass} sm:w-56`}
+        />
+        <input
+          type="date"
+          value={createdFrom}
+          onChange={(e) => { setCreatedFrom(e.target.value); setPage(1); }}
+          className={inputClass}
+          aria-label="Data da"
+        />
+        <input
+          type="date"
+          value={createdTo}
+          onChange={(e) => { setCreatedTo(e.target.value); setPage(1); }}
+          className={inputClass}
+          aria-label="Data a"
+        />
         <select value={status} onChange={(e) => { setStatus(e.target.value); setPage(1); }} className={selectClass}>
           {STATUS_FILTERS.map((f) => <option key={f.value} value={f.value}>{f.label}</option>)}
         </select>
@@ -126,11 +271,33 @@ function AdminOrdersList(): ReactNode {
         <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">{error}</div>
       )}
 
+      {selected.size > 0 && (
+        <div className="sticky top-0 z-10 flex items-center justify-between rounded-lg border border-gray-200 bg-white px-4 py-3 shadow-sm">
+          <span className="text-sm text-gray-700">{selected.size} ordini selezionati</span>
+          <button
+            onClick={() => setConfirmOpen(true)}
+            disabled={bulkLoading}
+            className="inline-flex h-9 items-center gap-1.5 rounded-md bg-red-600 px-4 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Trash2 className="h-4 w-4" />
+            Cestina
+          </button>
+        </div>
+      )}
+
       <div className="rounded-lg bg-white shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-gray-200 bg-gray-50 text-left text-xs font-medium tracking-wider text-gray-500">
+                <th className="px-4 py-3 w-10">
+                  <input
+                    type="checkbox"
+                    checked={allVisibleSelected}
+                    onChange={(e) => toggleAllVisible(e.target.checked)}
+                    aria-label="Seleziona tutti"
+                  />
+                </th>
                 <th className="px-4 py-3">Numero ordine</th>
                 <th className="px-4 py-3">Cliente</th>
                 <th className="px-4 py-3 text-right">Articoli</th>
@@ -144,17 +311,25 @@ function AdminOrdersList(): ReactNode {
             <tbody className="divide-y divide-gray-100">
               {loading ? (
                 <tr>
-                  <td colSpan={8} className="py-12 text-center">
+                  <td colSpan={9} className="py-12 text-center">
                     <Loader2 className="mx-auto h-6 w-6 animate-spin text-[var(--color-primary)]" />
                   </td>
                 </tr>
               ) : orders.length === 0 ? (
                 <tr>
-                  <td colSpan={8} className="py-12 text-center text-sm text-gray-500">Nessun ordine trovato</td>
+                  <td colSpan={9} className="py-12 text-center text-sm text-gray-500">Nessun ordine trovato</td>
                 </tr>
               ) : (
                 orders.map((order) => (
                   <tr key={order.id} className="hover:bg-gray-50">
+                    <td className="px-4 py-3">
+                      <input
+                        type="checkbox"
+                        checked={selected.has(order.id)}
+                        onChange={(e) => toggleRow(order.id, e.target.checked)}
+                        aria-label={`Seleziona ordine ${order.orderNumber}`}
+                      />
+                    </td>
                     <td className="whitespace-nowrap px-4 py-3 text-sm font-medium text-gray-900">{order.orderNumber}</td>
                     <td className="whitespace-nowrap px-4 py-3">
                       <div className="text-sm font-medium text-gray-900">{order.user.name}</div>
@@ -211,6 +386,17 @@ function AdminOrdersList(): ReactNode {
           </div>
         )}
       </div>
+
+      <TypeConfirmDialog
+        open={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={handleBulkSoftDelete}
+        title="Cestinare gli ordini selezionati?"
+        message={`${selected.size} ordini saranno spostati nel cestino. Potrai ripristinarli successivamente.`}
+        confirmText="CANCELLA"
+        confirmLabel="Cestina"
+        isLoading={bulkLoading}
+      />
     </div>
   );
 }

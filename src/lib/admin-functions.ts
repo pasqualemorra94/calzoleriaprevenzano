@@ -77,6 +77,10 @@ export const $getAdminOrders = createServerFn({ method: "GET" })
     status?: string;
     query?: string;
     sort?: string;
+    view?: "active" | "trash";
+    emailContains?: string;
+    createdFrom?: string;
+    createdTo?: string;
   }) => data)
   .handler(async ({ data }) => {
     await requireAdmin();
@@ -86,6 +90,10 @@ export const $getAdminOrders = createServerFn({ method: "GET" })
       status: data.status,
       query: data.query,
       sort: (data.sort ?? "newest") as "newest" | "order_number",
+      view: data.view ?? "active",
+      emailContains: data.emailContains,
+      createdFrom: data.createdFrom ? new Date(data.createdFrom) : undefined,
+      createdTo: data.createdTo ? new Date(data.createdTo) : undefined,
     }) satisfies Promise<PaginatedData<AdminOrderListItem>>;
   });
 
