@@ -258,13 +258,13 @@ function AdminOrderDetailPage(): ReactNode {
                     <span>-{fmt(order.discountAmount)}</span>
                   </div>
                 )}
-                <div className="flex justify-between text-gray-600">
-                  <span>IVA</span>
-                  <span>{fmt(order.taxAmount)}</span>
-                </div>
                 <div className="flex justify-between border-t border-gray-200 pt-2 text-base font-bold text-gray-900">
                   <span>Totale</span>
                   <span>{fmt(order.total)}</span>
+                </div>
+                <div className="flex justify-between text-xs text-gray-500">
+                  <span>di cui IVA (22%)</span>
+                  <span>{fmt(order.taxAmount)}</span>
                 </div>
               </div>
             </div>
