@@ -3,9 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: planning
-stopped_at: Completed quick/260429-e6n (cleanup-e2e-orders CLI script per cancellare ordini di test su DB Railway via marker email guest hard-coded, dry-run di default + --execute con countdown 5s)
-last_updated: "2026-04-29T10:30:00Z"
-last_activity: 2026-04-29 — Completed quick task 260429-e6n: creato `scripts/cleanup-e2e-orders.ts` (267 LOC) e `pnpm db:cleanup-e2e` script. Tool CLI locale per pulire dal DB Railway gli ordini E2E identificati via marker hard-coded `e2e+%@test.calzoleriaprevenzano.it` (LIKE su Order.guestEmail). Default dry-run con preview (count, totale, oldest/newest, sample 10); `--execute` opt-in con countdown 5s; `DATABASE_URL` obbligatorio (exit 1 altrimenti). Cascade FK su Order verificato in schema (OrderItem + Payment auto-deleted; Address invariato). Commit `c12f8d4` pushato su origin. Nessun redeploy Railway necessario — gira locale.
+stopped_at: Completed quick/260429-eev (tipizzazione esplicita beforeLoad in prodotti.$slug.tsx + cast as Promise<ProductDetail|null> / Promise<ProductListItem[]> — bypass dell'inferenza RPC rotta su Record<string,unknown>; -34 errori TS, smoke E2E PASS)
+last_updated: "2026-04-28T18:00:00Z"
+last_activity: 2026-04-28 — Completed quick task 260429-eev: tipizzata return type di `beforeLoad` in `src/routes/prodotti.$slug.tsx` (5 LOC change: 3 righe cambiate + 2 cast `as Promise<...>` aggiunti). Eliminati tutti i 34 errori TS nel file (totale repo 60→26, drop di 34). Causa a monte: il serializzatore RPC TanStack Start non gestisce `Record<string, unknown>` in `ProductDetail.variantConfig`, facendo collassare il return inferito di `$getProductBySlug` a `Promise<{}>` e avvelenando `Route.useRouteContext()`. Smoke purchase E2E PASS (30s). Commit `6059e60` pushato su origin. Stesso pattern affligge `admin-functions.ts:66` (1 errore residuo) — lasciato come quick task futura.
 progress:
   percent: 0
 ---
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-04-02)
 Phase: 1 of 10 (Foundation & Data Model)
 Plan: 0 of ? in current phase
 Status: Ready to plan
-Last activity: 2026-04-29 — Completed quick task 260429-e6n: creato `scripts/cleanup-e2e-orders.ts` (267 LOC) e `pnpm db:cleanup-e2e` script. Tool CLI locale per pulire dal DB Railway gli ordini E2E identificati via marker hard-coded `e2e+%@test.calzoleriaprevenzano.it` (LIKE su Order.guestEmail). Default dry-run con preview (count, totale, oldest/newest, sample 10); `--execute` opt-in con countdown 5s; `DATABASE_URL` obbligatorio (exit 1 altrimenti). Cascade FK su Order verificato in schema (OrderItem + Payment auto-deleted; Address invariato). Commit `c12f8d4` pushato su origin. Nessun redeploy Railway necessario — gira locale.
+Last activity: 2026-04-28 — Completed quick task 260429-eev: tipizzata return type di `beforeLoad` in `src/routes/prodotti.$slug.tsx` (5 LOC change: 3 righe cambiate + 2 cast `as Promise<...>` aggiunti). Eliminati tutti i 34 errori TS nel file (totale repo 60→26, drop di 34). Causa a monte: il serializzatore RPC TanStack Start non gestisce `Record<string, unknown>` in `ProductDetail.variantConfig`, facendo collassare il return inferito di `$getProductBySlug` a `Promise<{}>` e avvelenando `Route.useRouteContext()`. Smoke purchase E2E PASS (30s). Commit `6059e60` pushato su origin. Stesso pattern affligge `admin-functions.ts:66` (1 errore residuo) — lasciato come quick task futura.
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -79,9 +79,10 @@ None yet.
 | 260428-p14 | Fix flake denise/maria con retry-click helper inline + drop res.ok() dal predicato waitForResponse — full parametric 118/119 PASS first-pass (0 flaky, era 108+8 flaky in o8a). Solo provv resta hard-fail (data-quality, fuori scope) | 2026-04-28 | 66470c2 | [260428-p14-diagnose-denise-and-maria-cart-post-time](./quick/260428-p14-diagnose-denise-and-maria-cart-post-time/) |
 | 260429-dwz | IVA admin order detail — rimossa riga additiva, aggiunta riga informativa muted "di cui IVA (22%)" sotto il Totale a specchio del pattern in OrderSummary.tsx (fix double-display visivo, zero impatto su computation). 4+/4- LOC, 1 file. Railway redeploy verificato HTTP 200 | 2026-04-29 | 58322c2 | [260429-dwz-move-iva-from-additive-list-to-informati](./quick/260429-dwz-move-iva-from-additive-list-to-informati/) |
 | 260429-e6n | Cleanup script E2E orders — `scripts/cleanup-e2e-orders.ts` (267 LOC) + `pnpm db:cleanup-e2e`. CLI locale per cancellare dal DB Railway gli ordini di test via marker email guest hard-coded `e2e+%@test.calzoleriaprevenzano.it`. Default dry-run + preview, `--execute` opt-in con countdown 5s, `DATABASE_URL` obbligatorio. Cascade FK Order→OrderItem/Payment confermato in schema (Address NON toccato). Nessun redeploy richiesto. | 2026-04-29 | c12f8d4 | [260429-e6n-cleanup-script-for-e2e-test-orders-marke](./quick/260429-e6n-cleanup-script-for-e2e-test-orders-marke/) |
+| 260429-eev | Tipizzazione `beforeLoad` in `src/routes/prodotti.$slug.tsx` — 5 LOC change (return type esplicita `Promise<{ product: ProductDetail \| null; relatedProducts: ProductListItem[] }>` + 2 cast `as Promise<...>` sulle chiamate `createServerFn`). Bypass dell'inferenza rotta del serializzatore RPC TanStack Start su `Record<string, unknown>` in `ProductDetail.variantConfig` che faceva collassare il return tipo a `Promise<{}>`. Errori TS nel file 34→0; totale repo 60→26 (-34). Smoke purchase E2E PASS in 30s. Zero modifiche runtime. Stesso root cause affligge `admin-functions.ts:66` — lasciato come futuro task. | 2026-04-28 | 6059e60 | [260429-eev-fix-pre-existing-typescript-errors-in-pr](./quick/260429-eev-fix-pre-existing-typescript-errors-in-pr/) |
 
 ## Session Continuity
 
-Last session: 2026-04-29T10:30:00Z
-Stopped at: Completed quick/260429-e6n (cleanup-e2e-orders CLI script per cancellare ordini di test su DB Railway via marker email guest hard-coded, dry-run di default + --execute con countdown 5s)
+Last session: 2026-04-28T18:00:00Z
+Stopped at: Completed quick/260429-eev (tipizzazione esplicita beforeLoad in prodotti.$slug.tsx + cast as Promise<ProductDetail|null> / Promise<ProductListItem[]> — bypass dell'inferenza RPC rotta su Record<string,unknown>; -34 errori TS, smoke E2E PASS)
 Resume file: None
