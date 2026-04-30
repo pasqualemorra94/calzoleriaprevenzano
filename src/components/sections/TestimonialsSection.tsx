@@ -31,7 +31,7 @@ const TESTIMONIALS: Testimonial[] = [
     city: "Napoli",
   },
   {
-    text: "Ordino online da due anni ormai. Sempre puntuali, sempre ben confezionati. L'anno scorso ho fatto un reso ed è stato semplicissimo.",
+    text: "Ordino online da due anni ormai. Sempre puntuali, sempre ben confezionati. La cura nei dettagli si vede dal primo paio.",
     author: "Giulia P.",
     city: "Torino",
   },
