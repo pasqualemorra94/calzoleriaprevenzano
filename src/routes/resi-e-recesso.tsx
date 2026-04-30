@@ -23,7 +23,7 @@ function ResiERecessoPage(): ReactNode {
       <article className="prose-custom max-w-none">
         <div className="space-y-8 text-[var(--color-text-secondary)] leading-relaxed">
           <p className="text-sm text-[var(--color-muted)]">
-            Ultimo aggiornamento: 30 aprile 2026
+            Ultimo aggiornamento: 1 maggio 2026
           </p>
 
           {/* Sezione A — Personalizzati esclusi dal recesso */}
@@ -111,11 +111,16 @@ function ResiERecessoPage(): ReactNode {
               Procedura
             </h3>
             <p>
-              Per esercitare il diritto di recesso, scarica il
-              {" "}<a href="/modulo-recesso.pdf" target="_blank" rel="noopener" className="text-[var(--color-primary)] underline underline-offset-2">modulo di recesso ufficiale</a>{" "}
-              (Allegato I, parte B, D.Lgs. 206/2005), compilalo e invialo via email a
+              Per esercitare il diritto, compila il
+              {" "}<a href="/resi-e-recesso/richiesta" className="text-[var(--color-primary)] underline underline-offset-2">modulo di richiesta reso online</a>{" "}
+              indicando il numero del tuo ordine. Riceverai una conferma via email entro 14 giorni
+              con le istruzioni di restituzione.
+            </p>
+            <p className="mt-4">
+              In alternativa, puoi inviare una comunicazione esplicita via email a
               {" "}<a href="mailto:resi@calzoleriaprevenzano.it" className="text-[var(--color-primary)] underline underline-offset-2">resi@calzoleriaprevenzano.it</a>{" "}
-              oppure tramite raccomandata A/R a Calzoleria Prevenzano, Via Chiaia, 104 &mdash; 80132 Napoli (NA).
+              o tramite raccomandata A/R a Calzoleria Prevenzano, Via Chiaia 104 &mdash; 80132 Napoli (NA),
+              come previsto dall&apos;Art. 49 c. 1 lett. h e Art. 54 D.Lgs. 206/2005.
             </p>
 
             <h3 className="text-sm font-semibold text-[var(--color-text)] mt-6 mb-2">

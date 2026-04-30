@@ -325,11 +325,13 @@ function TerminiPage(): ReactNode {
               non lavati, non danneggiati e completi di tutte le etichette, confezione originale e accessori.
             </p>
             <p className="mt-4">
-              Per facilitare l&apos;esercizio del diritto, l&apos;Acquirente pu&ograve; scaricare e utilizzare il
-              {" "}<a href="/modulo-recesso.pdf" target="_blank" rel="noopener" className="text-[var(--color-primary)] underline underline-offset-2">modulo di recesso ufficiale</a>{" "}
-              (Allegato I, parte B, D.Lgs. 206/2005), da inviare via email a
+              Per facilitare l&apos;esercizio del diritto, l&apos;Acquirente pu&ograve; utilizzare il
+              {" "}<a href="/resi-e-recesso/richiesta" className="text-[var(--color-primary)] underline underline-offset-2">modulo di richiesta reso online</a>{" "}
+              accessibile dal nostro sito. Resta fermo il diritto dell&apos;Acquirente di esercitare il
+              recesso anche tramite comunicazione esplicita inviata a
               {" "}<a href="mailto:resi@calzoleriaprevenzano.it" className="text-[var(--color-primary)] underline underline-offset-2">resi@calzoleriaprevenzano.it</a>{" "}
-              o tramite raccomandata A/R all&apos;indirizzo sopra indicato.
+              o raccomandata A/R all&apos;indirizzo del Venditore (Art. 49 c. 1 lett. h e Art. 54
+              D.Lgs. 206/2005).
             </p>
             <p className="mt-4">
               In caso di prodotti restituiti privi dell&apos;imballaggio originale, con segni d&apos;uso evidenti,
