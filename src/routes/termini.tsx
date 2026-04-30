@@ -249,7 +249,7 @@ function TerminiPage(): ReactNode {
           </section>
 
           {/* 7. Spedizione e Consegna */}
-          <section>
+          <section id="spedizioni">
             <h2 className="text-base font-semibold text-[var(--color-text)] mb-3">
               7. Spedizione e Consegna
             </h2>

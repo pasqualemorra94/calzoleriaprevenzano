@@ -18,7 +18,8 @@ const FOOTER_LINKS = {
       { label: "Chi siamo", href: "/la-bottega" },
       { label: "Contatti", href: "/contatti" },
       { label: "Guida taglie", href: "/guida-taglia" },
-      { label: "Spedizioni e resi", href: "/termini" },
+      { label: "Spedizioni", href: "/termini#spedizioni" },
+      { label: "Resi e recesso", href: "/resi-e-recesso" },
     ],
   },
   legal: {
