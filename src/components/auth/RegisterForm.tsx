@@ -51,6 +51,22 @@ export function RegisterForm() {
           return;
         }
 
+        // Log GDPR consents server-side (audit-trail by-presence per privacy + marketing opt-in)
+        // Nota: failure non blocca il signup (consenso esplicito è già stato dato client-side)
+        try {
+          await fetch("/api/user/consents", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "same-origin",
+            body: JSON.stringify({
+              privacy: true,
+              marketing: value.marketingConsent,
+            }),
+          });
+        } catch {
+          // Silent fail: audit log non blocca user experience
+        }
+
         setSuccess(true);
       } catch {
         setServerError("Errore di connessione. Riprova.");
