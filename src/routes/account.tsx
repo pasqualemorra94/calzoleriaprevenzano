@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, useMatchRoute, redirect } from "@tanstack/react-router";
 import { useState, useEffect, type ReactNode } from "react";
-import { Menu, X, LayoutDashboard, ShoppingCart, Heart, MapPin, User, KeyRound, LogOut, ExternalLink } from "lucide-react";
+import { Menu, X, LayoutDashboard, ShoppingCart, Heart, MapPin, User, KeyRound, Shield, LogOut, ExternalLink } from "lucide-react";
 import { cn } from "~/lib/utils/cn";
 import { $signOut } from "~/lib/auth-functions";
 
@@ -26,6 +26,7 @@ const NAV_ITEMS = [
   { label: "Indirizzi", href: "/account/indirizzi", icon: MapPin, matchPath: "/account/indirizzi" as const },
   { label: "Profilo", href: "/account/profilo", icon: User, matchPath: "/account/profilo" as const },
   { label: "Password", href: "/account/password", icon: KeyRound, matchPath: "/account/password" as const },
+  { label: "Privacy e dati", href: "/account/privacy", icon: Shield, matchPath: "/account/privacy" as const },
 ] as const;
 
 function AccountLayout(): ReactNode {
