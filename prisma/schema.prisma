@@ -153,6 +153,23 @@ model DataRequest {
   @@index([status])
 }
 
+// ─── NewsletterSubscription (double opt-in) ──────────────────────
+// Stato: pending → confirmed (via email link) | unsubscribed (via token link)
+// Token unico usato sia per confirm che per unsubscribe (UUID v4 da crypto.randomUUID).
+// ConsentLog viene loggato SOLO al passaggio pending→confirmed (audit-by-presence)
+// e su unsubscribe (eccezione audit-by-presence: revoca esplicita di consenso pregresso).
+
+model NewsletterSubscription {
+  id          String    @id @default(cuid())
+  email       String    @unique
+  status      String    @default("pending") // "pending" | "confirmed" | "unsubscribed"
+  token       String    @unique
+  confirmedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([status])
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // Stripe — idempotency (required when modules.payments === true)
 // ═══════════════════════════════════════════════════════════════════════════
