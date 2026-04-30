@@ -304,7 +304,7 @@ function TerminiPage(): ReactNode {
             <p>
               Ai sensi dell&apos;art. 52 e ss. del D.Lgs. 206/2005 (Codice del Consumo), l&apos;Acquirente che agisce
               in qualit&agrave; di consumatore ha diritto di recedere dal Contratto di acquisto senza dover fornire
-              alcuna motivazione e senza alcuna penalit&agrave;, entro il termine di 14 giorni lavorativi dalla data
+              alcuna motivazione e senza alcuna penalit&agrave;, entro il termine di 14 giorni dalla data
               di ricevimento dei Prodotti.
             </p>
 
@@ -323,6 +323,19 @@ function TerminiPage(): ReactNode {
               L&apos;Acquirente deve restituire i Prodotti entro 14 giorni dalla data in cui ha comunicato il recesso,
               utilizzando un corriere tracciabile. I Prodotti devono essere restituiti integri, non indossati,
               non lavati, non danneggiati e completi di tutte le etichette, confezione originale e accessori.
+            </p>
+            <p className="mt-4">
+              Per facilitare l&apos;esercizio del diritto, l&apos;Acquirente pu&ograve; scaricare e utilizzare il
+              {" "}<a href="/modulo-recesso.pdf" target="_blank" rel="noopener" className="text-[var(--color-primary)] underline underline-offset-2">modulo di recesso ufficiale</a>{" "}
+              (Allegato I, parte B, D.Lgs. 206/2005), da inviare via email a
+              {" "}<a href="mailto:resi@calzoleriaprevenzano.it" className="text-[var(--color-primary)] underline underline-offset-2">resi@calzoleriaprevenzano.it</a>{" "}
+              o tramite raccomandata A/R all&apos;indirizzo sopra indicato.
+            </p>
+            <p className="mt-4">
+              In caso di prodotti restituiti privi dell&apos;imballaggio originale, con segni d&apos;uso evidenti,
+              sporchi, danneggiati o privi di etichette, il Venditore si riserva di applicare una decurtazione
+              proporzionale al rimborso a copertura del deprezzamento, ai sensi dell&apos;art. 57 comma 2
+              D.Lgs. 206/2005.
             </p>
 
             <h3 className="text-sm font-semibold text-[var(--color-text)] mt-6 mb-2">
@@ -349,14 +362,21 @@ function TerminiPage(): ReactNode {
             </h3>
             <p>
               Il Venditore provveder&agrave; al rimborso dell&apos;intero importo pagato dall&apos;Acquirente, comprensivo
-              delle spese di spedizione sostenute per la consegna del prodotto, entro 14 giorni dalla ricezione
-              dei Prodotti resi. Il rimborso verr&agrave; effettuato utilizzando lo stesso mezzo di pagamento utilizzato
-              per l&apos;acquisto. Il Venditore si riserva il diritto di trattenere il rimborso finch&eacute; non abbia
-              ricevuto i Prodotti resi o finch&eacute; l&apos;Acquirente non abbia dimostrato di averli rispediti.
+              delle spese di spedizione standard sostenute per la consegna del prodotto, ai sensi dell&apos;art. 56 comma 2
+              D.Lgs. 206/2005. Eventuali costi aggiuntivi per opzioni di spedizione espressa o non standard scelti
+              dall&apos;Acquirente non saranno rimborsati. Il rimborso sar&agrave; effettuato entro 14 giorni decorrenti
+              dalla data in cui il Venditore riceve i Prodotti restituiti, integri, completi di tutti gli accessori
+              e nelle condizioni descritte sopra. Il rimborso verr&agrave; effettuato utilizzando lo stesso mezzo
+              di pagamento utilizzato per l&apos;acquisto. Il Venditore si riserva il diritto di trattenere il rimborso
+              finch&eacute; non abbia ricevuto i Prodotti resi o finch&eacute; l&apos;Acquirente non abbia dimostrato di averli rispediti.
             </p>
             <p className="mt-4">
               Le spese di restituzione sono a carico dell&apos;Acquirente. Il Venditore non &egrave; responsabile per
               eventuali danni o smarrimenti dei Prodotti durante il trasporto di rientro.
+            </p>
+            <p className="mt-4">
+              Per dettagli operativi e categoria di prodotti, consulta la nostra
+              {" "}<a href="/resi-e-recesso" className="text-[var(--color-primary)] underline underline-offset-2">pagina dedicata Resi e Recesso</a>.
             </p>
           </section>
 
