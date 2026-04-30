@@ -145,6 +145,19 @@ export function Footer(): ReactNode {
                   </a>
                 </li>
               ))}
+              <li>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window === "undefined") return;
+                    localStorage.removeItem("consent_preferences");
+                    window.location.reload();
+                  }}
+                  className="text-sm text-[var(--color-text-secondary)] transition-colors duration-[var(--transition-base)] hover:text-[var(--color-background)] text-left"
+                >
+                  Gestisci preferenze cookie
+                </button>
+              </li>
             </ul>
           </div>
         </div>
