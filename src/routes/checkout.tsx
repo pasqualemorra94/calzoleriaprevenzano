@@ -34,6 +34,8 @@ function CheckoutPage(): ReactNode {
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
+  const [acceptedTermsError, setAcceptedTermsError] = useState<string | null>(null);
 
   const validateForm = (): boolean => {
     const errs: Record<string, string> = {};
@@ -46,7 +48,13 @@ function CheckoutPage(): ReactNode {
     if (!form.province.trim() || form.province.length !== 2) errs.province = "Inserisci 2 caratteri";
     if (!form.postalCode.trim() || form.postalCode.length !== 5) errs.postalCode = "Inserisci 5 caratteri";
     setErrors(errs);
-    return Object.keys(errs).length === 0;
+    if (Object.keys(errs).length > 0) return false;
+    if (!acceptedTerms) {
+      setAcceptedTermsError("Devi accettare i Termini di Vendita per procedere");
+      return false;
+    }
+    setAcceptedTermsError(null);
+    return true;
   };
 
   const updateField = (field: string, value: string) => {
@@ -79,6 +87,7 @@ function CheckoutPage(): ReactNode {
           email: form.email, firstName: form.firstName, lastName: form.lastName,
           address: { address1: form.address1, address2: form.address2, city: form.city, province: form.province, postalCode: form.postalCode, country: "IT", phone: form.phone || undefined },
           shippingMethod: "standard", discountCode: discountCode || undefined, notes: notes || undefined,
+          acceptedTerms: true,
         }),
       });
       const json = await res.json();
@@ -210,10 +219,37 @@ function CheckoutPage(): ReactNode {
               </m.div>
 
               <div className="lg:sticky lg:top-24">
+                <label htmlFor="checkout-accept-terms" className="mb-4 flex items-start gap-2 text-sm text-[var(--color-text-secondary)] cursor-pointer">
+                  <input
+                    id="checkout-accept-terms"
+                    type="checkbox"
+                    checked={acceptedTerms}
+                    onChange={(e) => {
+                      setAcceptedTerms(e.target.checked);
+                      if (e.target.checked) setAcceptedTermsError(null);
+                    }}
+                    required
+                    aria-required="true"
+                    aria-describedby={acceptedTermsError ? "checkout-accept-terms-error" : undefined}
+                    className="mt-1 h-4 w-4 cursor-pointer accent-[var(--color-primary)]"
+                  />
+                  <span>
+                    Ho letto e accetto i{" "}
+                    <a href="/termini" target="_blank" rel="noopener" className="text-[var(--color-primary)] underline underline-offset-2">
+                      Termini di Vendita
+                    </a>
+                  </span>
+                </label>
+                {acceptedTermsError && (
+                  <p id="checkout-accept-terms-error" className="mb-4 -mt-2 text-xs text-[var(--color-destructive)]">
+                    {acceptedTermsError}
+                  </p>
+                )}
                 <OrderSummary
                   items={cart.items} subtotal={cart.subtotal} shippingCost={shippingCost}
                   freeShippingThreshold={FREE_SHIPPING_THRESHOLD}
                   submitStatus={submitStatus} isCheckout
+                  disabled={!acceptedTerms}
                 />
               </div>
             </div>

@@ -8,6 +8,9 @@ import { Prisma } from "@prisma/client";
 import { prisma } from "~/lib/db.server";
 import type { CheckoutInput, CheckoutGuestInput } from "~/lib/validators/products";
 import type { PaginatedData } from "~/lib/types/api";
+import { createLogger } from "~/lib/logger.server";
+
+const log = createLogger("orders");
 
 // ─── Types ────────────────────────────────────────────────────────────
 
@@ -304,6 +307,26 @@ export async function createOrder(
   // Clear cart
   await prisma.cartItem.deleteMany({ where: { cartId: cart.id } });
   await prisma.cart.update({ where: { id: cart.id }, data: { updatedAt: new Date() } });
+
+  // Audit trail compliance Art. 49 D.Lgs. 206/2005 (terms acceptance at checkout).
+  // Best-effort: failure does not block the order — l'utente ha già dichiarato
+  // l'accettazione tramite Zod (acceptedTerms: literal true) lato server.
+  try {
+    await prisma.auditLog.create({
+      data: {
+        userId: userId ?? null,
+        event: "terms_accepted_at_checkout",
+        ip: ipAddress,
+        userAgent,
+        metadata: { orderId: order.id, orderNumber: order.orderNumber },
+      },
+    });
+  } catch (err) {
+    log.warn("Failed to insert terms_accepted_at_checkout audit", {
+      orderId: order.id,
+      errorMessage: err instanceof Error ? err.message : String(err),
+    });
+  }
 
   return {
     ok: true,

@@ -134,6 +134,9 @@ export const checkoutSchema = z.object({
   shippingMethod: z.string().default("standard"),
   notes: z.string().max(1000).optional(),
   discountCode: z.string().max(50).optional(),
+  acceptedTerms: z.literal(true, {
+    message: "Devi accettare i Termini di Vendita per procedere",
+  }),
 });
 
 export type CheckoutInput = z.infer<typeof checkoutSchema>;
@@ -155,6 +158,9 @@ export const checkoutGuestSchema = z.object({
   shippingMethod: z.string().default("standard"),
   notes: z.string().max(1000).optional(),
   discountCode: z.string().max(50).optional(),
+  acceptedTerms: z.literal(true, {
+    message: "Devi accettare i Termini di Vendita per procedere",
+  }),
 });
 
 export type CheckoutGuestInput = z.infer<typeof checkoutGuestSchema>;

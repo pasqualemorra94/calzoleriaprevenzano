@@ -19,11 +19,12 @@ interface OrderSummaryProps {
   freeShippingThreshold: number;
   submitStatus?: "idle" | "loading" | "success" | "error";
   isCheckout?: boolean;
+  disabled?: boolean;
 }
 
 export function OrderSummary({
   items, subtotal, shippingCost, freeShippingThreshold,
-  submitStatus = "idle", isCheckout = false,
+  submitStatus = "idle", isCheckout = false, disabled = false,
 }: OrderSummaryProps): ReactNode {
   const total = subtotal + shippingCost;
 
@@ -102,7 +103,7 @@ export function OrderSummary({
 
       {isCheckout && (
         <>
-          <button type="submit" disabled={submitStatus === "loading"}
+          <button type="submit" disabled={submitStatus === "loading" || disabled}
             className="mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-[var(--radius-md)] bg-[var(--color-primary)] px-6 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-dark)] disabled:cursor-not-allowed disabled:opacity-60">
             {submitStatus === "loading" ? <ShieldCheck className="h-4 w-4" /> : <ShieldCheck className="h-4 w-4" />}
             Conferma e paga
