@@ -11,7 +11,7 @@ import { APP_CONFIG } from "~/lib/constants/app";
 import { MotionProvider } from "~/providers/MotionProvider";
 import { MegaMenu } from "~/components/shared/MegaMenu";
 import { MobileSearchOverlay } from "~/components/shared/MobileSearchOverlay";
-import { Footer } from "~/components/shared/Footer";
+import { Footer, CookieBanner } from "~/components/shared";
 import { MobileBottomNav } from "~/components/shared/MobileBottomNav";
 import { ErrorBoundary } from "~/components/shared/ErrorBoundary";
 import { StructuredData } from "~/components/seo/StructuredData";
@@ -155,6 +155,7 @@ function RootComponent() {
         </ErrorBoundary>
       </main>
       {!isAdmin && <Footer />}
+      {!isAdmin && <CookieBanner />}
       {!isAdmin && !isAccount && <MobileBottomNav />}
       {!isAdmin && <MobileSearchOverlay />}
       <Toaster position="bottom-right" richColors closeButton />
