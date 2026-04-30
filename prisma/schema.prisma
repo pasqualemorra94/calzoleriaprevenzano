@@ -170,6 +170,34 @@ model NewsletterSubscription {
   @@index([status])
 }
 
+// ─── ReturnRequest (form online richiesta reso) ──────────────────
+// Form pubblico /resi-e-recesso/richiesta. Validation server-side: ordine esiste,
+// email coincide, ≤14gg, idempotency (1 sola pending per orderNumber via business logic).
+// Soft-block personalizzati: hasOnlyCustomItems=true se ordine ha solo subcategorie sandali.
+// Admin gestisce status: pending → approved | rejected | completed.
+
+model ReturnRequest {
+  id                 String    @id @default(cuid())
+  orderId            String
+  orderNumber        String    // denormalizzato per query/visibilità admin
+  email              String    // snapshot email al momento della richiesta
+  fullName           String    // snapshot nome cliente
+  reason             String    @db.Text
+  status             String    @default("pending") // "pending" | "approved" | "rejected" | "completed"
+  adminNotes         String?   @db.Text
+  hasOnlyCustomItems Boolean   @default(false) // soft-block flag (Art. 59.c)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  resolvedAt         DateTime?
+
+  order              Order     @relation(fields: [orderId], references: [id], onDelete: Restrict)
+
+  @@index([orderId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("return_requests")
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // Stripe — idempotency (required when modules.payments === true)
 // ═══════════════════════════════════════════════════════════════════════════
@@ -404,6 +432,7 @@ model Order {
   user           user?          @relation(fields: [userId], references: [id], onDelete: Cascade)
   items          OrderItem[]
   payments       Payment[]
+  returnRequests ReturnRequest[]
 
   @@index([userId])
   @@index([status])
