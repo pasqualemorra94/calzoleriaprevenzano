@@ -85,3 +85,15 @@ export type CreateCategoryInput = z.infer<typeof createCategorySchema>;
 export const updateCategorySchema = createCategorySchema.partial().omit({ slug: true });
 
 export type UpdateCategoryInput = z.infer<typeof updateCategorySchema>;
+
+// ─── Admin ConsentLog listing ──────────────────────────────────────────
+
+export const listConsentLogsSchema = z.object({
+  page: z.coerce.number().int().positive().default(1),
+  perPage: z.coerce.number().int().positive().max(50).default(12),
+  type: z.enum(["cookie", "preferences", "analytics", "marketing", "privacy"]).optional(),
+  createdFrom: z.coerce.date().optional(),
+  createdTo: z.coerce.date().optional(),
+});
+
+export type ListConsentLogsInput = z.infer<typeof listConsentLogsSchema>;

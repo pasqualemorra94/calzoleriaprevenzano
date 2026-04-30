@@ -19,9 +19,11 @@ import type { PaginatedData } from "./types/api";
 import type { MediaListItem } from "./media.server";
 import { getAdvisorCatalog } from "./ai-advisor.server";
 import type { AdvisorProduct } from "./ai-advisor.server";
+import { listConsentLogs } from "./admin/admin-consents.server";
+import type { AdminConsentLogItem } from "./admin/admin-consents.server";
 
 // Re-export types
-export type { DashboardStats, AdminProductListItem, AdminProductDetail, AdminOrderListItem, AdminOrderDetail, MediaListItem };
+export type { DashboardStats, AdminProductListItem, AdminProductDetail, AdminOrderListItem, AdminOrderDetail, MediaListItem, AdminConsentLogItem };
 
 // ─── Auth guard for admin server functions ─────────────────────────
 
@@ -128,6 +130,27 @@ export const $getAdminMedia = createServerFn({ method: "GET" })
       getMediaStats(),
     ]);
     return { ...result, stats };
+  });
+
+// ─── Consent Logs ──────────────────────────────────────────────────
+
+export const $listConsentLogs = createServerFn({ method: "GET" })
+  .inputValidator((data: {
+    page?: number;
+    perPage?: number;
+    type?: "cookie" | "preferences" | "analytics" | "marketing" | "privacy";
+    createdFrom?: string;
+    createdTo?: string;
+  }) => data)
+  .handler(async ({ data }) => {
+    await requireAdmin();
+    return listConsentLogs({
+      page: data.page ?? 1,
+      perPage: data.perPage ?? 12,
+      type: data.type,
+      createdFrom: data.createdFrom ? new Date(data.createdFrom) : undefined,
+      createdTo: data.createdTo ? new Date(data.createdTo) : undefined,
+    }) satisfies Promise<PaginatedData<AdminConsentLogItem>>;
   });
 
 // ─── AI Advisor ────────────────────────────────────────────────────
