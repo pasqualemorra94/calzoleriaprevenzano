@@ -86,6 +86,25 @@ export const updateCategorySchema = createCategorySchema.partial().omit({ slug: 
 
 export type UpdateCategoryInput = z.infer<typeof updateCategorySchema>;
 
+// ─── Admin Return Requests (resi/recesso) ──────────────────────────────
+
+export const listReturnRequestsSchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  perPage: z.coerce.number().int().min(1).max(50).default(12),
+  status: z.enum(["pending", "approved", "rejected", "completed"]).optional(),
+  createdFrom: z.coerce.date().optional(),
+  createdTo: z.coerce.date().optional(),
+});
+
+export type ListReturnRequestsInput = z.infer<typeof listReturnRequestsSchema>;
+
+export const updateReturnRequestSchema = z.object({
+  status: z.enum(["pending", "approved", "rejected", "completed"]),
+  adminNotes: z.string().trim().max(2000).nullable(),
+});
+
+export type UpdateReturnRequestInput = z.infer<typeof updateReturnRequestSchema>;
+
 // ─── Admin ConsentLog listing ──────────────────────────────────────────
 
 export const listConsentLogsSchema = z.object({

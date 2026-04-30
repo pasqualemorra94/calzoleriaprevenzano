@@ -21,9 +21,18 @@ import { getAdvisorCatalog } from "./ai-advisor.server";
 import type { AdvisorProduct } from "./ai-advisor.server";
 import { listConsentLogs } from "./admin/admin-consents.server";
 import type { AdminConsentLogItem } from "./admin/admin-consents.server";
+import {
+  listReturnRequests,
+  getReturnRequest,
+  countPendingReturnRequests,
+} from "./admin/admin-returns.server";
+import type {
+  AdminReturnRequestListItem,
+  AdminReturnRequestDetail,
+} from "./admin/admin-returns.server";
 
 // Re-export types
-export type { DashboardStats, AdminProductListItem, AdminProductDetail, AdminOrderListItem, AdminOrderDetail, MediaListItem, AdminConsentLogItem };
+export type { DashboardStats, AdminProductListItem, AdminProductDetail, AdminOrderListItem, AdminOrderDetail, MediaListItem, AdminConsentLogItem, AdminReturnRequestListItem, AdminReturnRequestDetail };
 
 // ─── Auth guard for admin server functions ─────────────────────────
 
@@ -152,6 +161,39 @@ export const $listConsentLogs = createServerFn({ method: "GET" })
       createdTo: data.createdTo ? new Date(data.createdTo) : undefined,
     }) satisfies Promise<PaginatedData<AdminConsentLogItem>>;
   });
+
+// ─── Return Requests (Resi) ────────────────────────────────────────
+
+export const $listReturnRequests = createServerFn({ method: "GET" })
+  .inputValidator((data: {
+    page?: number;
+    perPage?: number;
+    status?: "pending" | "approved" | "rejected" | "completed";
+    createdFrom?: string;
+    createdTo?: string;
+  }) => data)
+  .handler(async ({ data }) => {
+    await requireAdmin();
+    return listReturnRequests({
+      page: data.page ?? 1,
+      perPage: data.perPage ?? 12,
+      status: data.status,
+      createdFrom: data.createdFrom ? new Date(data.createdFrom) : undefined,
+      createdTo: data.createdTo ? new Date(data.createdTo) : undefined,
+    }) satisfies Promise<PaginatedData<AdminReturnRequestListItem>>;
+  });
+
+export const $getReturnRequest = createServerFn({ method: "GET" })
+  .inputValidator((data: { id: string }) => data)
+  .handler(async ({ data }) => {
+    await requireAdmin();
+    return getReturnRequest(data.id) satisfies Promise<AdminReturnRequestDetail | null>;
+  });
+
+export const $countPendingReturnRequests = createServerFn({ method: "GET" }).handler(async () => {
+  await requireAdmin();
+  return countPendingReturnRequests();
+});
 
 // ─── AI Advisor ────────────────────────────────────────────────────
 

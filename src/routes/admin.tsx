@@ -1,8 +1,9 @@
 import { createFileRoute, Link, Outlet, useMatchRoute, redirect } from "@tanstack/react-router";
 import { useState, useEffect, type ReactNode } from "react";
-import { Menu, X, LayoutDashboard, Package, ShoppingCart, Layers, ExternalLink, ImageIcon, LogOut, Sparkles, Shield } from "lucide-react";
+import { Menu, X, LayoutDashboard, Package, ShoppingCart, Layers, ExternalLink, ImageIcon, LogOut, Sparkles, Shield, RotateCcw } from "lucide-react";
 import { cn } from "~/lib/utils/cn";
 import { $signOut } from "~/lib/auth-functions";
+import { $countPendingReturnRequests } from "~/lib/admin-functions";
 
 // ── Server-side auth guard ──
 async function adminGuard() {
@@ -25,13 +26,22 @@ const NAV_ITEMS = [
   { label: "Media", href: "/admin/media", icon: ImageIcon, matchPath: "/admin/media" as const },
   { label: "Variant templates", href: "/admin/variant-templates", icon: Layers, matchPath: "/admin/variant-templates" as const },
   { label: "Ordini", href: "/admin/ordini", icon: ShoppingCart, matchPath: "/admin/ordini" as const },
+  { label: "Resi", href: "/admin/resi", icon: RotateCcw, matchPath: "/admin/resi" as const },
   { label: "AI Advisor", href: "/admin/ai-advisor", icon: Sparkles, matchPath: "/admin/ai-advisor" as const },
   { label: "Consensi", href: "/admin/consensi", icon: Shield, matchPath: "/admin/consensi" as const },
 ] as const;
 
 function AdminLayout(): ReactNode {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [pendingResiCount, setPendingResiCount] = useState<number>(0);
   const matchRoute = useMatchRoute();
+
+  // Badge count pending resi (one-shot al mount, errore silenzioso → 0)
+  useEffect(() => {
+    void $countPendingReturnRequests()
+      .then((n: number) => setPendingResiCount(n))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -115,6 +125,11 @@ function AdminLayout(): ReactNode {
                 >
                   <Icon className="h-5 w-5 shrink-0" />
                   {item.label}
+                  {item.label === "Resi" && pendingResiCount > 0 && (
+                    <span className="ml-auto inline-flex items-center justify-center rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-semibold text-white">
+                      {pendingResiCount}
+                    </span>
+                  )}
                 </Link>
               );
             })}
