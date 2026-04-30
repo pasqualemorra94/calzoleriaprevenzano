@@ -1,7 +1,7 @@
 import { ScrollCounter } from "~/components/ui/ScrollCounter";
 import { m, useInView } from "motion/react";
 import { useRef } from "react";
-import { ShieldCheck, Truck, RotateCcw, CreditCard } from "lucide-react";
+import { ShieldCheck, Truck, BadgeCheck, CreditCard } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 interface TrustItem {
@@ -18,10 +18,9 @@ const TRUST_ITEMS: TrustItem[] = [
     description: "Pellami italiani, produzione artigianale napoletana",
   },
   {
-    icon: RotateCcw,
-    title: "Reso facile",
-    description: "30 giorni per ripensarci, reso senza complicazioni",
-    counter: { target: 30, suffix: " giorni" },
+    icon: BadgeCheck,
+    title: "Pellami italiani certificati",
+    description: "Materiali selezionati da concerie italiane di alta qualità",
   },
   {
     icon: Truck,
