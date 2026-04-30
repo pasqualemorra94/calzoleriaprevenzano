@@ -1,8 +1,9 @@
 import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { m } from "motion/react";
 import { Check, Package, Loader2, ArrowRight, ShieldCheck } from "lucide-react";
+import { hasConsent } from "~/lib/cookieConsent";
 
 export const Route = createFileRoute("/ordine-confermato")({
   validateSearch: (search: Record<string, unknown>) => {
@@ -24,6 +25,7 @@ function OrderConfirmedPage(): ReactNode {
   const [order, setOrder] = useState<OrderData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const purchaseFiredRef = useRef<boolean>(false);
 
   useEffect(() => {
     if (!session_id) { setLoading(false); setError(true); return; }
@@ -43,6 +45,26 @@ function OrderConfirmedPage(): ReactNode {
       }
     })();
   }, [session_id]);
+
+  // GA4 purchase conversion event — gated by analytics consent + idempotent (StrictMode safe)
+  useEffect(() => {
+    if (!order) return;
+    if (purchaseFiredRef.current) return;
+    if (!hasConsent("analytics")) return;
+    if (typeof window.gtag !== "function") return;
+    purchaseFiredRef.current = true;
+    window.gtag("event", "purchase", {
+      transaction_id: order.orderNumber,
+      value: order.total,
+      currency: "EUR",
+      items: order.items.map((item, idx) => ({
+        item_id: `${order.orderNumber}-${idx}`,
+        item_name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+      })),
+    });
+  }, [order]);
 
   if (loading) {
     return (
