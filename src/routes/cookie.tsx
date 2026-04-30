@@ -270,10 +270,13 @@ function CookiePage(): ReactNode {
               visitate e sulle fonti di traffico. Tutti i dati sono raccolti in forma aggregata e anonimizzata.
             </p>
             <p className="mt-4">
-              Utilizziamo Google Analytics con l&apos;anonimizzazione dell&apos;indirizzo IP (tramite la funzione
-              <code className="mx-1 rounded bg-[var(--color-surface)] px-1.5 py-0.5 text-xs font-mono">anonymizeIp</code>)
-              e/o Plausible Analytics, un servizio di analisi privacy-oriented che non utilizza cookie e
-              rispetta pienamente il GDPR. Questi cookie vengono installati solo previo tuo consenso esplicito.
+              Utilizziamo Google Analytics 4 (GA4), il quale anonimizza by design l&apos;indirizzo IP degli utenti
+              (l&apos;anonimizzazione e&apos; integrata nel prodotto e non richiede flag aggiuntivi, a differenza della
+              versione Universal Analytics). Disabilitiamo inoltre i segnali pubblicitari Google
+              (<code className="mx-1 rounded bg-[var(--color-surface)] px-1.5 py-0.5 text-xs font-mono">allow_google_signals: false</code>)
+              e la personalizzazione degli annunci
+              (<code className="mx-1 rounded bg-[var(--color-surface)] px-1.5 py-0.5 text-xs font-mono">allow_ad_personalization_signals: false</code>).
+              Questi cookie vengono installati solo previo tuo consenso esplicito.
             </p>
             <CookieTable cookies={COOKIE_TABLE_ANALYTICS} />
             <p className="mt-4 text-sm">

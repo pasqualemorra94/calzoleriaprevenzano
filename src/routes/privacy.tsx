@@ -120,7 +120,7 @@ function PrivacyPage(): ReactNode {
 
               <div className="rounded-[var(--radius-md)] border border-[var(--color-border)] p-4">
                 <h3 className="font-medium text-[var(--color-text)] mb-2">E) Analisi e miglioramento del servizio (previo consenso)</h3>
-                <p>Analisi statistiche anonimizzate o aggregate sulla navigazione e sull&apos;utilizzo del sito, per migliorare l&apos;esperienza utente, ottimizzare le performance del sito e comprendere le preferenze della clientela. Utilizziamo Google Analytics in versione anonimizzata e/o Plausible Analytics.</p>
+                <p>Analisi statistiche anonimizzate o aggregate sulla navigazione e sull&apos;utilizzo del sito, per migliorare l&apos;esperienza utente, ottimizzare le performance del sito e comprendere le preferenze della clientela. Utilizziamo Google Analytics 4 (GA4) con anonimizzazione dell&apos;IP attiva by design e segnali pubblicitari/personalizzazione annunci disabilitati.</p>
                 <p className="mt-2 text-sm text-[var(--color-muted)]">Base giuridica: consenso dell&apos;interessato (art. 6, par. 1, lett. a) GDPR) e, per dati aggregati, interesse legittimo.</p>
               </div>
 
@@ -271,6 +271,9 @@ function PrivacyPage(): ReactNode {
               appropriate come le clausole contrattuali standard approvate dalla Commissione Europea o si assicurer&agrave;
               che il Paese destinatario offra un livello di protezione giudicato adeguato dal Garante europeo
               della protezione dei dati.
+            </p>
+            <p className="mt-4">
+              <strong className="text-[var(--color-text)]">Google Analytics 4:</strong> il servizio &egrave; fornito da Google Ireland Limited (titolare europeo, con sede in Irlanda). Il trattamento pu&ograve; comportare potenziali trasferimenti di dati negli Stati Uniti d&apos;America, regolati da Standard Contractual Clauses (SCC) approvate dalla Commissione Europea ai sensi dell&apos;art. 46 del GDPR. La base giuridica del trattamento &egrave; il consenso dell&apos;interessato (art. 6, par. 1, lett. a) GDPR), revocabile in qualsiasi momento dalle preferenze cookie. La sentenza Schrems II (CGUE C-311/18, 16 luglio 2020) ha sottolineato la necessit&agrave; di valutazioni caso per caso sui trasferimenti extra-UE: il Titolare ha valutato che le SCC adottate da Google offrono garanzie adeguate per la finalit&agrave; statistica anonimizzata qui descritta.
             </p>
           </section>
 
