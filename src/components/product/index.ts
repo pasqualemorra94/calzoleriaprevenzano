@@ -6,3 +6,4 @@ export { RelatedProducts } from "./RelatedProducts";
 export type { ProductListItem } from "./RelatedProducts";
 export { MobileImageCarousel } from "./MobileImageCarousel";
 export { MobileImageZoomModal } from "./MobileImageZoomModal";
+export { MobileStickyAddToCart } from "./MobileStickyAddToCart";
