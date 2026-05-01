@@ -62,7 +62,7 @@ export function MobileStickyAddToCart({
 
   return (
     <div
-      className="md:hidden fixed bottom-0 left-0 right-0 z-[var(--z-sticky)] border-t border-[var(--color-border)] bg-white/95 px-4 py-3 backdrop-blur"
+      className="md:hidden fixed bottom-[60px] left-0 right-0 z-[var(--z-sticky)] border-t border-[var(--color-border)] bg-white/95 px-4 py-3 backdrop-blur"
       style={{ boxShadow: "0 -4px 12px rgba(0,0,0,0.06)" }}
       role="region"
       aria-label="Aggiungi al carrello"
