@@ -3,6 +3,7 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { ShoppingBag, ZoomIn } from "lucide-react";
 import { cn } from "~/lib/utils/cn";
 import { usePrefersReducedMotion } from "~/lib/hooks/use-prefers-reduced-motion";
+import { MobileImageCarousel } from "./MobileImageCarousel";
 
 export interface ProductImage {
   id: string;
@@ -26,6 +27,33 @@ const LENS_SIZE = 180;
 // ── Main Gallery Component ──
 
 export function ProductGallery({ images, selectedIndex, onSelect, productName }: ProductGalleryProps): ReactNode {
+  return (
+    <>
+      {/* Desktop: ZoomableImage + MagnifiableThumbnail (md+) */}
+      <div className="hidden md:block">
+        <DesktopGallery
+          images={images}
+          selectedIndex={selectedIndex}
+          onSelect={onSelect}
+          productName={productName}
+        />
+      </div>
+
+      {/* Mobile: scroll-snap carousel + zoom modal (<md) */}
+      <MobileImageCarousel
+        className="block md:hidden"
+        images={images}
+        selectedIndex={selectedIndex}
+        onSelect={onSelect}
+        productName={productName}
+      />
+    </>
+  );
+}
+
+// ── Desktop Gallery (estratto: codice originale del return) ──
+
+function DesktopGallery({ images, selectedIndex, onSelect, productName }: ProductGalleryProps): ReactNode {
   return (
     <div>
       <ZoomableImage
