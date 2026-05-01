@@ -72,6 +72,24 @@ export function CookieBanner({ className }: CookieBannerProps): ReactNode {
     });
   }, [analyticsEnabled, marketingEnabled, persistAndClose]);
 
+  // Body scroll lock + ESC handler quando il modal preferenze mobile è aperto
+  useEffect(() => {
+    if (!showPreferences) return;
+    const original = document.body.style.overflow;
+    const mq = window.matchMedia("(max-width: 767px)");
+    if (mq.matches) {
+      document.body.style.overflow = "hidden";
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowPreferences(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = original;
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [showPreferences]);
+
   if (consent !== null || !isVisible) return null;
 
   return (
@@ -115,13 +133,67 @@ export function CookieBanner({ className }: CookieBannerProps): ReactNode {
           </p>
         </div>
 
+        {/* DESKTOP: pannello inline (≥md) */}
         {showPreferences && (
-          <CookiePreferencesPanel
-            analyticsEnabled={analyticsEnabled}
-            marketingEnabled={marketingEnabled}
-            onAnalyticsChange={setAnalyticsEnabled}
-            onMarketingChange={setMarketingEnabled}
-          />
+          <div className="hidden md:block">
+            <CookiePreferencesPanel
+              analyticsEnabled={analyticsEnabled}
+              marketingEnabled={marketingEnabled}
+              onAnalyticsChange={setAnalyticsEnabled}
+              onMarketingChange={setMarketingEnabled}
+            />
+          </div>
+        )}
+
+        {/* MOBILE: modal full-screen (<md) */}
+        {showPreferences && (
+          <div
+            className="md:hidden fixed inset-0 z-[var(--z-modal)] bg-black/50 flex items-center justify-center p-4"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Preferenze cookie"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setShowPreferences(false);
+            }}
+          >
+            <div className="bg-[var(--color-surface)] rounded-lg w-[90vw] max-w-md max-h-[80vh] overflow-y-auto p-6 relative">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-display text-base font-semibold text-[var(--color-text)]">
+                  Preferenze cookie
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setShowPreferences(false)}
+                  aria-label="Chiudi preferenze"
+                  className="rounded-md p-1 text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+              <CookiePreferencesPanel
+                analyticsEnabled={analyticsEnabled}
+                marketingEnabled={marketingEnabled}
+                onAnalyticsChange={setAnalyticsEnabled}
+                onMarketingChange={setMarketingEnabled}
+              />
+              <div className="mt-4 flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setShowPreferences(false)}
+                  className="flex-1 h-10 rounded-md border border-[var(--color-border)] bg-transparent text-sm font-medium text-[var(--color-text)] hover:bg-[var(--color-muted)]"
+                >
+                  Annulla
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSavePreferences}
+                  className="flex-1 h-10 rounded-md bg-[var(--color-primary)] text-sm font-medium text-[var(--color-primary-foreground)] hover:bg-[var(--color-primary-dark)]"
+                >
+                  Salva
+                </button>
+              </div>
+            </div>
+          </div>
         )}
 
         {/* MOBILE: 2 bottoni primari + link Personalizza sotto */}
