@@ -4,3 +4,4 @@ export { VariantSelector } from "./VariantSelector";
 export type { ProductVariant, OptionGroup } from "./VariantSelector";
 export { RelatedProducts } from "./RelatedProducts";
 export type { ProductListItem } from "./RelatedProducts";
+export { MobileImageCarousel } from "./MobileImageCarousel";
