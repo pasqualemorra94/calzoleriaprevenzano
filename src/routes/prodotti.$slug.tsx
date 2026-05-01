@@ -9,6 +9,7 @@ import { VariantSelector } from "~/components/product/VariantSelector";
 import type { ProductVariant, OptionGroup } from "~/components/product/VariantSelector";
 import { RelatedProducts } from "~/components/product/RelatedProducts";
 import type { ProductListItem } from "~/components/product/RelatedProducts";
+import { MobileStickyAddToCart } from "~/components/product/MobileStickyAddToCart";
 import { $getProductBySlug, $getFeaturedProducts } from "~/lib/product-functions";
 import type { ProductDetail } from "~/lib/product-functions";
 
@@ -190,7 +191,7 @@ function ProdottoPage(): ReactNode {
   };
 
   return (
-    <>
+    <div className="pb-24 md:pb-0">
       <div className="bg-[var(--color-surface)] py-4">
         <div className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
           <nav className="text-sm text-[var(--color-text-muted)]" aria-label="Breadcrumb">
@@ -278,6 +279,18 @@ function ProdottoPage(): ReactNode {
       </section>
 
       <RelatedProducts products={relatedProducts} currentProductId={product.id} />
-    </>
+
+      {/* Mobile sticky add-to-cart bar (md:hidden gestito internamente) */}
+      <MobileStickyAddToCart
+        price={priceBreakdown.total}
+        quantity={quantity}
+        onSetQuantity={(q) => setQuantity(q)}
+        cartStatus={cartStatus}
+        canAddToCart={!!canAddToCart}
+        onAddToCart={handleAddToCart}
+        effectiveStock={effectiveStock}
+        allOptionsSelected={allVisibleGroupsSelected}
+      />
+    </div>
   );
 }

@@ -139,7 +139,7 @@ export function VariantSelector({
         </div>
       )}
 
-      <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
+      <div className="mt-8 hidden md:flex flex-col gap-4 sm:flex-row sm:items-center">
         <div className="flex items-center rounded-[var(--radius-md)] border border-[var(--color-border)]">
           <button type="button" onClick={() => onSetQuantity(Math.max(1, quantity - 1))} disabled={quantity <= 1 || effectiveStock === 0}
             className="flex h-12 w-12 items-center justify-center text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-text)] disabled:opacity-40" aria-label="Diminuisci quantità">
