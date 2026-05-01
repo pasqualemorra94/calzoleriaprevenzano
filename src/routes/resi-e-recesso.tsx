@@ -112,7 +112,7 @@ function ResiERecessoPage(): ReactNode {
             </h3>
             <p>
               Per esercitare il diritto, compila il
-              {" "}<a href="/resi-e-recesso/richiesta" className="text-[var(--color-primary)] underline underline-offset-2">modulo di richiesta reso online</a>{" "}
+              {" "}<a href="/richiesta-reso" className="text-[var(--color-primary)] underline underline-offset-2">modulo di richiesta reso online</a>{" "}
               indicando il numero del tuo ordine. Riceverai una conferma via email entro 14 giorni
               con le istruzioni di restituzione.
             </p>

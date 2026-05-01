@@ -6,7 +6,7 @@ import { z } from "zod";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/resi-e-recesso/richiesta")({
+export const Route = createFileRoute("/richiesta-reso")({
   component: ReturnRequestPage,
 });
 
@@ -69,7 +69,7 @@ function ReturnRequestPage(): ReactNode {
           return;
         }
         toast.success("Richiesta inviata. Controlla la tua email.");
-        navigate({ to: "/resi-e-recesso/richiesta/inviata" });
+        navigate({ to: "/richiesta-inviata" });
       } catch {
         const msg = "Errore di connessione. Riprova tra qualche istante.";
         setServerError(msg);

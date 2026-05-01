@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { CheckCircle2 } from "lucide-react";
 import type { ReactNode } from "react";
 
-export const Route = createFileRoute("/resi-e-recesso/richiesta/inviata")({
+export const Route = createFileRoute("/richiesta-inviata")({
   component: ReturnRequestSentPage,
 });
 

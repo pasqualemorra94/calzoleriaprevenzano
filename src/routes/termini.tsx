@@ -326,7 +326,7 @@ function TerminiPage(): ReactNode {
             </p>
             <p className="mt-4">
               Per facilitare l&apos;esercizio del diritto, l&apos;Acquirente pu&ograve; utilizzare il
-              {" "}<a href="/resi-e-recesso/richiesta" className="text-[var(--color-primary)] underline underline-offset-2">modulo di richiesta reso online</a>{" "}
+              {" "}<a href="/richiesta-reso" className="text-[var(--color-primary)] underline underline-offset-2">modulo di richiesta reso online</a>{" "}
               accessibile dal nostro sito. Resta fermo il diritto dell&apos;Acquirente di esercitare il
               recesso anche tramite comunicazione esplicita inviata a
               {" "}<a href="mailto:resi@calzoleriaprevenzano.it" className="text-[var(--color-primary)] underline underline-offset-2">resi@calzoleriaprevenzano.it</a>{" "}
