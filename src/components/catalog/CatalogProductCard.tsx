@@ -15,7 +15,7 @@ export interface ProductListItem {
 
 export function CatalogProductCard({ product }: { product: ProductListItem }): ReactNode {
   return (
-    <article className="group relative">
+    <article className="group relative transition-transform duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] motion-safe:active:scale-[0.985]">
       <Link
         to="/prodotti/$slug"
         params={{ slug: product.slug }}
@@ -25,10 +25,10 @@ export function CatalogProductCard({ product }: { product: ProductListItem }): R
         <span className="sr-only">Vedi {product.name}</span>
       </Link>
 
-      <div className="relative aspect-[3/4] overflow-hidden rounded-[var(--radius-lg)] bg-[var(--color-muted)] transition-shadow duration-300 group-hover:shadow-[0_8px_30px_rgba(139,94,60,0.12)]">
+      <div className="relative aspect-[3/4] overflow-hidden rounded-[var(--radius-lg)] bg-[var(--color-muted)] transition-shadow duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:shadow-[0_8px_30px_rgba(139,94,60,0.12)]">
         {product.image ? (
           <img src={product.image.url} alt={product.image.alt ?? product.name}
-            className="h-full w-full object-cover transition-transform duration-[var(--transition-slow)] group-hover:scale-[1.05]"
+            className="h-full w-full object-cover transition-transform duration-[var(--transition-slow)] motion-safe:group-hover:scale-[1.05]"
             loading="lazy" width={400} height={533} />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-[var(--color-text-muted)]">
@@ -41,23 +41,23 @@ export function CatalogProductCard({ product }: { product: ProductListItem }): R
         )}
 
         {/* Hover reveal — "Vedi dettaglio" pill */}
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex translate-y-full justify-center p-4 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex translate-y-full justify-center p-4 opacity-0 transition-[transform,opacity] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-safe:group-hover:translate-y-0 group-hover:opacity-100">
           <span className="inline-flex h-11 items-center gap-2 rounded-[var(--radius-md)] bg-[var(--color-primary)] px-5 text-xs font-semibold tracking-wide text-white shadow-[0_4px_20px_rgba(139,94,60,0.3)]">
             <ShoppingBag className="h-4 w-4" />
             Vedi dettaglio
           </span>
         </div>
 
-        <div className="absolute inset-0 bg-[var(--color-primary)]/0 transition-colors duration-300 group-hover:bg-[var(--color-primary)]/[0.03]" />
+        <div className="absolute inset-0 bg-[var(--color-primary)]/0 transition-colors duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:bg-[var(--color-primary)]/[0.03]" />
 
-        <div className="pointer-events-none absolute inset-0 rounded-[var(--radius-lg)] border border-[var(--color-accent)]/0 transition-colors duration-[var(--transition-base)] group-hover:border-[var(--color-accent)]/30" />
+        <div className="pointer-events-none absolute inset-0 rounded-[var(--radius-lg)] border border-[var(--color-accent)]/0 transition-colors duration-[250ms] ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:border-[var(--color-accent)]/30" />
       </div>
 
       <div className="mt-4">
         {product.category && (
           <span className="text-[11px] text-[var(--color-text-muted)]">{product.category.name}</span>
         )}
-        <h3 className="mt-0.5 text-xs font-medium leading-snug text-[var(--color-text)] transition-colors duration-200 group-hover:text-[var(--color-primary)]">
+        <h3 className="mt-0.5 text-xs font-medium leading-snug text-[var(--color-text)] transition-colors duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:text-[var(--color-primary)]">
           {product.name}
         </h3>
         <div className="mt-1 flex items-center gap-2">

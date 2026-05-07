@@ -330,7 +330,7 @@ function CatalogoPage(): ReactNode {
                     type="button"
                     disabled={page <= 1}
                     onClick={() => setPage((p) => p - 1)}
-                    className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-md)] border border-[var(--color-border)] text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface)] disabled:cursor-not-allowed disabled:opacity-40"
+                    className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-md)] border border-[var(--color-border)] text-[var(--color-text-muted)] transition-[background-color,color,opacity,transform] duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] hover:bg-[var(--color-surface)] motion-safe:active:scale-[0.96] disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
                     aria-label="Pagina precedente"
                   >
                     <ChevronLeft className="h-4 w-4" />
@@ -340,7 +340,7 @@ function CatalogoPage(): ReactNode {
                       key={p}
                       type="button"
                       onClick={() => setPage(p)}
-                      className={`flex h-10 w-10 items-center justify-center rounded-[var(--radius-md)] text-sm font-medium transition-colors ${
+                      className={`flex h-10 w-10 items-center justify-center rounded-[var(--radius-md)] text-sm font-medium transition-[background-color,color,transform] duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] motion-safe:active:scale-[0.96] ${
                         p === page
                           ? "bg-[var(--color-primary)] text-white"
                           : "border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface)]"
@@ -354,7 +354,7 @@ function CatalogoPage(): ReactNode {
                     type="button"
                     disabled={page >= totalPages}
                     onClick={() => setPage((p) => p + 1)}
-                    className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-md)] border border-[var(--color-border)] text-[var(--color-text-muted)] transition-colors hover:bg-[var(--color-surface)] disabled:cursor-not-allowed disabled:opacity-40"
+                    className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-md)] border border-[var(--color-border)] text-[var(--color-text-muted)] transition-[background-color,color,opacity,transform] duration-200 ease-[cubic-bezier(0.4,0,0.2,1)] hover:bg-[var(--color-surface)] motion-safe:active:scale-[0.96] disabled:cursor-not-allowed disabled:opacity-40 disabled:active:scale-100"
                     aria-label="Pagina successiva"
                   >
                     <ChevronRight className="h-4 w-4" />
