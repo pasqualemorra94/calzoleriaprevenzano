@@ -390,7 +390,7 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
             {/* Left — socials */}
             <div className="flex items-center gap-0.5">
               <a
-                href="https://www.instagram.com/calzoleriaprevenzano"
+                href="https://www.instagram.com/calzoleria_prevenzano"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Instagram"
@@ -737,7 +737,7 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
               <div className="mb-3 flex items-center justify-between">
                 <div className="flex items-center gap-1 text-[var(--color-text-muted)]">
                   <a
-                    href="https://www.instagram.com/calzoleriaprevenzano"
+                    href="https://www.instagram.com/calzoleria_prevenzano"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Instagram"

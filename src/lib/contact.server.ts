@@ -11,7 +11,8 @@ import { contactNotificationTemplate, autoReplyTemplate } from "~/lib/email-temp
 
 /** Submit a contact form */
 export async function submitContact(input: ContactInput, ipAddress: string | null) {
-  const adminEmail = process.env.ADMIN_EMAIL ?? process.env.EMAIL_FROM ?? "info@calzoleriaprevenzano.it";
+  // Fallback finale: vera mailbox del titolare. info@calzoleriaprevenzano.it è solo facade pubblica (non riceve).
+  const adminEmail = process.env.ADMIN_EMAIL ?? process.env.EMAIL_FROM ?? "nunzio.prevenzano@gmail.com";
 
   // Send notification email to admin (best-effort)
   await sendEmail({

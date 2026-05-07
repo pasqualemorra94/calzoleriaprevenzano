@@ -25,14 +25,62 @@ const ORG_SCHEMA = {
   name: APP_CONFIG.site.name,
   url: APP_CONFIG.site.url,
   description: `${APP_CONFIG.site.name} — ${APP_CONFIG.site.tagline}. Sandali artigianali fatti a mano a Napoli dal 1965.`,
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: "Via Chiaia, 104",
-    addressLocality: "Napoli",
-    addressRegion: "NA",
-    postalCode: "80132",
-    addressCountry: "IT",
-  },
+  location: [
+    {
+      "@type": "Place",
+      name: "Negozio",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Via Chiaia, 104",
+        addressLocality: "Napoli",
+        addressRegion: "NA",
+        postalCode: "80121",
+        addressCountry: "IT",
+      },
+      telephone: "+390810410442",
+      openingHoursSpecification: [
+        {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          opens: "09:30",
+          closes: "20:00",
+        },
+      ],
+    },
+    {
+      "@type": "Place",
+      name: "Laboratorio",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "Via Michelangelo Schipa, 111",
+        addressLocality: "Napoli",
+        addressRegion: "NA",
+        postalCode: "80122",
+        addressCountry: "IT",
+      },
+      telephone: "+390819526465",
+      openingHoursSpecification: [
+        {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: ["Tuesday", "Wednesday", "Thursday", "Friday"],
+          opens: "09:30",
+          closes: "14:00",
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: ["Tuesday", "Wednesday", "Thursday", "Friday"],
+          opens: "16:00",
+          closes: "20:00",
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: "Saturday",
+          opens: "09:30",
+          closes: "13:00",
+        },
+      ],
+    },
+  ],
 } as const;
 
 export const Route = createRootRoute({

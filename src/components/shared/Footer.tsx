@@ -33,7 +33,7 @@ const FOOTER_LINKS = {
 } as const;
 
 const SOCIAL_LINKS = [
-  { platform: "Instagram", href: "https://instagram.com/calzoleriaprevenzano", icon: Instagram },
+  { platform: "Instagram", href: "https://instagram.com/calzoleria_prevenzano", icon: Instagram },
   { platform: "Facebook", href: "https://facebook.com/calzoleriaprevenzano", icon: Facebook },
 ] as const;
 

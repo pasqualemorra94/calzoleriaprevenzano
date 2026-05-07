@@ -3,21 +3,64 @@ import type { ReactNode } from "react";
 import { useState } from "react";
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
 import { m } from "motion/react";
-import { MapPin, Phone, MessageCircle, Mail, Loader2, Check } from "lucide-react";
+import { MapPin, Phone, MessageCircle, Mail, Clock, Loader2, Check } from "lucide-react";
 
 export const Route = createFileRoute("/contatti")({
   component: ContattiPage,
 });
 
+type ContactLocation = {
+  readonly name: string;
+  readonly address: string;
+  readonly hours: readonly string[];
+};
+
+type ContactPhone = {
+  readonly display: string;
+  readonly tel: string;
+  readonly note?: string;
+};
+
+type ContactInfo = {
+  readonly headline: string;
+  readonly body: string;
+  readonly locations: readonly ContactLocation[];
+  readonly phones: { readonly primary: ContactPhone; readonly secondary: ContactPhone };
+  readonly email: string;
+  readonly whatsapp: { readonly display: string; readonly url: string };
+  readonly piva: string;
+};
+
+const WHATSAPP_URL =
+  "https://wa.me/390810410442?text=Ciao,%20vorrei%20informazioni%20sui%20vostri%20sandali";
+
 const CONTACT_INFO = {
   headline: "Contattaci",
-  body: "Hai una domanda sui nostri prodotti, un dubbio sulla taglia o vuoi creare un sandalo completamente su misura? Siamo qui per aiutarti. Scrivici, chiamaci o vieni a trovarci in bottega.",
-  address: "Via Chiaia, 104 — 80132 Napoli (NA)",
+  body: "Hai una domanda sui nostri prodotti, un dubbio sulla taglia o vuoi creare un sandalo completamente su misura? Siamo qui per aiutarti. Scrivici, chiamaci o vieni a trovarci in bottega o in laboratorio.",
+  locations: [
+    {
+      name: "Negozio",
+      address: "Via Chiaia, 104 — 80121 Napoli (NA)",
+      hours: ["Lun–Sab: 9:30–20:00", "Domenica: chiuso"],
+    },
+    {
+      name: "Laboratorio",
+      address: "Via Michelangelo Schipa, 111 — 80122 Napoli (NA)",
+      hours: [
+        "Mar–Ven: 9:30–14:00 / 16:00–20:00",
+        "Sabato: 9:30–13:00",
+        "Lunedì e Domenica: chiuso",
+      ],
+    },
+  ],
+  phones: {
+    primary: { display: "081 0410442", tel: "+390810410442", note: "anche WhatsApp" },
+    secondary: { display: "081 1952 6465", tel: "+390819526465" },
+  },
   email: "info@calzoleriaprevenzano.it",
-  phone: "+39 081 XXX XXXX",
-  whatsapp: "+39 333 XXX XXXX",
+  whatsapp: { display: "081 0410442", url: WHATSAPP_URL },
   piva: "04590921211",
-} as const;
+} as const satisfies ContactInfo;
 
 function ContattiPage(): ReactNode {
   const [formState, setFormState] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -87,44 +130,98 @@ function ContattiPage(): ReactNode {
             {/* Left — Contact details */}
             <div>
               <p className="text-xs font-medium tracking-wider text-[var(--color-text-muted)]">
-                Informazioni di contatto
+                Le nostre sedi
+              </p>
+              <hr className="stitch-divider stitch-divider--left my-4" />
+
+              {/* Sedi: 2 card affiancate (md:) */}
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                {CONTACT_INFO.locations.map((loc) => (
+                  <article
+                    key={loc.name}
+                    className="rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] p-5"
+                  >
+                    <h3 className="font-display text-base font-semibold text-[var(--color-text)]">
+                      {loc.name}
+                    </h3>
+                    <div className="mt-3 flex items-start gap-3">
+                      <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-primary)]" />
+                      <p className="text-sm text-[var(--color-text-secondary)]">{loc.address}</p>
+                    </div>
+                    <div className="mt-3 flex items-start gap-3">
+                      <Clock className="mt-0.5 h-4 w-4 shrink-0 text-[var(--color-primary)]" />
+                      <ul className="space-y-1 text-sm text-[var(--color-text-secondary)]">
+                        {loc.hours.map((line) => (
+                          <li key={line}>{line}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </article>
+                ))}
+              </div>
+
+              {/* Contatti */}
+              <p className="mt-10 text-xs font-medium tracking-wider text-[var(--color-text-muted)]">
+                Contatti
               </p>
               <hr className="stitch-divider stitch-divider--left my-4" />
 
               <ul className="space-y-6">
                 <li className="flex items-start gap-4">
-                  <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-[var(--color-primary)]" />
-                  <div>
-                    <p className="text-sm font-medium text-[var(--color-text)]">Indirizzo</p>
-                    <p className="mt-1 text-sm text-[var(--color-text-secondary)]">{CONTACT_INFO.address}</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-4">
                   <Phone className="mt-0.5 h-5 w-5 shrink-0 text-[var(--color-primary)]" />
                   <div>
                     <p className="text-sm font-medium text-[var(--color-text)]">Telefono</p>
-                    <p className="mt-1 text-sm text-[var(--color-text-secondary)]">{CONTACT_INFO.phone}</p>
+                    <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+                      <a
+                        href={`tel:${CONTACT_INFO.phones.primary.tel}`}
+                        className="transition-colors hover:text-[var(--color-primary)]"
+                      >
+                        {CONTACT_INFO.phones.primary.display}
+                      </a>
+                      {CONTACT_INFO.phones.primary.note ? (
+                        <span className="ml-1 text-xs text-[var(--color-text-muted)]">
+                          ({CONTACT_INFO.phones.primary.note})
+                        </span>
+                      ) : null}
+                    </p>
+                    <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+                      <a
+                        href={`tel:${CONTACT_INFO.phones.secondary.tel}`}
+                        className="transition-colors hover:text-[var(--color-primary)]"
+                      >
+                        {CONTACT_INFO.phones.secondary.display}
+                      </a>
+                    </p>
                   </div>
                 </li>
                 <li className="flex items-start gap-4">
                   <MessageCircle className="mt-0.5 h-5 w-5 shrink-0 text-[var(--color-primary)]" />
                   <div>
                     <p className="text-sm font-medium text-[var(--color-text)]">WhatsApp</p>
-                    <p className="mt-1 text-sm text-[var(--color-text-secondary)]">{CONTACT_INFO.whatsapp}</p>
+                    <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+                      {CONTACT_INFO.whatsapp.display}
+                    </p>
                   </div>
                 </li>
                 <li className="flex items-start gap-4">
                   <Mail className="mt-0.5 h-5 w-5 shrink-0 text-[var(--color-primary)]" />
                   <div>
                     <p className="text-sm font-medium text-[var(--color-text)]">Email</p>
-                    <p className="mt-1 text-sm text-[var(--color-text-secondary)]">{CONTACT_INFO.email}</p>
+                    <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+                      <a
+                        href={`mailto:${CONTACT_INFO.email}`}
+                        className="transition-colors hover:text-[var(--color-primary)]"
+                      >
+                        {CONTACT_INFO.email}
+                      </a>
+                    </p>
                   </div>
                 </li>
               </ul>
 
-              {/* WhatsApp CTA */}
+              {/* WhatsApp CTA — brand color #25D366 (eccezione documentata in CONTEXT.md) */}
               <a
-                href={`https://wa.me/${CONTACT_INFO.whatsapp.replace(/\s/g, "")}`}
+                href={CONTACT_INFO.whatsapp.url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="mt-8 inline-flex h-12 items-center justify-center gap-2 rounded-[var(--radius-md)] bg-[#25D366] px-6 text-sm font-medium text-white transition-colors hover:bg-[#1DA851]"
@@ -132,6 +229,11 @@ function ContattiPage(): ReactNode {
                 <MessageCircle className="h-4 w-4" />
                 Scrivici su WhatsApp
               </a>
+
+              {/* P.IVA piedino */}
+              <p className="mt-8 text-xs text-[var(--color-text-muted)]">
+                P.IVA {CONTACT_INFO.piva}
+              </p>
             </div>
 
             {/* Right — Contact form */}
