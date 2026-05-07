@@ -460,7 +460,7 @@ function CookiePage(): ReactNode {
             </p>
             <div className="rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 my-4">
               <p className="font-medium text-[var(--color-text)]">Calzoleria Prevenzano di Prevenzano Antonio</p>
-              <p>Via Chiaia, 104 &mdash; 80132 Napoli (NA)</p>
+              <p>Via Chiaia, 104 &mdash; 80121 Napoli (NA)</p>
               <p>P.IVA: 04590921211</p>
               <p className="mt-2">Email: <a href="mailto:privacy@calzoleriaprevenzano.it" className="text-[var(--color-primary)] underline underline-offset-2">privacy@calzoleriaprevenzano.it</a></p>
             </div>

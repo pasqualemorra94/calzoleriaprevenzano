@@ -55,7 +55,7 @@ export async function sendAuthEmail(type: AuthEmailType, data: AuthEmailData): P
           Il link scade tra ${t === "reset" ? "1 ora" : "24 ore"}.
         </p>
         <p style="font-size:12px; color:#8A8A8A; margin:16px 0 0; text-align:center;">
-          ${brandName} — Via Chiaia, 104, 80132 Napoli
+          ${brandName} — Via Chiaia, 104, 80121 Napoli
         </p>
       </div>`;
   };

@@ -217,7 +217,7 @@ export const Route = createFileRoute("/api/return-request")({
       <p>Il nostro team la valuterà e ti contatterà via email entro <strong>14 giorni</strong> con le istruzioni di restituzione o l'esito della valutazione.</p>
       <p style="margin-top:24px;color:#6b6157;font-size:14px;">Per qualsiasi necessità: <a href="mailto:resi@calzoleriaprevenzano.it" style="color:#8b6f47;">resi@calzoleriaprevenzano.it</a></p>
       <hr style="border:0;border-top:1px solid #d9cdb8;margin:24px 0;">
-      <p style="color:#6b6157;font-size:12px;">Calzoleria Prevenzano di Prevenzano Antonio<br>Via Chiaia 104 — 80132 Napoli (NA)<br>P.IVA 04590921211</p>
+      <p style="color:#6b6157;font-size:12px;">Calzoleria Prevenzano di Prevenzano Antonio<br>Via Chiaia 104 — 80121 Napoli (NA)<br>P.IVA 04590921211</p>
     </td></tr>
   </table>
 </body></html>`;

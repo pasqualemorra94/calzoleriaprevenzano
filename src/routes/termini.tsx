@@ -54,7 +54,7 @@ function TerminiPage(): ReactNode {
             <ul className="space-y-2 mt-4">
               <li>
                 <strong className="text-[var(--color-text)]">&quot;Venditore&quot; o &quot;Calzoleria Prevenzano&quot;:</strong> Calzoleria
-                Prevenzano di Prevenzano Antonio, con sede legale in Via Chiaia, 104 &mdash; 80132 Napoli (NA),
+                Prevenzano di Prevenzano Antonio, con sede legale in Via Chiaia, 104 &mdash; 80121 Napoli (NA),
                 P.IVA 04590921211, email: info@calzoleriaprevenzano.it.
               </li>
               <li>
@@ -317,7 +317,7 @@ function TerminiPage(): ReactNode {
             </p>
             <ul className="list-disc pl-6 space-y-2 mt-2">
               <li>Email a: <a href="mailto:resi@calzoleriaprevenzano.it" className="text-[var(--color-primary)] underline underline-offset-2">resi@calzoleriaprevenzano.it</a></li>
-              <li>Raccomandata A/R a: Calzoleria Prevenzano, Via Chiaia, 104 &mdash; 80132 Napoli (NA)</li>
+              <li>Raccomandata A/R a: Calzoleria Prevenzano, Via Chiaia, 104 &mdash; 80121 Napoli (NA)</li>
             </ul>
             <p className="mt-4">
               L&apos;Acquirente deve restituire i Prodotti entro 14 giorni dalla data in cui ha comunicato il recesso,
@@ -539,7 +539,7 @@ function TerminiPage(): ReactNode {
             </p>
             <div className="rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 my-4">
               <p className="font-medium text-[var(--color-text)]">Calzoleria Prevenzano di Prevenzano Antonio</p>
-              <p>Via Chiaia, 104 &mdash; 80132 Napoli (NA)</p>
+              <p>Via Chiaia, 104 &mdash; 80121 Napoli (NA)</p>
               <p>P.IVA: 04590921211</p>
               <p className="mt-2">Email: <a href="mailto:info@calzoleriaprevenzano.it" className="text-[var(--color-primary)] underline underline-offset-2">info@calzoleriaprevenzano.it</a></p>
               <p>Resi e rimborsi: <a href="mailto:resi@calzoleriaprevenzano.it" className="text-[var(--color-primary)] underline underline-offset-2">resi@calzoleriaprevenzano.it</a></p>

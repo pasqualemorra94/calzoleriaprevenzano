@@ -119,7 +119,7 @@ function ResiERecessoPage(): ReactNode {
             <p className="mt-4">
               In alternativa, puoi inviare una comunicazione esplicita via email a
               {" "}<a href="mailto:resi@calzoleriaprevenzano.it" className="text-[var(--color-primary)] underline underline-offset-2">resi@calzoleriaprevenzano.it</a>{" "}
-              o tramite raccomandata A/R a Calzoleria Prevenzano, Via Chiaia 104 &mdash; 80132 Napoli (NA),
+              o tramite raccomandata A/R a Calzoleria Prevenzano, Via Chiaia 104 &mdash; 80121 Napoli (NA),
               come previsto dall&apos;Art. 49 c. 1 lett. h e Art. 54 D.Lgs. 206/2005.
             </p>
 

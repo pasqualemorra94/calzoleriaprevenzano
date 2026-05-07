@@ -28,7 +28,7 @@ export const emailBrand = {
   bodyFont: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
 
   // Footer
-  companyAddress: "Via Chiaia, 104 — 80132 Napoli (NA), Italia",
+  companyAddress: "Via Chiaia, 104 — 80121 Napoli (NA), Italia",
   unsubscribeUrl: "",
 } as const;
 

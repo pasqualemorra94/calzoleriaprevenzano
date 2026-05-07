@@ -346,7 +346,7 @@ function ReturnRequestPage(): ReactNode {
             resi@calzoleriaprevenzano.it
           </a>{" "}
           o tramite raccomandata A/R a Calzoleria Prevenzano, Via Chiaia 104 &mdash;
-          80132 Napoli (NA), come previsto dall&apos;Art. 49 c. 1 lett. h e Art. 54
+          80121 Napoli (NA), come previsto dall&apos;Art. 49 c. 1 lett. h e Art. 54
           D.Lgs. 206/2005.
         </p>
       </div>
