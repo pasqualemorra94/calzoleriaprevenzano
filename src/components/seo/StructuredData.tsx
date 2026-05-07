@@ -7,7 +7,7 @@
  */
 
 type JsonLdPrimitive = string | number | boolean | null;
-type JsonLdValue = JsonLdPrimitive | JsonLdValue[] | { [key: string]: JsonLdValue };
+export type JsonLdValue = JsonLdPrimitive | JsonLdValue[] | { [key: string]: JsonLdValue };
 
 interface StructuredDataProps {
   data: JsonLdValue | JsonLdValue[];

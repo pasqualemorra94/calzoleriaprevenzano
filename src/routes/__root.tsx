@@ -14,12 +14,12 @@ import { MobileSearchOverlay } from "~/components/shared/MobileSearchOverlay";
 import { Footer, CookieBanner, GoogleAnalytics, WhatsAppFloatingButton } from "~/components/shared";
 import { MobileBottomNav } from "~/components/shared/MobileBottomNav";
 import { ErrorBoundary } from "~/components/shared/ErrorBoundary";
-import { StructuredData } from "~/components/seo/StructuredData";
+import { StructuredData, type JsonLdValue } from "~/components/seo/StructuredData";
 import { cn } from "~/lib/utils/cn";
 import { Toaster } from "sonner";
 import appCss from "~/styles/app.css?url";
 
-const ORG_SCHEMA = {
+const ORG_SCHEMA: JsonLdValue = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: APP_CONFIG.site.name,
