@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
 import { StaggeredGrid, StaggeredItem } from "~/components/ui/StaggeredGrid";
 import { m } from "motion/react";
@@ -70,6 +70,12 @@ function CatalogoPage(): ReactNode {
   const [loading, setLoading] = useState(false);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
+  // Ref alla colonna principale (intestazione "X prodotti" + griglia + paginazione).
+  // Si attacca al wrapper `min-w-0 flex-1` perché resta stabile in tutti gli stati
+  // (loading / loaded / vuoto), mentre la griglia stessa cambia tra skeleton e StaggeredGrid.
+  const gridRef = useRef<HTMLDivElement>(null);
+  const isFirstRender = useRef(true);
+
   // Fetch products client-side when filters change (after initial SSR)
   const fetchProducts = useCallback(async () => {
     setLoading(true);
@@ -92,6 +98,29 @@ function CatalogoPage(): ReactNode {
   useEffect(() => { if (routeSearch.category !== activeCategory) { setActiveCategory(routeSearch.category); setPage(1); } }, [routeSearch.category]);
   useEffect(() => { fetchProducts(); }, [fetchProducts]);
   useEffect(() => { setMobileFiltersOpen(false); }, [activeCategory, query]);
+
+  // Scroll-to-top della griglia su cambio page/categoria/query/sort.
+  // Salta il primo render per non interferire con SSR/hydration: l'utente che arriva
+  // direttamente con `?page=2&category=sandali` NON deve essere buttato giù né su.
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    const el = gridRef.current;
+    if (!el) return;
+
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Sottrai un buffer per la navbar fissa, così l'utente atterra sull'intestazione
+    // "X prodotti per..." e non sotto la navbar.
+    const navbarOffset = 96;
+    const top = el.getBoundingClientRect().top + window.scrollY - navbarOffset;
+
+    window.scrollTo({
+      top: Math.max(0, top),
+      behavior: prefersReduced ? "auto" : "smooth",
+    });
+  }, [page, activeCategory, query, sort]);
 
   const handleSearch = (e: React.FormEvent) => { e.preventDefault(); setPage(1); setQuery(searchInput); };
   const handleClearSearch = () => { setSearchInput(""); setQuery(""); setPage(1); };
@@ -187,7 +216,7 @@ function CatalogoPage(): ReactNode {
             </div>
 
             {/* Main Content */}
-            <div className="min-w-0 flex-1">
+            <div ref={gridRef} className="min-w-0 flex-1">
               {/* Sort + Results count */}
               <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-sm text-[var(--color-text-muted)]">
