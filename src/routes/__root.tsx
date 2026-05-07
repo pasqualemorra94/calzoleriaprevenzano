@@ -11,7 +11,7 @@ import { APP_CONFIG } from "~/lib/constants/app";
 import { MotionProvider } from "~/providers/MotionProvider";
 import { MegaMenu } from "~/components/shared/MegaMenu";
 import { MobileSearchOverlay } from "~/components/shared/MobileSearchOverlay";
-import { Footer, CookieBanner, GoogleAnalytics } from "~/components/shared";
+import { Footer, CookieBanner, GoogleAnalytics, WhatsAppFloatingButton } from "~/components/shared";
 import { MobileBottomNav } from "~/components/shared/MobileBottomNav";
 import { ErrorBoundary } from "~/components/shared/ErrorBoundary";
 import { StructuredData } from "~/components/seo/StructuredData";
@@ -206,6 +206,7 @@ function RootComponent() {
       {!isAdmin && <CookieBanner />}
       {!isAdmin && <GoogleAnalytics />}
       {!isAdmin && !isAccount && <MobileBottomNav />}
+      {!isAdmin && <WhatsAppFloatingButton />}
       {!isAdmin && <MobileSearchOverlay />}
       <Toaster position="bottom-right" richColors closeButton />
     </MotionProvider>
