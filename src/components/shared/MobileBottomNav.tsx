@@ -1,16 +1,16 @@
 "use client";
 
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, ShoppingBag, Search, User } from "lucide-react";
+import { Home, ShoppingBag, Search, MessageCircle } from "lucide-react";
 import { cn } from "~/lib/utils/cn";
 import type { ReactNode } from "react";
 
 type LinkItem = {
   kind: "link";
   label: string;
-  to: "/" | "/carrello" | "/account";
+  to: "/" | "/carrello";
   icon: typeof Home;
-  matchPath: "/" | "/carrello" | "/account";
+  matchPath: "/" | "/carrello";
   exact?: boolean;
 };
 
@@ -21,13 +21,30 @@ type ActionItem = {
   action: "open-search";
 };
 
-type NavItem = LinkItem | ActionItem;
+type ExternalItem = {
+  kind: "external";
+  label: string;
+  href: string;
+  icon: typeof MessageCircle;
+  ariaLabel: string;
+};
+
+type NavItem = LinkItem | ActionItem | ExternalItem;
+
+const WHATSAPP_URL =
+  "https://wa.me/390810410442?text=Ciao,%20vorrei%20informazioni%20sui%20vostri%20sandali";
 
 const NAV_ITEMS: NavItem[] = [
   { kind: "link", label: "Home", to: "/", icon: Home, matchPath: "/", exact: true },
   { kind: "action", label: "Cerca", icon: Search, action: "open-search" },
   { kind: "link", label: "Carrello", to: "/carrello", icon: ShoppingBag, matchPath: "/carrello" },
-  { kind: "link", label: "Account", to: "/account", icon: User, matchPath: "/account" },
+  {
+    kind: "external",
+    label: "WhatsApp",
+    href: WHATSAPP_URL,
+    icon: MessageCircle,
+    ariaLabel: "Contattaci su WhatsApp",
+  },
 ];
 
 /**
@@ -78,6 +95,24 @@ export function MobileBottomNav({ cartCount = 0 }: { cartCount?: number }): Reac
                   {item.label}
                 </span>
               </button>
+            );
+          }
+
+          if (item.kind === "external") {
+            return (
+              <a
+                key={item.label}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-1 flex-col items-center gap-0.5 py-2 pt-3 text-center text-[var(--color-text-muted)] transition-colors duration-200 active:text-[var(--color-primary)]"
+                aria-label={item.ariaLabel}
+              >
+                <Icon className="h-5 w-5" strokeWidth={1.5} />
+                <span className="text-[10px] font-medium leading-tight">
+                  {item.label}
+                </span>
+              </a>
             );
           }
 
