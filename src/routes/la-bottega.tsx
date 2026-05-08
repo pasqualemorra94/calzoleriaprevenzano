@@ -85,7 +85,7 @@ function LaBottegaPage(): ReactNode {
             <m.img
               src="/images/nunzio-ritratto.jpg"
               alt="Calzoleria Prevenzano — la nostra storia, l'arte del sandalo dal 1984"
-              className="aspect-[4/3] w-full rounded-[var(--radius-lg)] object-cover"
+              className="aspect-[4/3] w-full rounded-[var(--radius-lg)] object-cover lg:sticky lg:top-24"
               loading="lazy"
               width={800}
               height={600}
@@ -120,24 +120,6 @@ function LaBottegaPage(): ReactNode {
                   Oltre alla creazione di sandali su misura, offriamo servizi di lavaggio, tintura e recrafting su calzature di lusso come Church's, Edward Green e Tricker's.
                 </p>
               </div>
-              <dl className="mt-8 space-y-4">
-                <div className="flex gap-4">
-                  <dt className="w-28 shrink-0 text-sm font-medium text-[var(--color-text-muted)]">Sede principale</dt>
-                  <dd className="text-sm text-[var(--color-text-secondary)]">Via Chiaia, 104 — 80121 Napoli (NA)</dd>
-                </div>
-                <div className="flex gap-4">
-                  <dt className="w-28 shrink-0 text-sm font-medium text-[var(--color-text-muted)]">Seconda sede</dt>
-                  <dd className="text-sm text-[var(--color-text-secondary)]">Via Michelangelo Schipa, 111 — 80122 Napoli (NA)</dd>
-                </div>
-                <div className="flex gap-4">
-                  <dt className="w-28 shrink-0 text-sm font-medium text-[var(--color-text-muted)]">Telefono</dt>
-                  <dd className="text-sm text-[var(--color-text-secondary)]">081 0410442 — 081 19526465</dd>
-                </div>
-                <div className="flex gap-4">
-                  <dt className="w-28 shrink-0 text-sm font-medium text-[var(--color-text-muted)]">P.Iva</dt>
-                  <dd className="text-sm text-[var(--color-text-secondary)]">04590921211</dd>
-                </div>
-              </dl>
               <a
                 href={ABOUT_COPY.ctaHref}
                 className="mt-8 inline-flex h-12 items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-primary)] px-8 text-sm font-medium text-white transition-colors duration-[var(--transition-base)] hover:bg-[var(--color-primary-dark)]"
