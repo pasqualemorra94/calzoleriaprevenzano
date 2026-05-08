@@ -539,6 +539,12 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
 
           <span className="h-1 w-1 rounded-full bg-[var(--color-accent)]/50" />
 
+          <Link to="/guida-alla-taglia" className={navLinkClass} onClick={handleItemClick}>
+            Guida alla taglia
+          </Link>
+
+          <span className="h-1 w-1 rounded-full bg-[var(--color-accent)]/50" />
+
           <Link to="/contatti" className={navLinkClass} onClick={handleItemClick}>
             Contatti
           </Link>
@@ -702,6 +708,16 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
                     className="flex items-center justify-between px-5 py-4 text-[17px] font-medium tracking-wide text-[var(--color-text)] transition-colors active:bg-[var(--color-muted)]/50"
                   >
                     Chi Siamo
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    to="/guida-alla-taglia"
+                    onClick={handleItemClick}
+                    className="flex items-center justify-between px-5 py-4 text-[17px] font-medium tracking-wide text-[var(--color-text)] transition-colors active:bg-[var(--color-muted)]/50"
+                  >
+                    Guida alla taglia
                   </Link>
                 </li>
 
