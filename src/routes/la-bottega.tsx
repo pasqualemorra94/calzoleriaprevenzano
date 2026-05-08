@@ -81,7 +81,7 @@ function LaBottegaPage(): ReactNode {
       {/* Story content — storia + foto affiancate subito dopo hero */}
       <ScrollAnimatedSection className="bg-[var(--color-background)] py-[var(--section-padding-y)]" variants={fadeInUp}>
         <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
+          <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2 lg:gap-16">
             <m.img
               src="/images/nunzio-ritratto.jpg"
               alt="Calzoleria Prevenzano — la nostra storia, l'arte del sandalo dal 1984"
@@ -111,6 +111,34 @@ function LaBottegaPage(): ReactNode {
                   </p>
                 ))}
               </div>
+              <h2 className="mt-12 font-display text-[var(--text-xl)] font-semibold tracking-tight">
+                La nostra calzoleria
+              </h2>
+              <hr className="stitch-divider stitch-divider--left my-4" />
+              <p className="text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
+                Nel cuore di Napoli, a due passi da Via Chiaia e Piazza del Plebiscito, la nostra calzoleria è il luogo dove la tradizione artigianale incontra la creatività. Qui puoi toccare con mano la qualità dei materiali, provare i modelli e vedere gli artigiani al lavoro.
+              </p>
+              <p className="mt-4 text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
+                Oltre alla creazione di sandali su misura, offriamo servizi di lavaggio, tintura e recrafting su calzature di lusso come Church's, Edward Green e Tricker's.
+              </p>
+              <dl className="mt-8 space-y-4">
+                <div className="flex gap-4">
+                  <dt className="w-28 shrink-0 text-sm font-medium text-[var(--color-text-muted)]">Sede principale</dt>
+                  <dd className="text-sm text-[var(--color-text-secondary)]">Via Chiaia, 104 — 80121 Napoli (NA)</dd>
+                </div>
+                <div className="flex gap-4">
+                  <dt className="w-28 shrink-0 text-sm font-medium text-[var(--color-text-muted)]">Seconda sede</dt>
+                  <dd className="text-sm text-[var(--color-text-secondary)]">Via Michelangelo Schipa, 111 — 80122 Napoli (NA)</dd>
+                </div>
+                <div className="flex gap-4">
+                  <dt className="w-28 shrink-0 text-sm font-medium text-[var(--color-text-muted)]">Telefono</dt>
+                  <dd className="text-sm text-[var(--color-text-secondary)]">081 0410442 — 081 19526465</dd>
+                </div>
+                <div className="flex gap-4">
+                  <dt className="w-28 shrink-0 text-sm font-medium text-[var(--color-text-muted)]">P.Iva</dt>
+                  <dd className="text-sm text-[var(--color-text-secondary)]">04590921211</dd>
+                </div>
+              </dl>
               <a
                 href={ABOUT_COPY.ctaHref}
                 className="mt-8 inline-flex h-12 items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-primary)] px-8 text-sm font-medium text-white transition-colors duration-[var(--transition-base)] hover:bg-[var(--color-primary-dark)]"
@@ -145,10 +173,6 @@ function LaBottegaPage(): ReactNode {
         </section>
       </ScrollAnimatedSection>
 
-      {/* Info block */}
-      <ScrollAnimatedSection className="bg-[var(--color-background)] py-[var(--section-padding-y)]" variants={fadeInUp}>
-        <BottegaInfoBlock />
-      </ScrollAnimatedSection>
     </>
   );
 }
@@ -190,61 +214,3 @@ function TeamCard({ member, index }: { member: TeamMember; index: number }) {
   );
 }
 
-// ─── Bottega Info Block ─────────────────────────────────────────────
-
-function BottegaInfoBlock(): ReactNode {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
-
-  return (
-    <section ref={ref} className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
-      <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
-        <m.img
-          src="/images/nunzio-ritratto.jpg"
-          alt="Nunzio Prevenzano al lavoro nella calzoleria di Via Chiaia, Napoli"
-          className="aspect-[4/3] w-full rounded-[var(--radius-lg)] object-cover"
-          loading="lazy"
-          width={800}
-          height={600}
-          initial={{ opacity: 0, x: -32 }}
-          animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -32 }}
-          transition={{ duration: 0.55, ease: "easeOut" }}
-        />
-        <m.div
-          initial={{ opacity: 0, x: 32 }}
-          animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 32 }}
-          transition={{ duration: 0.55, ease: "easeOut", delay: 0.15 }}
-        >
-          <h2 className="font-display text-[var(--text-xl)] font-semibold tracking-tight">
-            La nostra calzoleria
-          </h2>
-          <hr className="stitch-divider stitch-divider--left my-4" />
-          <p className="text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
-            Nel cuore di Napoli, a due passi da Via Chiaia e Piazza del Plebiscito, la nostra calzoleria è il luogo dove la tradizione artigianale incontra la creatività. Qui puoi toccare con mano la qualità dei materiali, provare i modelli e vedere gli artigiani al lavoro.
-          </p>
-          <p className="mt-4 text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
-            Oltre alla creazione di sandali su misura, offriamo servizi di lavaggio, tintura e recrafting su calzature di lusso come Church's, Edward Green e Tricker's.
-          </p>
-          <dl className="mt-8 space-y-4">
-            <div className="flex gap-4">
-              <dt className="w-28 shrink-0 text-sm font-medium text-[var(--color-text-muted)]">Sede principale</dt>
-              <dd className="text-sm text-[var(--color-text-secondary)]">Via Chiaia, 104 — 80121 Napoli (NA)</dd>
-            </div>
-            <div className="flex gap-4">
-              <dt className="w-28 shrink-0 text-sm font-medium text-[var(--color-text-muted)]">Seconda sede</dt>
-              <dd className="text-sm text-[var(--color-text-secondary)]">Via Michelangelo Schipa, 111 — 80122 Napoli (NA)</dd>
-            </div>
-            <div className="flex gap-4">
-              <dt className="w-28 shrink-0 text-sm font-medium text-[var(--color-text-muted)]">Telefono</dt>
-              <dd className="text-sm text-[var(--color-text-secondary)]">081 0410442 — 081 19526465</dd>
-            </div>
-            <div className="flex gap-4">
-              <dt className="w-28 shrink-0 text-sm font-medium text-[var(--color-text-muted)]">P.Iva</dt>
-              <dd className="text-sm text-[var(--color-text-secondary)]">04590921211</dd>
-            </div>
-          </dl>
-        </m.div>
-      </div>
-    </section>
-  );
-}
