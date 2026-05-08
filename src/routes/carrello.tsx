@@ -5,6 +5,8 @@ import { m } from "motion/react";
 import { ShoppingBag, Minus, Plus, Trash2, Loader2, ArrowRight } from "lucide-react";
 import { OrderSummary } from "~/components/checkout/OrderSummary";
 import type { CartItemDetail } from "~/components/checkout/OrderSummary";
+import { $getPublicShippingConfig } from "~/lib/shipping-functions";
+import { computeShippingCost, type ShippingConfigShape } from "~/lib/utils/shipping";
 
 interface CartResult {
   id: string;
@@ -13,24 +15,31 @@ interface CartResult {
   subtotal: number;
 }
 
-const FREE_SHIPPING_THRESHOLD = 99;
-const SHIPPING_COST = 7.9;
-
 export const Route = createFileRoute("/carrello")({
   component: CarrelloPage,
 });
 
 function CarrelloPage(): ReactNode {
   const [cart, setCart] = useState<CartResult | null>(null);
+  const [shippingConfig, setShippingConfig] = useState<ShippingConfigShape | null>(null);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
 
   const fetchCart = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/cart");
-      const json = await res.json();
-      if (json.ok) setCart(json.data);
+      const [cartRes, configRes] = await Promise.all([
+        fetch("/api/cart").then((r) => r.json()),
+        $getPublicShippingConfig().catch(() => null),
+      ]);
+      if (cartRes.ok) setCart(cartRes.data);
+      if (configRes) {
+        setShippingConfig({
+          cost: configRes.cost,
+          freeThreshold: configRes.freeThreshold,
+          enabled: configRes.enabled,
+        });
+      }
     } catch { /* ignore */ }
     setLoading(false);
   }, []);
@@ -103,7 +112,9 @@ function CarrelloPage(): ReactNode {
     );
   }
 
-  const shippingCost = cart.subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+  const shippingCost = shippingConfig
+    ? computeShippingCost(cart.subtotal, shippingConfig)
+    : 0;
 
   return (
     <>
@@ -184,7 +195,8 @@ function CarrelloPage(): ReactNode {
             <div className="lg:sticky lg:top-24">
               <OrderSummary
                 items={cart.items} subtotal={cart.subtotal} shippingCost={shippingCost}
-                freeShippingThreshold={FREE_SHIPPING_THRESHOLD}
+                freeShippingThreshold={shippingConfig?.freeThreshold ?? 99}
+                shippingEnabled={shippingConfig?.enabled ?? true}
               />
               <Link to="/checkout" className="mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-[var(--radius-md)] bg-[var(--color-primary)] px-6 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-dark)]">
                 Procedi al checkout <ArrowRight className="h-4 w-4" />

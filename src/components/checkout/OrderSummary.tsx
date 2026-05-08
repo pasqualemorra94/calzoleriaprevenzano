@@ -17,6 +17,7 @@ interface OrderSummaryProps {
   subtotal: number;
   shippingCost: number;
   freeShippingThreshold: number;
+  shippingEnabled?: boolean;
   submitStatus?: "idle" | "loading" | "success" | "error";
   isCheckout?: boolean;
   disabled?: boolean;
@@ -24,6 +25,7 @@ interface OrderSummaryProps {
 
 export function OrderSummary({
   items, subtotal, shippingCost, freeShippingThreshold,
+  shippingEnabled = true,
   submitStatus = "idle", isCheckout = false, disabled = false,
 }: OrderSummaryProps): ReactNode {
   const total = subtotal + shippingCost;
@@ -78,13 +80,15 @@ export function OrderSummary({
         </div>
         <div className="flex justify-between text-sm">
           <span className="text-[var(--color-text-secondary)]">Spedizione</span>
-          {shippingCost === 0 ? (
+          {!shippingEnabled ? (
+            <span className="font-medium text-green-600">Spedizione gratuita</span>
+          ) : shippingCost === 0 ? (
             <span className="font-medium text-green-600">Gratis</span>
           ) : (
             <span className="font-medium">€{shippingCost.toFixed(2)}</span>
           )}
         </div>
-        {!isCheckout && subtotal < freeShippingThreshold && (
+        {shippingEnabled && !isCheckout && subtotal < freeShippingThreshold && (
           <div className="flex items-center gap-2 rounded-[var(--radius-md)] bg-amber-50 px-3 py-2 text-xs text-amber-700">
             <Truck className="h-4 w-4 shrink-0" />
             <span>Aggiungi ancora €{(freeShippingThreshold - subtotal).toFixed(2)} per la spedizione gratuita</span>

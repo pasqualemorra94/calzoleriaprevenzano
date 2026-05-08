@@ -6,9 +6,9 @@ import { Loader2, Check } from "lucide-react";
 import { Truck } from "lucide-react";
 import { OrderSummary } from "~/components/checkout/OrderSummary";
 import type { CartItemDetail } from "~/components/checkout/OrderSummary";
+import { $getPublicShippingConfig } from "~/lib/shipping-functions";
+import { computeShippingCost, type ShippingConfigShape } from "~/lib/utils/shipping";
 
-const FREE_SHIPPING_THRESHOLD = 99;
-const SHIPPING_COST = 7.9;
 const INPUT_CLASS =
   "h-11 w-full rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] px-4 text-sm text-[var(--color-text)] placeholder:text-[var(--color-text-muted)] transition-colors focus:border-[var(--color-primary)] focus:outline-none";
 const LABEL_CLASS = "block text-sm font-medium text-[var(--color-text)]";
@@ -20,6 +20,7 @@ export const Route = createFileRoute("/checkout")({
 function CheckoutPage(): ReactNode {
   const navigate = useNavigate();
   const [cart, setCart] = useState<{ items: CartItemDetail[]; subtotal: number } | null>(null);
+  const [shippingConfig, setShippingConfig] = useState<ShippingConfigShape | null>(null);
   const [loading, setLoading] = useState(true);
   const [authChecked, setAuthChecked] = useState(false);
   const [redirecting, setRedirecting] = useState(false);
@@ -65,10 +66,19 @@ function CheckoutPage(): ReactNode {
   useEffect(() => {
     (async () => {
       try {
-        const cartRes = await fetch("/api/cart");
-        const cartJson = await cartRes.json();
-        if (cartJson.ok && cartJson.data.items.length === 0) { navigate({ to: "/carrello" }); return; }
-        if (cartJson.ok) setCart(cartJson.data);
+        const [cartRes, configRes] = await Promise.all([
+          fetch("/api/cart").then((r) => r.json()),
+          $getPublicShippingConfig().catch(() => null),
+        ]);
+        if (cartRes.ok && cartRes.data.items.length === 0) { navigate({ to: "/carrello" }); return; }
+        if (cartRes.ok) setCart(cartRes.data);
+        if (configRes) {
+          setShippingConfig({
+            cost: configRes.cost,
+            freeThreshold: configRes.freeThreshold,
+            enabled: configRes.enabled,
+          });
+        }
       } catch { /* ignore */ }
       setAuthChecked(true);
       setLoading(false);
@@ -144,7 +154,9 @@ function CheckoutPage(): ReactNode {
     );
   }
 
-  const shippingCost = cart.subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+  const shippingCost = shippingConfig
+    ? computeShippingCost(cart.subtotal, shippingConfig)
+    : 0;
 
   return (
     <>
@@ -247,7 +259,8 @@ function CheckoutPage(): ReactNode {
                 )}
                 <OrderSummary
                   items={cart.items} subtotal={cart.subtotal} shippingCost={shippingCost}
-                  freeShippingThreshold={FREE_SHIPPING_THRESHOLD}
+                  freeShippingThreshold={shippingConfig?.freeThreshold ?? 99}
+                  shippingEnabled={shippingConfig?.enabled ?? true}
                   submitStatus={submitStatus} isCheckout
                   disabled={!acceptedTerms}
                 />

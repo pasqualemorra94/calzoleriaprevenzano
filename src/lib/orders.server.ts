@@ -9,6 +9,8 @@ import { prisma } from "~/lib/db.server";
 import type { CheckoutInput, CheckoutGuestInput } from "~/lib/validators/products";
 import type { PaginatedData } from "~/lib/types/api";
 import { createLogger } from "~/lib/logger.server";
+import { getShippingConfig } from "~/lib/admin/shipping-config.server";
+import { computeShippingCost } from "~/lib/utils/shipping";
 
 const log = createLogger("orders");
 
@@ -207,7 +209,8 @@ export async function createOrder(
     (sum: number, item: CartItemFull) => sum + Number(item.price) * item.quantity,
     0,
   );
-  const shippingCost = subtotal >= 99 ? 0 : 7.9;
+  const shippingConfig = await getShippingConfig();
+  const shippingCost = computeShippingCost(subtotal, shippingConfig);
   const netAfterDiscount = subtotal - discountAmount;
   const total = Math.round((netAfterDiscount + shippingCost) * 100) / 100;
   // VAT contained in the total at 22% — for invoicing only, NOT added to total
