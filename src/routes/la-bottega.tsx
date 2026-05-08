@@ -100,7 +100,10 @@ function LaBottegaPage(): ReactNode {
               viewport={{ once: true, amount: 0.3 }}
               transition={{ duration: 0.55, ease: "easeOut", delay: 0.15 }}
             >
-              <hr className="stitch-divider stitch-divider--left mb-6" />
+              <h2 className="font-display text-[var(--text-xl)] font-semibold tracking-tight">
+                La nostra calzoleria
+              </h2>
+              <hr className="stitch-divider stitch-divider--left my-4" />
               <div className="space-y-5">
                 {ABOUT_COPY.paragraphs.map((paragraph, index) => (
                   <p
@@ -110,17 +113,13 @@ function LaBottegaPage(): ReactNode {
                     {paragraph}
                   </p>
                 ))}
+                <p className="text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
+                  Nel cuore di Napoli, a due passi da Via Chiaia e Piazza del Plebiscito, la nostra calzoleria è il luogo dove la tradizione artigianale incontra la creatività. Qui puoi toccare con mano la qualità dei materiali, provare i modelli e vedere gli artigiani al lavoro.
+                </p>
+                <p className="text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
+                  Oltre alla creazione di sandali su misura, offriamo servizi di lavaggio, tintura e recrafting su calzature di lusso come Church's, Edward Green e Tricker's.
+                </p>
               </div>
-              <h2 className="mt-12 font-display text-[var(--text-xl)] font-semibold tracking-tight">
-                La nostra calzoleria
-              </h2>
-              <hr className="stitch-divider stitch-divider--left my-4" />
-              <p className="text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
-                Nel cuore di Napoli, a due passi da Via Chiaia e Piazza del Plebiscito, la nostra calzoleria è il luogo dove la tradizione artigianale incontra la creatività. Qui puoi toccare con mano la qualità dei materiali, provare i modelli e vedere gli artigiani al lavoro.
-              </p>
-              <p className="mt-4 text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
-                Oltre alla creazione di sandali su misura, offriamo servizi di lavaggio, tintura e recrafting su calzature di lusso come Church's, Edward Green e Tricker's.
-              </p>
               <dl className="mt-8 space-y-4">
                 <div className="flex gap-4">
                   <dt className="w-28 shrink-0 text-sm font-medium text-[var(--color-text-muted)]">Sede principale</dt>
