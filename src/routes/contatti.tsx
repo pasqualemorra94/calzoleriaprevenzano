@@ -39,12 +39,12 @@ const CONTACT_INFO = {
   body: "Hai una domanda sui nostri prodotti, un dubbio sulla taglia o vuoi creare un sandalo completamente su misura? Siamo qui per aiutarti. Scrivici, chiamaci o vieni a trovarci in calzoleria o in laboratorio.",
   locations: [
     {
-      name: "Negozio",
+      name: "Negozio 1",
       address: "Via Chiaia, 104 — 80121 Napoli (NA)",
       hours: ["Lun–Sab: 9:30–20:00", "Domenica: chiuso"],
     },
     {
-      name: "Laboratorio",
+      name: "Negozio 2",
       address: "Via Michelangelo Schipa, 111 — 80122 Napoli (NA)",
       hours: [
         "Mar–Ven: 9:30–14:00 / 16:00–20:00",
@@ -134,8 +134,8 @@ function ContattiPage(): ReactNode {
               </p>
               <hr className="stitch-divider stitch-divider--left my-4" />
 
-              {/* Sedi: 2 card affiancate (md:) */}
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              {/* Sedi: card impilate verticalmente */}
+              <div className="grid grid-cols-1 gap-6">
                 {CONTACT_INFO.locations.map((loc) => (
                   <article
                     key={loc.name}
