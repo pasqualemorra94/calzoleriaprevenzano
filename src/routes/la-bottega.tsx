@@ -78,29 +78,46 @@ function LaBottegaPage(): ReactNode {
         </div>
       </section>
 
-      {/* Story content */}
-      <ScrollAnimatedSection className="bg-[var(--color-background)] py-[var(--section-padding-y)]">
+      {/* Story content — storia + foto affiancate subito dopo hero */}
+      <ScrollAnimatedSection className="bg-[var(--color-background)] py-[var(--section-padding-y)]" variants={fadeInUp}>
         <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
-          <div className="mx-auto max-w-3xl">
-            <div className="space-y-6">
-              {ABOUT_COPY.paragraphs.map((paragraph, index) => (
-                <p
-                  key={index}
-                  className="text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)] first-of-type:text-[var(--text-lg)]"
-                >
-                  {paragraph}
-                </p>
-              ))}
-            </div>
-
-            <hr className="stitch-divider stitch-divider--left my-12" />
-
-            <a
-              href={ABOUT_COPY.ctaHref}
-              className="inline-flex h-12 items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-primary)] px-8 text-sm font-medium text-white transition-colors duration-[var(--transition-base)] hover:bg-[var(--color-primary-dark)]"
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
+            <m.img
+              src="/images/nunzio-ritratto.jpg"
+              alt="Calzoleria Prevenzano — la nostra storia, l'arte del sandalo dal 1984"
+              className="aspect-[4/3] w-full rounded-[var(--radius-lg)] object-cover"
+              loading="lazy"
+              width={800}
+              height={600}
+              initial={{ opacity: 0, x: -32 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.55, ease: "easeOut" }}
+            />
+            <m.div
+              initial={{ opacity: 0, x: 32 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.55, ease: "easeOut", delay: 0.15 }}
             >
-              {ABOUT_COPY.cta}
-            </a>
+              <hr className="stitch-divider stitch-divider--left mb-6" />
+              <div className="space-y-5">
+                {ABOUT_COPY.paragraphs.map((paragraph, index) => (
+                  <p
+                    key={index}
+                    className="text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)] first-of-type:text-[var(--text-lg)]"
+                  >
+                    {paragraph}
+                  </p>
+                ))}
+              </div>
+              <a
+                href={ABOUT_COPY.ctaHref}
+                className="mt-8 inline-flex h-12 items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-primary)] px-8 text-sm font-medium text-white transition-colors duration-[var(--transition-base)] hover:bg-[var(--color-primary-dark)]"
+              >
+                {ABOUT_COPY.cta}
+              </a>
+            </m.div>
           </div>
         </section>
       </ScrollAnimatedSection>
