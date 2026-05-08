@@ -54,7 +54,7 @@ function TerminiPage(): ReactNode {
             <ul className="space-y-2 mt-4">
               <li>
                 <strong className="text-[var(--color-text)]">&quot;Venditore&quot; o &quot;Calzoleria Prevenzano&quot;:</strong> Calzoleria
-                Prevenzano di Prevenzano Antonio, con sede legale in Via Chiaia, 104 &mdash; 80121 Napoli (NA),
+                Prevenzano di Prevenzano Nunzio, con sede legale in Via Chiaia, 104 &mdash; 80121 Napoli (NA),
                 P.IVA 04590921211, email: info@calzoleriaprevenzano.it.
               </li>
               <li>
@@ -538,7 +538,7 @@ function TerminiPage(): ReactNode {
               Per qualsiasi domanda relativa alle presenti Condizioni Generali di Vendita, puoi contattarci a:
             </p>
             <div className="rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 my-4">
-              <p className="font-medium text-[var(--color-text)]">Calzoleria Prevenzano di Prevenzano Antonio</p>
+              <p className="font-medium text-[var(--color-text)]">Calzoleria Prevenzano di Prevenzano Nunzio</p>
               <p>Via Chiaia, 104 &mdash; 80121 Napoli (NA)</p>
               <p>P.IVA: 04590921211</p>
               <p className="mt-2">Email: <a href="mailto:info@calzoleriaprevenzano.it" className="text-[var(--color-primary)] underline underline-offset-2">info@calzoleriaprevenzano.it</a></p>
