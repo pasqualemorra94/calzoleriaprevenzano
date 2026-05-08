@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { useState, useCallback, useEffect } from "react";
 import { m, AnimatePresence } from "motion/react";
 import { Check, ChevronRight, ChevronDown, Minus, Plus, ShoppingBag, Loader2, ZoomIn, X } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { cn } from "~/lib/utils/cn";
 import type { VariantConfig } from "~/lib/types/variant-config";
 
@@ -89,6 +90,17 @@ export function VariantSelector({
           {effectiveStock === 0 ? "Esaurito" : effectiveStock <= 3 ? `Ultimi ${effectiveStock} pezzi` : "Disponibile"}
         </span>
       </div>
+
+      {visibleGroups.length > 0 && (
+        <div className="mt-4 flex justify-end">
+          <Link
+            to="/guida-alla-taglia"
+            className="inline-flex items-center gap-1 text-xs font-medium text-[var(--color-primary)] underline underline-offset-2 transition-colors hover:text-[var(--color-primary-dark)]"
+          >
+            Trova la tua taglia
+          </Link>
+        </div>
+      )}
 
       {visibleGroups.length > 0 && (
         <div className="space-y-5">
