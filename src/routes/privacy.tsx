@@ -38,7 +38,7 @@ function PrivacyPage(): ReactNode {
               <p className="font-medium text-[var(--color-text)]">
                 Calzoleria Prevenzano
               </p>
-              <p>di Prevenzano Antonio</p>
+              <p>di Prevenzano Nunzio</p>
               <p>Via Chiaia, 104 &mdash; 80121 Napoli (NA)</p>
               <p>P.IVA: 04590921211</p>
               <p>Email: <a href="mailto:info@calzoleriaprevenzano.it" className="text-[var(--color-primary)] underline underline-offset-2">info@calzoleriaprevenzano.it</a></p>
@@ -411,7 +411,7 @@ function PrivacyPage(): ReactNode {
               dei dati personali, puoi contattarci a:
             </p>
             <div className="rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 my-4">
-              <p className="font-medium text-[var(--color-text)]">Calzoleria Prevenzano di Prevenzano Antonio</p>
+              <p className="font-medium text-[var(--color-text)]">Calzoleria Prevenzano di Prevenzano Nunzio</p>
               <p>Via Chiaia, 104 &mdash; 80121 Napoli (NA)</p>
               <p>P.IVA: 04590921211</p>
               <p className="mt-2">Email generale: <a href="mailto:info@calzoleriaprevenzano.it" className="text-[var(--color-primary)] underline underline-offset-2">info@calzoleriaprevenzano.it</a></p>
