@@ -116,3 +116,19 @@ export const listConsentLogsSchema = z.object({
 });
 
 export type ListConsentLogsInput = z.infer<typeof listConsentLogsSchema>;
+
+// ─── Admin Shipping Config ──────────────────────────────────────────────
+
+export const updateShippingConfigSchema = z.object({
+  cost: z.coerce
+    .number({ message: "Inserisci un numero valido" })
+    .min(0, "Il costo non può essere negativo")
+    .max(9999.99, "Costo massimo €9999.99"),
+  freeThreshold: z.coerce
+    .number({ message: "Inserisci un numero valido" })
+    .min(0, "La soglia non può essere negativa")
+    .max(99999.99, "Soglia massima €99999.99"),
+  enabled: z.boolean(),
+});
+
+export type UpdateShippingConfigInput = z.infer<typeof updateShippingConfigSchema>;

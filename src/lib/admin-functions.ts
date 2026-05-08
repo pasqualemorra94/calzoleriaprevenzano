@@ -30,9 +30,15 @@ import type {
   AdminReturnRequestListItem,
   AdminReturnRequestDetail,
 } from "./admin/admin-returns.server";
+import {
+  getShippingConfig,
+  updateShippingConfig,
+  type ShippingConfigData,
+} from "./admin/shipping-config.server";
+import type { UpdateShippingConfigInput } from "./validators/admin";
 
 // Re-export types
-export type { DashboardStats, AdminProductListItem, AdminProductDetail, AdminOrderListItem, AdminOrderDetail, MediaListItem, AdminConsentLogItem, AdminReturnRequestListItem, AdminReturnRequestDetail };
+export type { DashboardStats, AdminProductListItem, AdminProductDetail, AdminOrderListItem, AdminOrderDetail, MediaListItem, AdminConsentLogItem, AdminReturnRequestListItem, AdminReturnRequestDetail, ShippingConfigData };
 
 // ─── Auth guard for admin server functions ─────────────────────────
 
@@ -207,3 +213,17 @@ export const $getAdvisorCatalog = createServerFn({ method: "GET" }).handler(asyn
     aiMetadata: JSON.parse(JSON.stringify(p.aiMetadata ?? {})),
   }));
 });
+
+// ─── Shipping Config ──────────────────────────────────────────────
+
+export const $getShippingConfig = createServerFn({ method: "GET" }).handler(async () => {
+  await requireAdmin();
+  return getShippingConfig();
+});
+
+export const $updateShippingConfig = createServerFn({ method: "POST" })
+  .inputValidator((data: UpdateShippingConfigInput) => data)
+  .handler(async ({ data }) => {
+    const user = await requireAdmin();
+    return updateShippingConfig(data, user.id);
+  });
