@@ -17,7 +17,7 @@ const ABOUT_COPY = {
   headline: "Dal 1984, l'arte del sandalo nel cuore di Napoli",
   paragraphs: [
     "Calzoleria Prevenzano è fondata nel 1984 dal maestro Vincenzo Prevenzano in un quartiere residenziale di Napoli. L'attività principale è la riparazione di scarpe, borse e valigie — e sin da subito il maestro Vincenzo si fa notare per la maestria, l'amore e la passione con cui si dedicava a questo stupendo mestiere, diventando presto un punto di riferimento per gli abitanti della zona.",
-    "Successivamente crea la sua prima linea di sandali su misura, riscuotendo un notevole e apprezzato successo. Il figlio Nunzio Prevenzano, sin da piccolo, frequenta la bottega rimanendo sempre più ammaliato dalle abilità del padre. Al termine degli studi al liceo, decide di entrare anch'egli nella bottega e intraprende contemporaneamente gli studi presso l'Accademia della Moda di Napoli come modellista di calzature.",
+    "Successivamente crea la sua prima linea di sandali su misura, riscuotendo un notevole e apprezzato successo. Il figlio Nunzio Prevenzano, sin da piccolo, frequenta la calzoleria rimanendo sempre più ammaliato dalle abilità del padre. Al termine degli studi al liceo, decide di entrare anch'egli nella calzoleria e intraprende contemporaneamente gli studi presso l'Accademia della Moda di Napoli come modellista di calzature.",
     "Nel 2018 Nunzio apre una nuova sede nel centro storico di Napoli, a pochi passi da Piazza del Plebiscito, dove farà da padrone la creatività e la manualità dell'arte del sandalo. Successivamente entra a far parte dell'attività anche la piccola di casa, Francesca Prevenzano, che si distingue subito per la sua bravura nel restauro di scarpe e borse.",
     "Calzoleria Prevenzano esporta il suo marchio in tutto il mondo, contraddistinguendosi per l'accuratezza nei dettagli. Tutti i materiali utilizzati provengono dal territorio nazionale: pellami pregiati per la tomaia, cuoio toscano certificato per le suole, cristalli Swarovski e pietre preziose per impreziosire ogni creazione. Il tutto certificato.",
   ],
@@ -110,13 +110,13 @@ function LaBottegaPage(): ReactNode {
         <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
           <div className="mb-14 text-center md:mb-16">
             <span className="mb-3 inline-block text-xs font-medium tracking-[var(--tracking-widest)] text-[var(--color-accent)]">
-              La famiglia in bottega
+              La famiglia in calzoleria
             </span>
             <h2 className="font-display text-[var(--text-lg)] font-semibold tracking-tight md:text-[var(--text-xl)]">
               Le mani dietro ogni sandalo
             </h2>
             <p className="mx-auto mt-4 max-w-lg text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
-              Due generazioni a tramandarsi, di padre in figlio, l&apos;arte calzolaia napoletana — la stessa bottega, le stesse mani, dal 1984.
+              Due generazioni a tramandarsi, di padre in figlio, l&apos;arte calzolaia napoletana — la stessa calzoleria, le stesse mani, dal 1984.
             </p>
           </div>
 
@@ -184,7 +184,7 @@ function BottegaInfoBlock(): ReactNode {
       <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
         <m.img
           src="/images/nunzio-ritratto.jpg"
-          alt="Nunzio Prevenzano al lavoro nella bottega di Via Chiaia, Napoli"
+          alt="Nunzio Prevenzano al lavoro nella calzoleria di Via Chiaia, Napoli"
           className="aspect-[4/3] w-full rounded-[var(--radius-lg)] object-cover"
           loading="lazy"
           width={800}
@@ -199,11 +199,11 @@ function BottegaInfoBlock(): ReactNode {
           transition={{ duration: 0.55, ease: "easeOut", delay: 0.15 }}
         >
           <h2 className="font-display text-[var(--text-xl)] font-semibold tracking-tight">
-            La nostra bottega
+            La nostra calzoleria
           </h2>
           <hr className="stitch-divider stitch-divider--left my-4" />
           <p className="text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
-            Nel cuore di Napoli, a due passi da Via Chiaia e Piazza del Plebiscito, la nostra bottega è il luogo dove la tradizione artigianale incontra la creatività. Qui puoi toccare con mano la qualità dei materiali, provare i modelli e vedere gli artigiani al lavoro.
+            Nel cuore di Napoli, a due passi da Via Chiaia e Piazza del Plebiscito, la nostra calzoleria è il luogo dove la tradizione artigianale incontra la creatività. Qui puoi toccare con mano la qualità dei materiali, provare i modelli e vedere gli artigiani al lavoro.
           </p>
           <p className="mt-4 text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
             Oltre alla creazione di sandali su misura, offriamo servizi di lavaggio, tintura e recrafting su calzature di lusso come Church's, Edward Green e Tricker's.

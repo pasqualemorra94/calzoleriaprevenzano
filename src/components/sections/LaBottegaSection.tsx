@@ -5,11 +5,11 @@ import { useRef } from "react";
 import { ArrowRight } from "lucide-react";
 
 const BOTTEGA_COPY = {
-  headline: "La Bottega Prevenzano",
+  headline: "La Calzoleria Prevenzano",
   paragraphs: [
     "Nel cuore di Napoli, a due passi da Via Chiaia, la nostra calzoleria porta avanti una tradizione che affonda le radici nella maestria artigianale napoletana. Qui la pelle non è un materiale — è una storia da raccontare con le mani.",
     "Ogni sandalo che esce dal nostro laboratorio attraversa le stesse mani che lo hanno pensato: taglio, cucitura, finitura. Nessun passaggio è delegato a una macchina che non sappiamo controllare. È questo che rende ogni paio diverso dall'altro — e ogni cliente, parte della famiglia.",
-    "La personalizzazione non è un'opzione aggiuntiva: è il modo in cui lavoriamo da sempre. Quando entri in bottega — o quando ordini online — scegli esattamente il sandalo che hai in mente. E noi lo realizziamo, con la stessa cura di chi lo indossa.",
+    "La personalizzazione non è un'opzione aggiuntiva: è il modo in cui lavoriamo da sempre. Quando entri in calzoleria — o quando ordini online — scegli esattamente il sandalo che hai in mente. E noi lo realizziamo, con la stessa cura di chi lo indossa.",
   ],
   cta: "Scopri la nostra storia",
   ctaHref: "/la-bottega",

@@ -115,7 +115,7 @@ export function PersonalizationSection() {
             Crea il tuo sandalo in 3 passi
           </h2>
           <p className="mx-auto mt-4 max-w-lg text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
-            Come in bottega: scegli il modello, la pelle e i dettagli. Le tue mani scelgono,
+            Come in calzoleria: scegli il modello, la pelle e i dettagli. Le tue mani scelgono,
             le nostre realizzano.
           </p>
         </div>

@@ -33,7 +33,7 @@ function ResiERecessoPage(): ReactNode {
             </h2>
             <p>
               Ogni sandalo della Collezione Classica, Gioiello e Bambini viene cucito a mano nella nostra
-              bottega di Via Chiaia dopo che tu hai scelto pelle, colore, tacco e gioiello. Per noi non
+              calzoleria di Via Chiaia dopo che tu hai scelto pelle, colore, tacco e gioiello. Per noi non
               esiste un magazzino di &ldquo;sandali pronti&rdquo;: ogni paio nasce su tua richiesta.
             </p>
             <p className="mt-4">

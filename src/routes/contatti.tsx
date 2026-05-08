@@ -36,7 +36,7 @@ const WHATSAPP_URL =
 
 const CONTACT_INFO = {
   headline: "Contattaci",
-  body: "Hai una domanda sui nostri prodotti, un dubbio sulla taglia o vuoi creare un sandalo completamente su misura? Siamo qui per aiutarti. Scrivici, chiamaci o vieni a trovarci in bottega o in laboratorio.",
+  body: "Hai una domanda sui nostri prodotti, un dubbio sulla taglia o vuoi creare un sandalo completamente su misura? Siamo qui per aiutarti. Scrivici, chiamaci o vieni a trovarci in calzoleria o in laboratorio.",
   locations: [
     {
       name: "Negozio",

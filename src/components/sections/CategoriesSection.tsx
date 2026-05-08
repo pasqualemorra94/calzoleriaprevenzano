@@ -100,7 +100,7 @@ export function CategoriesSection() {
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-[13px] leading-[1.65] text-[var(--color-text-secondary)] md:mt-4 md:text-[var(--text-base)] md:leading-[var(--leading-relaxed)]">
             Tre anime del nostro lavoro — dal sandalo al complemento, ogni pezzo
-            nasce dalle mani della famiglia Prevenzano, in bottega a Napoli dal 1984.
+            nasce dalle mani della famiglia Prevenzano, in calzoleria a Napoli dal 1984.
           </p>
           {/* 🧬 DNA: Decorative stitch pattern */}
           <div className="mt-8 flex items-center justify-center gap-1">

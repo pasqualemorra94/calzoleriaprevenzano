@@ -26,7 +26,7 @@ const TESTIMONIALS: Testimonial[] = [
     city: "Milano",
   },
   {
-    text: "Non è solo un negozio, è una bottega dove entri e senti l'odore della pelle buona. Il personale ti aiuta a scegliere e ti spiega ogni materiale. Esperienza rara.",
+    text: "Non è solo un negozio, è una calzoleria dove entri e senti l'odore della pelle buona. Il personale ti aiuta a scegliere e ti spiega ogni materiale. Esperienza rara.",
     author: "Luca M.",
     city: "Napoli",
   },

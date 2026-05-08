@@ -57,7 +57,7 @@ export function NewsletterSection() {
             Resta aggiornato sulle nuove collezioni
           </h2>
           <p className="mt-4 text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
-            Iscriviti alla newsletter per ricevere anteprime, offerte esclusive e storie dalla bottega. Un&apos;email al mese, niente spam.
+            Iscriviti alla newsletter per ricevere anteprime, offerte esclusive e storie dalla calzoleria. Un&apos;email al mese, niente spam.
           </p>
 
           {status === "success" ? (

@@ -1,7 +1,7 @@
 /**
  * GET /api/site/media — Public endpoint for site template images
  *
- * Returns decorative/media images used across public pages (hero, bottega, etc.).
+ * Returns decorative/media images used across public pages (hero, calzoleria, etc.).
  * No auth required — this is a public-facing endpoint.
  */
 
