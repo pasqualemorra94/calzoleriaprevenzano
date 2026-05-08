@@ -81,7 +81,7 @@ function LaBottegaPage(): ReactNode {
       {/* Story content — storia + foto affiancate subito dopo hero */}
       <ScrollAnimatedSection className="bg-[var(--color-background)] py-[var(--section-padding-y)]" variants={fadeInUp}>
         <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
-          <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-2 lg:gap-16">
+          <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-[1fr_3fr] lg:gap-16">
             <m.img
               src="/images/nunzio-ritratto.jpg"
               alt="Calzoleria Prevenzano — la nostra storia, l'arte del sandalo dal 1984"
