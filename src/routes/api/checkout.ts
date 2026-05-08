@@ -1,9 +1,10 @@
 /**
  * POST /api/checkout — Create order from cart
  *
- * Supports both authenticated users and anonymous guests.
- * For guests: accepts shipping + email directly from the form body.
- * For logged-in users: accepts addressId (existing) or inline address data.
+ * Discrimina lo schema in base alla forma del payload, NON in base allo stato di auth:
+ * - Payload guest-shape (email + address inline): supportato sia per guest che per
+ *   utenti loggati (il form checkout invia sempre questo formato).
+ * - Payload auth-shape (addressId di un indirizzo salvato): richiede utente loggato.
  */
 
 import { createFileRoute } from "@tanstack/react-router";
@@ -18,6 +19,15 @@ import { createLogger } from "~/lib/logger.server";
 
 const log = createLogger("checkout");
 
+function isGuestShapePayload(body: unknown): boolean {
+  return (
+    typeof body === "object" &&
+    body !== null &&
+    "email" in body &&
+    "address" in body
+  );
+}
+
 export const Route = createFileRoute("/api/checkout")({
   server: {
     handlers: {
@@ -25,34 +35,41 @@ export const Route = createFileRoute("/api/checkout")({
         const user = await getUser(request);
         const sessionId = getSessionId(request);
 
-        const body = await request.json() as unknown;
+        const body = (await request.json()) as unknown;
 
-        // Guest checkout: user is not logged in
-        if (!user) {
-          if (!sessionId) {
+        const ipAddress = request.headers.get("x-forwarded-for") ?? null;
+        const userAgent = request.headers.get("user-agent") ?? null;
+
+        // ─── Guest-shape payload (email + address inline) ───────────────
+        // Supportato per guest E utenti loggati (il form checkout invia
+        // sempre questo formato).
+        if (isGuestShapePayload(body)) {
+          if (!user && !sessionId) {
             return apiError("BAD_REQUEST", "Carrello non trovato", 400);
           }
 
           const parsed = checkoutGuestSchema.safeParse(body);
           if (!parsed.success) {
+            log.warn("Guest-shape checkout validation failed", {
+              userId: user?.id ?? null,
+              issues: parsed.error.issues,
+            });
             return apiError("VALIDATION_ERROR", "Dati non validi", 422);
           }
-
-          const ipAddress = request.headers.get("x-forwarded-for") ?? null;
-          const userAgent = request.headers.get("user-agent") ?? null;
 
           let result: Awaited<ReturnType<typeof createOrder>>;
           try {
             result = await createOrder(
-              null,
-              sessionId,
+              user?.id ?? null,
+              user ? null : sessionId,
               parsed.data,
               ipAddress,
               userAgent,
             );
           } catch (err) {
-            log.error("createOrder threw (guest branch)", {
-              sessionId,
+            log.error("createOrder threw (guest-shape branch)", {
+              userId: user?.id ?? null,
+              sessionId: user ? null : sessionId,
               email: parsed.data.email,
               errorMessage: err instanceof Error ? err.message : String(err),
             });
@@ -67,7 +84,7 @@ export const Route = createFileRoute("/api/checkout")({
             return apiError("BAD_REQUEST", result.error, 400);
           }
 
-          // Send order confirmation email (best-effort)
+          // Order confirmation email (best-effort) — usa l'email dal form
           try {
             await sendEmail({
               to: parsed.data.email,
@@ -87,38 +104,54 @@ export const Route = createFileRoute("/api/checkout")({
             // Email failure doesn't block the order
           }
 
-          // Create Stripe checkout session
+          // Stripe checkout session
           try {
             const session = await createCheckoutSession(
               result.order.id,
               result.order.orderNumber,
               result.order.total,
-              null,
+              user?.id ?? null,
               parsed.data.email,
             );
 
-            return apiSuccess({
-              orderId: result.order.id,
-              orderNumber: result.order.orderNumber,
-              checkoutUrl: session.url,
-            }, 201);
+            return apiSuccess(
+              {
+                orderId: result.order.id,
+                orderNumber: result.order.orderNumber,
+                checkoutUrl: session.url,
+              },
+              201,
+            );
           } catch {
-            return apiSuccess({
-              orderId: result.order.id,
-              orderNumber: result.order.orderNumber,
-              checkoutUrl: null,
-            }, 201);
+            return apiSuccess(
+              {
+                orderId: result.order.id,
+                orderNumber: result.order.orderNumber,
+                checkoutUrl: null,
+              },
+              201,
+            );
           }
         }
 
-        // Authenticated checkout (existing flow)
-        const parsed = checkoutSchema.safeParse(body);
-        if (!parsed.success) {
-          return apiError("VALIDATION_ERROR", "Dati non validi", 422);
+        // ─── Auth-shape payload (addressId) ─────────────────────────────
+        // Richiede utente loggato.
+        if (!user) {
+          return apiError(
+            "UNAUTHORIZED",
+            "Sessione non valida. Effettua di nuovo il login.",
+            401,
+          );
         }
 
-        const ipAddress = request.headers.get("x-forwarded-for") ?? null;
-        const userAgent = request.headers.get("user-agent") ?? null;
+        const parsed = checkoutSchema.safeParse(body);
+        if (!parsed.success) {
+          log.warn("Auth-shape checkout validation failed", {
+            userId: user.id,
+            issues: parsed.error.issues,
+          });
+          return apiError("VALIDATION_ERROR", "Dati non validi", 422);
+        }
 
         let result: Awaited<ReturnType<typeof createOrder>>;
         try {
@@ -138,7 +171,7 @@ export const Route = createFileRoute("/api/checkout")({
           return apiError("BAD_REQUEST", result.error, 400);
         }
 
-        // Send order confirmation email (best-effort)
+        // Order confirmation email (best-effort)
         try {
           await sendEmail({
             to: user.email,
@@ -158,7 +191,7 @@ export const Route = createFileRoute("/api/checkout")({
           // Email failure doesn't block the order
         }
 
-        // Create Stripe checkout session
+        // Stripe checkout session
         try {
           const session = await createCheckoutSession(
             result.order.id,
@@ -167,17 +200,23 @@ export const Route = createFileRoute("/api/checkout")({
             user.id,
           );
 
-          return apiSuccess({
-            orderId: result.order.id,
-            orderNumber: result.order.orderNumber,
-            checkoutUrl: session.url,
-          }, 201);
+          return apiSuccess(
+            {
+              orderId: result.order.id,
+              orderNumber: result.order.orderNumber,
+              checkoutUrl: session.url,
+            },
+            201,
+          );
         } catch {
-          return apiSuccess({
-            orderId: result.order.id,
-            orderNumber: result.order.orderNumber,
-            checkoutUrl: null,
-          }, 201);
+          return apiSuccess(
+            {
+              orderId: result.order.id,
+              orderNumber: result.order.orderNumber,
+              checkoutUrl: null,
+            },
+            201,
+          );
         }
       },
     },
