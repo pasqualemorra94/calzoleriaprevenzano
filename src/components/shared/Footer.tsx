@@ -15,7 +15,7 @@ const FOOTER_LINKS = {
   info: {
     title: "Informazioni",
     items: [
-      { label: "Chi siamo", href: "/la-bottega" },
+      { label: "Chi Siamo", href: "/la-bottega" },
       { label: "Contatti", href: "/contatti" },
       { label: "Guida taglie", href: "/guida-taglia" },
       { label: "Spedizioni", href: "/termini#spedizioni" },

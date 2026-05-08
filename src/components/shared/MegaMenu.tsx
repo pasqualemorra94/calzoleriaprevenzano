@@ -534,7 +534,7 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
           <span className="h-1 w-1 rounded-full bg-[var(--color-accent)]/50" />
 
           <Link to="/la-bottega" className={navLinkClass} onClick={handleItemClick}>
-            La Bottega
+            Chi Siamo
           </Link>
 
           <span className="h-1 w-1 rounded-full bg-[var(--color-accent)]/50" />
@@ -701,7 +701,7 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
                     onClick={handleItemClick}
                     className="flex items-center justify-between px-5 py-4 text-[17px] font-medium tracking-wide text-[var(--color-text)] transition-colors active:bg-[var(--color-muted)]/50"
                   >
-                    La Bottega
+                    Chi Siamo
                   </Link>
                 </li>
 
