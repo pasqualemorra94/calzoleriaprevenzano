@@ -271,7 +271,7 @@ function SwatchZoomModal({ imageUrl, label, onClose }: { imageUrl: string; label
           exit={{ scale: 0.85, opacity: 0 }}
           transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
         >
-          <div className="overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border)] shadow-2xl">
+          <div className="overflow-hidden rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-white shadow-2xl">
             <img
               src={imageUrl}
               alt={label}
