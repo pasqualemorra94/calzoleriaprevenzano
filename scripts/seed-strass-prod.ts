@@ -102,19 +102,19 @@ interface ProductDef {
   slug: string;
   name: string;
   price: number;
-  type: "misto" | "solo-strass";
+  type: "misto" | "solo-strass" | "fisso";
   photoPrefix: string;
   description: string;
 }
 
 const PRODUCTS: ProductDef[] = [
   { slug: "elena-strass", name: "Elena", price: 95, type: "misto", photoPrefix: "elena 95€ strass", description: "Sandalo con cinturini in pelle e cinturini ricoperti di strass. Personalizzabile." },
-  { slug: "elisa-argento-strass", name: "Elisa Argento", price: 90, type: "misto", photoPrefix: "elisa argento 90€ strass", description: "Sandalo infradito con cinturino strass argento e caviglia in pelle." },
-  { slug: "elisa-azzurro-strass", name: "Elisa Azzurro", price: 90, type: "misto", photoPrefix: "elisa azzurro 90€ strass", description: "Sandalo infradito con cinturino strass azzurro e caviglia in pelle." },
-  { slug: "elisa-black-strass", name: "Elisa Black", price: 90, type: "misto", photoPrefix: "elisa black 90€ strass", description: "Sandalo infradito con cinturino strass nero e caviglia in pelle." },
-  { slug: "elisa-oro-strass", name: "Elisa Oro", price: 90, type: "misto", photoPrefix: "elisa oro 90€ strass", description: "Sandalo infradito con cinturino strass oro e caviglia in pelle." },
-  { slug: "elisa-oro-rosa-strass", name: "Elisa Oro Rosa", price: 90, type: "misto", photoPrefix: "elisa oro rosa 90€ strass", description: "Sandalo infradito con cinturino strass oro rosa e caviglia in pelle." },
-  { slug: "elisa-verde-strass", name: "Elisa Verde", price: 90, type: "misto", photoPrefix: "elisa verde 90€ strass", description: "Sandalo infradito con cinturino strass verde e caviglia in pelle." },
+  { slug: "elisa-argento-strass", name: "Elisa Argento", price: 90, type: "fisso", photoPrefix: "elisa argento 90€ strass", description: "Sandalo infradito con cinturino strass argento e caviglia in pelle." },
+  { slug: "elisa-azzurro-strass", name: "Elisa Azzurro", price: 90, type: "fisso", photoPrefix: "elisa azzurro 90€ strass", description: "Sandalo infradito con cinturino strass azzurro e caviglia in pelle." },
+  { slug: "elisa-black-strass", name: "Elisa Black", price: 90, type: "fisso", photoPrefix: "elisa black 90€ strass", description: "Sandalo infradito con cinturino strass nero e caviglia in pelle." },
+  { slug: "elisa-oro-strass", name: "Elisa Oro", price: 90, type: "fisso", photoPrefix: "elisa oro 90€ strass", description: "Sandalo infradito con cinturino strass oro e caviglia in pelle." },
+  { slug: "elisa-oro-rosa-strass", name: "Elisa Oro Rosa", price: 90, type: "fisso", photoPrefix: "elisa oro rosa 90€ strass", description: "Sandalo infradito con cinturino strass oro rosa e caviglia in pelle." },
+  { slug: "elisa-verde-strass", name: "Elisa Verde", price: 90, type: "fisso", photoPrefix: "elisa verde 90€ strass", description: "Sandalo infradito con cinturino strass verde e caviglia in pelle." },
   { slug: "elisabetta-strass", name: "Elisabetta", price: 90, type: "solo-strass", photoPrefix: "elisabetta 90€ strass", description: "Sandalo interamente ricoperto di strass su tutti i cinturini." },
   { slug: "federica-strass", name: "Federica", price: 80, type: "misto", photoPrefix: "federica 80€ strass", description: "Sandalo con cinturini incrociati strass e pelle metallizzata." },
   { slug: "fiona-strass", name: "Fiona", price: 95, type: "misto", photoPrefix: "fiona 95€ strass", description: "Sandalo con tre cinturini strass nell'avampiede e caviglia in pelle." },
@@ -292,7 +292,12 @@ async function main() {
         continue;
       }
 
-      const groups = def.type === "solo-strass" ? [strassGroup, TACCO_GROUP, TAGLIA_GROUP] : [...chiaraGroups, strassGroup];
+      const groups =
+        def.type === "fisso"
+          ? [TACCO_GROUP, TAGLIA_GROUP]
+          : def.type === "solo-strass"
+            ? [strassGroup, TACCO_GROUP, TAGLIA_GROUP]
+            : [...chiaraGroups, strassGroup];
       const variantConfig = { groups };
 
       const existing = await prisma.product.findUnique({ where: { slug: def.slug }, select: { id: true } });

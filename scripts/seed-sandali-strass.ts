@@ -109,7 +109,7 @@ interface ProductDef {
   slug: string;
   name: string;
   price: number;
-  type: "misto" | "solo-strass";
+  type: "misto" | "solo-strass" | "fisso";
   /** prefix nel filename (lowercase, senza estensione) per matchare le foto */
   photoPrefix: string;
   description: string;
@@ -128,49 +128,49 @@ const PRODUCTS: ProductDef[] = [
     slug: "elisa-argento-strass",
     name: "Elisa Argento",
     price: 90,
-    type: "misto",
+    type: "fisso",
     photoPrefix: "elisa argento 90€ strass",
-    description: "Sandalo infradito con cinturino strass argento e cinturino caviglia in pelle. Personalizzabile.",
+    description: "Sandalo infradito con cinturino strass argento e cinturino caviglia in pelle.",
   },
   {
     slug: "elisa-azzurro-strass",
     name: "Elisa Azzurro",
     price: 90,
-    type: "misto",
+    type: "fisso",
     photoPrefix: "elisa azzurro 90€ strass",
-    description: "Sandalo infradito con cinturino strass azzurro e cinturino caviglia in pelle. Personalizzabile.",
+    description: "Sandalo infradito con cinturino strass azzurro e cinturino caviglia in pelle.",
   },
   {
     slug: "elisa-black-strass",
     name: "Elisa Black",
     price: 90,
-    type: "misto",
+    type: "fisso",
     photoPrefix: "elisa black 90€ strass",
-    description: "Sandalo infradito con cinturino strass nero e cinturino caviglia in pelle. Personalizzabile.",
+    description: "Sandalo infradito con cinturino strass nero e cinturino caviglia in pelle.",
   },
   {
     slug: "elisa-oro-strass",
     name: "Elisa Oro",
     price: 90,
-    type: "misto",
+    type: "fisso",
     photoPrefix: "elisa oro 90€ strass",
-    description: "Sandalo infradito con cinturino strass oro e cinturino caviglia in pelle. Personalizzabile.",
+    description: "Sandalo infradito con cinturino strass oro e cinturino caviglia in pelle.",
   },
   {
     slug: "elisa-oro-rosa-strass",
     name: "Elisa Oro Rosa",
     price: 90,
-    type: "misto",
+    type: "fisso",
     photoPrefix: "elisa oro rosa 90€ strass",
-    description: "Sandalo infradito con cinturino strass oro rosa e cinturino caviglia in pelle. Personalizzabile.",
+    description: "Sandalo infradito con cinturino strass oro rosa e cinturino caviglia in pelle.",
   },
   {
     slug: "elisa-verde-strass",
     name: "Elisa Verde",
     price: 90,
-    type: "misto",
+    type: "fisso",
     photoPrefix: "elisa verde 90€ strass",
-    description: "Sandalo infradito con cinturino strass verde e cinturino caviglia in pelle. Personalizzabile.",
+    description: "Sandalo infradito con cinturino strass verde e cinturino caviglia in pelle.",
   },
   {
     slug: "elisabetta-strass",
@@ -194,7 +194,7 @@ const PRODUCTS: ProductDef[] = [
     price: 95,
     type: "misto",
     photoPrefix: "fiona 95€ strass",
-    description: "Sandalo con tre cinturini strass nell'avampiede e cinturino caviglia in pelle. Personalizzabile.",
+    description: "Sandalo con tre cinturini strass nell'avampiede e cinturino caviglia in pelle.",
   },
   {
     slug: "francy-strass",
@@ -298,7 +298,10 @@ async function main() {
 
     // Costruisci variantConfig
     let groups: unknown[];
-    if (def.type === "solo-strass") {
+    if (def.type === "fisso") {
+      // Elisa: prodotto fisso, solo dimensione (no pelle, no colore, no strass)
+      groups = [TACCO_GROUP, TAGLIA_GROUP];
+    } else if (def.type === "solo-strass") {
       groups = [strassGroup, TACCO_GROUP, TAGLIA_GROUP];
     } else {
       groups = [...chiaraGroups, strassGroup];
