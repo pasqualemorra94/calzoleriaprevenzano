@@ -139,7 +139,7 @@ export function HeroSection() {
             </a>
             <a
               href="/la-bottega"
-              className="group inline-flex items-center gap-2 text-[13px] font-medium tracking-wide text-[var(--color-foreground)] transition-colors hover:text-[var(--color-primary)]"
+              className="group inline-flex items-center gap-2 text-sm font-medium tracking-wide text-[var(--color-foreground)] transition-colors hover:text-[var(--color-primary)]"
             >
               <span className="border-b border-[var(--color-foreground)]/30 pb-0.5 transition-colors group-hover:border-[var(--color-primary)]">
                 La nostra storia
