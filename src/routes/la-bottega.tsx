@@ -18,7 +18,7 @@ const ABOUT_COPY = {
   paragraphs: [
     "Calzoleria Prevenzano è fondata nel 1984 dal maestro Vincenzo Prevenzano in un quartiere residenziale di Napoli. L'attività principale è la riparazione di scarpe, borse e valigie — e sin da subito il maestro Vincenzo si fa notare per la maestria, l'amore e la passione con cui si dedicava a questo stupendo mestiere, diventando presto un punto di riferimento per gli abitanti della zona.",
     "Successivamente crea la sua prima linea di sandali su misura, riscuotendo un notevole e apprezzato successo. Il figlio Nunzio Prevenzano, sin da piccolo, frequenta la calzoleria rimanendo sempre più ammaliato dalle abilità del padre. Al termine degli studi al liceo, decide di entrare anch'egli nella calzoleria, dove impara al fianco del padre l'arte del sandalo, formandosi come modellista di calzature.",
-    "Nunzio porta avanti la tradizione paterna mettendo al centro la creatività e la manualità dell'arte del sandalo. Successivamente entra a far parte dell'attività anche la sorella di Nunzio, la piccola di casa Francesca Prevenzano, che si distingue subito per la sua bravura nel restauro di scarpe e borse.",
+    "Nunzio porta avanti la tradizione paterna mettendo al centro la creatività e la manualità dell'arte del sandalo. Successivamente entra a far parte dell'attività anche Francesca Prevenzano, figlia di Vincenzo e sorella minore di Nunzio, che si distingue subito per la sua bravura nel restauro di scarpe e borse.",
     "Calzoleria Prevenzano esporta il suo marchio in tutto il mondo, contraddistinguendosi per l'accuratezza nei dettagli. Tutti i materiali utilizzati provengono dal territorio nazionale: pellami pregiati per la tomaia, cuoio toscano certificato per le suole, cristalli Swarovski e pietre preziose per impreziosire ogni creazione. Il tutto certificato.",
   ],
   cta: "Scopri le nostre collezioni",
@@ -40,7 +40,7 @@ const TEAM_MEMBERS: TeamMember[] = [
     name: "Nunzio Prevenzano",
     role: "Sandal Maker & Modellista",
     description:
-      "Seconda generazione dell'arte calzolaia, figlio del fondatore. Crea e personalizza i sandali a mano, portando avanti la tradizione del padre con cura artigianale.",
+      "Figlio di Vincenzo Prevenzano, fondatore della calzoleria. Crea e personalizza i sandali a mano, portando avanti la tradizione del padre con cura artigianale.",
     image: "/images/nunzio-team.jpg",
     imageAlt: "Nunzio Prevenzano — sandal maker e modellista di calzature",
   },
@@ -48,7 +48,7 @@ const TEAM_MEMBERS: TeamMember[] = [
     name: "Francesca Prevenzano",
     role: "Restauro & Pulizia",
     description:
-      "Sorella di Nunzio. Si occupa del restauro e della cura di scarpe e borse in pelle, con competenza e passione nell'arte del recupero della pelletteria.",
+      "Figlia di Vincenzo Prevenzano, fondatore della calzoleria. Si occupa del restauro e della cura di scarpe e borse in pelle, con competenza e passione nell'arte del recupero della pelletteria.",
     image: "/images/francesca-team.jpg",
     imageAlt: "Francesca Prevenzano — restauro e pulizia scarpe e borse",
   },
