@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
+import { SectionHeader } from "~/components/ui";
 import { fadeInUp } from "~/lib/animation-variants";
 import { m } from "motion/react";
 
@@ -40,25 +41,12 @@ export function NewsletterSection() {
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
           {/* 🧬 Section header — Correspondence themed */}
-          <div className="inline-flex items-center gap-3 mb-6">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-[var(--color-accent)]" aria-hidden="true">
-              <rect x="2" y="4" width="20" height="16" rx="2" />
-              <path d="M22 4L12 13L2 4" />
-            </svg>
-            <span className="text-xs font-medium tracking-[var(--tracking-widest)] text-[var(--color-accent)]">
-              Newsletter
-            </span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-[var(--color-accent)]" aria-hidden="true">
-              <rect x="2" y="4" width="20" height="16" rx="2" />
-              <path d="M22 4L12 13L2 4" />
-            </svg>
-          </div>
-          <h2 className="font-display text-[var(--text-xl)] font-semibold tracking-tight md:text-[var(--text-2xl)]">
-            Resta aggiornato sulle nuove collezioni
-          </h2>
-          <p className="mt-4 text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
-            Iscriviti alla newsletter per ricevere anteprime, offerte esclusive e storie dalla calzoleria. Un&apos;email al mese, niente spam.
-          </p>
+          <SectionHeader
+            eyebrow="Newsletter"
+            title="Resta aggiornato sulle nuove collezioni"
+            lead="Iscriviti alla newsletter per ricevere anteprime, offerte esclusive e storie dalla calzoleria. Un'email al mese, niente spam."
+            className="mb-0"
+          />
 
           {status === "success" ? (
             <div className="mt-8 flex items-center justify-center gap-2">

@@ -1,4 +1,5 @@
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
+import { SectionHeader } from "~/components/ui";
 import { slideInLeft, slideInRight, fadeInUp } from "~/lib/animation-variants";
 import { m, useInView } from "motion/react";
 import { useRef } from "react";
@@ -83,12 +84,12 @@ function StepCard({ step, index }: { step: PersonalizationStep; index: number })
       <hr className="stitch-divider mb-4" />
 
       {/* Title */}
-      <h3 className="font-display text-[var(--text-lg)] font-semibold tracking-tight md:text-[var(--text-xl)]">
+      <h3 className="font-display text-xl font-semibold tracking-tight text-balance text-[var(--color-text)]">
         {step.title}
       </h3>
 
       {/* Description */}
-      <p className="mt-3 max-w-xs text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
+      <p className="mt-3 max-w-xs text-base leading-relaxed text-[var(--color-text-secondary)]">
         {step.description}
       </p>
     </m.div>
@@ -103,22 +104,12 @@ export function PersonalizationSection() {
     <ScrollAnimatedSection className="bg-[var(--color-surface)] py-[var(--section-padding-y-lg)]" variants={fadeInUp}>
       <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
         {/* Section header — Craftsmanship themed */}
-        <div className="mb-16 text-center md:mb-20">
-          <div className="inline-flex items-center gap-4 mb-6">
-            <span className="h-px w-8 bg-[var(--color-accent)]/40" />
-            <span className="text-xs font-medium tracking-[var(--tracking-widest)] text-[var(--color-accent)]">
-              Su misura
-            </span>
-            <span className="h-px w-8 bg-[var(--color-accent)]/40" />
-          </div>
-          <h2 className="font-display text-[var(--text-lg)] font-semibold tracking-tight md:text-[var(--text-xl)]">
-            Crea il tuo sandalo in 3 passi
-          </h2>
-          <p className="mx-auto mt-4 max-w-lg text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
-            Come in calzoleria: scegli il modello, la pelle e i dettagli. Le tue mani scelgono,
-            le nostre realizzano.
-          </p>
-        </div>
+        <SectionHeader
+          eyebrow="Su misura"
+          title="Crea il tuo sandalo in 3 passi"
+          lead="Come in calzoleria: scegli il modello, la pelle e i dettagli. Le tue mani scelgono, le nostre realizzano."
+          className="mb-16 md:mb-20"
+        />
 
         <div ref={ref} className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[2fr_3fr] lg:gap-16 mb-16">
           {/* Left — Personalization showcase image */}

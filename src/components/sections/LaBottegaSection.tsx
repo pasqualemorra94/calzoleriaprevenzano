@@ -1,4 +1,5 @@
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
+import { SectionHeader } from "~/components/ui";
 import { slideInLeft, slideInRight } from "~/lib/animation-variants";
 import { m, useInView } from "motion/react";
 import { useRef } from "react";
@@ -32,20 +33,12 @@ export function LaBottegaSection({ imageUrl }: LaBottegaSectionProps) {
         className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]"
       >
         {/* 🧬 Section header — Heritage/Story themed */}
-        <div className="mb-14 md:mb-16">
-          <div className="inline-flex items-center gap-3 mb-4">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-[var(--color-accent)]" aria-hidden="true">
-              <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="currentColor" opacity="0.3" />
-              <circle cx="12" cy="12" r="3" fill="currentColor" />
-            </svg>
-            <span className="text-xs font-medium tracking-[var(--tracking-widest)] text-[var(--color-text-muted)]">
-              La nostra storia
-            </span>
-          </div>
-          <h2 className="font-display text-[var(--text-lg)] font-semibold tracking-tight md:text-[var(--text-xl)]">
-            {BOTTEGA_COPY.headline}
-          </h2>
-        </div>
+        <SectionHeader
+          align="left"
+          eyebrow="La nostra storia"
+          title={BOTTEGA_COPY.headline}
+          className="mb-14 md:mb-16"
+        />
 
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[2fr_3fr] lg:gap-16">
           {/* Left — Text (40%) */}
@@ -62,7 +55,7 @@ export function LaBottegaSection({ imageUrl }: LaBottegaSectionProps) {
               {BOTTEGA_COPY.paragraphs.map((paragraph, index) => (
                 <p
                   key={index}
-                  className="text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]"
+                  className="text-base leading-relaxed text-[var(--color-text-secondary)]"
                 >
                   {paragraph}
                 </p>
@@ -72,7 +65,7 @@ export function LaBottegaSection({ imageUrl }: LaBottegaSectionProps) {
             {/* CTA */}
             <a
               href={BOTTEGA_COPY.ctaHref}
-              className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-[var(--color-primary)] transition-colors duration-[var(--transition-base)] hover:text-[var(--color-primary-dark)]"
+              className="mt-8 inline-flex items-center gap-2 text-sm font-medium text-[var(--color-accent)] transition-colors duration-[var(--transition-base)] hover:text-[var(--color-primary)]"
             >
               {BOTTEGA_COPY.cta}
               <ArrowRight className="h-4 w-4" />

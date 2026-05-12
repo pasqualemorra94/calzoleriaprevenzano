@@ -52,7 +52,7 @@ export function HeroSection() {
             transition={{ duration: 0.7, ease: EASE_OUT, delay: 0.05 }}
             className="mb-6 flex items-center gap-3 text-[var(--color-text-muted)]"
           >
-            <span className="font-display text-[10px] tracking-[0.32em] uppercase">
+            <span className="text-xs font-semibold uppercase tracking-widest">
               Edizione
             </span>
             <span className="h-[1px] w-12 bg-[var(--color-accent)]" />
@@ -71,7 +71,7 @@ export function HeroSection() {
             <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
               <path d="M8 1L9.5 6.5L15 8L9.5 9.5L8 15L6.5 9.5L1 8L6.5 6.5L8 1Z" fill="#C9A961" />
             </svg>
-            <span className="text-[10px] font-semibold tracking-[0.28em] uppercase text-[var(--color-accent)]">
+            <span className="text-xs font-semibold uppercase tracking-widest text-[var(--color-accent)]">
               Nuova Collezione
             </span>
           </m.div>

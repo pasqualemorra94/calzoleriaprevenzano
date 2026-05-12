@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Link } from "@tanstack/react-router";
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
 import { StaggeredGrid, StaggeredItem } from "~/components/ui/StaggeredGrid";
+import { SectionHeader } from "~/components/ui";
 import { m, AnimatePresence } from "motion/react";
 import { ArrowRight, ShoppingBag } from "lucide-react";
 
@@ -79,19 +80,19 @@ function ProductCard({ product }: { product: Product }) {
 
       <div className="mt-3 md:mt-5">
         {product.category && (
-          <span className="text-[10px] font-medium tracking-[0.18em] uppercase text-[var(--color-text-muted)] md:text-[11px] md:tracking-[0.15em] md:normal-case">
+          <span className="text-xs font-medium uppercase tracking-wide text-[var(--color-text-muted)]">
             {product.category.name}
           </span>
         )}
-        <h3 className="mt-1 text-[13px] font-medium leading-snug text-[var(--color-text)] transition-colors duration-200 group-hover:text-[var(--color-primary)] md:mt-1.5 md:text-sm">
+        <h3 className="mt-1 text-sm font-medium leading-snug text-[var(--color-text)] transition-colors duration-200 group-hover:text-[var(--color-primary)] md:mt-1.5">
           {product.name}
         </h3>
         <div className="mt-1 flex items-center gap-1.5 md:mt-2 md:gap-2">
-          <p className="text-[13px] font-semibold text-[var(--color-primary)] md:text-sm">
+          <p className="text-sm font-semibold text-[var(--color-primary)]">
             €{product.price.toFixed(2)}
           </p>
           {product.compareAtPrice && (
-            <p className="text-[11px] text-[var(--color-text-muted)] line-through md:text-sm">
+            <p className="text-sm text-[var(--color-text-muted)] line-through">
               €{product.compareAtPrice.toFixed(2)}
             </p>
           )}
@@ -137,14 +138,11 @@ export function FeaturedProductsSection() {
     <ScrollAnimatedSection className="bg-[var(--color-surface)] py-[var(--section-padding-y-lg)]">
       <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
         {/* Section header */}
-        <div className="mb-9 text-center md:mb-16">
-          <span className="mb-3 inline-block text-[10px] font-medium tracking-[0.22em] uppercase text-[var(--color-text-muted)] md:mb-4 md:text-xs md:normal-case">
-            Catalogo
-          </span>
-          <h2 className="font-display text-[1.3rem] font-semibold tracking-tight md:text-[var(--text-xl)]">
-            Novità e bestseller
-          </h2>
-        </div>
+        <SectionHeader
+          eyebrow="Catalogo"
+          title="Novità e bestseller"
+          className="mb-9 md:mb-16"
+        />
 
         {/* Tabs */}
         <div className="mb-6 flex items-center justify-center gap-2 md:mb-10">
@@ -153,7 +151,7 @@ export function FeaturedProductsSection() {
               key={tab.key}
               type="button"
               onClick={() => setActiveTab(tab.key)}
-              className={`rounded-[var(--radius-md)] px-5 py-2 text-[13px] font-medium transition-all duration-200 md:px-7 md:py-2.5 md:text-sm ${
+              className={`rounded-[var(--radius-md)] px-5 py-2 text-sm font-medium transition-all duration-200 md:px-7 md:py-2.5 ${
                 activeTab === tab.key
                   ? "bg-[var(--color-primary)] text-white shadow-sm"
                   : "bg-[var(--color-muted)] text-[var(--color-text-secondary)] hover:bg-[var(--color-border)]"
@@ -172,7 +170,7 @@ export function FeaturedProductsSection() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.3 }}
-            className="mx-auto mb-7 max-w-2xl text-center text-[13px] leading-[1.65] text-[var(--color-text-secondary)] md:mb-12 md:text-[var(--text-base)] md:leading-[var(--leading-relaxed)]"
+            className="mx-auto mb-7 max-w-2xl text-center text-lg leading-relaxed text-[var(--color-text-secondary)] md:mb-12"
           >
             {currentTabMeta?.description}
           </m.p>

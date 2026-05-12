@@ -1,5 +1,6 @@
 import { ScrollAnimatedSection } from "~/components/ui/ScrollAnimatedSection";
 import { StaggeredGrid, StaggeredItem } from "~/components/ui/StaggeredGrid";
+import { SectionHeader } from "~/components/ui";
 import { Quote } from "lucide-react";
 import { m } from "motion/react";
 
@@ -48,7 +49,7 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
       <Quote className="mb-4 h-6 w-6 text-[var(--color-accent)]" />
 
       {/* Text */}
-      <p className="text-[var(--text-sm)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)] italic">
+      <p className="text-base leading-relaxed text-[var(--color-text-secondary)] italic">
         &ldquo;{testimonial.text}&rdquo;
       </p>
 
@@ -80,21 +81,12 @@ export function TestimonialsSection() {
     <ScrollAnimatedSection className="bg-[var(--color-background)] py-[var(--section-padding-y)]">
       <section className="mx-auto max-w-[var(--page-max-width)] px-[var(--page-padding-x)]">
         {/* 🧬 Section header — Customer voices themed */}
-        <div className="mb-12 text-center md:mb-16">
-          <div className="inline-flex items-center gap-3 mb-4">
-            <Quote className="h-4 w-4 text-[var(--color-accent)]" />
-            <span className="text-xs font-medium tracking-[var(--tracking-widest)] text-[var(--color-text-muted)]">
-              Clienti
-            </span>
-          </div>
-          <h2 className="font-display text-[var(--text-lg)] font-semibold tracking-tight md:text-[var(--text-xl)]">
-            Cosa dicono di noi
-          </h2>
-          <p className="mx-auto mt-4 max-w-lg text-[var(--text-base)] leading-[var(--leading-relaxed)] text-[var(--color-text-secondary)]">
-            Le parole di chi ci ha scelto — da Napoli a Torino, le storie
-            di chi cammina con i nostri sandali.
-          </p>
-        </div>
+        <SectionHeader
+          eyebrow="Clienti"
+          title="Cosa dicono di noi"
+          lead="Le parole di chi ci ha scelto — da Napoli a Torino, le storie di chi cammina con i nostri sandali."
+          className="mb-12 md:mb-16"
+        />
 
         {/* Staggered grid: 1 col mobile, 2 col md, 3 col lg */}
         <StaggeredGrid className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">

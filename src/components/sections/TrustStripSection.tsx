@@ -56,7 +56,7 @@ function TrustCard({ item, index }: { item: TrustItem; index: number }) {
         <Icon className="h-5 w-5 text-[var(--color-accent)]" />
       </div>
 
-      <h3 className="font-display text-sm font-semibold text-white md:text-base">
+      <h3 className="font-display text-base font-semibold text-white">
         {item.title}
       </h3>
 
@@ -65,12 +65,12 @@ function TrustCard({ item, index }: { item: TrustItem; index: number }) {
           <ScrollCounter
             target={item.counter.target}
             suffix={item.counter.suffix}
-            className="text-lg font-bold text-[var(--color-accent)] md:text-xl"
+            className="text-xl font-bold text-[var(--color-accent)]"
           />
         </div>
       ) : null}
 
-      <p className="mt-1 text-xs leading-relaxed text-white/50 md:text-sm">
+      <p className="mt-1 text-sm leading-relaxed text-white/50">
         {item.description}
       </p>
     </m.div>
