@@ -408,7 +408,7 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
                 <FacebookIcon />
               </a>
               <a
-                href="https://wa.me/390817645183"
+                href="https://wa.me/390810410442"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="WhatsApp"
@@ -426,11 +426,11 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
             {/* Right — micro contacts */}
             <div className="flex items-center gap-4">
               <a
-                href="tel:+390817645183"
+                href="tel:+390810410442"
                 className="flex items-center gap-1.5 text-[11px] tracking-[0.04em] text-[var(--color-text-muted)] transition-colors hover:text-[var(--color-primary)]"
               >
                 <PhoneIcon />
-                <span>081 764 5183</span>
+                <span>081 0410442</span>
               </a>
               <div className="h-3 w-[1px] bg-[var(--color-border)]" />
               <a
@@ -771,7 +771,7 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
                     <FacebookIcon />
                   </a>
                   <a
-                    href="https://wa.me/390817645183"
+                    href="https://wa.me/390810410442"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="WhatsApp"
@@ -785,11 +785,11 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
                 </span>
               </div>
               <a
-                href="tel:+390817645183"
+                href="tel:+390810410442"
                 className="flex items-center gap-2 text-[13px] text-[var(--color-text-secondary)] transition-colors active:text-[var(--color-primary)]"
               >
                 <PhoneIcon />
-                <span className="tabular-nums">081 764 5183</span>
+                <span className="tabular-nums">081 0410442</span>
               </a>
               <a
                 href="/contatti"
