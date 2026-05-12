@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback, type ReactNode } from "react"
 import { Link } from "@tanstack/react-router";
 import { Search, X, ArrowRight, Loader2, ShoppingBag } from "lucide-react";
 import { AnimatePresence, m } from "motion/react";
+import { CategoryBrowseList } from "~/components/shared/CategoryBrowseList";
 
 interface SearchResult {
   id: string;
@@ -13,30 +14,6 @@ interface SearchResult {
   compareAtPrice: number | null;
   image: { id: string; url: string; alt: string | null } | null;
 }
-
-interface SuggestedCategory {
-  label: string;
-  description: string;
-  slug: string;
-}
-
-const SUGGESTED_CATEGORIES: SuggestedCategory[] = [
-  {
-    label: "Sandali",
-    description: "Personalizzabili — dal classico al gioiello",
-    slug: "sandali",
-  },
-  {
-    label: "Pelletteria",
-    description: "Borselli, cinture e accessori in pelle",
-    slug: "pelletteria",
-  },
-  {
-    label: "Accessori",
-    description: "Solette e cura della scarpa",
-    slug: "articoli-calzature",
-  },
-];
 
 const POPULAR_QUERIES = [
   "Sandalo gioiello",
@@ -239,40 +216,7 @@ export function MobileSearchOverlay(): ReactNode {
               {/* Empty state — categories + popular queries */}
               {!showResults && (
                 <div className="px-5 pb-12 pt-7">
-                  <div className="mb-4 flex items-baseline gap-3">
-                    <p className="text-[10px] tracking-[0.28em] text-[var(--color-text-muted)] uppercase">
-                      Sfoglia per categoria
-                    </p>
-                    <span className="h-[1px] flex-1 bg-[var(--stitch-color)]/30" />
-                  </div>
-
-                  <ul className="space-y-2">
-                    {SUGGESTED_CATEGORIES.map((cat, i) => (
-                      <m.li
-                        key={cat.slug}
-                        initial={{ opacity: 0, y: 8 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.08 + i * 0.06, duration: 0.3 }}
-                      >
-                        <Link
-                          to="/catalogo"
-                          search={{ category: cat.slug }}
-                          onClick={close}
-                          className="group flex items-center justify-between rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] px-5 py-4 transition-colors active:bg-[var(--color-muted)]/50"
-                        >
-                          <div className="min-w-0">
-                            <p className="font-display text-xl font-semibold tracking-tight text-[var(--color-text)]">
-                              {cat.label}
-                            </p>
-                            <p className="mt-0.5 text-[13px] text-[var(--color-text-secondary)]">
-                              {cat.description}
-                            </p>
-                          </div>
-                          <ArrowRight className="h-4 w-4 shrink-0 text-[var(--color-accent)] transition-transform group-active:translate-x-1" />
-                        </Link>
-                      </m.li>
-                    ))}
-                  </ul>
+                  <CategoryBrowseList onNavigate={close} />
 
                   <div className="mb-4 mt-9 flex items-baseline gap-3">
                     <p className="text-[10px] tracking-[0.28em] text-[var(--color-text-muted)] uppercase">
