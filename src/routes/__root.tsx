@@ -120,12 +120,12 @@ export const Route = createRootRoute({
       },
       {
         rel: "preload",
-        href: "https://fonts.bunny.net/css?family=inria-sans:wght@300;400;700&display=swap",
+        href: "https://fonts.bunny.net/css?family=inria-sans:wght@300;400;500;600;700&display=swap",
         as: "style",
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.bunny.net/css?family=cormorant-garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=inria-sans:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap",
+        href: "https://fonts.bunny.net/css?family=cormorant-garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=inria-sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,700&display=swap",
       },
       { rel: "stylesheet", href: appCss },
     ],
