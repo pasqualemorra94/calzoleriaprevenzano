@@ -8,7 +8,6 @@ import {
   FeaturedProductsSection,
   LaBottegaSection,
   TrustStripSection,
-  TestimonialsSection,
   NewsletterSection,
 } from "~/components/sections";
 
@@ -28,7 +27,6 @@ function HomePage(): ReactNode {
       <FeaturedProductsSection />
       <LaBottegaSection />
       <TrustStripSection />
-      <TestimonialsSection />
       <NewsletterSection />
     </>
   );
