@@ -7,7 +7,7 @@ import { HERO_SLIDES } from "./hero-slides";
 
 type Easing = [number, number, number, number];
 const EASE_OUT: Easing = [0.22, 1, 0.36, 1];
-const SLIDE_DURATION_MS = 8500;
+const SLIDE_DURATION_MS = 7500;
 const BG_TRANSITION_S = 1.4;
 const TEXT_CHAR_STAGGER = 0.025;
 
@@ -54,15 +54,13 @@ function SplitText({
 
 export function HeroSection() {
   const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    if (paused) return;
     const id = window.setInterval(() => {
       setIndex((prev) => (prev + 1) % SLIDES.length);
     }, SLIDE_DURATION_MS);
     return () => window.clearInterval(id);
-  }, [paused, index]);
+  }, [index]);
 
   const slide = SLIDES[index];
 
@@ -72,8 +70,6 @@ export function HeroSection() {
       transition={{ duration: BG_TRANSITION_S, ease: EASE_OUT }}
       className="relative hidden overflow-hidden md:block md:min-h-[calc(100svh-var(--navbar-height-md))]"
       style={{ background: SLIDES[0].bgGradient, color: slide.textColor }}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
       aria-roledescription="carousel"
       aria-label="Collezioni Calzoleria Prevenzano"
     >

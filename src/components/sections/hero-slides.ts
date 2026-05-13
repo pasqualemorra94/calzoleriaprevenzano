@@ -82,4 +82,32 @@ export const HERO_SLIDES: HeroSlide[] = [
     ctaHover: "#E8D27F",
     grainOpacity: 0.04,
   },
+  {
+    id: "classici",
+    edition: "Mediterraneo · Estate 2026",
+    tagline: "Sul Mare di Napoli",
+    headlineLine1: "Sandali",
+    headlineLine2: "Classici",
+    subtitle:
+      "Pelle italiana lavorata a mano nella tradizione napoletana. Eleganza senza tempo, fatta per le estati al mare.",
+    ctaHref: "/catalogo?category=classici",
+    ctaLabel: "Scopri i Classici",
+    image: {
+      src: "/images/hero-classici-vesuvio.webp",
+      alt: "Donna seduta su un gozzo napoletano con sandali classici bianchi, Vesuvio e mare di Napoli sullo sfondo",
+      width: 1045,
+      height: 1749,
+    },
+    caption: "Modello Capri · Pelle Bianca",
+    bgGradient: "radial-gradient(at 50% 20%, #E8F4F8 0%, #C5DDE6 55%, #97B7C8 100%)",
+    haloGradient:
+      "radial-gradient(circle at center, rgba(201,169,97,0.18), rgba(220,235,245,0.10) 55%, transparent 75%)",
+    textColor: "var(--color-foreground)",
+    textSecondaryColor: "var(--color-text-secondary)",
+    accentColor: "#C9A961",
+    ctaBg: "var(--color-foreground)",
+    ctaText: "#FFFFFF",
+    ctaHover: "var(--color-primary)",
+    grainOpacity: 0.05,
+  },
 ];

@@ -77,6 +77,11 @@ export function MobileHeroSection() {
 
   const slide = SLIDES[index];
 
+  // Lift specifico per slide su mobile: foto con sandali al bottom del source
+  // vengono shiftate verso l'alto per non essere coperte dalla pillola CTA.
+  const mobileYOffset =
+    slide.id === "strass" ? "-7%" : slide.id === "classici" ? "-4%" : "0%";
+
   return (
     <section
       className="relative overflow-hidden bg-black md:hidden"
@@ -105,19 +110,19 @@ export function MobileHeroSection() {
               opacity: 0,
               clipPath: "inset(100% 0% 0% 0%)",
               scale: 1.1,
-              y: slide.id === "strass" ? "-7%" : "0%",
+              y: mobileYOffset,
             }}
             animate={{
               opacity: 1,
               clipPath: "inset(0% 0% 0% 0%)",
               scale: 1.0,
-              y: slide.id === "strass" ? "-7%" : "0%",
+              y: mobileYOffset,
             }}
             exit={{
               opacity: 0,
               clipPath: "inset(0% 0% 100% 0%)",
               scale: 1.03,
-              y: slide.id === "strass" ? "-7%" : "0%",
+              y: mobileYOffset,
             }}
             transition={{
               opacity: { duration: 0.55, ease: EASE_OUT },
