@@ -98,7 +98,7 @@ export const HERO_SLIDES: HeroSlide[] = [
       width: 1045,
       height: 1749,
     },
-    caption: "Modello Capri · Pelle Bianca",
+    caption: "Modello Maratea · Pelle Bianca",
     bgGradient: "radial-gradient(at 50% 20%, #E8F4F8 0%, #C5DDE6 55%, #97B7C8 100%)",
     haloGradient:
       "radial-gradient(circle at center, rgba(201,169,97,0.18), rgba(220,235,245,0.10) 55%, transparent 75%)",
