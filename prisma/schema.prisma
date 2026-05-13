@@ -608,7 +608,7 @@ model AiSession {
 model ShippingConfig {
   id            String   @id @default("default")
   cost          Decimal  @default(7.90) @db.Decimal(10, 2)
-  freeThreshold Decimal  @default(99.00) @db.Decimal(10, 2)
+  freeThreshold Decimal  @default(199.00) @db.Decimal(10, 2)
   enabled       Boolean  @default(true)
   updatedAt     DateTime @updatedAt
   updatedById   String?

@@ -285,7 +285,7 @@ function TerminiPage(): ReactNode {
             <p className="mt-4">
               Le spese di spedizione sono calcolate automaticamente in base al peso, alle dimensioni del
               pacco e alla destinazione, e vengono visualizzate nel riepilogo dell&apos;ordine prima della conferma.
-              La spedizione &egrave; gratuita in Italia per ordini superiori a 150 EUR.
+              La spedizione &egrave; gratuita in Italia per ordini superiori a 199 EUR.
             </p>
             <p className="mt-4">
               Il Venditore utilizza corrieri nazionali e internazionali affidabili (es. SDA, BRT, GLS, DHL Express).

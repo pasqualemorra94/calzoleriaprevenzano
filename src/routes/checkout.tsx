@@ -259,7 +259,7 @@ function CheckoutPage(): ReactNode {
                 )}
                 <OrderSummary
                   items={cart.items} subtotal={cart.subtotal} shippingCost={shippingCost}
-                  freeShippingThreshold={shippingConfig?.freeThreshold ?? 99}
+                  freeShippingThreshold={shippingConfig?.freeThreshold ?? 199}
                   shippingEnabled={shippingConfig?.enabled ?? true}
                   submitStatus={submitStatus} isCheckout
                   disabled={!acceptedTerms}

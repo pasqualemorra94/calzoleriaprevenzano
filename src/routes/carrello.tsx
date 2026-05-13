@@ -195,7 +195,7 @@ function CarrelloPage(): ReactNode {
             <div className="lg:sticky lg:top-24">
               <OrderSummary
                 items={cart.items} subtotal={cart.subtotal} shippingCost={shippingCost}
-                freeShippingThreshold={shippingConfig?.freeThreshold ?? 99}
+                freeShippingThreshold={shippingConfig?.freeThreshold ?? 199}
                 shippingEnabled={shippingConfig?.enabled ?? true}
               />
               <Link to="/checkout" className="mt-6 flex h-12 w-full items-center justify-center gap-2 rounded-[var(--radius-md)] bg-[var(--color-primary)] px-6 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-dark)]">
