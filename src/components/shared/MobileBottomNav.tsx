@@ -3,7 +3,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Home, ShoppingBag, Search, MessageCircle } from "lucide-react";
 import { cn } from "~/lib/utils/cn";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 type LinkItem = {
   kind: "link";
@@ -52,9 +52,37 @@ const NAV_ITEMS: NavItem[] = [
  * Uses glassmorphism, golden accent (🧬 DNA), and route-aware active states.
  * Hidden when on /admin/* routes.
  */
-export function MobileBottomNav({ cartCount = 0 }: { cartCount?: number }): ReactNode {
+export function MobileBottomNav(): ReactNode {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isAdmin = pathname.startsWith("/admin");
+  const [cartTotal, setCartTotal] = useState<number | null>(null);
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    async function loadCart() {
+      try {
+        const res = await fetch("/api/cart");
+        const json = await res.json();
+        if (json.ok && json.data.items.length > 0) {
+          setCartTotal(json.data.subtotal);
+          const count = json.data.items.reduce(
+            (acc: number, it: { quantity: number }) => acc + it.quantity,
+            0,
+          );
+          setCartCount(count);
+        } else {
+          setCartTotal(null);
+          setCartCount(0);
+        }
+      } catch {
+        /* ignore */
+      }
+    }
+    loadCart();
+    const handler = () => loadCart();
+    window.addEventListener("cart-updated", handler);
+    return () => window.removeEventListener("cart-updated", handler);
+  }, []);
 
   if (isAdmin) return null;
 
@@ -144,8 +172,10 @@ export function MobileBottomNav({ cartCount = 0 }: { cartCount?: number }): Reac
                   </span>
                 )}
               </div>
-              <span className="text-[10px] leading-tight font-medium">
-                {item.label}
+              <span className="text-[10px] leading-tight font-medium tabular-nums">
+                {isCartActive && cartTotal !== null
+                  ? `€${cartTotal.toFixed(2)}`
+                  : item.label}
               </span>
             </Link>
           );
