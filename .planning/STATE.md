@@ -90,6 +90,19 @@ None yet.
 - TanStack Start is RC-stage — pin exact versions, never upgrade mid-phase
 - Customization UX needs design validation during Phase 4 planning (multi-zone sandal configurator is unusual)
 
+### Up Next (next session)
+
+Coda concordata con l'utente (sessione 2026-05-12, dopo la fine dei 9 task font/contenuti). Eseguire **una per volta** con `/gsd:quick` (o `--discuss` dove indicato), ognuna con checkpoint visivo + commit/push.
+
+1. **Selezioni curate sopra le card categorie (homepage)** — sezione con 3-5 "selezioni" tipo "Per l'estate", "Da cerimonia", "Sotto i 100€", "Più amati", che linkano a filtri preconfigurati del catalogo. Decisioni da prendere insieme: quali selezioni, manuali (admin-curate) o automatiche (tag/prezzo/sales), dove esattamente in homepage. *Usare `/gsd:quick --discuss`.*
+2. **SEO categorie — URL parlanti** — passare da `/catalogo?category=sandali-gioiello` a `/sandali/gioiello` (parent/child), con **redirect 301** dai vecchi URL (no link rotti / no perdita SEO esistente). Aggiornare sitemap e tutti i `<Link search={{category}}>` interni (MegaMenu, MobileSearchOverlay, CategoryBrowseList, Footer, CatalogSidebar, ecc.). *Lavoro tecnico medio-alto; usare `/gsd:quick --discuss` per decidere il pattern esatto (anche grandchild? slug locale?) e la strategia di redirect.*
+3. **Crea il tuo sandalo in 3 passi → mini-configuratore in homepage** — oggi `PersonalizationSection` è un poster illustrativo; trasformarlo in qualcosa di interattivo (anche solo: scegli modello/famiglia → swatch pelle → CTA "Personalizza" che porta alla scheda prodotto con varianti preselezionate via query params). Quanto deep va deciso. *Usare `/gsd:quick --discuss` o `--research` se vogliamo guardare pattern di configuratori artigianali.*
+4. **Wishlist** — il modello `Wishlist` esiste nel Prisma schema (visto in audit GDPR `260430-ov8`), verificare quanto è già implementato (forse c'è back-end + UI parziale). Decisioni: utenti loggati only o anche guest (localStorage + sync al login)? Dove appare l'icona cuore (catalog card, scheda prodotto, header)? Pagina dedicata `/account/wishlist`? *Iniziare con audit dello stato attuale, poi `/gsd:quick --discuss`.*
+
+Ordine consigliato dall'orchestratore: 1 → 2 → 3 → 4 (motivazione: #1 piccolo e visivo come warm-up, #2 fondamenta SEO prima che #3 e #4 linkino a categorie, #3 strategico, #4 feature completa). L'utente può ribaltare l'ordine.
+
+NON in scope per queste 4: heading pagine non-homepage allo "Sobrio" (resta nella to-do a parte), font admin/auth (esclusi su decisione utente).
+
 ### Quick Tasks Completed
 
 | # | Description | Date | Commit | Directory |
