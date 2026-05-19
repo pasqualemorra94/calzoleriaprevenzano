@@ -114,6 +114,7 @@ export function FeaturedProductsSection() {
       params.set("perPage", "8");
       params.set("page", "1");
       params.set("sort", tab === "nuove" ? "newest" : "name");
+      if (tab === "nuove") params.set("category", "sandali");
       if (tab === "bestseller") params.set("featured", "true");
 
       const res = await fetch(`/api/products?${params.toString()}`);
