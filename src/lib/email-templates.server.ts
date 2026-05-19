@@ -276,3 +276,84 @@ export function orderConfirmationTemplate(data: OrderEmailData): string {
     body,
   });
 }
+
+interface OrderNotificationData {
+  orderNumber: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string; // chi chiama passa "—" se assente
+  shippingAddress: {
+    address1: string;
+    address2?: string;
+    city: string;
+    province: string;
+    postalCode: string;
+    country: string;
+  };
+  items: Array<{ name: string; quantity: number; priceCents: number }>;
+  totalCents: number;
+}
+
+export function orderNotificationTemplate(data: OrderNotificationData): string {
+  const b = emailBrand;
+
+  const addressLine = data.shippingAddress.address2
+    ? `${data.shippingAddress.address1}, ${data.shippingAddress.address2}`
+    : data.shippingAddress.address1;
+
+  const itemRows = data.items
+    .map(
+      (item) => `
+      <tr>
+        <td style="padding:10px 14px; color:${b.textColor}; font-size:14px; border-bottom:1px solid ${b.borderColor};">
+          ${escapeHtml(item.name)}
+          <span style="color:${b.mutedColor};"> &times; ${item.quantity}</span>
+        </td>
+        <td style="padding:10px 14px; color:${b.textColor}; font-size:14px; border-bottom:1px solid ${b.borderColor}; text-align:right; font-weight:500;">
+          ${formatCurrency(item.priceCents * item.quantity)}
+        </td>
+      </tr>`,
+    )
+    .join("");
+
+  const body = `
+    <h1 style="font-family:${b.displayFont}; font-size:22px; color:${b.textColor}; margin:0 0 8px;">
+      Nuovo ordine ricevuto
+    </h1>
+    <p style="color:${b.mutedColor}; font-size:13px; margin:0 0 24px;">
+      Ordine #${escapeHtml(data.orderNumber)} — ${formatDate(new Date())}
+    </p>
+
+    <p style="margin:0 0 8px; font-size:11px; text-transform:uppercase; letter-spacing:0.8px; color:${b.mutedColor}; font-weight:600;">Cliente</p>
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border:1px solid ${b.borderColor}; border-radius:8px; border-collapse:separate; overflow:hidden; margin-bottom:20px;">
+      ${dataRow("Nome", data.customerName, true)}
+      ${dataRow("Email", data.customerEmail)}
+      ${dataRow("Telefono", data.customerPhone)}
+    </table>
+
+    <p style="margin:0 0 8px; font-size:11px; text-transform:uppercase; letter-spacing:0.8px; color:${b.mutedColor}; font-weight:600;">Indirizzo di spedizione</p>
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border:1px solid ${b.borderColor}; border-radius:8px; border-collapse:separate; overflow:hidden; margin-bottom:20px;">
+      ${dataRow("Indirizzo", addressLine)}
+      ${dataRow("CAP / Città", `${data.shippingAddress.postalCode} ${data.shippingAddress.city}`)}
+      ${dataRow("Provincia", data.shippingAddress.province)}
+      ${dataRow("Paese", data.shippingAddress.country)}
+    </table>
+
+    <p style="margin:0 0 8px; font-size:11px; text-transform:uppercase; letter-spacing:0.8px; color:${b.mutedColor}; font-weight:600;">Articoli</p>
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="border:1px solid ${b.borderColor}; border-radius:8px; border-collapse:separate; overflow:hidden;">
+      <tr style="background-color:${b.surfaceColor};">
+        <td style="padding:10px 14px; font-size:11px; text-transform:uppercase; letter-spacing:0.8px; color:${b.mutedColor}; font-weight:600; border-bottom:1px solid ${b.borderColor};">Articolo</td>
+        <td style="padding:10px 14px; font-size:11px; text-transform:uppercase; letter-spacing:0.8px; color:${b.mutedColor}; font-weight:600; border-bottom:1px solid ${b.borderColor}; text-align:right;">Prezzo</td>
+      </tr>
+      ${itemRows}
+      <tr style="background-color:${b.surfaceColor};">
+        <td style="padding:14px; font-size:15px; font-weight:700; color:${b.textColor};">Totale</td>
+        <td style="padding:14px; font-size:15px; font-weight:700; color:${b.primaryColor}; text-align:right;">${formatCurrency(data.totalCents)}</td>
+      </tr>
+    </table>`;
+
+  return premiumEmailLayout({
+    preheader: `Nuovo ordine #${data.orderNumber} — ${formatCurrency(data.totalCents)}`,
+    body,
+  });
+}
