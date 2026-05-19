@@ -3,7 +3,6 @@ import type { ReactNode } from "react";
 import {
   HeroSection,
   MobileHeroSection,
-  MobileQuickShop,
   CategoriesSection,
   PersonalizationSection,
   FeaturedProductsSection,
@@ -23,7 +22,6 @@ function HomePage(): ReactNode {
       <HeroSection />
       <MobileHeroSection />
       <FeaturedProductsSection />
-      <MobileQuickShop />
       <CategoriesSection />
       <PersonalizationSection />
       <TrustStripSection />
