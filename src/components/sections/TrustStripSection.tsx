@@ -31,7 +31,7 @@ const TRUST_ITEMS: TrustItem[] = [
   {
     icon: CreditCard,
     title: "Pagamento sicuro",
-    description: "Carta di credito, PayPal, bonifico",
+    description: "Carta di credito, bonifico, contrassegno",
   },
 ];
 

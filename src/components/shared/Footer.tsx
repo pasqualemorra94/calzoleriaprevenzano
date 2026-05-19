@@ -37,12 +37,7 @@ const SOCIAL_LINKS = [
   { platform: "Facebook", href: "https://facebook.com/calzoleriaprevenzano", icon: Facebook },
 ] as const;
 
-const PAYMENT_METHODS = [
-  "Visa",
-  "Mastercard",
-  "PayPal",
-  "Contrassegno",
-] as const;
+const PAYMENT_METHODS = ["Visa", "Mastercard", "Contrassegno"] as const;
 
 export function Footer(): ReactNode {
   const currentYear = new Date().getFullYear();
