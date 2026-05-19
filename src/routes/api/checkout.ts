@@ -12,8 +12,6 @@ import { apiSuccess, apiError } from "~/lib/api-response";
 import { getUser } from "~/lib/sdk-auth.server";
 import { createOrder, createCheckoutSession } from "~/lib/orders.server";
 import { checkoutGuestSchema, checkoutSchema } from "~/lib/validators/products";
-import { sendEmail } from "~/lib/email.server";
-import { orderConfirmationTemplate } from "~/lib/email-templates.server";
 import { getSessionId } from "~/lib/cart-session";
 import { createLogger } from "~/lib/logger.server";
 
@@ -84,26 +82,6 @@ export const Route = createFileRoute("/api/checkout")({
             return apiError("BAD_REQUEST", result.error, 400);
           }
 
-          // Order confirmation email (best-effort) — usa l'email dal form
-          try {
-            await sendEmail({
-              to: parsed.data.email,
-              subject: `Conferma ordine ${result.order.orderNumber} — Calzoleria Prevenzano`,
-              html: orderConfirmationTemplate({
-                customerName: parsed.data.firstName,
-                orderNumber: result.order.orderNumber,
-                items: result.order.items.map((item) => ({
-                  name: item.name,
-                  quantity: item.quantity,
-                  priceCents: Math.round(item.price * 100),
-                })),
-                totalCents: Math.round(result.order.total * 100),
-              }),
-            });
-          } catch {
-            // Email failure doesn't block the order
-          }
-
           // Stripe checkout session
           try {
             const session = await createCheckoutSession(
@@ -169,26 +147,6 @@ export const Route = createFileRoute("/api/checkout")({
         }
         if (!result.ok) {
           return apiError("BAD_REQUEST", result.error, 400);
-        }
-
-        // Order confirmation email (best-effort)
-        try {
-          await sendEmail({
-            to: user.email,
-            subject: `Conferma ordine ${result.order.orderNumber} — Calzoleria Prevenzano`,
-            html: orderConfirmationTemplate({
-              customerName: user.name ?? "Cliente",
-              orderNumber: result.order.orderNumber,
-              items: result.order.items.map((item) => ({
-                name: item.name,
-                quantity: item.quantity,
-                priceCents: Math.round(item.price * 100),
-              })),
-              totalCents: Math.round(result.order.total * 100),
-            }),
-          });
-        } catch {
-          // Email failure doesn't block the order
         }
 
         // Stripe checkout session

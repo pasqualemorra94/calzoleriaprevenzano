@@ -14,6 +14,7 @@
 
 import { prisma } from "~/lib/db.server";
 import { createLogger } from "~/lib/logger.server";
+import { sendOrderConfirmedEmails } from "~/lib/order-emails.server";
 import type Stripe from "stripe";
 
 const log = createLogger("webhook");
@@ -98,6 +99,17 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session): Promise
           method: "card",
         },
       });
+
+      // Order emails are best-effort: a failure must NOT fail the webhook
+      // (sendOrderConfirmedEmails never throws by design — try/catch is a safety net).
+      try {
+        await sendOrderConfirmedEmails(orderId);
+      } catch (e: unknown) {
+        log.error("Order confirmation emails threw", {
+          orderId,
+          message: e instanceof Error ? e.message : String(e),
+        });
+      }
     }
   }
   return { ok: true, message: "Checkout completed", status: 200 };
