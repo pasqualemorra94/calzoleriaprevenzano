@@ -2,7 +2,7 @@
 export const APP_CONFIG = {
   site: {
     name: "Calzoleria Prevenzano",
-    tagline: "Sandali artigianali dal 1965",
+    tagline: "Sandali artigianali dal 1984",
     url: process.env.APP_URL ?? "http://localhost:5173",
   },
   pagination: {

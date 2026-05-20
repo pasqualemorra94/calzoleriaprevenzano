@@ -24,7 +24,7 @@ const ORG_SCHEMA: JsonLdValue = {
   "@type": "Organization",
   name: APP_CONFIG.site.name,
   url: APP_CONFIG.site.url,
-  description: `${APP_CONFIG.site.name} — ${APP_CONFIG.site.tagline}. Sandali artigianali fatti a mano a Napoli dal 1965.`,
+  description: `${APP_CONFIG.site.name} — ${APP_CONFIG.site.tagline}. Sandali artigianali fatti a mano a Napoli dal 1984.`,
   location: [
     {
       "@type": "Place",
@@ -90,7 +90,7 @@ export const Route = createRootRoute({
       { name: "viewport", content: "width=device-width, initial-scale=1.0" },
       {
         name: "description",
-        content: `${APP_CONFIG.site.name} — ${APP_CONFIG.site.tagline}. Sandali artigianali fatti a mano a Napoli dal 1965.`,
+        content: `${APP_CONFIG.site.name} — ${APP_CONFIG.site.tagline}. Sandali artigianali fatti a mano a Napoli dal 1984.`,
       },
       { title: APP_CONFIG.site.name },
       { property: "og:type", content: "website" },

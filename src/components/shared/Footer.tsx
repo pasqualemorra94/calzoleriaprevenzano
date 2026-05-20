@@ -63,7 +63,7 @@ export function Footer(): ReactNode {
               />
             </a>
             <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed mb-6">
-              Sandali artigianali fatti a mano a Napoli dal 1965.
+              Sandali artigianali fatti a mano a Napoli dal 1984.
               Tradizione, qualità e passione per la pelletteria italiana.
             </p>
 
