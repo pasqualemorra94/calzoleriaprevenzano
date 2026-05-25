@@ -18,11 +18,20 @@ declare global {
   }
 }
 
-const MEASUREMENT_ID = import.meta.env.VITE_GA4_MEASUREMENT_ID as string | undefined;
+// Letto a runtime dal meta tag iniettato SSR in __root.tsx.
+// Necessario perché Railway non passa env vars al build Docker,
+// quindi import.meta.env.VITE_* viene risolto a undefined al build.
+function getMeasurementId(): string | undefined {
+  if (typeof document === "undefined") return undefined;
+  const meta = document.querySelector('meta[name="x-ga4-id"]');
+  const content = meta?.getAttribute("content");
+  return content && content.length > 0 ? content : undefined;
+}
 
 export function GoogleAnalytics(): null {
   // Loader: aggancia gtag.js dopo consenso analytics.
   useEffect(() => {
+    const MEASUREMENT_ID = getMeasurementId();
     if (!MEASUREMENT_ID) return;
 
     const loadGtag = (): void => {
@@ -54,7 +63,7 @@ export function GoogleAnalytics(): null {
 
   // Listener revoke: se utente revoca analytics post-load, reload per pulire cookie _ga.
   useEffect(() => {
-    if (!MEASUREMENT_ID) return;
+    if (!getMeasurementId()) return;
 
     const handler = (e: Event): void => {
       if (!(e instanceof CustomEvent)) return;

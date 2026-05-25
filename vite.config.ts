@@ -9,11 +9,6 @@ export default defineConfig({
   server: {
     port: 3000,
   },
-  define: {
-    "import.meta.env.VITE_GA4_MEASUREMENT_ID": JSON.stringify(
-      process.env.VITE_GA4_MEASUREMENT_ID ?? "",
-    ),
-  },
   resolve: {
     alias: {
       "motion/react": "framer-motion",

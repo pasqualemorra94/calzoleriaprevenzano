@@ -95,6 +95,9 @@ export const Route = createRootRoute({
       ...(process.env.GOOGLE_SITE_VERIFICATION
         ? [{ name: "google-site-verification", content: process.env.GOOGLE_SITE_VERIFICATION }]
         : []),
+      ...(process.env.VITE_GA4_MEASUREMENT_ID
+        ? [{ name: "x-ga4-id", content: process.env.VITE_GA4_MEASUREMENT_ID }]
+        : []),
       { title: APP_CONFIG.site.name },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "it_IT" },
