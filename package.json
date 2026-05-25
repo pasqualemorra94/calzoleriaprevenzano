@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev",
-    "build": "echo \"[BUILD-ENV-CHECK] VITE_GA4_MEASUREMENT_ID='${VITE_GA4_MEASUREMENT_ID:-UNSET}' NODE_ENV='${NODE_ENV:-UNSET}'\" && vite build && tsc --noEmit",
+    "build": "vite build && tsc --noEmit",
     "preview": "vite preview",
     "start": "node .output/server/index.mjs",
     "typecheck": "tsc --noEmit",
