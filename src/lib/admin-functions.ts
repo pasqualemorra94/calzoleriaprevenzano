@@ -36,9 +36,21 @@ import {
   type ShippingConfigData,
 } from "./admin/shipping-config.server";
 import type { UpdateShippingConfigInput } from "./validators/admin";
+import {
+  listAbandonedCarts,
+  getAbandonedCart,
+  getAbandonedCartsStats,
+} from "./admin/admin-carts.server";
+import type {
+  AbandonedCartListItem,
+  AbandonedCartDetail,
+  AbandonedCartsStats,
+  ThresholdRange,
+  UserFilter,
+} from "./admin/admin-carts.server";
 
 // Re-export types
-export type { DashboardStats, AdminProductListItem, AdminProductDetail, AdminOrderListItem, AdminOrderDetail, MediaListItem, AdminConsentLogItem, AdminReturnRequestListItem, AdminReturnRequestDetail, ShippingConfigData };
+export type { DashboardStats, AdminProductListItem, AdminProductDetail, AdminOrderListItem, AdminOrderDetail, MediaListItem, AdminConsentLogItem, AdminReturnRequestListItem, AdminReturnRequestDetail, ShippingConfigData, AbandonedCartListItem, AbandonedCartDetail, AbandonedCartsStats, ThresholdRange, UserFilter };
 
 // ─── Auth guard for admin server functions ─────────────────────────
 
@@ -226,4 +238,40 @@ export const $updateShippingConfig = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const user = await requireAdmin();
     return updateShippingConfig(data, user.id);
+  });
+
+// ─── Abandoned Carts (view-only) ───────────────────────────────────
+
+export const $listAbandonedCarts = createServerFn({ method: "GET" })
+  .inputValidator((data: {
+    page?: number;
+    perPage?: number;
+    threshold?: ThresholdRange;
+    userFilter?: UserFilter;
+  }) => data)
+  .handler(async ({ data }) => {
+    await requireAdmin();
+    return listAbandonedCarts({
+      page: data.page ?? 1,
+      perPage: data.perPage ?? 20,
+      threshold: data.threshold ?? "1h",
+      userFilter: data.userFilter ?? "all",
+    }) satisfies Promise<PaginatedData<AbandonedCartListItem>>;
+  });
+
+export const $getAbandonedCart = createServerFn({ method: "GET" })
+  .inputValidator((data: { id: string }) => data)
+  .handler(async ({ data }) => {
+    await requireAdmin();
+    return getAbandonedCart(data.id) satisfies Promise<AbandonedCartDetail | null>;
+  });
+
+export const $getAbandonedCartsStats = createServerFn({ method: "GET" })
+  .inputValidator((data: { threshold?: ThresholdRange; userFilter?: UserFilter }) => data)
+  .handler(async ({ data }) => {
+    await requireAdmin();
+    return getAbandonedCartsStats(
+      data.threshold ?? "1h",
+      data.userFilter ?? "all",
+    ) satisfies Promise<AbandonedCartsStats>;
   });
