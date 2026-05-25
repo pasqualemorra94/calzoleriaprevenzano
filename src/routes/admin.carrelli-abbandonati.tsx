@@ -342,6 +342,7 @@ function AdminAbandonedCartsList(): ReactNode {
                       <Link
                         to="/admin/carrelli-abbandonati/$id"
                         params={{ id: row.id }}
+                        search={search}
                         className="inline-flex h-8 items-center gap-1 rounded-md border border-gray-300 px-2.5 text-xs font-medium text-gray-700 transition-colors hover:bg-gray-50"
                       >
                         <Eye className="h-3.5 w-3.5" />
