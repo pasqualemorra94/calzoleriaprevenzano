@@ -92,12 +92,6 @@ export const Route = createRootRoute({
         name: "description",
         content: `${APP_CONFIG.site.name} — ${APP_CONFIG.site.tagline}. Sandali artigianali fatti a mano a Napoli dal 1984.`,
       },
-      ...(process.env.GOOGLE_SITE_VERIFICATION
-        ? [{ name: "google-site-verification", content: process.env.GOOGLE_SITE_VERIFICATION }]
-        : []),
-      ...(process.env.VITE_GA4_MEASUREMENT_ID
-        ? [{ name: "x-ga4-id", content: process.env.VITE_GA4_MEASUREMENT_ID }]
-        : []),
       { title: APP_CONFIG.site.name },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "it_IT" },
@@ -144,10 +138,14 @@ export const Route = createRootRoute({
 });
 
 function RootDocument({ children }: { children: ReactNode }) {
+  const ga4Id = process.env.VITE_GA4_MEASUREMENT_ID ?? "";
+  const gscId = process.env.GOOGLE_SITE_VERIFICATION ?? "";
   return (
     <html lang="it">
       <head>
         <HeadContent />
+        {ga4Id ? <meta name="x-ga4-id" content={ga4Id} /> : null}
+        {gscId ? <meta name="google-site-verification" content={gscId} /> : null}
       </head>
       <body className="min-h-screen bg-[var(--color-background)] text-[var(--color-text)] antialiased">
         {children}
