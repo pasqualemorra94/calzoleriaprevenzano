@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, useMatchRoute, redirect } from "@tanstack/react-router";
 import { useState, useEffect, type ReactNode } from "react";
-import { Menu, X, LayoutDashboard, Package, ShoppingCart, Layers, ExternalLink, ImageIcon, LogOut, Sparkles, Shield, RotateCcw, Truck } from "lucide-react";
+import { Menu, X, LayoutDashboard, Package, ShoppingCart, Layers, ExternalLink, ImageIcon, LogOut, Sparkles, Shield, RotateCcw, Truck, ShoppingBag } from "lucide-react";
 import { cn } from "~/lib/utils/cn";
 import { $signOut } from "~/lib/auth-functions";
 import { $countPendingReturnRequests } from "~/lib/admin-functions";
@@ -26,6 +26,7 @@ const NAV_ITEMS = [
   { label: "Media", href: "/admin/media", icon: ImageIcon, matchPath: "/admin/media" as const },
   { label: "Variant templates", href: "/admin/variant-templates", icon: Layers, matchPath: "/admin/variant-templates" as const },
   { label: "Ordini", href: "/admin/ordini", icon: ShoppingCart, matchPath: "/admin/ordini" as const },
+  { label: "Carrelli abbandonati", href: "/admin/carrelli-abbandonati", icon: ShoppingBag, matchPath: "/admin/carrelli-abbandonati" as const },
   { label: "Spedizione", href: "/admin/spedizione", icon: Truck, matchPath: "/admin/spedizione" as const },
   { label: "Resi", href: "/admin/resi", icon: RotateCcw, matchPath: "/admin/resi" as const },
   { label: "AI Advisor", href: "/admin/ai-advisor", icon: Sparkles, matchPath: "/admin/ai-advisor" as const },
