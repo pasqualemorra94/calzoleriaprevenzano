@@ -116,12 +116,8 @@ export const Route = createRootRoute({
         href: "https://fonts.bunny.net",
         crossOrigin: "",
       },
-      ...(process.env.VITE_GA4_MEASUREMENT_ID
-        ? [
-            { rel: "preconnect", href: "https://www.googletagmanager.com" },
-            { rel: "preconnect", href: "https://www.googletagmanager.com", crossOrigin: "" },
-          ]
-        : []),
+      { rel: "preconnect", href: "https://www.googletagmanager.com" },
+      { rel: "preconnect", href: "https://www.googletagmanager.com", crossOrigin: "" },
       {
         rel: "preload",
         href: "https://fonts.bunny.net/css?family=cormorant-garamond:wght@400;500;600;700&display=swap",
