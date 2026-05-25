@@ -92,6 +92,9 @@ export const Route = createRootRoute({
         name: "description",
         content: `${APP_CONFIG.site.name} — ${APP_CONFIG.site.tagline}. Sandali artigianali fatti a mano a Napoli dal 1984.`,
       },
+      ...(process.env.GOOGLE_SITE_VERIFICATION
+        ? [{ name: "google-site-verification", content: process.env.GOOGLE_SITE_VERIFICATION }]
+        : []),
       { title: APP_CONFIG.site.name },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "it_IT" },
