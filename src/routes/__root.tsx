@@ -165,7 +165,6 @@ function RootComponent() {
       <a href="#main-content" className="skip-to-content">
         Vai al contenuto principale
       </a>
-      <StructuredData data={ORG_SCHEMA} />
       {!isAdmin && <MegaMenu />}
       <main
         id="main-content"
