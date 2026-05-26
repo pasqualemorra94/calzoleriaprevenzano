@@ -32,17 +32,15 @@ export function GoogleAnalytics(): null {
   // Loader: aggancia gtag.js dopo consenso analytics.
   useEffect(() => {
     const MEASUREMENT_ID = getMeasurementId();
+    // eslint-disable-next-line no-console
+    console.info("[GA4] init", { hasMeasurementId: Boolean(MEASUREMENT_ID), id: MEASUREMENT_ID });
     if (!MEASUREMENT_ID) return;
 
     const loadGtag = (): void => {
-      // Idempotenza injection script
-      if (document.querySelector('script[src*="googletagmanager.com/gtag/js"]')) return;
+      // eslint-disable-next-line no-console
+      console.info("[GA4] loadGtag fired — consent OK");
 
-      const script = document.createElement("script");
-      script.async = true;
-      script.src = `https://www.googletagmanager.com/gtag/js?id=${MEASUREMENT_ID}`;
-      document.head.appendChild(script);
-
+      // Init dataLayer + gtag stub PRIMA dell'append (pattern Google ufficiale)
       window.dataLayer = window.dataLayer || [];
       window.gtag =
         window.gtag ||
@@ -56,8 +54,35 @@ export function GoogleAnalytics(): null {
         allow_google_signals: false,
         allow_ad_personalization_signals: false,
       });
+
+      // eslint-disable-next-line no-console
+      console.info("[GA4] dataLayer dopo config", window.dataLayer);
+
+      // Idempotenza injection script
+      if (document.querySelector('script[src*="googletagmanager.com/gtag/js"]')) {
+        // eslint-disable-next-line no-console
+        console.info("[GA4] gtag.js già presente, skip injection");
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.async = true;
+      script.src = `https://www.googletagmanager.com/gtag/js?id=${MEASUREMENT_ID}`;
+      script.onload = () => {
+        // eslint-disable-next-line no-console
+        console.info("[GA4] gtag.js caricato", { dataLayerLen: window.dataLayer?.length });
+      };
+      script.onerror = (err) => {
+        // eslint-disable-next-line no-console
+        console.error("[GA4] gtag.js FALLITO il caricamento", err);
+      };
+      document.head.appendChild(script);
+      // eslint-disable-next-line no-console
+      console.info("[GA4] script appeso al DOM:", script.src);
     };
 
+    // eslint-disable-next-line no-console
+    console.info("[GA4] in attesa di consenso analytics…");
     loadScriptWithConsent("analytics", loadGtag);
   }, []);
 

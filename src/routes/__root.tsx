@@ -14,74 +14,9 @@ import { MobileSearchOverlay } from "~/components/shared/MobileSearchOverlay";
 import { Footer, CookieBanner, GoogleAnalytics, WhatsAppFloatingButton } from "~/components/shared";
 import { MobileBottomNav } from "~/components/shared/MobileBottomNav";
 import { ErrorBoundary } from "~/components/shared/ErrorBoundary";
-import { StructuredData, type JsonLdValue } from "~/components/seo/StructuredData";
 import { cn } from "~/lib/utils/cn";
 import { Toaster } from "sonner";
 import appCss from "~/styles/app.css?url";
-
-const ORG_SCHEMA: JsonLdValue = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: APP_CONFIG.site.name,
-  url: APP_CONFIG.site.url,
-  description: `${APP_CONFIG.site.name} — ${APP_CONFIG.site.tagline}. Sandali artigianali fatti a mano a Napoli dal 1984.`,
-  location: [
-    {
-      "@type": "Place",
-      name: "Negozio",
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: "Via Chiaia, 104",
-        addressLocality: "Napoli",
-        addressRegion: "NA",
-        postalCode: "80121",
-        addressCountry: "IT",
-      },
-      telephone: "+390810410442",
-      openingHoursSpecification: [
-        {
-          "@type": "OpeningHoursSpecification",
-          dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-          opens: "09:30",
-          closes: "20:00",
-        },
-      ],
-    },
-    {
-      "@type": "Place",
-      name: "Laboratorio",
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: "Via Michelangelo Schipa, 111",
-        addressLocality: "Napoli",
-        addressRegion: "NA",
-        postalCode: "80122",
-        addressCountry: "IT",
-      },
-      telephone: "+390819526465",
-      openingHoursSpecification: [
-        {
-          "@type": "OpeningHoursSpecification",
-          dayOfWeek: ["Tuesday", "Wednesday", "Thursday", "Friday"],
-          opens: "09:30",
-          closes: "14:00",
-        },
-        {
-          "@type": "OpeningHoursSpecification",
-          dayOfWeek: ["Tuesday", "Wednesday", "Thursday", "Friday"],
-          opens: "16:00",
-          closes: "20:00",
-        },
-        {
-          "@type": "OpeningHoursSpecification",
-          dayOfWeek: "Saturday",
-          opens: "09:30",
-          closes: "13:00",
-        },
-      ],
-    },
-  ],
-} as const;
 
 export const Route = createRootRoute({
   head: () => ({
