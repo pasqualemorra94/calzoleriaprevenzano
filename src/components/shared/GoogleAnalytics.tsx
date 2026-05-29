@@ -44,9 +44,10 @@ export function GoogleAnalytics(): null {
       window.dataLayer = window.dataLayer || [];
       window.gtag =
         window.gtag ||
-        function gtag(...args: unknown[]): void {
-          (window.dataLayer as unknown[]).push(args);
-        };
+        (function gtag(): void {
+          // biome-ignore lint/style/noArguments: gtag.js richiede l'oggetto arguments nativo (pattern ufficiale Google), non un array — vedi diagnosi /collect
+          (window.dataLayer as unknown[]).push(arguments);
+        } as (...args: unknown[]) => void);
 
       window.gtag("js", new Date());
       window.gtag("config", MEASUREMENT_ID, {
