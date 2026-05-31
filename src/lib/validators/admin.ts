@@ -132,3 +132,46 @@ export const updateShippingConfigSchema = z.object({
 });
 
 export type UpdateShippingConfigInput = z.infer<typeof updateShippingConfigSchema>;
+
+// ─── Discount Codes ─────────────────────────────────────────────────────
+
+export const createDiscountCodeSchema = z
+  .object({
+    code: z
+      .string()
+      .trim()
+      .min(2, "Il codice deve avere almeno 2 caratteri")
+      .max(50, "Il codice è troppo lungo")
+      .regex(/^[A-Za-z0-9_-]+$/, "Solo lettere, numeri, trattino e underscore")
+      .transform((c) => c.toUpperCase()),
+    value: z.coerce
+      .number({ message: "Inserisci una percentuale valida" })
+      .positive("La percentuale deve essere maggiore di 0")
+      .max(100, "La percentuale non può superare 100"),
+    startsAt: z.coerce.date({ message: "Data inizio non valida" }),
+    expiresAt: z.coerce.date({ message: "Data scadenza non valida" }),
+    minOrder: z.coerce
+      .number({ message: "Ordine minimo non valido" })
+      .min(0, "L'ordine minimo non può essere negativo")
+      .max(99999.99)
+      .optional(),
+    maxUses: z.coerce
+      .number({ message: "Limite utilizzi non valido" })
+      .int("Deve essere un numero intero")
+      .min(1, "Il limite deve essere almeno 1")
+      .max(1000000)
+      .optional(),
+  })
+  .refine((d) => d.expiresAt > d.startsAt, {
+    message: "La data di scadenza deve essere successiva alla data di inizio",
+    path: ["expiresAt"],
+  });
+
+export type CreateDiscountCodeInput = z.infer<typeof createDiscountCodeSchema>;
+
+export const toggleDiscountCodeSchema = z.object({
+  id: z.string().cuid(),
+  isActive: z.boolean(),
+});
+
+export type ToggleDiscountCodeInput = z.infer<typeof toggleDiscountCodeSchema>;
