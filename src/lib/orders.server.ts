@@ -11,6 +11,7 @@ import type { PaginatedData } from "~/lib/types/api";
 import { createLogger } from "~/lib/logger.server";
 import { getShippingConfig } from "~/lib/admin/shipping-config.server";
 import { computeShippingCost } from "~/lib/utils/shipping";
+import { validateDiscountCode } from "~/lib/discount.server";
 
 const log = createLogger("orders");
 
@@ -174,41 +175,40 @@ export async function createOrder(
     }
   }
 
-  // Apply discount code if provided
-  let discountAmount = 0;
-  if (input.discountCode) {
-    const code = await prisma.discountCode.findFirst({
-      where: {
-        code: input.discountCode.toUpperCase(),
-        isActive: true,
-        startsAt: { lte: new Date() },
-        expiresAt: { gte: new Date() },
-      },
-    });
-    if (code) {
-      const subtotal = cartItems.reduce(
-        (sum: number, item: CartItemFull) => sum + Number(item.price) * item.quantity,
-        0,
-      );
-      if (code.minOrder && subtotal < Number(code.minOrder)) {
-        return { ok: false, error: `Ordine minimo: €${code.minOrder}` };
-      }
-      if (code.maxUses && code.usedCount >= code.maxUses) {
-        return { ok: false, error: "Codice sconto esaurito" };
-      }
-      discountAmount = code.type === "percentage"
-        ? Math.round(subtotal * Number(code.value) / 100 * 100) / 100
-        : Math.min(Number(code.value), subtotal);
-      await prisma.discountCode.update({ where: { id: code.id }, data: { usedCount: { increment: 1 } } });
-    }
-  }
-
-  // Calculate totals — prices are VAT-inclusive (Italian e-commerce convention).
-  // Tax is *contained* in the total (extracted for invoice/legal), never added on top.
+  // Subtotal — prices are VAT-inclusive (Italian e-commerce convention).
+  // Computed up-front because it feeds both discount validation and the totals below.
   const subtotal = cartItems.reduce(
     (sum: number, item: CartItemFull) => sum + Number(item.price) * item.quantity,
     0,
   );
+
+  // Apply discount code if provided. Validation/calc delegated to the shared
+  // single-source-of-truth helper (`validateDiscountCode`) — same math used by
+  // the live preview server fn `$validateDiscount`, so no drift.
+  // Behaviour preserved 1:1: an unknown/expired code is silently ignored
+  // (discountAmount stays 0), while minOrder/maxUses failures abort the order.
+  let discountAmount = 0;
+  if (input.discountCode) {
+    const result = await validateDiscountCode(input.discountCode, subtotal);
+    if (!result.valid) {
+      // "Codice non valido o scaduto" → ignora silenziosamente (contratto storico);
+      // qualsiasi altro errore (minOrder/maxUses) → aborta l'ordine.
+      if (result.error && result.error !== "Codice non valido o scaduto") {
+        return { ok: false, error: result.error };
+      }
+    } else {
+      discountAmount = result.discountAmount;
+      // Increment usedCount SOLO qui, a creazione ordine, e solo se valido.
+      // `code` è @unique → update by-code evita una seconda lookup.
+      await prisma.discountCode.update({
+        where: { code: input.discountCode.toUpperCase() },
+        data: { usedCount: { increment: 1 } },
+      });
+    }
+  }
+
+  // Calculate totals — prices are VAT-inclusive; tax is *contained* in the
+  // total (extracted for invoice/legal), never added on top.
   const shippingConfig = await getShippingConfig();
   const shippingCost = computeShippingCost(subtotal, shippingConfig);
   const netAfterDiscount = subtotal - discountAmount;

@@ -128,6 +128,14 @@ export const contactSchema = z.object({
 
 export type ContactInput = z.infer<typeof contactSchema>;
 
+/** Discount code preview (live validation at checkout — public) */
+export const validateDiscountSchema = z.object({
+  code: z.string().min(1, "Inserisci un codice").max(50),
+  subtotal: z.number().nonnegative(),
+});
+
+export type ValidateDiscountInput = z.infer<typeof validateDiscountSchema>;
+
 /** Checkout input (authenticated — uses saved addressId) */
 export const checkoutSchema = z.object({
   addressId: z.string().min(1, "L'indirizzo di spedizione è obbligatorio"),
