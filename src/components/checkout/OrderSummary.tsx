@@ -21,14 +21,16 @@ interface OrderSummaryProps {
   submitStatus?: "idle" | "loading" | "success" | "error";
   isCheckout?: boolean;
   disabled?: boolean;
+  discountAmount?: number;
 }
 
 export function OrderSummary({
   items, subtotal, shippingCost, freeShippingThreshold,
   shippingEnabled = true,
   submitStatus = "idle", isCheckout = false, disabled = false,
+  discountAmount = 0,
 }: OrderSummaryProps): ReactNode {
-  const total = subtotal + shippingCost;
+  const total = Math.max(0, subtotal - discountAmount) + shippingCost;
 
   return (
     <div className="rounded-[var(--radius-lg)] border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
@@ -92,6 +94,12 @@ export function OrderSummary({
           <div className="flex items-center gap-2 rounded-[var(--radius-md)] bg-amber-50 px-3 py-2 text-xs text-amber-700">
             <Truck className="h-4 w-4 shrink-0" />
             <span>Aggiungi ancora €{(freeShippingThreshold - subtotal).toFixed(2)} per la spedizione gratuita</span>
+          </div>
+        )}
+        {discountAmount > 0 && (
+          <div className="flex justify-between text-sm">
+            <span className="text-[var(--color-text-secondary)]">Sconto</span>
+            <span className="font-medium text-green-600">−€{discountAmount.toFixed(2)}</span>
           </div>
         )}
         <hr className="border-[var(--color-border)]" />

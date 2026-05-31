@@ -7,6 +7,7 @@ import { Truck } from "lucide-react";
 import { OrderSummary } from "~/components/checkout/OrderSummary";
 import type { CartItemDetail } from "~/components/checkout/OrderSummary";
 import { $getPublicShippingConfig } from "~/lib/shipping-functions";
+import { $validateDiscount } from "~/lib/checkout-functions";
 import { computeShippingCost, type ShippingConfigShape } from "~/lib/utils/shipping";
 
 const INPUT_CLASS =
@@ -29,6 +30,9 @@ function CheckoutPage(): ReactNode {
     email: "", firstName: "", lastName: "", address1: "", address2: "", city: "", province: "", postalCode: "", phone: "",
   });
   const [discountCode, setDiscountCode] = useState("");
+  const [appliedDiscount, setAppliedDiscount] = useState(0);
+  const [discountStatus, setDiscountStatus] = useState<"idle" | "loading" | "error">("idle");
+  const [discountError, setDiscountError] = useState<string | null>(null);
   const [notes, setNotes] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitStatus, setSubmitStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -37,6 +41,35 @@ function CheckoutPage(): ReactNode {
   const [orderNumber, setOrderNumber] = useState<string | null>(null);
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [acceptedTermsError, setAcceptedTermsError] = useState<string | null>(null);
+
+  // Reset dell'anteprima sconto quando cambia il subtotale del carrello
+  // (evita sconto stale se l'utente modifica il carrello in un'altra tab).
+  useEffect(() => {
+    setAppliedDiscount(0);
+    setDiscountError(null);
+    setDiscountStatus("idle");
+  }, [cart?.subtotal]);
+
+  const handleApplyDiscount = async (): Promise<void> => {
+    if (!discountCode.trim() || !cart) return;
+    setDiscountStatus("loading");
+    setDiscountError(null);
+    try {
+      const res = await $validateDiscount({ data: { code: discountCode.trim(), subtotal: cart.subtotal } });
+      if (res.valid) {
+        setAppliedDiscount(res.discountAmount);
+        setDiscountStatus("idle");
+      } else {
+        setAppliedDiscount(0);
+        setDiscountError(res.error ?? "Codice non valido");
+        setDiscountStatus("error");
+      }
+    } catch {
+      setAppliedDiscount(0);
+      setDiscountError("Errore nella verifica del codice. Riprova.");
+      setDiscountStatus("error");
+    }
+  };
 
   const validateForm = (): boolean => {
     const errs: Record<string, string> = {};
@@ -217,10 +250,11 @@ function CheckoutPage(): ReactNode {
                     <div className="flex gap-2">
                       <div className="relative flex-1">
                         <span className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-text-muted)]">🏷</span>
-                        <input id="checkout-discount" type="text" placeholder="Inserisci il codice" value={discountCode} onChange={(e) => setDiscountCode(e.target.value.toUpperCase())} className={`${INPUT_CLASS} pl-10`} />
+                        <input id="checkout-discount" type="text" placeholder="Inserisci il codice" value={discountCode} onChange={(e) => { setDiscountCode(e.target.value.toUpperCase()); if (appliedDiscount || discountError) { setAppliedDiscount(0); setDiscountError(null); setDiscountStatus("idle"); } }} className={`${INPUT_CLASS} pl-10`} />
                       </div>
-                      <button type="button" className="h-11 rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] px-5 text-sm font-medium text-[var(--color-text)] transition-colors hover:bg-[var(--color-muted)]">Applica</button>
+                      <button type="button" onClick={handleApplyDiscount} disabled={discountStatus === "loading" || !discountCode.trim()} className="flex h-11 items-center justify-center rounded-[var(--radius-md)] border border-[var(--color-border)] bg-[var(--color-surface)] px-5 text-sm font-medium text-[var(--color-text)] transition-colors hover:bg-[var(--color-muted)] disabled:cursor-not-allowed disabled:opacity-60">{discountStatus === "loading" ? <Loader2 className="h-4 w-4 animate-spin" /> : "Applica"}</button>
                     </div>
+                    {discountError && <p className="text-xs text-[var(--color-destructive)]">{discountError}</p>}
                   </div>
                   <div className="space-y-2">
                     <label htmlFor="checkout-notes" className={LABEL_CLASS}>Note <span className="font-normal text-[var(--color-text-muted)]">(opzionale)</span></label>
@@ -263,6 +297,7 @@ function CheckoutPage(): ReactNode {
                   shippingEnabled={shippingConfig?.enabled ?? true}
                   submitStatus={submitStatus} isCheckout
                   disabled={!acceptedTerms}
+                  discountAmount={appliedDiscount}
                 />
               </div>
             </div>
