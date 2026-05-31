@@ -48,9 +48,19 @@ import type {
   ThresholdRange,
   UserFilter,
 } from "./admin/admin-carts.server";
+import {
+  listDiscountCodes,
+  createDiscountCode,
+  toggleDiscountCode,
+  type DiscountCodeListItem,
+} from "./admin/admin-discounts.server";
+import type {
+  CreateDiscountCodeInput,
+  ToggleDiscountCodeInput,
+} from "./validators/admin";
 
 // Re-export types
-export type { DashboardStats, AdminProductListItem, AdminProductDetail, AdminOrderListItem, AdminOrderDetail, MediaListItem, AdminConsentLogItem, AdminReturnRequestListItem, AdminReturnRequestDetail, ShippingConfigData, AbandonedCartListItem, AbandonedCartDetail, AbandonedCartsStats, ThresholdRange, UserFilter };
+export type { DashboardStats, AdminProductListItem, AdminProductDetail, AdminOrderListItem, AdminOrderDetail, MediaListItem, AdminConsentLogItem, AdminReturnRequestListItem, AdminReturnRequestDetail, ShippingConfigData, AbandonedCartListItem, AbandonedCartDetail, AbandonedCartsStats, ThresholdRange, UserFilter, DiscountCodeListItem };
 
 // ─── Auth guard for admin server functions ─────────────────────────
 
@@ -274,4 +284,25 @@ export const $getAbandonedCartsStats = createServerFn({ method: "GET" })
       data.threshold ?? "1h",
       data.userFilter ?? "all",
     ) satisfies Promise<AbandonedCartsStats>;
+  });
+
+// ─── Discount Codes ───────────────────────────────────────────────
+
+export const $listDiscountCodes = createServerFn({ method: "GET" }).handler(async () => {
+  await requireAdmin();
+  return listDiscountCodes() satisfies Promise<DiscountCodeListItem[]>;
+});
+
+export const $createDiscountCode = createServerFn({ method: "POST" })
+  .inputValidator((data: CreateDiscountCodeInput) => data)
+  .handler(async ({ data }) => {
+    const user = await requireAdmin();
+    return createDiscountCode(data, user.id) satisfies Promise<DiscountCodeListItem>;
+  });
+
+export const $toggleDiscountCode = createServerFn({ method: "POST" })
+  .inputValidator((data: ToggleDiscountCodeInput) => data)
+  .handler(async ({ data }) => {
+    const user = await requireAdmin();
+    return toggleDiscountCode(data, user.id) satisfies Promise<DiscountCodeListItem>;
   });
