@@ -442,7 +442,7 @@ export async function createCheckoutSession(
   if (userId) metadata.userId = userId;
 
   const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card"],
+    payment_method_types: ["card", "paypal", "klarna"],
     mode: "payment",
     line_items: [
       {
