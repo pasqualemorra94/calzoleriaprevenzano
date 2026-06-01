@@ -15,6 +15,7 @@
 import { prisma } from "~/lib/db.server";
 import { createLogger } from "~/lib/logger.server";
 import { sendOrderConfirmedEmails } from "~/lib/order-emails.server";
+import { stripe } from "~/lib/stripe.server";
 import type Stripe from "stripe";
 
 const log = createLogger("webhook");
@@ -87,6 +88,36 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session): Promise
         },
       });
 
+      // Derive the real payment method used (card/paypal/klarna) from the
+      // PaymentIntent's charge details. Falls back to "card" if undeterminable.
+      const paymentIntentId =
+        typeof session.payment_intent === "string"
+          ? session.payment_intent
+          : (session.payment_intent?.id ?? null);
+
+      let paymentMethod = "card"; // fallback sensato se il tipo non è determinabile
+      if (paymentIntentId) {
+        try {
+          const intent = await stripe.paymentIntents.retrieve(paymentIntentId, {
+            expand: ["latest_charge.payment_method_details"],
+          });
+          const charge = intent.latest_charge;
+          // latest_charge può essere string | Stripe.Charge | null → narrowing
+          const type =
+            charge && typeof charge !== "string"
+              ? charge.payment_method_details?.type
+              : undefined;
+          if (type) paymentMethod = type;
+        } catch (e: unknown) {
+          log.error("Impossibile determinare il metodo di pagamento", {
+            orderId,
+            paymentIntentId,
+            message: e instanceof Error ? e.message : String(e),
+          });
+          // paymentMethod resta "card" (fallback) — il webhook NON deve fallire per questo
+        }
+      }
+
       // Create payment record
       await prisma.payment.create({
         data: {
@@ -96,7 +127,7 @@ async function handleCheckoutComplete(session: Stripe.Checkout.Session): Promise
           amount: session.amount_total ? session.amount_total / 100 : 0,
           currency: session.currency ?? "EUR",
           status: "succeeded",
-          method: "card",
+          method: paymentMethod,
         },
       });
 
