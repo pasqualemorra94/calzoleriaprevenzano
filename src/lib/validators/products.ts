@@ -149,27 +149,65 @@ export const checkoutSchema = z.object({
 
 export type CheckoutInput = z.infer<typeof checkoutSchema>;
 
-/** Checkout input (guest — includes inline shipping data + email) */
-export const checkoutGuestSchema = z.object({
-  email: z.string().email("Email non valida"),
-  firstName: z.string().min(1, "Il nome è obbligatorio").max(100),
-  lastName: z.string().min(1, "Il cognome è obbligatorio").max(100),
-  address: z.object({
-    address1: z.string().min(1, "L'indirizzo è obbligatorio").max(200),
-    address2: z.string().max(200).optional(),
-    city: z.string().min(1, "La città è obbligatoria").max(100),
-    province: z.string().min(2, "La provincia è obbligatoria").max(2),
-    postalCode: z.string().min(5, "Il CAP deve avere 5 caratteri").max(5),
-    country: z.string().default("IT"),
-    phone: z.string().max(20).optional(),
-  }),
-  shippingMethod: z.string().default("standard"),
-  notes: z.string().max(1000).optional(),
-  discountCode: z.string().max(50).optional(),
-  acceptedTerms: z.literal(true, {
-    message: "Devi accettare i Termini di Vendita per procedere",
-  }),
-});
+/** Paesi considerati "Italia" (zona spedizione domestica). */
+const ITALY_COUNTRY_CODES = ["IT", "ITALIA", "ITALY"];
+
+/** True se il country normalizzato NON è Italia (zona estero). */
+export function isEsteroCountry(country: string | null | undefined): boolean {
+  const normalized = (country ?? "").trim().toUpperCase();
+  return !ITALY_COUNTRY_CODES.includes(normalized);
+}
+
+/**
+ * Checkout input (guest — includes inline shipping data + email).
+ *
+ * Validazione indirizzo condizionale al paese:
+ *  - Italia → provincia esattamente 2 char + CAP esattamente 5 char (formato IT).
+ *  - Estero → provincia/regione e codice postale liberi (anche vuoti).
+ * I constraint base sono allentati a stringa libera opzionale, lo `superRefine`
+ * applica il formato stretto solo per l'Italia.
+ */
+export const checkoutGuestSchema = z
+  .object({
+    email: z.string().email("Email non valida"),
+    firstName: z.string().min(1, "Il nome è obbligatorio").max(100),
+    lastName: z.string().min(1, "Il cognome è obbligatorio").max(100),
+    address: z.object({
+      address1: z.string().min(1, "L'indirizzo è obbligatorio").max(200),
+      address2: z.string().max(200).optional(),
+      city: z.string().min(1, "La città è obbligatoria").max(100),
+      province: z.string().max(100).optional().default(""),
+      postalCode: z.string().max(20).optional().default(""),
+      country: z.string().min(1, "La nazione è obbligatoria").default("IT"),
+      phone: z.string().max(20).optional(),
+    }),
+    shippingMethod: z.string().default("standard"),
+    notes: z.string().max(1000).optional(),
+    discountCode: z.string().max(50).optional(),
+    acceptedTerms: z.literal(true, {
+      message: "Devi accettare i Termini di Vendita per procedere",
+    }),
+  })
+  .superRefine((data, ctx) => {
+    // Solo per l'Italia si applica il formato stretto provincia/CAP.
+    if (isEsteroCountry(data.address.country)) return;
+    const province = data.address.province ?? "";
+    const postalCode = data.address.postalCode ?? "";
+    if (province.length !== 2) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["address", "province"],
+        message: "La provincia è obbligatoria",
+      });
+    }
+    if (postalCode.length !== 5) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["address", "postalCode"],
+        message: "Il CAP deve avere 5 caratteri",
+      });
+    }
+  });
 
 export type CheckoutGuestInput = z.infer<typeof checkoutGuestSchema>;
 

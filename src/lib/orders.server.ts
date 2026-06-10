@@ -6,7 +6,11 @@
 
 import { Prisma } from "@prisma/client";
 import { prisma } from "~/lib/db.server";
-import type { CheckoutInput, CheckoutGuestInput } from "~/lib/validators/products";
+import {
+  isEsteroCountry,
+  type CheckoutInput,
+  type CheckoutGuestInput,
+} from "~/lib/validators/products";
 import type { PaginatedData } from "~/lib/types/api";
 import { createLogger } from "~/lib/logger.server";
 import { getShippingConfig } from "~/lib/admin/shipping-config.server";
@@ -113,6 +117,8 @@ export async function createOrder(
 > {
   // Build addressId from either saved address or inline guest address
   let addressId: string;
+  // Country della spedizione — serve a determinare la tariffa (Italia vs estero).
+  let shippingCountry: string;
 
   if ("addressId" in input) {
     // Authenticated: validate address belongs to user
@@ -120,6 +126,7 @@ export async function createOrder(
     const address = await prisma.address.findFirst({ where: { id: input.addressId, userId } });
     if (!address) return { ok: false, error: "Indirizzo non trovato" };
     addressId = address.id;
+    shippingCountry = address.country;
   } else {
     // Guest: create address on the fly (no userId)
     const addr = await prisma.address.create({
@@ -138,6 +145,7 @@ export async function createOrder(
       },
     });
     addressId = addr.id;
+    shippingCountry = input.address.country;
   }
 
   // Find the active cart (by userId or sessionId)
@@ -210,7 +218,10 @@ export async function createOrder(
   // Calculate totals — prices are VAT-inclusive; tax is *contained* in the
   // total (extracted for invoice/legal), never added on top.
   const shippingConfig = await getShippingConfig();
-  const shippingCost = computeShippingCost(subtotal, shippingConfig);
+  // Tariffa estero quando il paese di spedizione non è Italia. Il prezzo resta
+  // SEMPRE ricalcolato server-side dalla config, mai dal client.
+  const isEstero = isEsteroCountry(shippingCountry);
+  const shippingCost = computeShippingCost(subtotal, shippingConfig, isEstero);
   const netAfterDiscount = subtotal - discountAmount;
   const total = Math.round((netAfterDiscount + shippingCost) * 100) / 100;
   // VAT contained in the total at 22% — for invoicing only, NOT added to total
