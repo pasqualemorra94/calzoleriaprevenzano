@@ -33,6 +33,8 @@ export const Route = createFileRoute("/admin/spedizione")({
 interface ShippingFormValues {
   cost: number;
   freeThreshold: number;
+  costEstero: number;
+  freeThresholdEstero: number;
   enabled: boolean;
 }
 
@@ -45,6 +47,8 @@ function AdminShippingPage(): ReactNode {
     defaultValues: {
       cost: initialConfig.cost,
       freeThreshold: initialConfig.freeThreshold,
+      costEstero: initialConfig.costEstero,
+      freeThresholdEstero: initialConfig.freeThresholdEstero,
       enabled: initialConfig.enabled,
     },
     validatorAdapter: zodValidator(),
@@ -160,6 +164,41 @@ function AdminShippingPage(): ReactNode {
           )}
         </form.Field>
 
+        {/* costEstero */}
+        <form.Field
+          name="costEstero"
+          validators={{
+            onChange: ({ value }: { value: number }) => {
+              if (value < 0) return "Il costo non può essere negativo";
+              return undefined;
+            },
+          }}
+        >
+          {(field) => (
+            <div className="space-y-2">
+              <label htmlFor={field.name} className={labelClass}>
+                Costo spedizione estero (€)
+              </label>
+              <input
+                id={field.name}
+                type="number"
+                step="0.01"
+                min="0"
+                value={field.state.value}
+                onChange={(e) => field.handleChange(Number(e.target.value))}
+                onBlur={field.handleBlur}
+                className={inputClass}
+              />
+              <p className={helperClass}>
+                Vale per ordini con spedizione fuori Italia, sotto la soglia estero.
+              </p>
+              {field.state.meta.errors.length > 0 && (
+                <p className="text-xs text-red-600">{String(field.state.meta.errors[0])}</p>
+              )}
+            </div>
+          )}
+        </form.Field>
+
         {/* freeThreshold */}
         <form.Field
           name="freeThreshold"
@@ -188,6 +227,42 @@ function AdminShippingPage(): ReactNode {
               <p className={helperClass}>
                 Per ordini di importo superiore o uguale a questa soglia, la
                 spedizione è gratuita.
+              </p>
+              {field.state.meta.errors.length > 0 && (
+                <p className="text-xs text-red-600">{String(field.state.meta.errors[0])}</p>
+              )}
+            </div>
+          )}
+        </form.Field>
+
+        {/* freeThresholdEstero */}
+        <form.Field
+          name="freeThresholdEstero"
+          validators={{
+            onChange: ({ value }: { value: number }) => {
+              if (value < 0) return "La soglia non può essere negativa";
+              return undefined;
+            },
+          }}
+        >
+          {(field) => (
+            <div className="space-y-2">
+              <label htmlFor={field.name} className={labelClass}>
+                Soglia spedizione gratuita estero (€)
+              </label>
+              <input
+                id={field.name}
+                type="number"
+                step="0.01"
+                min="0"
+                value={field.state.value}
+                onChange={(e) => field.handleChange(Number(e.target.value))}
+                onBlur={field.handleBlur}
+                className={inputClass}
+              />
+              <p className={helperClass}>
+                Vale per ordini con spedizione fuori Italia: oltre questa soglia la
+                spedizione estero è gratuita.
               </p>
               {field.state.meta.errors.length > 0 && (
                 <p className="text-xs text-red-600">{String(field.state.meta.errors[0])}</p>
