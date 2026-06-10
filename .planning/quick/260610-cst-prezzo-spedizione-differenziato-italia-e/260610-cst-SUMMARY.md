@@ -87,6 +87,18 @@ Tariffa di spedizione estero configurabile dall'admin + selettore paese binario 
 - Codice e migrazione prod vanno applicati **INSIEME**: NON deployare il codice senza aver prima migrato il DB di prod, e fare entrambe le cose solo con consenso esplicito.
 - `pnpm install --ignore-workspace` è stato eseguito (workaround isolamento monorepo): il `pnpm-lock.yaml` generato **NON è stato committato** (resta untracked, come da vincolo).
 
+### ✅ Deploy in produzione completato — 2026-06-10 (con OK esplicito utente)
+
+Sequenza eseguita (migrazione PRIMA del codice, come da vincolo):
+1. `prisma migrate status` su prod (via `DATABASE_PUBLIC_URL`, read-only) → unica pendente `20260610071814_add_shipping_estero`, storia allineata, nessun drift.
+2. `prisma migrate deploy` su prod → applicata solo la migrazione additiva (`ADD COLUMN costEstero/freeThresholdEstero DEFAULT`). Riga `shipping_config` preservata (dati intatti: `cost=10`, `freeThreshold=199`; nuove `costEstero=7.90`, `freeThresholdEstero=199`).
+3. `git push origin site-gen/calzoleria-prevenzano` → deploy Railway `27ae649c` **SUCCESS** (build pulita su Railway, conferma che gli errori `tsc`/`build` locali erano artefatti del node_modules locale).
+4. Smoke test live: `/`, `/carrello`, `/checkout` → HTTP 200 (nessun 500 da `getShippingConfig`).
+
+**Dominio:** `calzoleriaprevenzano.it` ora serve l'app Railway (cutover dal vecchio WordPress completato — memoria storica superata).
+
+**Azione residua utente:** impostare la tariffa estero da `/admin/spedizione` (default `costEstero=7.90` è SOTTO i `10€` dell'Italia).
+
 ## Deviazioni dal piano
 
 ### Auto-fix (Rule 3 — blocking)
