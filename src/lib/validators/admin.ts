@@ -128,6 +128,14 @@ export const updateShippingConfigSchema = z.object({
     .number({ message: "Inserisci un numero valido" })
     .min(0, "La soglia non può essere negativa")
     .max(99999.99, "Soglia massima €99999.99"),
+  costEstero: z.coerce
+    .number({ message: "Inserisci un numero valido" })
+    .min(0, "Il costo non può essere negativo")
+    .max(9999.99, "Costo massimo €9999.99"),
+  freeThresholdEstero: z.coerce
+    .number({ message: "Inserisci un numero valido" })
+    .min(0, "La soglia non può essere negativa")
+    .max(99999.99, "Soglia massima €99999.99"),
   enabled: z.boolean(),
 });
 

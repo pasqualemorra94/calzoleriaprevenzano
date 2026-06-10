@@ -37,6 +37,8 @@ function CarrelloPage(): ReactNode {
         setShippingConfig({
           cost: configRes.cost,
           freeThreshold: configRes.freeThreshold,
+          costEstero: configRes.costEstero,
+          freeThresholdEstero: configRes.freeThresholdEstero,
           enabled: configRes.enabled,
         });
       }

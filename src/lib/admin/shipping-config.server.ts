@@ -25,6 +25,8 @@ const CACHE_TTL_MS = 30_000;
 export interface ShippingConfigData {
   cost: number;
   freeThreshold: number;
+  costEstero: number;
+  freeThresholdEstero: number;
   enabled: boolean;
   updatedAt: Date;
 }
@@ -52,6 +54,8 @@ export async function getShippingConfig(): Promise<ShippingConfigData> {
   const data: ShippingConfigData = {
     cost: Number(row.cost),
     freeThreshold: Number(row.freeThreshold),
+    costEstero: Number(row.costEstero),
+    freeThresholdEstero: Number(row.freeThresholdEstero),
     enabled: row.enabled,
     updatedAt: row.updatedAt,
   };
@@ -73,6 +77,8 @@ export async function updateShippingConfig(
     update: {
       cost: parsed.cost,
       freeThreshold: parsed.freeThreshold,
+      costEstero: parsed.costEstero,
+      freeThresholdEstero: parsed.freeThresholdEstero,
       enabled: parsed.enabled,
       updatedById: userId,
     },
@@ -80,6 +86,8 @@ export async function updateShippingConfig(
       id: SINGLETON_ID,
       cost: parsed.cost,
       freeThreshold: parsed.freeThreshold,
+      costEstero: parsed.costEstero,
+      freeThresholdEstero: parsed.freeThresholdEstero,
       enabled: parsed.enabled,
       updatedById: userId,
     },
@@ -91,6 +99,8 @@ export async function updateShippingConfig(
   return {
     cost: Number(row.cost),
     freeThreshold: Number(row.freeThreshold),
+    costEstero: Number(row.costEstero),
+    freeThresholdEstero: Number(row.freeThresholdEstero),
     enabled: row.enabled,
     updatedAt: row.updatedAt,
   };
