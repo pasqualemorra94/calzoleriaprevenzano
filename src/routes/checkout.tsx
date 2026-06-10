@@ -6,6 +6,8 @@ import { Loader2, Check } from "lucide-react";
 import { Truck } from "lucide-react";
 import { OrderSummary } from "~/components/checkout/OrderSummary";
 import type { CartItemDetail } from "~/components/checkout/OrderSummary";
+import { ShippingAddressFields } from "~/components/checkout/ShippingAddressFields";
+import type { ShippingFormState } from "~/components/checkout/ShippingAddressFields";
 import { $getPublicShippingConfig } from "~/lib/shipping-functions";
 import { $validateDiscount } from "~/lib/checkout-functions";
 import { computeShippingCost, type ShippingConfigShape } from "~/lib/utils/shipping";
@@ -26,8 +28,9 @@ function CheckoutPage(): ReactNode {
   const [authChecked, setAuthChecked] = useState(false);
   const [redirecting, setRedirecting] = useState(false);
 
-  const [form, setForm] = useState({
-    email: "", firstName: "", lastName: "", address1: "", address2: "", city: "", province: "", postalCode: "", phone: "",
+  const [isEstero, setIsEstero] = useState(false);
+  const [form, setForm] = useState<ShippingFormState>({
+    email: "", firstName: "", lastName: "", address1: "", address2: "", city: "", province: "", postalCode: "", country: "", phone: "",
   });
   const [discountCode, setDiscountCode] = useState("");
   const [appliedDiscount, setAppliedDiscount] = useState(0);
@@ -79,8 +82,14 @@ function CheckoutPage(): ReactNode {
     if (!form.lastName.trim()) errs.lastName = "Il cognome è obbligatorio";
     if (!form.address1.trim()) errs.address1 = "L'indirizzo è obbligatorio";
     if (!form.city.trim()) errs.city = "La città è obbligatoria";
-    if (!form.province.trim() || form.province.length !== 2) errs.province = "Inserisci 2 caratteri";
-    if (!form.postalCode.trim() || form.postalCode.length !== 5) errs.postalCode = "Inserisci 5 caratteri";
+    if (isEstero) {
+      // Estero: provincia/CAP liberi, ma la nazione è obbligatoria.
+      if (!form.country.trim()) errs.country = "La nazione è obbligatoria";
+    } else {
+      // Italia: formato stretto provincia (2 char) + CAP (5 char).
+      if (!form.province.trim() || form.province.length !== 2) errs.province = "Inserisci 2 caratteri";
+      if (!form.postalCode.trim() || form.postalCode.length !== 5) errs.postalCode = "Inserisci 5 caratteri";
+    }
     setErrors(errs);
     if (Object.keys(errs).length > 0) return false;
     if (!acceptedTerms) {
@@ -91,9 +100,15 @@ function CheckoutPage(): ReactNode {
     return true;
   };
 
-  const updateField = (field: string, value: string) => {
+  const updateField = (field: keyof ShippingFormState, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) setErrors((prev) => ({ ...prev, [field]: "" }));
+  };
+
+  // Cambio zona Italia/estero: resetta gli errori formato IT non più pertinenti.
+  const handleCountryModeChange = (estero: boolean): void => {
+    setIsEstero(estero);
+    setErrors((prev) => ({ ...prev, province: "", postalCode: "", country: "" }));
   };
 
   useEffect(() => {
@@ -109,6 +124,8 @@ function CheckoutPage(): ReactNode {
           setShippingConfig({
             cost: configRes.cost,
             freeThreshold: configRes.freeThreshold,
+            costEstero: configRes.costEstero,
+            freeThresholdEstero: configRes.freeThresholdEstero,
             enabled: configRes.enabled,
           });
         }
@@ -128,7 +145,7 @@ function CheckoutPage(): ReactNode {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: form.email, firstName: form.firstName, lastName: form.lastName,
-          address: { address1: form.address1, address2: form.address2, city: form.city, province: form.province, postalCode: form.postalCode, country: "IT", phone: form.phone || undefined },
+          address: { address1: form.address1, address2: form.address2, city: form.city, province: form.province, postalCode: form.postalCode, country: isEstero ? form.country.trim() : "IT", phone: form.phone || undefined },
           shippingMethod: "standard", discountCode: discountCode || undefined, notes: notes || undefined,
           acceptedTerms: true,
         }),
@@ -188,7 +205,7 @@ function CheckoutPage(): ReactNode {
   }
 
   const shippingCost = shippingConfig
-    ? computeShippingCost(cart.subtotal, shippingConfig)
+    ? computeShippingCost(cart.subtotal, shippingConfig, isEstero)
     : 0;
 
   return (
@@ -226,25 +243,13 @@ function CheckoutPage(): ReactNode {
                 )}
 
                 <div className="space-y-5">
-                  <FormInput id="checkout-email" label="Email" type="email" required placeholder="mario@esempio.it" autoComplete="email" value={form.email} error={errors.email} onChange={(e) => updateField("email", e.target.value)} />
-                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                    <FormInput id="checkout-firstName" label="Nome" type="text" required placeholder="Mario" autoComplete="given-name" value={form.firstName} error={errors.firstName} onChange={(e) => updateField("firstName", e.target.value)} />
-                    <FormInput id="checkout-lastName" label="Cognome" type="text" required placeholder="Rossi" autoComplete="family-name" value={form.lastName} error={errors.lastName} onChange={(e) => updateField("lastName", e.target.value)} />
-                  </div>
-                  <FormInput id="checkout-address1" label="Indirizzo" type="text" required placeholder="Via Roma, 1" autoComplete="address-line1" value={form.address1} error={errors.address1} onChange={(e) => updateField("address1", e.target.value)} />
-                  <FormInput id="checkout-address2" label="Indirizzo 2" type="text" placeholder="Appartamento, interno..." optional autoComplete="address-line2" value={form.address2} onChange={(e) => updateField("address2", e.target.value)} />
-                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
-                    <div className="sm:col-span-2 space-y-2">
-                      <FormInput id="checkout-city" label="Città" type="text" required placeholder="Napoli" autoComplete="address-level2" value={form.city} error={errors.city} onChange={(e) => updateField("city", e.target.value)} />
-                    </div>
-                    <div className="space-y-2">
-                      <FormInput id="checkout-province" label="Provincia" type="text" required placeholder="NA" maxLength={2} autoComplete="address-level1" value={form.province} error={errors.province} onChange={(e) => updateField("province", e.target.value.toUpperCase())} />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                    <FormInput id="checkout-postalCode" label="CAP" type="text" required placeholder="80132" maxLength={5} autoComplete="postal-code" value={form.postalCode} error={errors.postalCode} onChange={(e) => updateField("postalCode", e.target.value.replace(/\D/g, ""))} />
-                    <FormInput id="checkout-phone" label="Telefono" type="tel" placeholder="+39 333 XXX XXXX" optional autoComplete="tel" value={form.phone} onChange={(e) => updateField("phone", e.target.value)} />
-                  </div>
+                  <ShippingAddressFields
+                    form={form}
+                    errors={errors}
+                    isEstero={isEstero}
+                    onCountryModeChange={handleCountryModeChange}
+                    updateField={updateField}
+                  />
                   <div className="space-y-2">
                     <label htmlFor="checkout-discount" className={LABEL_CLASS}>Codice sconto</label>
                     <div className="flex gap-2">
@@ -293,7 +298,7 @@ function CheckoutPage(): ReactNode {
                 )}
                 <OrderSummary
                   items={cart.items} subtotal={cart.subtotal} shippingCost={shippingCost}
-                  freeShippingThreshold={shippingConfig?.freeThreshold ?? 199}
+                  freeShippingThreshold={(isEstero ? shippingConfig?.freeThresholdEstero : shippingConfig?.freeThreshold) ?? 199}
                   shippingEnabled={shippingConfig?.enabled ?? true}
                   submitStatus={submitStatus} isCheckout
                   disabled={!acceptedTerms}
@@ -305,21 +310,5 @@ function CheckoutPage(): ReactNode {
         </div>
       </section>
     </>
-  );
-}
-
-function FormInput({ id, label, type, required, placeholder, autoComplete, optional, maxLength, value, error, onChange }: {
-  id: string; label: string; type?: string; required?: boolean; placeholder?: string; autoComplete?: string; optional?: boolean; maxLength?: number;
-  value: string; error?: string; onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-}): ReactNode {
-  return (
-    <div className="space-y-2">
-      <label htmlFor={id} className={LABEL_CLASS}>
-        {label} {optional && <span className="font-normal text-[var(--color-text-muted)]">(opzionale)</span>}
-      </label>
-      <input id={id} type={type ?? "text"} required={required} placeholder={placeholder} autoComplete={autoComplete} maxLength={maxLength} value={value}
-        onChange={onChange} className={`${INPUT_CLASS} ${error ? "border-[var(--color-destructive)]" : ""}`} />
-      {error && <p className="text-xs text-[var(--color-destructive)]">{error}</p>}
-    </div>
   );
 }
