@@ -44,6 +44,11 @@ export async function sendOrderConfirmedEmails(orderId: string): Promise<void> {
     name: i.name,
     quantity: i.quantity,
     priceCents: Math.round(Number(i.price) * 100),
+    // Variante e opzioni selezionate: colonne scalari già presenti su OrderItem
+    variantName: i.variantName,
+    selectedOptions: i.selectedOptions as
+      | Array<{ label: string; value: string; color?: string }>
+      | null,
   }));
   const totalCents = Math.round(Number(order.total) * 100);
 
