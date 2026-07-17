@@ -144,6 +144,41 @@ function dataRow(label: string, value: string, bold = false): string {
     </tr>`;
 }
 
+// ─── Dettaglio articolo: variante + opzioni personalizzazione ──────
+
+// Consente SOLO hex #RGB/#RRGGBB/#RRGGBBAA; altrimenti null (niente injection nello style).
+function safeHexColor(color: string | undefined): string | null {
+  if (!color) return null;
+  return /^#[0-9a-fA-F]{3,8}$/.test(color) ? color : null;
+}
+
+// Renderizza le sotto-righe (variante + opzioni) di UN articolo.
+// Riutilizzato da entrambi i template per non duplicare logica.
+function itemDetailLines(item: {
+  variantName?: string | null;
+  selectedOptions?: Array<{ label: string; value: string; color?: string }> | null;
+}): string {
+  const b = emailBrand;
+  const lines: string[] = [];
+  // Variante selezionata (es. taglia/colore aggregato)
+  if (item.variantName) {
+    lines.push(
+      `<div style="color:${b.mutedColor}; font-size:12px; margin-top:2px;">${escapeHtml(item.variantName)}</div>`,
+    );
+  }
+  // Opzioni di personalizzazione (label: value) con swatch inline se il colore è un hex valido
+  for (const opt of item.selectedOptions ?? []) {
+    const hex = safeHexColor(opt.color);
+    const swatch = hex
+      ? `<span style="display:inline-block; width:10px; height:10px; border-radius:2px; background:${hex}; border:1px solid ${b.borderColor}; vertical-align:middle; margin-right:4px;"></span>`
+      : "";
+    lines.push(
+      `<div style="color:${b.mutedColor}; font-size:12px; margin-top:2px;">${swatch}${escapeHtml(opt.label)}: ${escapeHtml(opt.value)}</div>`,
+    );
+  }
+  return lines.join("");
+}
+
 // ─── Templates ─────────────────────────────────────────────────────
 
 interface ContactData {
@@ -219,7 +254,13 @@ export function autoReplyTemplate(name: string): string {
 interface OrderEmailData {
   customerName: string;
   orderNumber: string;
-  items: Array<{ name: string; quantity: number; priceCents: number }>;
+  items: Array<{
+    name: string;
+    quantity: number;
+    priceCents: number;
+    variantName?: string | null;
+    selectedOptions?: Array<{ label: string; value: string; color?: string }> | null;
+  }>;
   totalCents: number;
 }
 
@@ -233,6 +274,7 @@ export function orderConfirmationTemplate(data: OrderEmailData): string {
         <td style="padding:10px 14px; color:${b.textColor}; font-size:14px; border-bottom:1px solid ${b.borderColor};">
           ${escapeHtml(item.name)}
           <span style="color:${b.mutedColor};"> &times; ${item.quantity}</span>
+          ${itemDetailLines(item)}
         </td>
         <td style="padding:10px 14px; color:${b.textColor}; font-size:14px; border-bottom:1px solid ${b.borderColor}; text-align:right; font-weight:500;">
           ${formatCurrency(item.priceCents * item.quantity)}
@@ -290,7 +332,13 @@ interface OrderNotificationData {
     postalCode: string;
     country: string;
   };
-  items: Array<{ name: string; quantity: number; priceCents: number }>;
+  items: Array<{
+    name: string;
+    quantity: number;
+    priceCents: number;
+    variantName?: string | null;
+    selectedOptions?: Array<{ label: string; value: string; color?: string }> | null;
+  }>;
   totalCents: number;
 }
 
@@ -308,6 +356,7 @@ export function orderNotificationTemplate(data: OrderNotificationData): string {
         <td style="padding:10px 14px; color:${b.textColor}; font-size:14px; border-bottom:1px solid ${b.borderColor};">
           ${escapeHtml(item.name)}
           <span style="color:${b.mutedColor};"> &times; ${item.quantity}</span>
+          ${itemDetailLines(item)}
         </td>
         <td style="padding:10px 14px; color:${b.textColor}; font-size:14px; border-bottom:1px solid ${b.borderColor}; text-align:right; font-weight:500;">
           ${formatCurrency(item.priceCents * item.quantity)}
