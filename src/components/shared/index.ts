@@ -1,3 +1,4 @@
+export { AnnouncementBar } from "./AnnouncementBar";
 export { MegaMenu } from "./MegaMenu";
 export { MobileSearchOverlay } from "./MobileSearchOverlay";
 export { CategoryBrowseList } from "./CategoryBrowseList";

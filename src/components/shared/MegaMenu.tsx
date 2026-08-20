@@ -5,6 +5,7 @@ import { Link } from "@tanstack/react-router";
 import { ChevronDown } from "lucide-react";
 import { cn } from "~/lib/utils/cn";
 import { QuickSearch } from "~/components/shared/QuickSearch";
+import { AnnouncementBar } from "~/components/shared/AnnouncementBar";
 import { authClient } from "~/lib/auth-client";
 
 interface GrandchildCategory {
@@ -378,6 +379,9 @@ export function MegaMenu({ cartCount = 0 }: { cartCount?: number }) {
           : "bg-[var(--color-background)] shadow-[0_2px_12px_rgba(0,0,0,0.07)]",
       )}
     >
+      {/* ── Striscia annuncio (sopra tutto) ── */}
+      <AnnouncementBar />
+
       {/* ── DESKTOP ─────────────────────────────────────── */}
       <div className="hidden md:block">
 
