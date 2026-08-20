@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { ArrowRight } from "lucide-react";
+import { isAnnouncementActive } from "~/lib/announcement";
 import { HERO_SLIDES } from "./hero-slides";
 
 // ─── Animation tokens ──────────────────────────────────────
@@ -85,7 +86,11 @@ export function MobileHeroSection() {
   return (
     <section
       className="relative overflow-hidden bg-black md:hidden"
-      style={{ height: "calc(100svh - var(--navbar-height-base, 64px))" }}
+      style={{
+        height: isAnnouncementActive()
+          ? "calc(100svh - var(--navbar-height-base, 64px) - var(--announcement-height))"
+          : "calc(100svh - var(--navbar-height-base, 64px))",
+      }}
       aria-roledescription="carousel"
       aria-label="Collezioni Calzoleria Prevenzano"
     >

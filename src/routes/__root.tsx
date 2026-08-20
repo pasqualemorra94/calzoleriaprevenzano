@@ -10,6 +10,7 @@ import type { ReactNode } from "react";
 import { APP_CONFIG } from "~/lib/constants/app";
 import { MotionProvider } from "~/providers/MotionProvider";
 import { MegaMenu } from "~/components/shared/MegaMenu";
+import { isAnnouncementActive } from "~/lib/announcement";
 import { MobileSearchOverlay } from "~/components/shared/MobileSearchOverlay";
 import { Footer, CookieBanner, GoogleAnalytics, WhatsAppFloatingButton } from "~/components/shared";
 import { MobileBottomNav } from "~/components/shared/MobileBottomNav";
@@ -94,6 +95,7 @@ function RootComponent() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const isAdmin = pathname.startsWith("/admin");
   const isAccount = pathname.startsWith("/account");
+  const announcementActive = isAnnouncementActive();
 
   return (
     <MotionProvider>
@@ -105,7 +107,10 @@ function RootComponent() {
         id="main-content"
         className={cn(
           "min-h-screen",
-          !isAdmin && "pt-[var(--navbar-height)] md:pt-[var(--navbar-height-md)]",
+          !isAdmin &&
+            (announcementActive
+              ? "pt-[calc(var(--navbar-height)+var(--announcement-height))] md:pt-[calc(var(--navbar-height-md)+var(--announcement-height-md))]"
+              : "pt-[var(--navbar-height)] md:pt-[var(--navbar-height-md)]"),
           !isAdmin && !isAccount && "pb-20 md:pb-0",
         )}
       >

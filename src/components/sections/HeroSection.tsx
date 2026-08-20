@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, m } from "motion/react";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { isAnnouncementActive } from "~/lib/announcement";
 import { HERO_SLIDES } from "./hero-slides";
 
 // ─── Animation tokens ───────────────────────────────────────
@@ -68,7 +69,11 @@ export function HeroSection() {
     <m.section
       animate={{ background: slide.bgGradient }}
       transition={{ duration: BG_TRANSITION_S, ease: EASE_OUT }}
-      className="relative hidden overflow-hidden md:block md:min-h-[calc(100svh-var(--navbar-height-md))]"
+      className={`relative hidden overflow-hidden md:block ${
+        isAnnouncementActive()
+          ? "md:min-h-[calc(100svh-var(--navbar-height-md)-var(--announcement-height-md))]"
+          : "md:min-h-[calc(100svh-var(--navbar-height-md))]"
+      }`}
       style={{ background: SLIDES[0].bgGradient, color: slide.textColor }}
       aria-roledescription="carousel"
       aria-label="Collezioni Calzoleria Prevenzano"
