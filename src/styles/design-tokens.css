@@ -143,6 +143,9 @@
   --section-padding-y-lg: clamp(5rem, 2.5rem + 8vw, 10rem);
   --navbar-height: 5.25rem;
   --navbar-height-md: 11.5rem;
+  /* Striscia annuncio sopra l'header (vedi src/lib/announcement.ts) */
+  --announcement-height: 2.75rem;
+  --announcement-height-md: 2.25rem;
 
   /* ── Transitions ───────────────────────────────────────── */
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
